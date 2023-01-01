@@ -1,0 +1,54 @@
+.title {
+  margin: 2rem 0 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin-top: 6px;
+    position: absolute;
+    right: 1.6rem;
+  }
+}
+
+.hymnBooks {
+  margin-top: 0.5rem;
+  font-size: 90%;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  button {
+    margin: 2%;
+    padding: 3%;
+    width: 46%;
+    aspect-ratio: 177/228;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    text-align: center;
+    background-color: #171717;
+
+    h2 {
+      margin-top: 8px;
+    }
+  }
+}
+
+.otherHymns {
+  margin: 2% 3%;
+  padding: 3%;
+  width: 94%;
+
+  text-align: center;
+  background-color: #171717;
+}

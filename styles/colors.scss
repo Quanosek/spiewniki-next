@@ -6,19 +6,12 @@
   --darkRed: #991e1e;
   --lightBlue: #68aafa;
   --darkBlue: #2170d0;
-
-  /* theme backgrounds */
-  --blackBG: #000000;
-  --darkBG: #212121;
-  --lightBG: #ffffff;
-  --readingBG: #fbf9f6;
 }
 
 /* default/black theme */
-:root,
-:root.black {
-  --textSelection: var(--darkBlue);
-  --background: var(--blackBG);
+:root {
+  --textSelection: #212121;
+  --background: #000000;
   --accentColor: var(--lightBlue);
   --text: #ededed;
   --boxes: #1d1d1d;
@@ -26,43 +19,4 @@
   --buttonsHover: #3a3a3a;
   --mobileMenu: #171717;
   --iconsFilter: invert();
-}
-
-/* dark theme */
-:root.dark {
-  --textSelection: var(--darkBlue);
-  --background: var(--darkBG);
-  --accentColor: var(--lightBlue);
-  --text: #ffffff;
-  --boxes: #313131;
-  --buttons: #414141;
-  --buttonsHover: #535353;
-  --mobileMenu: #2a2a2a;
-  --iconsFilter: invert();
-}
-
-/* light theme */
-:root.light {
-  --textSelection: var(--lightBlue);
-  --background: var(--lightBG);
-  --accentColor: var(--darkBlue);
-  --text: #000000;
-  --boxes: #f4f4f4;
-  --buttons: #e6e6e6;
-  --buttonsHover: #dadada;
-  --mobileMenu: #ffffff;
-  --iconsFilter: none;
-}
-
-/* reading theme */
-:root.reading {
-  --textSelection: var(--lightBlue);
-  --background: var(--readingBG);
-  --accentColor: var(--darkBlue);
-  --text: #23221e;
-  --boxes: #f5f0ea;
-  --buttons: #e7e4da;
-  --buttonsHover: #e1dcd1;
-  --mobileMenu: #fffbf2;
-  --iconsFilter: none;
 }

@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 
 import styles from "@styles/main.module.scss";
 
@@ -24,14 +23,8 @@ export default function IndexPage() {
       <main>
         <div className={styles.title}>
           <h1>Śpiewniki</h1>
-          <button id="infoButton">
-            <Image
-              className="icon"
-              alt="info"
-              src="/icons/info.svg"
-              width={26}
-              height={26}
-            />
+          <button id="infoButton" title="Informacje o aplikacji">
+            <img className="icon" alt="info" src="/icons/info.svg" />
           </button>
         </div>
 
@@ -40,12 +33,7 @@ export default function IndexPage() {
         <div className={styles.hymnBooks}>
           <div className={styles.grid}>
             <button id="brzask">
-              <Image
-                alt="okładka śpiewnika"
-                src="/covers/brzask.jpg"
-                width={114}
-                height={160}
-              />
+              <img alt="okładka śpiewnika" src="/covers/brzask.jpg" />
               <h2>
                 Pieśni Brzasku
                 <br />
@@ -53,12 +41,7 @@ export default function IndexPage() {
               </h2>
             </button>
             <button id="ciegielki">
-              <Image
-                alt="okładka śpiewnika"
-                src="/covers/cegielki.jpg"
-                width={114}
-                height={160}
-              />
+              <img alt="okładka śpiewnika" src="/covers/cegielki.jpg" />
               <h2>
                 Uwielbiajmy Pana
                 <br />
@@ -66,12 +49,7 @@ export default function IndexPage() {
               </h2>
             </button>
             <button id="nowe">
-              <Image
-                alt="okładka śpiewnika"
-                src="/covers/nowe.jpg"
-                width={114}
-                height={160}
-              />
+              <img alt="okładka śpiewnika" src="/covers/nowe.jpg" />
               <h2>
                 Śpiewajmy Panu
                 <br />
@@ -79,12 +57,7 @@ export default function IndexPage() {
               </h2>
             </button>
             <button id="epifania">
-              <Image
-                alt="okładka śpiewnika"
-                src="/covers/epifania.jpg"
-                width={114}
-                height={160}
-              />
+              <img alt="okładka śpiewnika" src="/covers/epifania.jpg" />
               <h2>
                 Śpiewniczek
                 <br />

@@ -1,3 +1,10 @@
+import styles from "@styles/main.module.scss";
+
 export default function Searchbar() {
-  return <input id="input" placeholder="Wpisz tytuł lub numer pieśni" />;
+  return (
+    <div className={styles.searchbar}>
+      <div className={styles.searchIcon}></div>
+      <input id="input" placeholder="Wpisz tytuł lub numer pieśni" />
+    </div>
+  );
 }

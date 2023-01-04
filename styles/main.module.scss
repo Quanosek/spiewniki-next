@@ -1,19 +1,18 @@
-// title
 .title {
   margin: 2.5rem 0 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 1.4rem;
-  user-select: none;
+  font-size: 1.25rem;
 
+  // infoButton on mobile
   button {
     padding: 10px;
     position: absolute;
     right: 1.6rem;
-    display: flex;
-    align-items: center;
+    display: none;
+    background-color: transparent;
 
     img {
       width: 1.6rem;
@@ -21,50 +20,28 @@
   }
 }
 
-// searchbar
-.searchbar {
-  max-width: 48rem;
-  width: 94%;
+.content {
+  margin: 1.6rem 1% 0;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  gap: 1rem;
 
-  input {
-    z-index: 1;
-    padding: 0.6rem 0.6rem 0.6rem 3rem;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    font-size: 1.2rem;
-    background-color: #202020;
-    border: solid 2px #202020;
-    border-radius: 0.4rem;
-    cursor: pointer;
+  hr {
+    width: 1px;
+    opacity: 0.65;
+    background-color: #ededed;
+    border-radius: 100%;
   }
 }
 
-.searchIcon {
-  z-index: 2;
-  margin-left: 1rem;
-  width: 24px;
-  height: 24px;
-  position: absolute;
-  opacity: 0.65;
-  border: none;
-  border-radius: 0.4rem;
-  background: url(/icons/search.svg) no-repeat center;
-  background-size: contain;
-  pointer-events: none;
-  filter: invert(1);
-  cursor: pointer;
-}
-
-// grid
 .hymnBooks {
-  margin-top: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  h2 {
+    margin-bottom: 0.6rem;
+  }
 }
 
 .grid {
@@ -76,46 +53,51 @@
   button {
     margin: 0.5rem;
     padding: 5px;
-    width: 14rem;
-    aspect-ratio: 9/12;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5%;
+    width: 22%;
+    max-width: 12rem;
+    aspect-ratio: 9/13;
     text-align: center;
-    background-color: #171717;
+    gap: 5%;
 
-    img {
-      width: 70%;
+    h3 {
+      font-size: 0.9rem;
     }
 
-    h2 {
-      font-size: 100%;
+    img {
+      width: 73%;
     }
   }
 }
 
 .otherHymns {
-  margin: 0.5rem 0;
-  padding: 1.2rem 0;
-  width: 48rem;
+  margin-top: 0.3rem;
+  padding: 1rem;
+  max-width: 48rem;
   text-align: center;
   background-color: #171717;
 }
 
-.title button,
-.grid button,
-.otherHymns {
-  transition: 0.2s background-color ease-in-out;
-}
+.optionsMenu {
+  display: flex;
+  flex-direction: column;
 
-// desktop-only
-@media (min-width: 1024px) {
-  .title button:hover,
-  .grid button:hover,
-  .otherHymns:hover {
-    background-color: #252525;
+  h2 {
+    margin: 0 0 0.6rem 0.5rem;
+  }
+
+  button {
+    margin: 0.5rem;
+    padding: 0.8rem 1rem;
+    width: 14rem;
+    flex-direction: row;
+    justify-content: flex-start;
+    border-radius: 0.4rem;
+    gap: 1rem;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
   }
 }
 
@@ -124,23 +106,24 @@
   .title {
     font-size: 1.2rem;
   }
-  .title button:hover,
-  .grid button:hover,
-  .otherHymns:hover {
-    background-color: #171717;
+
+  .content {
+    margin-top: 3%;
   }
-  .title button:hover,
-  .grid button:focus,
-  .otherHymns:focus {
-    background-color: #252525;
+
+  .hymnBooks {
+    width: 65%;
   }
 
   .grid button {
     margin: 1%;
-    width: 22%;
+    width: min(48%, 16.5rem);
+    max-width: none;
 
-    h2 {
-      font-size: 1.6vw;
+    aspect-ratio: 9/12;
+
+    h3 {
+      font-size: min(2vw, 1.1rem);
     }
   }
 
@@ -155,13 +138,39 @@
 @media (max-width: 767px) {
   .title {
     margin: 2.2rem 0 2rem;
+    font-size: 1.1rem;
+
+    button {
+      display: flex;
+
+      &:focus {
+        background-color: #252525;
+      }
+    }
+  }
+
+  .content {
+    margin-top: 1.5%;
+
+    hr {
+      display: none;
+    }
+  }
+
+  .hymnBooks {
+    width: 100%;
+
+    h2 {
+      display: none;
+    }
   }
 
   .grid button {
     width: 48%;
+    max-width: 16rem;
 
-    h2 {
-      font-size: 3.5vw;
+    h3 {
+      font-size: min(3.2vw, 18px);
     }
   }
 
@@ -169,6 +178,10 @@
     padding: 6% 0;
     width: 98%;
     font-size: 3.6vw;
+  }
+
+  .optionsMenu {
+    display: none;
   }
 }
 
@@ -178,7 +191,7 @@
     margin: 10vw 0 8vw;
     position: relative;
     left: 3vw;
-    font-size: 6.8vw;
+    font-size: 5.5vw;
     flex-direction: row;
     gap: 3vw;
 
@@ -194,33 +207,20 @@
     }
   }
 
-  .searchbar {
-    input {
-      padding: 4vw 0.6rem 4vw 14vw;
-      font-size: 6vw;
-    }
-    input::placeholder {
-      bottom: 1px;
-      font-size: 5vw;
-    }
-  }
-
-  .searchIcon {
-    z-index: 2;
-    margin-left: 5vw;
-    width: 7.5vw;
-    height: 7.5vw;
+  .content {
+    margin-top: 3%;
   }
 
   .grid button {
     width: 96%;
+    max-width: none;
     aspect-ratio: 9/10;
 
     img {
       width: 60%;
     }
 
-    h2 {
+    h3 {
       font-size: 5.5vw;
     }
   }

@@ -1,7 +1,9 @@
+import styles from "@styles/components.module.scss";
+
 export default function Navbar() {
   return (
-    <nav>
-      <button id="printButton" className="onlyOnHymn icon">
+    <div className={styles.navigation}>
+      <button id="printButton" className="onlyOnHymn">
         <img className="icon" alt="drukarka" src="/icons/printer.svg" />
         <p>Wydrukuj</p>
       </button>
@@ -21,6 +23,6 @@ export default function Navbar() {
         <img className="icon" alt="link" src="/icons/link.svg" />
         <p>Udostępnij</p>
       </button>
-    </nav>
+    </div>
   );
 }

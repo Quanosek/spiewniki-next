@@ -29,45 +29,71 @@ export default function IndexPage() {
         </div>
 
         <Searchbar />
-
-        <div className={styles.hymnBooks}>
-          <div className={styles.grid}>
-            <button id="brzask">
-              <img alt="okładka śpiewnika" src="/covers/brzask.jpg" />
-              <h2>
-                Pieśni Brzasku
-                <br />
-                Tysiąclecia
-              </h2>
-            </button>
-            <button id="ciegielki">
-              <img alt="okładka śpiewnika" src="/covers/cegielki.jpg" />
-              <h2>
-                Uwielbiajmy Pana
-                <br />
-                (Cegiełki)
-              </h2>
-            </button>
-            <button id="nowe">
-              <img alt="okładka śpiewnika" src="/covers/nowe.jpg" />
-              <h2>
-                Śpiewajmy Panu
-                <br />
-                Pieśń Nową
-              </h2>
-            </button>
-            <button id="epifania">
-              <img alt="okładka śpiewnika" src="/covers/epifania.jpg" />
-              <h2>
-                Śpiewniczek
-                <br />
-                Młodzieżowy Epifanii
-              </h2>
+        <div className={styles.content}>
+          <div className={styles.hymnBooks}>
+            <h2>Wybierz śpiewnik:</h2>
+            <div className={styles.grid}>
+              <button id="brzask">
+                <img alt="okładka śpiewnika" src="/covers/brzask.jpg" />
+                <h3>
+                  Pieśni Brzasku
+                  <br />
+                  Tysiąclecia
+                </h3>
+              </button>
+              <button id="ciegielki">
+                <img alt="okładka śpiewnika" src="/covers/cegielki.jpg" />
+                <h3>
+                  Uwielbiajmy Pana
+                  <br />
+                  (Cegiełki)
+                </h3>
+              </button>
+              <button id="nowe">
+                <img alt="okładka śpiewnika" src="/covers/nowe.jpg" />
+                <h3>
+                  Śpiewajmy Panu
+                  <br />
+                  Pieśń Nową
+                </h3>
+              </button>
+              <button id="epifania">
+                <img alt="okładka śpiewnika" src="/covers/epifania.jpg" />
+                <h3>
+                  Śpiewniczek
+                  <br />
+                  Młodzieżowy Epifanii
+                </h3>
+              </button>
+            </div>
+            <button id="inne" className={styles.otherHymns}>
+              <h3>Inne pieśni</h3>
             </button>
           </div>
-          <button id="inne" className={styles.otherHymns}>
-            <h2>Inne pieśni</h2>
-          </button>
+          <hr />
+          <div className={styles.optionsMenu}>
+            <h2>Dostępne opcje:</h2>
+            <button id="randomButton">
+              <img className="icon" alt="kostka" src="/icons/dice.svg" />
+              Wylosuj pieśń
+            </button>
+            <button id="favoriteButton">
+              <img
+                className="icon"
+                alt="gwiazdka"
+                src="/icons/star_empty.svg"
+              />
+              Lista ulubionych
+            </button>
+            <button id="settingsButton">
+              <img className="icon" alt="trybik" src="/icons/settings.svg" />
+              Ustawienia
+            </button>
+            <button id="infoButton">
+              <img className="icon" alt="info" src="/icons/info.svg" />
+              Informacje
+            </button>
+          </div>
         </div>
       </main>
 

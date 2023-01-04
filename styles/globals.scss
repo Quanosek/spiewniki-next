@@ -1,6 +1,3 @@
-/* import */
-@import "colors.scss";
-
 /* fonts */
 @font-face {
   font-family: "Gill Sans MT";
@@ -26,7 +23,7 @@ body {
 }
 
 main {
-  padding-bottom: 25%;
+  padding-bottom: 4rem; // navigation component
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,6 +32,10 @@ main {
 
 h1 {
   font-size: 200%;
+}
+
+h2 {
+  font-size: 115%;
 }
 
 h1,
@@ -57,8 +58,14 @@ img {
 }
 
 button {
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   border-radius: 0.4rem;
+  background-color: #171717;
+  transition: 0.2s background-color ease-in-out;
+  cursor: pointer;
 }
 
 ::placeholder {
@@ -68,63 +75,28 @@ button {
   bottom: 1px;
 }
 
-nav {
-  z-index: 10;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 3.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3%;
-
-  color: #ffffff;
-  background-color: #141414;
-
-  button {
-    padding: 12px 0 8px;
-    width: 5rem;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;
-    text-align: center;
-    transition: 0.2s background-color ease-in-out;
-
-    img {
-      width: 22px;
-      height: 22px;
-    }
-
-    p {
-      font-size: 11px;
-    }
-  }
-}
-
 // desktop-only
 @media (min-width: 1024px) {
-  nav button:hover {
+  button:hover {
     background-color: #252525;
   }
 }
 
 // laptop
 @media (max-width: 1023px) {
-  nav button:hover {
+  button:hover {
     background-color: #171717;
   }
-  nav button:focus {
+  button:focus {
     background-color: #252525;
   }
 }
 
 // tablet
 @media (max-width: 767px) {
+  main {
+    padding-bottom: 18vw; // navigation component
+  }
 }
 
 // small-mobile
@@ -132,24 +104,6 @@ nav {
   html,
   body {
     align-items: normal;
-  }
-
-  nav {
-    height: 18vw;
-
-    button {
-      width: 25vw;
-      gap: 0.8vw;
-
-      img {
-        width: 8vw;
-      }
-
-      p {
-        margin: 0.8vw;
-        font-size: 3.5vw;
-      }
-    }
   }
 }
 

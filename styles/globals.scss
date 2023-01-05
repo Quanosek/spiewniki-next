@@ -33,6 +33,9 @@ html,
 body {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-family: "Brutal Type Medium", "Gill Sans MT";
   color: var(--text-color);
   background-color: var(--background);

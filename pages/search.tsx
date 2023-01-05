@@ -20,19 +20,59 @@ export default function SearchPage() {
         <title>Wyszukiwanie | Śpiewniki</title>
       </Head>
 
-      <main>
-        <h1>Wyszukiwanie</h1>
-        <div className={styles.searchbar}>
-          <div className={styles.searchIcon}></div>
-          <input
-            ref={inputRef}
-            id="input"
-            placeholder="Wpisz tytuł lub numer pieśni"
-          />
+      <main className={styles.main}>
+        <div className={styles.searchHolder}>
+          <button
+            className={styles.arrow}
+            title="Powrót do strony głównej"
+            onClick={() => router.push("/")}
+          >
+            <img className="icon" alt="powrót" src="/icons/arrow.svg" />
+          </button>
+          <div className={styles.searchbar}>
+            <input ref={inputRef} id="input" placeholder="Wyszukaj..." />
+            <div className={styles.searchIcon}></div>
+          </div>
         </div>
 
-        <h2>{book}</h2>
+        <div id="filters" className={styles.filters}>
+          <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
+          <button onClick={() => router.push("/filters")}>
+            <p>{hymnBookNames(book)}</p>
+          </button>
+        </div>
+
+        <div id="results" className={styles.results}>
+          <p className={styles.noResults}>Brak wyników wyszukiwania.</p>
+          {/* <hr /> */}
+          {/* <p>216. Przyszła chwila dla Syonu</p> */}
+        </div>
       </main>
     </>
   );
+}
+
+function hymnBookNames(short: any) {
+  switch (short) {
+    case "all":
+      short = "Wszystkie śpiewniki";
+      break;
+    case "brzask":
+      short = "Pieśni Brzasku Tysiąclecia";
+      break;
+    case "cegielki":
+      short = "Uwielbiajmy Pana (Cegiełki)";
+      break;
+    case "nowe":
+      short = "Śpiewajmy Panu Pieśń Nową";
+      break;
+    case "epifania":
+      short = "Śpiewniczek Młodzieżowy Epifanii";
+      break;
+    case "inne":
+      short = "Inne pieśni";
+      break;
+  }
+
+  return short;
 }

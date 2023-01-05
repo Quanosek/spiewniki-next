@@ -83,6 +83,10 @@ button {
   background-color: var(--button);
   transition: 0.2s background-color ease-in-out;
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--button-hover);
+  }
 }
 
 ::placeholder {
@@ -90,23 +94,6 @@ button {
   opacity: 0.6;
   position: relative;
   bottom: 1px;
-}
-
-// desktop-only
-@media (min-width: 1024px) {
-  button:hover {
-    background-color: var(--button-hover);
-  }
-}
-
-// laptop
-@media (max-width: 1023px) {
-  button:hover {
-    background-color: var(--button);
-  }
-  button:focus {
-    background-color: var(--button-hover);
-  }
 }
 
 // tablet

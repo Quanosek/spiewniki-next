@@ -1,11 +1,30 @@
 import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import styles from "@styles/pages/index.module.scss";
-
-import Searchbar from "@components/searchbar";
+import Menu from "@components/menu";
 import Navbar from "@components/navbar";
 
 export default function IndexPage() {
+  const router = useRouter();
+  const { query } = router;
+
+  // showing & hiding menu
+  useEffect(() => {
+    const menu = document.getElementById("menu") as HTMLElement;
+    if (query.menu) {
+      document.getElementsByTagName("html")[0].style.overflowY = "hidden";
+      menu.style.visibility = "visible";
+      menu.style.opacity = "1";
+    } else {
+      document.getElementsByTagName("html")[0].style.overflowY = "";
+      menu.style.visibility = "";
+      menu.style.opacity = "";
+    }
+  });
+
   return (
     <>
       <Head>
@@ -21,19 +40,49 @@ export default function IndexPage() {
       </Head>
 
       <main>
+        <Menu />
+
         <div className={styles.title}>
           <h1>Śpiewniki</h1>
-          <button id="infoButton" title="Informacje o aplikacji">
+          <button
+            id="infoButton"
+            title="Informacje o aplikacji"
+            onClick={() => {
+              router.push(
+                {
+                  pathname: router.asPath,
+                  query: { menu: "info" },
+                },
+                undefined,
+                {
+                  scroll: false,
+                }
+              );
+            }}
+          >
             <img className="icon" alt="info" src="/icons/info.svg" />
           </button>
         </div>
 
-        <Searchbar />
+        <Link href="/search" className={styles.searchbar}>
+          <div className={styles.searchIcon}></div>
+          <input
+            id="input"
+            placeholder="Wpisz tytuł lub numer pieśni"
+            disabled
+          />
+        </Link>
+
         <div className={styles.content}>
           <div className={styles.hymnBooks}>
             <h2>Wybierz śpiewnik:</h2>
             <div className={styles.grid}>
-              <button id="brzask">
+              <button
+                id="brzask"
+                onClick={() => {
+                  router.push("/search" + "?book=" + "brzask");
+                }}
+              >
                 <img alt="okładka śpiewnika" src="/covers/brzask.jpg" />
                 <h3>
                   Pieśni Brzasku
@@ -41,7 +90,12 @@ export default function IndexPage() {
                   Tysiąclecia
                 </h3>
               </button>
-              <button id="ciegielki">
+              <button
+                id="ciegielki"
+                onClick={() => {
+                  router.push("/search" + "?book=" + "cegielki");
+                }}
+              >
                 <img alt="okładka śpiewnika" src="/covers/cegielki.jpg" />
                 <h3>
                   Uwielbiajmy Pana
@@ -49,7 +103,12 @@ export default function IndexPage() {
                   (Cegiełki)
                 </h3>
               </button>
-              <button id="nowe">
+              <button
+                id="nowe"
+                onClick={() => {
+                  router.push("/search" + "?book=" + "nowe");
+                }}
+              >
                 <img alt="okładka śpiewnika" src="/covers/nowe.jpg" />
                 <h3>
                   Śpiewajmy Panu
@@ -57,7 +116,12 @@ export default function IndexPage() {
                   Pieśń Nową
                 </h3>
               </button>
-              <button id="epifania">
+              <button
+                id="epifania"
+                onClick={() => {
+                  router.push("/search" + "?book=" + "epifania");
+                }}
+              >
                 <img alt="okładka śpiewnika" src="/covers/epifania.jpg" />
                 <h3>
                   Śpiewniczek
@@ -66,7 +130,13 @@ export default function IndexPage() {
                 </h3>
               </button>
             </div>
-            <button id="inne" className={styles.otherHymns}>
+            <button
+              id="inne"
+              className={styles.otherHymns}
+              onClick={() => {
+                router.push("/search" + "?book=" + "inne");
+              }}
+            >
               <h3>Inne pieśni</h3>
             </button>
           </div>
@@ -77,7 +147,21 @@ export default function IndexPage() {
               <img className="icon" alt="kostka" src="/icons/dice.svg" />
               Wylosuj pieśń
             </button>
-            <button id="favoriteButton">
+            <button
+              id="favoriteButton"
+              onClick={() => {
+                router.push(
+                  {
+                    pathname: router.asPath,
+                    query: { menu: "favorite" },
+                  },
+                  undefined,
+                  {
+                    scroll: false,
+                  }
+                );
+              }}
+            >
               <img
                 className="icon"
                 alt="gwiazdka"
@@ -85,11 +169,39 @@ export default function IndexPage() {
               />
               Lista ulubionych
             </button>
-            <button id="settingsButton">
+            <button
+              id="settingsButton"
+              onClick={() => {
+                router.push(
+                  {
+                    pathname: router.asPath,
+                    query: { menu: "settings" },
+                  },
+                  undefined,
+                  {
+                    scroll: false,
+                  }
+                );
+              }}
+            >
               <img className="icon" alt="trybik" src="/icons/settings.svg" />
               Ustawienia
             </button>
-            <button id="infoButton">
+            <button
+              id="infoButton"
+              onClick={() => {
+                router.push(
+                  {
+                    pathname: router.asPath,
+                    query: { menu: "info" },
+                  },
+                  undefined,
+                  {
+                    scroll: false,
+                  }
+                );
+              }}
+            >
               <img className="icon" alt="info" src="/icons/info.svg" />
               Informacje
             </button>

@@ -1,0 +1,31 @@
+import { useRouter } from "next/router";
+
+import Favorite from "./menu/favorite";
+import Info from "./menu/info";
+import Settings from "./menu/settings";
+
+import styles from "@styles/components/menu.module.scss";
+
+export default function Menu() {
+  const router = useRouter();
+  const { query } = router;
+
+  return (
+    <div id="menu" className={styles.holder}>
+      <div
+        className={styles.background}
+        onClick={() => {
+          // hide menu
+          router.replace("/", undefined, { shallow: true });
+        }}
+      ></div>
+      <div className={styles.menu}>
+        <div className={styles.content}>
+          {query.menu === "favorite" && <Favorite />}
+          {query.menu === "info" && <Info />}
+          {query.menu === "settings" && <Settings />}
+        </div>
+      </div>
+    </div>
+  );
+}

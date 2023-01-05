@@ -1,3 +1,5 @@
+@import "./custom.scss";
+
 .navigation {
   z-index: 10;
   position: fixed;
@@ -8,7 +10,6 @@
   justify-content: center;
   align-items: center;
   gap: 3%;
-
   color: #ffffff;
   background-color: #141414;
 
@@ -21,7 +22,7 @@
     background-color: transparent;
 
     &:focus {
-      background-color: #252525;
+      background-color: $button-hover;
     }
 
     img {
@@ -75,7 +76,7 @@
     font-size: 1.2rem;
     background-color: #202020;
     border: solid 2px #202020;
-    border-radius: 0.4rem;
+    border-radius: $rounded;
     cursor: pointer;
   }
 
@@ -87,7 +88,7 @@
     position: absolute;
     opacity: 0.65;
     border: none;
-    border-radius: 0.4rem;
+    border-radius: $rounded;
     background: url(/icons/search.svg) no-repeat center;
     background-size: contain;
     pointer-events: none;

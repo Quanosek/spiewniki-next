@@ -1,3 +1,5 @@
+@import "./custom.scss";
+
 .title {
   margin: 2.5rem 0 2rem;
   display: flex;
@@ -21,15 +23,16 @@
 }
 
 .content {
-  margin: 1.6rem 1% 0;
+  margin: 2.5rem 1% 0;
   display: flex;
   justify-content: center;
   gap: 1rem;
 
   hr {
+    margin-left: -0.5rem;
     width: 1px;
     opacity: 0.65;
-    background-color: #ededed;
+    background-color: $text-color;
     border-radius: 100%;
   }
 }
@@ -72,9 +75,9 @@
 .otherHymns {
   margin-top: 0.3rem;
   padding: 1rem;
-  max-width: 48rem;
+  width: 80%;
   text-align: center;
-  background-color: #171717;
+  background-color: $button;
 }
 
 .optionsMenu {
@@ -82,21 +85,23 @@
   flex-direction: column;
 
   h2 {
-    margin: 0 0 0.6rem 0.5rem;
+    margin: 0 0 0.8rem 0.5rem;
+    font-size: 100%;
   }
 
   button {
-    margin: 0.5rem;
+    margin: 0.35rem;
     padding: 0.8rem 1rem;
-    width: 14rem;
+    width: min(14rem, 20vw);
     flex-direction: row;
     justify-content: flex-start;
-    border-radius: 0.4rem;
-    gap: 1rem;
+    border-radius: $rounded;
+    gap: 8px;
+    font-size: 90%;
 
     img {
-      width: 24px;
-      height: 24px;
+      width: 20px;
+      height: 20px;
     }
   }
 }
@@ -109,6 +114,10 @@
 
   .content {
     margin-top: 3%;
+
+    hr {
+      margin-left: 0;
+    }
   }
 
   .hymnBooks {
@@ -128,9 +137,22 @@
   }
 
   .otherHymns {
-    padding: 2% 0;
-    width: 75%;
-    font-size: 1.7vw;
+    padding: 3% 0;
+    width: 78%;
+    font-size: 1.9vw;
+  }
+
+  .optionsMenu {
+    h2 {
+      margin-bottom: 0.6rem;
+      font-size: 105%;
+    }
+    button {
+      width: 14rem;
+      margin: 0.45rem;
+      gap: 12px;
+      font-size: 100%;
+    }
   }
 }
 
@@ -144,7 +166,7 @@
       display: flex;
 
       &:focus {
-        background-color: #252525;
+        background-color: $button-hover;
       }
     }
   }
@@ -175,9 +197,13 @@
   }
 
   .otherHymns {
-    padding: 6% 0;
-    width: 98%;
+    padding: min(5%, 1.5rem);
+    width: min(98%, 33rem);
     font-size: 3.6vw;
+
+    h3 {
+      font-size: min(3.5vw, 20px);
+    }
   }
 
   .optionsMenu {

@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import styles from "@styles/main.module.scss";
+import styles from "@styles/pages/index.module.scss";
 
 import Searchbar from "@components/searchbar";
 import Navbar from "@components/navbar";

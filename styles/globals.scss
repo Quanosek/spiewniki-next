@@ -1,5 +1,3 @@
-@import "./custom.scss";
-
 // scrollbar
 ::-webkit-scrollbar {
   width: 0.8rem;
@@ -10,10 +8,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $button-hover;
+  background: var(--button-hover);
   border-radius: 0.75vw;
   &:hover {
-    background: lighten($button-hover, 5%);
+    background: lighten(#202020, 6%);
   }
 }
 
@@ -36,8 +34,8 @@ body {
   width: 100%;
   height: 100%;
   font-family: "Brutal Type Medium", "Gill Sans MT";
-  color: $text-color;
-  background-color: $background;
+  color: var(--text-color);
+  background-color: var(--background);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -81,8 +79,8 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: $rounded;
-  background-color: $button;
+  border-radius: var(--rounded);
+  background-color: var(--button);
   transition: 0.2s background-color ease-in-out;
   cursor: pointer;
 }
@@ -97,17 +95,17 @@ button {
 // desktop-only
 @media (min-width: 1024px) {
   button:hover {
-    background-color: $button-hover;
+    background-color: var(--button-hover);
   }
 }
 
 // laptop
 @media (max-width: 1023px) {
   button:hover {
-    background-color: $button;
+    background-color: var(--button);
   }
   button:focus {
-    background-color: $button-hover;
+    background-color: var(--button-hover);
   }
 }
 

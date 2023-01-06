@@ -4,29 +4,28 @@ import { useRouter } from "next/router";
 import React, { useRef, useEffect } from "react";
 
 import styles from "@styles/pages/search.module.scss";
-import Searching from "@scripts/searching";
+import Search from "@scripts/search";
 
 export default function SearchPage() {
   const router = useRouter();
   const { query } = router;
-  const book = (query.book ? query.book : "all") as string;
+  const book = query.book as string;
 
   const inputRef: any = useRef(null);
 
   useEffect(() => {
-    // focus on searching all
-    if (book === "all") inputRef.current.focus();
+    if (!book) return; // ignore default empty
+    if (book === "W") inputRef.current.focus(); // focus on searching all
 
-    // searching input
+    // read searching input
     const input = document.getElementById("input") as HTMLInputElement;
-    const loader = document.getElementById("loader") as HTMLElement;
     const results = document.getElementById("results") as HTMLElement;
-    Searching(book, input.value, results);
+    Search(book, input.value, results);
 
     input.addEventListener("input", () => {
-      Searching(book, input.value, results);
+      Search(book, input.value, results);
     });
-  });
+  }, [book]);
 
   return (
     <>
@@ -35,6 +34,7 @@ export default function SearchPage() {
       </Head>
 
       <main className={styles.main}>
+        <h1 className={styles.title}>Wyszukiwanie</h1>
         <div className={styles.searchHolder}>
           <button
             className={styles.arrow}
@@ -47,11 +47,40 @@ export default function SearchPage() {
               src="/icons/arrow.svg"
               width={45}
               height={45}
+              priority
             />
           </button>
           <div className={styles.searchbar}>
-            <input ref={inputRef} id="input" placeholder="Wyszukaj..." />
-            <div className={styles.searchIcon}></div>
+            <input
+              ref={inputRef}
+              id="input"
+              placeholder="Wyszukaj..."
+              onFocus={(e) => e.target.select()}
+            />
+            <div id="searchIcon" className={styles.searchIcon}>
+              <Image
+                className={`${styles.searchIcon} icon`}
+                alt="szukaj"
+                src="/icons/search.svg"
+                width={10}
+                height={10}
+              />
+            </div>
+            <div
+              id="clearIcon"
+              className={styles.clearIcon}
+              onClick={() => {
+                clearButton(book);
+              }}
+            >
+              <Image
+                className="icon"
+                alt="szukaj"
+                src="/icons/close.svg"
+                width={10}
+                height={10}
+              />
+            </div>
           </div>
         </div>
 
@@ -69,25 +98,34 @@ export default function SearchPage() {
 
 function hymnBookNames(short: string) {
   switch (short) {
-    case "all":
+    case "W":
       short = "Wszystkie śpiewniki";
       break;
-    case "brzask":
+    case "PBT":
       short = "Pieśni Brzasku Tysiąclecia";
       break;
-    case "cegielki":
+    case "C":
       short = "Uwielbiajmy Pana (Cegiełki)";
       break;
-    case "nowe":
+    case "N":
       short = "Śpiewajmy Panu Pieśń Nową";
       break;
-    case "epifania":
+    case "E":
       short = "Śpiewniczek Młodzieżowy Epifanii";
       break;
-    case "inne":
+    case "I":
       short = "Inne pieśni";
       break;
   }
 
   return short;
+}
+
+function clearButton(book: string) {
+  const input = document.getElementById("input") as HTMLInputElement;
+  const results = document.getElementById("results") as HTMLInputElement;
+
+  input.value = "";
+  input.focus();
+  Search(book, input.value, results);
 }

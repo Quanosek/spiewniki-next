@@ -1,6 +1,8 @@
+import router from "next/router";
+
 import styles from "@styles/pages/search.module.scss";
 
-export default async function Searching(
+export default async function Search(
   book: string,
   input: string,
   results: HTMLElement
@@ -8,19 +10,29 @@ export default async function Searching(
   const map = await getJSON();
   const list = map.get(book);
 
-  results.innerHTML = "";
-  results.style.display = "flex";
+  results.innerHTML = ""; // reset HTML
+
+  const searchIcon = document.getElementById("searchIcon") as HTMLElement;
+  const clearIcon = document.getElementById("clearIcon") as HTMLElement;
 
   if (!input) {
+    // replace icons
+    searchIcon.style.display = "";
+    clearIcon.style.display = "";
+
     // show all hymns
-    await list.forEach((hymn: { title: string }, index: string) =>
-      listElements(results, hymn, index)
+    list.forEach((hymn: { title: string }, index: number) =>
+      listElements(book, results, hymn, index)
     );
   } else {
+    // replace icons
+    searchIcon.style.display = "none";
+    clearIcon.style.display = "flex";
+
     // show filtered
-    await list.forEach((hymn: { title: string }, index: string) => {
+    list.forEach((hymn: { title: string }, index: number) => {
       if (textFormat(hymn.title).search(textFormat(input)) != -1)
-        listElements(results, hymn, index);
+        listElements(book, results, hymn, index);
     });
 
     // no results
@@ -33,49 +45,54 @@ export default async function Searching(
     }
   }
 
-  // delete last <hr />
-  if (results.lastChild) results.lastChild.remove();
+  if (results.lastChild) results.lastChild.remove(); // delete last <hr />
+  results.style.display = "flex"; // show search results
 }
 
 // generate maps of hymnbooks
 async function getJSON() {
-  const brzask = await fetch(`/json/brzask.json`).then((response) => {
+  const PBT = await fetch(`/json/brzask.json`).then((response) => {
     return response.json();
   });
-  const cegielki = await fetch(`/json/cegielki.json`).then((response) => {
+  const C = await fetch(`/json/cegielki.json`).then((response) => {
     return response.json();
   });
-  const nowe = await fetch(`/json/nowe.json`).then((response) => {
+  const N = await fetch(`/json/nowe.json`).then((response) => {
     return response.json();
   });
-  const epifania = await fetch(`/json/epifania.json`).then((response) => {
+  const E = await fetch(`/json/epifania.json`).then((response) => {
     return response.json();
   });
-  const inne = await fetch(`/json/inne.json`).then((response) => {
+  const I = await fetch(`/json/inne.json`).then((response) => {
     return response.json();
   });
 
   let map = new Map();
-  map.set("all", brzask.concat(cegielki, nowe, epifania, inne));
-  map.set("brzask", brzask);
-  map.set("cegielki", cegielki);
-  map.set("nowe", nowe);
-  map.set("epifania", epifania);
-  map.set("inne", inne);
+  map.set("W", PBT.concat(C, N, E, I));
+  map.set("PBT", PBT);
+  map.set("C", C);
+  map.set("N", N);
+  map.set("E", E);
+  map.set("I", I);
   return map;
 }
 
 // create HTML elements
 function listElements(
+  book: string,
   results: HTMLElement,
   hymn: { title: string },
-  index: string
+  index: number
 ) {
   const param = document.createElement("p");
-  param.setAttribute("id", index);
+  param.setAttribute("id", index.toString());
   param.innerHTML = `${hymn.title}`;
   results.appendChild(param);
   results.appendChild(document.createElement("hr"));
+
+  param.addEventListener("click", async () => {
+    router.push(`/${book}/${hymn.title}`);
+  });
 }
 
 // formatting text

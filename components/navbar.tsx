@@ -1,48 +1,26 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
+import router from "next/router";
 
 import styles from "@styles/components/navbar.module.scss";
 
 export default function Navbar() {
-  const router = useRouter();
-
   return (
     <div className={styles.navigation}>
-      <button id="printButton" className="onlyOnHymn">
-        <Image
-          className="icon"
-          alt="drukarka"
-          src="/icons/printer.svg"
-          width={30}
-          height={30}
-        />
-        <p>Wydrukuj</p>
-      </button>
+      {NavButton(
+        "printButton",
+        { link: false, param: "onlyOnHymn" },
+        "drukarka",
+        "/icons/printer.svg",
+        "Wydrukuj"
+      )}
 
-      <button
-        id="settingsButton"
-        onClick={() => {
-          router.push(
-            {
-              pathname: router.asPath,
-              query: { menu: "settings" },
-            },
-            undefined,
-            {
-              scroll: false,
-            }
-          );
-        }}
-      >
-        <Image
-          className="icon"
-          alt="trybik"
-          src="/icons/settings.svg"
-          width={30}
-          height={30}
-        />
-        <p>Ustawienia</p>
-      </button>
+      {NavButton(
+        "settingsButton",
+        { link: true, param: "settings" },
+        "trybik",
+        "/icons/settings.svg",
+        "Ustawienia"
+      )}
 
       <button id="randomButton">
         <Image
@@ -55,41 +33,55 @@ export default function Navbar() {
         <p>Wylosuj</p>
       </button>
 
-      <button
-        id="favoriteButton"
-        onClick={() => {
+      {NavButton(
+        "favoriteButton",
+        { link: true, param: "favorite" },
+        "gwiazdka",
+        "/icons/star_empty.svg",
+        "Ulubione"
+      )}
+
+      {NavButton(
+        "shareButton",
+        { link: false, param: "onlyOnHymn" },
+        "link",
+        "/icons/link.svg",
+        "Udostępnij"
+      )}
+    </div>
+  );
+}
+
+function NavButton(
+  id: string,
+  condition: { link: boolean; param: string },
+  alt: string,
+  src: string,
+  name: string
+) {
+  const { link, param } = condition;
+
+  return (
+    <button
+      id={id}
+      className={link ? "" : param}
+      onClick={() => {
+        if (link) {
           router.push(
             {
               pathname: router.asPath,
-              query: { menu: "favorite" },
+              query: { menu: `${param}` },
             },
             undefined,
             {
               scroll: false,
             }
           );
-        }}
-      >
-        <Image
-          className="icon"
-          alt="gwiazdka"
-          src="/icons/star_empty.svg"
-          width={30}
-          height={30}
-        />
-        <p>Ulubione</p>
-      </button>
-
-      <button id="shareButton" className="onlyOnHymn">
-        <Image
-          className="icon"
-          alt="link"
-          src="/icons/link.svg"
-          width={30}
-          height={30}
-        />
-        <p>Udostępnij</p>
-      </button>
-    </div>
+        }
+      }}
+    >
+      <Image className="icon" alt={alt} src={src} width={30} height={30} />
+      <p>{name}</p>
+    </button>
   );
 }

@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import styles from "@styles/pages/index.module.scss";
@@ -12,17 +11,18 @@ export default function IndexPage() {
   const router = useRouter();
   const { query } = router;
 
-  // showing & hiding menu
   useEffect(() => {
-    const menu = document.getElementById("menu") as HTMLElement;
+    // showing & hiding menu
+    const menuDiv = document.getElementById("menu") as HTMLElement;
+
     if (query.menu) {
       document.getElementsByTagName("html")[0].style.overflowY = "hidden";
-      menu.style.visibility = "visible";
-      menu.style.opacity = "1";
+      menuDiv.style.visibility = "visible";
+      menuDiv.style.opacity = "1";
     } else {
       document.getElementsByTagName("html")[0].style.overflowY = "";
-      menu.style.visibility = "";
-      menu.style.opacity = "";
+      menuDiv.style.visibility = "";
+      menuDiv.style.opacity = "";
     }
   });
 
@@ -71,109 +71,91 @@ export default function IndexPage() {
           </button>
         </div>
 
-        <Link href="/search" className={styles.searchbar}>
+        <div
+          className={styles.searchbar}
+          onClick={() => {
+            router.push({
+              pathname: "/search",
+              query: { book: "W" },
+            });
+          }}
+        >
           <div className={styles.searchIcon}></div>
           <input
             id="input"
             placeholder="Wpisz tytuł lub numer pieśni"
             disabled
           />
-        </Link>
+        </div>
 
         <div className={styles.content}>
           <div className={styles.hymnBooks}>
             <h2>Wybierz śpiewnik:</h2>
             <div className={styles.grid}>
-              <button
-                id="brzask"
-                onClick={() => {
-                  router.push("/search" + "?book=" + "brzask");
-                }}
-              >
-                <Image
-                  alt="okładka śpiewnika"
-                  src="/covers/brzask.jpg"
-                  width={183}
-                  height={258}
-                  priority
-                />
-                <h3>
+              {HymnbookButton(
+                "brzask",
+                "PBT",
+                "/covers/brzask.jpg",
+                <>
                   Pieśni&nbsp;Brzasku
                   <br />
                   Tysiąclecia
-                </h3>
-              </button>
-              <button
-                id="ciegielki"
-                onClick={() => {
-                  router.push("/search" + "?book=" + "cegielki");
-                }}
-              >
-                <Image
-                  alt="okładka śpiewnika"
-                  src="/covers/cegielki.jpg"
-                  width={183}
-                  height={258}
-                  priority
-                />
-                <h3>
+                </>
+              )}
+
+              {HymnbookButton(
+                "ciegielki",
+                "C",
+                "/covers/cegielki.jpg",
+                <>
                   Uwielbiajmy&nbsp;Pana
                   <br />
                   (Cegiełki)
-                </h3>
-              </button>
-              <button
-                id="nowe"
-                onClick={() => {
-                  router.push("/search" + "?book=" + "nowe");
-                }}
-              >
-                <Image
-                  alt="okładka śpiewnika"
-                  src="/covers/nowe.jpg"
-                  width={183}
-                  height={258}
-                  priority
-                />
-                <h3>
+                </>
+              )}
+
+              {HymnbookButton(
+                "nowe",
+                "N",
+                "/covers/nowe.jpg",
+                <>
                   Śpiewajmy&nbsp;Panu
                   <br />
                   Pieśń&nbsp;Nową
-                </h3>
-              </button>
-              <button
-                id="epifania"
-                onClick={() => {
-                  router.push("/search" + "?book=" + "epifania");
-                }}
-              >
-                <Image
-                  alt="okładka śpiewnika"
-                  src="/covers/epifania.jpg"
-                  width={183}
-                  height={258}
-                  priority
-                />
-                <h3>
+                </>
+              )}
+
+              {HymnbookButton(
+                "epifania",
+                "E",
+                "/covers/epifania.jpg",
+                <>
                   Śpiewniczek
                   <br />
                   Młodzieżowy&nbsp;Epifanii
-                </h3>
-              </button>
+                </>
+              )}
             </div>
+
             <button
               id="inne"
               className={styles.otherHymns}
               onClick={() => {
-                router.push("/search" + "?book=" + "inne");
+                router.push({
+                  pathname: "/search",
+                  query: { book: "I" },
+                });
               }}
             >
               <h3>Inne pieśni</h3>
             </button>
           </div>
+
           <hr />
+
           <div className={styles.optionsMenu}>
             <h2>Dostępne opcje:</h2>
+
             <button id="randomButton">
               <Image
                 className="icon"
@@ -184,83 +166,87 @@ export default function IndexPage() {
               />
               Wylosuj pieśń
             </button>
-            <button
-              id="favoriteButton"
-              onClick={() => {
-                router.push(
-                  {
-                    pathname: router.asPath,
-                    query: { menu: "favorite" },
-                  },
-                  undefined,
-                  {
-                    scroll: false,
-                  }
-                );
-              }}
-            >
-              <Image
-                className="icon"
-                alt="gwiazdka"
-                src="/icons/star_empty.svg"
-                width={10}
-                height={10}
-              />
-              Lista ulubionych
-            </button>
-            <button
-              id="settingsButton"
-              onClick={() => {
-                router.push(
-                  {
-                    pathname: router.asPath,
-                    query: { menu: "settings" },
-                  },
-                  undefined,
-                  {
-                    scroll: false,
-                  }
-                );
-              }}
-            >
-              <Image
-                className="icon"
-                alt="trybik"
-                src="/icons/settings.svg"
-                width={10}
-                height={10}
-              />
-              Ustawienia
-            </button>
-            <button
-              id="infoButton"
-              onClick={() => {
-                router.push(
-                  {
-                    pathname: router.asPath,
-                    query: { menu: "info" },
-                  },
-                  undefined,
-                  {
-                    scroll: false,
-                  }
-                );
-              }}
-            >
-              <Image
-                className="icon"
-                alt="info"
-                src="/icons/info.svg"
-                width={10}
-                height={10}
-              />
-              Informacje
-            </button>
+
+            {OptionsButton(
+              "favoriteButton",
+              "favorite",
+              "gwiazdka",
+              "/icons/star_empty.svg",
+              "Lista ulubionych"
+            )}
+
+            {OptionsButton(
+              "settingsButton",
+              "settings",
+              "trybik",
+              "/icons/settings.svg",
+              "Ustawienia"
+            )}
+
+            {OptionsButton(
+              "infoButton",
+              "info",
+              "info",
+              "/icons/info.svg",
+              "Informacje"
+            )}
           </div>
         </div>
       </main>
 
       <Navbar />
     </>
+  );
+}
+
+function HymnbookButton(id: string, shortcut: string, src: string, name: any) {
+  return (
+    <button
+      id={id}
+      onClick={() => {
+        router.push({
+          pathname: "/search",
+          query: { book: `${shortcut}` },
+        });
+      }}
+    >
+      <Image
+        alt="okładka śpiewnika"
+        src={src}
+        width={183}
+        height={258}
+        priority
+      />
+      <h3>{name}</h3>
+    </button>
+  );
+}
+
+function OptionsButton(
+  id: string,
+  link: string,
+  alt: string,
+  src: string,
+  name: string
+) {
+  return (
+    <button
+      id={id}
+      onClick={() => {
+        router.push(
+          {
+            pathname: router.asPath,
+            query: { menu: `${link}` },
+          },
+          undefined,
+          {
+            scroll: false,
+          }
+        );
+      }}
+    >
+      <Image className="icon" alt={alt} src={src} width={10} height={10} />
+      <p>{name}</p>
+    </button>
   );
 }

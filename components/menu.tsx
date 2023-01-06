@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 
+import styles from "@styles/components/menu.module.scss";
+
 import Favorite from "./menu/favorite";
 import Info from "./menu/info";
 import Settings from "./menu/settings";
-
-import styles from "@styles/components/menu.module.scss";
 
 export default function Menu() {
   const router = useRouter();
@@ -21,6 +21,7 @@ export default function Menu() {
       ></div>
       <div className={styles.menu}>
         <div className={styles.content}>
+          {/* select menu */}
           {query.menu === "favorite" && <Favorite />}
           {query.menu === "info" && <Info />}
           {query.menu === "settings" && <Settings />}

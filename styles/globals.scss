@@ -20,6 +20,7 @@
   font-family: "Gill Sans MT";
   src: url("/fonts/Gill\ Sans\ MT.ttf") format("truetype");
   size-adjust: 110%;
+  font-display: swap;
 }
 
 @font-face {
@@ -27,6 +28,11 @@
   src: url("/fonts/Brutal\ Type\ Medium.ttf") format("truetype");
   unicode-range: U+30-39;
   size-adjust: 106%;
+  font-display: swap;
+}
+
+html {
+  overflow-y: scroll;
 }
 
 html,
@@ -70,11 +76,14 @@ p {
 
 img {
   max-width: none;
+  width: 100%;
+  height: 100%;
   max-block-size: none;
 }
 
 .icon {
   filter: invert(1);
+  user-select: none;
 }
 
 button {

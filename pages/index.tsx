@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -60,7 +61,13 @@ export default function IndexPage() {
               );
             }}
           >
-            <img className="icon" alt="info" src="/icons/info.svg" />
+            <Image
+              className="icon"
+              alt="info"
+              src="/icons/info.svg"
+              width={25}
+              height={25}
+            />
           </button>
         </div>
 
@@ -83,9 +90,15 @@ export default function IndexPage() {
                   router.push("/search" + "?book=" + "brzask");
                 }}
               >
-                <img alt="okładka śpiewnika" src="/covers/brzask.jpg" />
+                <Image
+                  alt="okładka śpiewnika"
+                  src="/covers/brzask.jpg"
+                  width={183}
+                  height={258}
+                  priority
+                />
                 <h3>
-                  Pieśni Brzasku
+                  Pieśni&nbsp;Brzasku
                   <br />
                   Tysiąclecia
                 </h3>
@@ -96,9 +109,15 @@ export default function IndexPage() {
                   router.push("/search" + "?book=" + "cegielki");
                 }}
               >
-                <img alt="okładka śpiewnika" src="/covers/cegielki.jpg" />
+                <Image
+                  alt="okładka śpiewnika"
+                  src="/covers/cegielki.jpg"
+                  width={183}
+                  height={258}
+                  priority
+                />
                 <h3>
-                  Uwielbiajmy Pana
+                  Uwielbiajmy&nbsp;Pana
                   <br />
                   (Cegiełki)
                 </h3>
@@ -109,11 +128,17 @@ export default function IndexPage() {
                   router.push("/search" + "?book=" + "nowe");
                 }}
               >
-                <img alt="okładka śpiewnika" src="/covers/nowe.jpg" />
+                <Image
+                  alt="okładka śpiewnika"
+                  src="/covers/nowe.jpg"
+                  width={183}
+                  height={258}
+                  priority
+                />
                 <h3>
-                  Śpiewajmy Panu
+                  Śpiewajmy&nbsp;Panu
                   <br />
-                  Pieśń Nową
+                  Pieśń&nbsp;Nową
                 </h3>
               </button>
               <button
@@ -122,11 +147,17 @@ export default function IndexPage() {
                   router.push("/search" + "?book=" + "epifania");
                 }}
               >
-                <img alt="okładka śpiewnika" src="/covers/epifania.jpg" />
+                <Image
+                  alt="okładka śpiewnika"
+                  src="/covers/epifania.jpg"
+                  width={183}
+                  height={258}
+                  priority
+                />
                 <h3>
                   Śpiewniczek
                   <br />
-                  Młodzieżowy Epifanii
+                  Młodzieżowy&nbsp;Epifanii
                 </h3>
               </button>
             </div>
@@ -144,7 +175,13 @@ export default function IndexPage() {
           <div className={styles.optionsMenu}>
             <h2>Dostępne opcje:</h2>
             <button id="randomButton">
-              <img className="icon" alt="kostka" src="/icons/dice.svg" />
+              <Image
+                className="icon"
+                alt="kostka"
+                src="/icons/dice.svg"
+                width={10}
+                height={10}
+              />
               Wylosuj pieśń
             </button>
             <button
@@ -162,10 +199,12 @@ export default function IndexPage() {
                 );
               }}
             >
-              <img
+              <Image
                 className="icon"
                 alt="gwiazdka"
                 src="/icons/star_empty.svg"
+                width={10}
+                height={10}
               />
               Lista ulubionych
             </button>
@@ -184,7 +223,13 @@ export default function IndexPage() {
                 );
               }}
             >
-              <img className="icon" alt="trybik" src="/icons/settings.svg" />
+              <Image
+                className="icon"
+                alt="trybik"
+                src="/icons/settings.svg"
+                width={10}
+                height={10}
+              />
               Ustawienia
             </button>
             <button
@@ -202,7 +247,13 @@ export default function IndexPage() {
                 );
               }}
             >
-              <img className="icon" alt="info" src="/icons/info.svg" />
+              <Image
+                className="icon"
+                alt="info"
+                src="/icons/info.svg"
+                width={10}
+                height={10}
+              />
               Informacje
             </button>
           </div>

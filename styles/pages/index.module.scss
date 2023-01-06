@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   font-size: 1.25rem;
+  user-select: none;
 
   // infoButton on mobile
   button {
@@ -90,19 +91,14 @@
 
   button {
     margin: 0.5rem;
-    padding: 5px;
+    padding: 1.5rem 1rem;
     width: 22%;
     max-width: 12rem;
-    aspect-ratio: 9/13;
     text-align: center;
     gap: 5%;
 
     h3 {
       font-size: 0.9rem;
-    }
-
-    img {
-      width: 73%;
     }
   }
 }
@@ -160,11 +156,10 @@
   }
 
   .grid button {
+    padding: 2rem 1.8rem;
     margin: 1%;
     width: min(48%, 16.5rem);
     max-width: none;
-
-    aspect-ratio: 9/12;
 
     h3 {
       font-size: min(2vw, 1.1rem);
@@ -223,6 +218,7 @@
   }
 
   .grid button {
+    padding: 1.5rem 1.8rem;
     width: 48%;
     max-width: 16rem;
 
@@ -292,11 +288,6 @@
   .grid button {
     width: 96%;
     max-width: none;
-    aspect-ratio: 9/10;
-
-    img {
-      width: 60%;
-    }
 
     h3 {
       font-size: 5.5vw;
@@ -307,5 +298,9 @@
     padding: 8% 0;
     width: 96%;
     font-size: 5.6vw;
+
+    h3 {
+      font-size: 5.6vw;
+    }
   }
 }

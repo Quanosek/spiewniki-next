@@ -1,3 +1,5 @@
+import styles from "@styles/pages/filters.module.scss";
+
 export default function FiltersPage() {
   return (
     <>

@@ -23,6 +23,7 @@ export default function SearchPage() {
     Search(book, input.value, results);
 
     input.addEventListener("input", () => {
+      console.log(input.value);
       Search(book, input.value, results);
     });
   }, [book]);
@@ -54,7 +55,7 @@ export default function SearchPage() {
             <input
               ref={inputRef}
               id="input"
-              placeholder="Wyszukaj..."
+              placeholder="Wpisz tytuł lub numer pieśni"
               onFocus={(e) => e.target.select()}
             />
             <div id="searchIcon" className={styles.searchIcon}>

@@ -161,10 +161,10 @@
   }
 
   .grid button {
-    padding: 2rem 1.8rem;
     margin: 1%;
-    width: min(48%, 16.5rem);
+    padding: 2rem 1.8rem;
     max-width: none;
+    width: min(48%, 16.5rem);
 
     h3 {
       font-size: min(2vw, 1.1rem);
@@ -223,9 +223,9 @@
   }
 
   .grid button {
-    padding: 1.5rem 1.8rem;
-    width: 48%;
+    padding: min(6vw, 2rem) 1.8rem;
     max-width: 16rem;
+    width: 48%;
 
     h3 {
       font-size: min(3.2vw, 18px);
@@ -291,6 +291,7 @@
   }
 
   .grid button {
+    padding: 12vw 16vw;
     width: 96%;
     max-width: none;
 

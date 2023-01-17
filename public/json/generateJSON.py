@@ -34,13 +34,13 @@ def generuj(main_url, raw_url, name, regex):
             }
             hymns.append(x)
 
-    def myFunc(e):
+    def getValues(e):
         pos = regex.search(e['title']).start()
         number = int(e['title'][:pos])
         return number
 
     if regex:
-        hymns = sorted(hymns, key=myFunc)
+        hymns = sorted(hymns, key=getValues)
 
     hymns = json.dumps(hymns)
     with open(name + ".json", "w") as outfile:
@@ -49,22 +49,22 @@ def generuj(main_url, raw_url, name, regex):
 
 main_url = "https://github.com/Quanosek/Piesni-OpenSong/tree/main/Pie%C5%9Bni%20Brzasku%20Tysi%C4%85clecia"
 raw_url = "https://raw.githubusercontent.com/Quanosek/Piesni-OpenSong/main/Pie%C5%9Bni%20Brzasku%20Tysi%C4%85clecia"
-generuj(main_url, raw_url, "brzask", re.compile(r'([.]|[a.])'))
+generuj(main_url, raw_url, "PBT", re.compile(r'([.]|[a.])'))
 
 main_url = "https://github.com/Quanosek/Piesni-OpenSong/tree/main/Uwielbiajmy%20Pana%20(Cegie%C5%82ki)"
 raw_url = "https://raw.githubusercontent.com/Quanosek/Piesni-OpenSong/main/Uwielbiajmy%20Pana%20(Cegie%C5%82ki)"
-generuj(main_url, raw_url, "cegielki", re.compile(r'([C.]|[aC.])'))
+generuj(main_url, raw_url, "UP", re.compile(r'([C.]|[aC.])'))
 
 main_url = "https://github.com/Quanosek/Piesni-OpenSong/tree/main/%C5%9Apiewajcie%20Panu%20Pie%C5%9B%C5%84%20Now%C4%85%20(Nowe%20Pie%C5%9Bni)"
 raw_url = "https://raw.githubusercontent.com/Quanosek/Piesni-OpenSong/main/%C5%9Apiewajcie%20Panu%20Pie%C5%9B%C5%84%20Now%C4%85%20(Nowe%20Pie%C5%9Bni)"
-generuj(main_url, raw_url, "nowe", re.compile(r'([N.]|[aN.])'))
+generuj(main_url, raw_url, "N", re.compile(r'([N.]|[aN.])'))
 
 main_url = "https://github.com/Quanosek/Piesni-OpenSong/tree/main/%C5%9Apiewniczek%20M%C5%82odzie%C5%BCowy%20Epifanii"
 raw_url = "https://raw.githubusercontent.com/Quanosek/Piesni-OpenSong/main/%C5%9Apiewniczek%20M%C5%82odzie%C5%BCowy%20Epifanii"
-generuj(main_url, raw_url, "epifania", re.compile(r'([E.]|[aE.])'))
+generuj(main_url, raw_url, "E", re.compile(r'([E.]|[aE.])'))
 
 main_url = "https://github.com/Quanosek/Piesni-OpenSong/tree/main/Inne%20pie%C5%9Bni"
 raw_url = "https://raw.githubusercontent.com/Quanosek/Piesni-OpenSong/main/Inne%20pie%C5%9Bni"
-generuj(main_url, raw_url, "inne", NULL)
+generuj(main_url, raw_url, "I", NULL)
 
 print("Gotowe.")

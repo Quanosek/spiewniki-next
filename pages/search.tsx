@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useRef, useEffect } from "react";
 
 import styles from "@styles/pages/search.module.scss";
-import Search from "@scripts/search";
+import { Search, hymnBookNames } from "@scripts/search";
 
 export default function SearchPage() {
   const router = useRouter();
@@ -95,31 +95,6 @@ export default function SearchPage() {
       </main>
     </>
   );
-}
-
-function hymnBookNames(short: string) {
-  switch (short) {
-    case "W":
-      short = "Wszystkie śpiewniki";
-      break;
-    case "PBT":
-      short = "Pieśni Brzasku Tysiąclecia";
-      break;
-    case "C":
-      short = "Uwielbiajmy Pana (Cegiełki)";
-      break;
-    case "N":
-      short = "Śpiewajmy Panu Pieśń Nową";
-      break;
-    case "E":
-      short = "Śpiewniczek Młodzieżowy Epifanii";
-      break;
-    case "I":
-      short = "Inne pieśni";
-      break;
-  }
-
-  return short;
 }
 
 function clearButton(book: string) {

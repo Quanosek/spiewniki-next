@@ -93,7 +93,6 @@ export default function IndexPage() {
             <h2>Wybierz śpiewnik:</h2>
             <div className={styles.grid}>
               {HymnbookButton(
-                "brzask",
                 "PBT",
                 "/covers/brzask.jpg",
                 <>
@@ -104,8 +103,7 @@ export default function IndexPage() {
               )}
 
               {HymnbookButton(
-                "ciegielki",
-                "C",
+                "UP",
                 "/covers/cegielki.jpg",
                 <>
                   Uwielbiajmy&nbsp;Pana
@@ -115,18 +113,16 @@ export default function IndexPage() {
               )}
 
               {HymnbookButton(
-                "nowe",
                 "N",
                 "/covers/nowe.jpg",
                 <>
-                  Śpiewajmy&nbsp;Panu
+                  Śpiewajcie&nbsp;Panu
                   <br />
                   Pieśń&nbsp;Nową
                 </>
               )}
 
               {HymnbookButton(
-                "epifania",
                 "E",
                 "/covers/epifania.jpg",
                 <>
@@ -199,10 +195,9 @@ export default function IndexPage() {
   );
 }
 
-function HymnbookButton(id: string, shortcut: string, src: string, name: any) {
+function HymnbookButton(shortcut: string, src: string, name: any) {
   return (
     <button
-      id={id}
       onClick={() => {
         router.push({
           pathname: "/search",

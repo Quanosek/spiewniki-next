@@ -2,7 +2,7 @@ import router from "next/router";
 
 import styles from "@styles/pages/search.module.scss";
 
-export default async function Search(
+export async function Search(
   book: string,
   input: string,
   results: HTMLElement
@@ -51,30 +51,21 @@ export default async function Search(
 
 // generate maps of hymnbooks
 async function getJSON() {
-  const PBT = await fetch(`/json/brzask.json`).then((response) => {
-    return response.json();
-  });
-  const C = await fetch(`/json/cegielki.json`).then((response) => {
-    return response.json();
-  });
-  const N = await fetch(`/json/nowe.json`).then((response) => {
-    return response.json();
-  });
-  const E = await fetch(`/json/epifania.json`).then((response) => {
-    return response.json();
-  });
-  const I = await fetch(`/json/inne.json`).then((response) => {
-    return response.json();
-  });
+  const PBT = await fetch(`/json/PBT.json`).then((response) => response.json());
+  const UP = await fetch(`/json/UP.json`).then((response) => response.json());
+  const N = await fetch(`/json/N.json`).then((response) => response.json());
+  const E = await fetch(`/json/E.json`).then((response) => response.json());
+  const I = await fetch(`/json/I.json`).then((response) => response.json());
 
-  let map = new Map();
-  map.set("W", PBT.concat(C, N, E, I));
-  map.set("PBT", PBT);
-  map.set("C", C);
-  map.set("N", N);
-  map.set("E", E);
-  map.set("I", I);
-  return map;
+  let allHymns = new Map();
+  allHymns.set("W", PBT.concat(UP, N, E, I));
+  allHymns.set("PBT", PBT);
+  allHymns.set("UP", UP);
+  allHymns.set("N", N);
+  allHymns.set("E", E);
+  allHymns.set("I", I);
+
+  return allHymns;
 }
 
 // create HTML elements
@@ -110,3 +101,31 @@ function textFormat(text: string) {
     .replaceAll("ź", "z")
     .replace(/[^\w\s]/gi, "");
 }
+
+// friendly names
+export function hymnBookNames(short: string) {
+  switch (short) {
+    case "W":
+      short = "Wszystkie śpiewniki";
+      break;
+    case "PBT":
+      short = "Pieśni Brzasku Tysiąclecia";
+      break;
+    case "UP":
+      short = "Uwielbiajmy Pana (Cegiełki)";
+      break;
+    case "N":
+      short = "Śpiewajcie Panu Pieśń Nową";
+      break;
+    case "E":
+      short = "Śpiewniczek Młodzieżowy Epifanii";
+      break;
+    case "I":
+      short = "Inne pieśni";
+      break;
+  }
+
+  return short;
+}
+
+export default null;

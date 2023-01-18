@@ -1,6 +1,4 @@
 import Head from "next/head";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 
 import styles from "@styles/pages/hymn.module.scss";
 
@@ -22,13 +20,10 @@ export default function HymnPage({ hymnbook, title }: any) {
 export async function getServerSideProps(context: {
   params: { hymnbook: any; title: any };
 }) {
-  const contacts = await prisma.contact.findMany();
-
   const { hymnbook, title } = context.params;
 
   return {
     props: {
-      initialContacts: contacts,
       hymnbook,
       title,
     },

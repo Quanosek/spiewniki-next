@@ -12,7 +12,6 @@ export default function IndexPage() {
   const { query } = router;
 
   useEffect(() => {
-    // showing & hiding menu
     const menuDiv = document.getElementById("menu") as HTMLElement;
 
     if (query.menu) {
@@ -76,7 +75,7 @@ export default function IndexPage() {
           onClick={() => {
             router.push({
               pathname: "/search",
-              query: { book: "W" },
+              query: { book: "all" },
             });
           }}
         >

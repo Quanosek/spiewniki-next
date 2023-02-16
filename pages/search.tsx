@@ -1,32 +1,31 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import styles from "@styles/pages/search.module.scss";
-import { Search, hymnBookNames } from "@scripts/search";
+
+import Search from "@scripts/search";
+import hymnBookNames from "@/scripts/bookNames";
 
 export default function SearchPage() {
   const router = useRouter();
   const { query } = router;
   const book = query.book as string;
 
-  const inputRef: any = useRef(null);
-
   useEffect(() => {
-    if (!book) return; // ignore default empty
-    if (book === "W") inputRef.current.focus(); // focus on searching all
+    if (!router.isReady) return;
+    const { query } = router;
+    const book = query.book as string;
 
-    // read searching input
     const input = document.getElementById("input") as HTMLInputElement;
     const results = document.getElementById("results") as HTMLElement;
     Search(book, input.value, results);
 
     input.addEventListener("input", () => {
-      console.log(input.value);
       Search(book, input.value, results);
     });
-  }, [book]);
+  }, [router]);
 
   return (
     <>
@@ -53,7 +52,6 @@ export default function SearchPage() {
           </button>
           <div className={styles.searchbar}>
             <input
-              ref={inputRef}
               id="input"
               placeholder="Wpisz tytuł lub numer pieśni"
               onFocus={(e) => e.target.select()}
@@ -88,7 +86,7 @@ export default function SearchPage() {
         <div id="filters" className={styles.filters}>
           <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
           <button onClick={() => router.push("/filters")}>
-            <p>{hymnBookNames(book)}</p>
+            <p>{hymnBookNames(book as string)}</p>
           </button>
         </div>
         <div id="results" className={styles.results}></div>

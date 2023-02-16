@@ -1,6 +1,3 @@
-# private keys
-.env
-
 # dependencies
 /node_modules
 /.pnp

@@ -48,10 +48,10 @@ export default function Document() {
               <a href="https://github.com/Krist0f0l0s">
                 Krzysztofa Olszewskiego
               </a>{" "}
-              i <a href="https://github.com/Quanosek">Jakuba Kłało</a> z pasją.
+              i <a href="https://github.com/Quanosek">Jakuba Kłało</a>.
             </p>
             <p>
-              Wszelkie prawa zastrzeżone &#169; 2022-2023 │ domena{" "}
+              Wszelkie prawa zastrzeżone &#169; 2023 │ domena{" "}
               <a href="https://www.klalo.pl">klalo.pl</a>
             </p>
           </div>

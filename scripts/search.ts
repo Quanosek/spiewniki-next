@@ -1,41 +1,43 @@
 import router from "next/router";
+import axios from "axios";
 
 import styles from "@styles/pages/search.module.scss";
 
-export async function Search(
+export default async function Search(
   book: string,
   input: string,
   results: HTMLElement
 ) {
-  const map = await getJSON();
-  const list = map.get(book);
+  let path, list;
+  if (book === "all") path = `/api/xml/`;
+  else path = `/api/xml?book=${book}/`;
 
-  results.innerHTML = ""; // reset HTML
+  list = await axios.get(path).then(async ({ data }) => {
+    return data.results;
+  });
+
+  results.innerHTML = "";
 
   const searchIcon = document.getElementById("searchIcon") as HTMLElement;
   const clearIcon = document.getElementById("clearIcon") as HTMLElement;
 
   if (!input) {
-    // replace icons
     searchIcon.style.display = "";
     clearIcon.style.display = "";
 
-    // show all hymns
-    list.forEach((hymn: { title: string }, index: number) =>
-      listElements(book, results, hymn, index)
-    );
+    list.forEach((hymn: any) => listElements(results, hymn));
   } else {
-    // replace icons
     searchIcon.style.display = "none";
     clearIcon.style.display = "flex";
 
-    // show filtered
-    list.forEach((hymn: { title: string }, index: number) => {
-      if (textFormat(hymn.title).search(textFormat(input)) != -1)
-        listElements(book, results, hymn, index);
+    list.forEach((hymn: any) => {
+      if (
+        textFormat(hymn.title).search(textFormat(input)) > 0 ||
+        textFormat(hymn.lyrics).search(textFormat(input)) > 0
+      )
+        listElements(results, hymn);
     });
 
-    // no results
     if (!results.innerHTML) {
       const param = document.createElement("p");
       param.setAttribute("class", `${styles.noResults}`);
@@ -45,48 +47,24 @@ export async function Search(
     }
   }
 
-  if (results.lastChild) results.lastChild.remove(); // delete last <hr />
-  results.style.display = "flex"; // show search results
+  if (results.lastChild) results.lastChild.remove();
+  results.style.display = "flex";
 }
 
-// generate maps of hymnbooks
-async function getJSON() {
-  const PBT = await fetch(`/json/PBT.json`).then((response) => response.json());
-  const UP = await fetch(`/json/UP.json`).then((response) => response.json());
-  const N = await fetch(`/json/N.json`).then((response) => response.json());
-  const E = await fetch(`/json/E.json`).then((response) => response.json());
-  const I = await fetch(`/json/I.json`).then((response) => response.json());
-
-  let allHymns = new Map();
-  allHymns.set("W", PBT.concat(UP, N, E, I));
-  allHymns.set("PBT", PBT);
-  allHymns.set("UP", UP);
-  allHymns.set("N", N);
-  allHymns.set("E", E);
-  allHymns.set("I", I);
-
-  return allHymns;
-}
-
-// create HTML elements
 function listElements(
-  book: string,
   results: HTMLElement,
-  hymn: { title: string },
-  index: number
+  hymn: { book: string; title: string }
 ) {
   const param = document.createElement("p");
-  param.setAttribute("id", index.toString());
   param.innerHTML = `${hymn.title}`;
   results.appendChild(param);
   results.appendChild(document.createElement("hr"));
 
   param.addEventListener("click", async () => {
-    router.push(`/${book}/${hymn.title}`);
+    router.push(`/hymn?book=${hymn.book}&title=${hymn.title}/`);
   });
 }
 
-// formatting text
 function textFormat(text: string) {
   return text
     .toLowerCase()
@@ -101,31 +79,3 @@ function textFormat(text: string) {
     .replaceAll("ź", "z")
     .replace(/[^\w\s]/gi, "");
 }
-
-// friendly names
-export function hymnBookNames(short: string) {
-  switch (short) {
-    case "W":
-      short = "Wszystkie śpiewniki";
-      break;
-    case "PBT":
-      short = "Pieśni Brzasku Tysiąclecia";
-      break;
-    case "UP":
-      short = "Uwielbiajmy Pana (Cegiełki)";
-      break;
-    case "N":
-      short = "Śpiewajcie Panu Pieśń Nową";
-      break;
-    case "E":
-      short = "Śpiewniczek Młodzieżowy Epifanii";
-      break;
-    case "I":
-      short = "Inne pieśni";
-      break;
-  }
-
-  return short;
-}
-
-export default null;

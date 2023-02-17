@@ -3,10 +3,12 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
+import axios from "axios";
+
 import styles from "@styles/pages/search.module.scss";
 
-import Search from "@scripts/search";
-import hymnBookNames from "@/scripts/bookNames";
+import Search from "@/scripts/Search";
+import BookNames from "@/scripts/BookNames";
 
 export default function SearchPage() {
   const router = useRouter();
@@ -15,8 +17,6 @@ export default function SearchPage() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { query } = router;
-    const book = query.book as string;
 
     const input = document.getElementById("input") as HTMLInputElement;
     const results = document.getElementById("results") as HTMLElement;
@@ -25,7 +25,7 @@ export default function SearchPage() {
     input.addEventListener("input", () => {
       Search(book, input.value, results);
     });
-  }, [router]);
+  }, [router.isReady]);
 
   return (
     <>
@@ -86,7 +86,7 @@ export default function SearchPage() {
         <div id="filters" className={styles.filters}>
           <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
           <button onClick={() => router.push("/filters")}>
-            <p>{hymnBookNames(book as string)}</p>
+            <p>{BookNames(book)}</p>
           </button>
         </div>
         <div id="results" className={styles.results}></div>
@@ -101,5 +101,5 @@ function clearButton(book: string) {
 
   input.value = "";
   input.focus();
-  Search(book, input.value, results);
+  // Search(state, input.value, results);
 }

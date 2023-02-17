@@ -1,21 +1,25 @@
 import fs from "fs";
 import path from "path";
-
 import { parseString } from "xml2js";
 
-export default function Database(req: any, res: any) {
-  if (!req.query.book) ListAll(res);
+import { NextApiRequest, NextApiResponse } from "next";
+
+import LyricsFormat from "@/scripts/LyricsFormat";
+
+export default function Database(req: NextApiRequest, res: NextApiResponse) {
+  const { book, title } = req.query;
+  if (!book) ListAll(res);
   else {
-    if (!req.query.title) {
-      const results = HymnList(req.query.book);
+    if (!title) {
+      const results = HymnList(book as string);
       res.status(200).json({ results });
     } else {
-      HymnData(req.query, res);
+      HymnData(req, res);
     }
   }
 }
 
-function ListAll(res: any) {
+function ListAll(res: NextApiResponse) {
   let results = new Array();
   const books = ["PBT", "UP", "N", "E", "I"];
 
@@ -34,7 +38,7 @@ function ListAll(res: any) {
             results.push({
               book: book,
               title: filename,
-              lyrics: result.song.lyrics[0],
+              lyrics: LyricsFormat(result.song.lyrics[0]),
             });
           }
         );
@@ -60,7 +64,7 @@ function HymnList(book: string) {
           results.push({
             book: book,
             title: filename,
-            lyrics: result.song.lyrics[0],
+            lyrics: LyricsFormat(result.song.lyrics[0]),
           });
         }
       );
@@ -69,14 +73,16 @@ function HymnList(book: string) {
   return results;
 }
 
-function HymnData(query: any, res: any) {
-  const { book, title } = query;
+function HymnData(req: NextApiRequest, res: NextApiResponse) {
+  const { book, title } = req.query;
 
   const data = fs.readFileSync(
     path.join(process.cwd(), `/database/${book}/xml/${title}/`)
   );
 
   parseString(data, (err, result) => {
+    result.song.lyrics[0] = LyricsFormat(result.song.lyrics[0]);
+
     const hymn = result.song;
     res.status(200).json({ hymn });
   });

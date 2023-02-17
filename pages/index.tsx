@@ -4,6 +4,7 @@ import router, { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import styles from "@styles/pages/index.module.scss";
+
 import Menu from "@components/menu";
 import Navbar from "@components/navbar";
 

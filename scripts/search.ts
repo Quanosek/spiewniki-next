@@ -1,5 +1,6 @@
-import router from "next/router";
 import axios from "axios";
+
+import router from "next/router";
 
 import styles from "@styles/pages/search.module.scss";
 
@@ -32,8 +33,8 @@ export default async function Search(
 
     list.forEach((hymn: any) => {
       if (
-        textFormat(hymn.title).search(textFormat(input)) > 0 ||
-        textFormat(hymn.lyrics).search(textFormat(input)) > 0
+        textFormat(hymn.title).search(textFormat(input)) >= 0
+        // textFormat(hymn.lyrics).search(textFormat(input)) > 0
       )
         listElements(results, hymn);
     });

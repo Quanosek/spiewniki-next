@@ -1,9 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-
-import axios from "axios";
+import React, { useRef, useEffect } from "react";
 
 import styles from "@styles/pages/search.module.scss";
 
@@ -15,8 +13,11 @@ export default function SearchPage() {
   const { query } = router;
   const book = query.book as string;
 
+  const inputRef: any = useRef(null);
+
   useEffect(() => {
     if (!router.isReady) return;
+    if (book === "all") inputRef.current.focus();
 
     const input = document.getElementById("input") as HTMLInputElement;
     const results = document.getElementById("results") as HTMLElement;
@@ -52,6 +53,7 @@ export default function SearchPage() {
           </button>
           <div className={styles.searchbar}>
             <input
+              ref={inputRef}
               id="input"
               placeholder="Wpisz tytuł lub numer pieśni"
               onFocus={(e) => e.target.select()}

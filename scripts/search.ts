@@ -1,71 +1,121 @@
 import axios from "axios";
-
 import router from "next/router";
 
 import styles from "@styles/pages/search.module.scss";
 
-export default async function Search(
-  book: string,
-  input: string,
-  results: HTMLElement
-) {
-  let path, list;
-  if (book === "all") path = `/api/xml/`;
-  else path = `/api/xml?book=${book}/`;
-
-  list = await axios.get(path).then(async ({ data }) => {
-    return data.results;
-  });
-
-  results.innerHTML = "";
-
+export default async function Search(book: string, input: string) {
+  // change icons
   const searchIcon = document.getElementById("searchIcon") as HTMLElement;
   const clearIcon = document.getElementById("clearIcon") as HTMLElement;
 
   if (!input) {
     searchIcon.style.display = "";
     clearIcon.style.display = "";
-
-    list.forEach((hymn: any) => listElements(results, hymn));
   } else {
     searchIcon.style.display = "none";
     clearIcon.style.display = "flex";
-
-    list.forEach((hymn: any) => {
-      if (
-        textFormat(hymn.title).search(textFormat(input)) >= 0
-        // textFormat(hymn.lyrics).search(textFormat(input)) > 0
-      )
-        listElements(results, hymn);
-    });
-
-    if (!results.innerHTML) {
-      const param = document.createElement("p");
-      param.setAttribute("class", `${styles.noResults}`);
-      param.innerHTML = `Brak wyników wyszukiwania.`;
-      results.appendChild(param);
-      results.appendChild(document.createElement("hr"));
-    }
   }
 
-  if (results.lastChild) results.lastChild.remove();
-  results.style.display = "flex";
-}
+  // read books
+  let path;
+  if (book === "all") path = `/api/xml`;
+  else path = `/api/xml?book=${book}`;
 
-function listElements(
-  results: HTMLElement,
-  hymn: { book: string; title: string }
-) {
-  const param = document.createElement("p");
-  param.innerHTML = `${hymn.title}`;
-  results.appendChild(param);
-  results.appendChild(document.createElement("hr"));
+  const list = await axios.get(path).then(({ data }) => data.results);
 
-  param.addEventListener("click", async () => {
-    router.push(`/hymn?book=${hymn.book}&title=${hymn.title}/`);
+  // create results
+  let titlesCollector = new Array();
+  let lyricsCollector = new Array();
+
+  list.map((hymn: { book: string; title: string; lyrics: string[] }) => {
+    if (textFormat(hymn.title).includes(textFormat(input))) {
+      // title found
+      titlesCollector.push({
+        book: hymn.book,
+        title: hymn.title,
+      });
+    } else {
+      // lyrics found
+      hymn.lyrics.map((verses: any) => {
+        verses.map((lines: string, index: number) => {
+          if (textFormat(lines).includes(textFormat(input))) {
+            lyricsCollector.push({
+              book: hymn.book,
+              title: hymn.title,
+              lyrics: [
+                verses[index - 2] ? "..." : "",
+                verses[index - 1],
+                verses[index],
+                verses[index + 1],
+                verses[index + 2] ? "..." : "",
+              ],
+            });
+          }
+        });
+      });
+    }
   });
+
+  // merge Collectors
+  let Collector = [...titlesCollector, ...lyricsCollector];
+  Collector = Collector.filter((value, index, self) => {
+    return index === self.findIndex((x) => x.title === value.title);
+  });
+
+  const titles = Collector.map((i) => i.title);
+  Collector = Collector.filter(
+    ({ id }, index) => !titles.includes(id, index + 1)
+  );
+
+  // reset results div
+  const results = document.getElementById("results") as HTMLElement;
+  results.innerHTML = "";
+
+  // no results
+  if (!Collector[0]) {
+    const div = document.createElement("div");
+    div.setAttribute("class", `${styles.noResults}`);
+    div.innerHTML = `Brak wyników wyszukiwania.`;
+    results.appendChild(div);
+    results.appendChild(document.createElement("hr"));
+  }
+
+  // display results
+  Collector.forEach(
+    (hymn: { book: string; title: string; lyrics: string[] }) => {
+      const div = document.createElement("div");
+      const title = document.createElement("h3");
+      title.innerHTML = `${hymn.title}`;
+      div.appendChild(title);
+
+      if (hymn.lyrics && input) {
+        const lyrics = document.createElement("p");
+        hymn.lyrics.forEach((line: string) => {
+          if (line) lyrics.innerHTML += line;
+        });
+        div.appendChild(lyrics);
+      }
+
+      results.appendChild(div);
+      results.appendChild(document.createElement("hr"));
+
+      div.addEventListener("click", () => {
+        router.push(`/hymn?book=${hymn.book}&title=${hymn.title}`);
+      });
+    }
+  );
+
+  results.lastChild?.remove();
+  results.style.display = "flex";
+
+  // easter-egg
+  if (input === "2137")
+    router.push(
+      `/hymn?book=UP&title=7C. Pan kiedyś stanął nad brzegiem (Barka)`
+    );
 }
 
+// change text to searching-friendly format
 function textFormat(text: string) {
   return text
     .toLowerCase()

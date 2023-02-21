@@ -20,12 +20,7 @@ export default function SearchPage() {
     if (book === "all") inputRef.current.focus();
 
     const input = document.getElementById("input") as HTMLInputElement;
-    const results = document.getElementById("results") as HTMLElement;
-    Search(book, input.value, results);
-
-    input.addEventListener("input", () => {
-      Search(book, input.value, results);
-    });
+    Search(book, input.value);
   }, [router.isReady]);
 
   return (
@@ -51,13 +46,16 @@ export default function SearchPage() {
               priority
             />
           </button>
+
           <div className={styles.searchbar}>
             <input
               ref={inputRef}
               id="input"
               placeholder="Wpisz tytuł lub numer pieśni"
               onFocus={(e) => e.target.select()}
+              onInput={(e: any) => Search(book, e.target.value)}
             />
+
             <div id="searchIcon" className={styles.searchIcon}>
               <Image
                 className={`${styles.searchIcon} icon`}
@@ -67,6 +65,7 @@ export default function SearchPage() {
                 height={10}
               />
             </div>
+
             <div
               id="clearIcon"
               className={styles.clearIcon}
@@ -91,6 +90,7 @@ export default function SearchPage() {
             <p>{BookNames(book)}</p>
           </button>
         </div>
+
         <div id="results" className={styles.results}></div>
       </main>
     </>
@@ -99,9 +99,8 @@ export default function SearchPage() {
 
 function clearButton(book: string) {
   const input = document.getElementById("input") as HTMLInputElement;
-  const results = document.getElementById("results") as HTMLInputElement;
-
   input.value = "";
   input.focus();
-  // Search(state, input.value, results);
+
+  Search(book, input.value);
 }

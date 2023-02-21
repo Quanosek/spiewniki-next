@@ -197,7 +197,7 @@ function HymnbookButton(shortcut: string, name: any) {
       onClick={() => {
         router.push({
           pathname: "/search",
-          query: { book: `${shortcut}` },
+          query: { book: shortcut },
         });
       }}
     >

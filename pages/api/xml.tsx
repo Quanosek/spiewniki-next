@@ -4,8 +4,6 @@ import { parseString } from "xml2js";
 
 import { NextApiRequest, NextApiResponse } from "next";
 
-import LyricsFormat from "@/scripts/LyricsFormat";
-
 export default function Database(req: NextApiRequest, res: NextApiResponse) {
   const { book, title } = req.query;
   if (!book) ListAll(res);
@@ -86,4 +84,15 @@ function HymnData(req: NextApiRequest, res: NextApiResponse) {
     const hymn = result.song;
     res.status(200).json({ hymn });
   });
+}
+
+function LyricsFormat(lyrics: any) {
+  const separator = /\s*\[\w*\]\s*/;
+  const verses = lyrics.split(separator).slice(1);
+
+  verses.forEach((element: any, index: number) => {
+    verses[index] = element.split(/\n/g).slice(0);
+  });
+
+  return verses;
 }

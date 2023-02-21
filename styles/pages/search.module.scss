@@ -127,18 +127,24 @@
     border-radius: 100%;
   }
 
-  p {
-    padding: 1rem 0.9rem;
+  div {
+    padding: 0.8rem 0.8rem;
     margin: 0;
     width: 100%;
     font-size: 1.05rem;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     cursor: pointer;
 
     &:hover {
       background-color: var(--button-hover);
+    }
+
+    p {
+      opacity: 0.75;
+      margin-top: 6px;
+      font-size: 90%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 

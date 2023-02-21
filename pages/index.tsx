@@ -94,7 +94,6 @@ export default function IndexPage() {
             <div className={styles.grid}>
               {HymnbookButton(
                 "PBT",
-                "/covers/brzask.jpg",
                 <>
                   Pieśni&nbsp;Brzasku
                   <br />
@@ -104,7 +103,6 @@ export default function IndexPage() {
 
               {HymnbookButton(
                 "UP",
-                "/covers/cegielki.jpg",
                 <>
                   Uwielbiajmy&nbsp;Pana
                   <br />
@@ -114,7 +112,6 @@ export default function IndexPage() {
 
               {HymnbookButton(
                 "N",
-                "/covers/nowe.jpg",
                 <>
                   Śpiewajcie&nbsp;Panu
                   <br />
@@ -124,7 +121,6 @@ export default function IndexPage() {
 
               {HymnbookButton(
                 "E",
-                "/covers/epifania.jpg",
                 <>
                   Śpiewniczek
                   <br />
@@ -195,7 +191,7 @@ export default function IndexPage() {
   );
 }
 
-function HymnbookButton(shortcut: string, src: string, name: any) {
+function HymnbookButton(shortcut: string, name: any) {
   return (
     <button
       onClick={() => {
@@ -207,10 +203,10 @@ function HymnbookButton(shortcut: string, src: string, name: any) {
     >
       <Image
         alt="okładka śpiewnika"
-        src={src}
+        src={`/covers/${shortcut}.webp`}
         width={183}
         height={258}
-        priority
+        priority={true}
       />
       <h3>{name}</h3>
     </button>

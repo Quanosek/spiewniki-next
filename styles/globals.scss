@@ -41,6 +41,7 @@ body {
 }
 
 main {
+  padding-bottom: 3rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -71,7 +72,6 @@ input {
 }
 
 footer {
-  margin-top: 3rem;
   padding: 1rem 3rem;
   width: 100%;
   display: flex;
@@ -148,7 +148,7 @@ button {
 // tablet
 @media (max-width: 767px) {
   main {
-    padding-bottom: 5rem;
+    padding-bottom: 6rem;
   }
 
   footer {

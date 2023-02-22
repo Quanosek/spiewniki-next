@@ -71,6 +71,7 @@ input {
 }
 
 footer {
+  margin-top: 3rem;
   padding: 1rem 3rem;
   width: 100%;
   display: flex;
@@ -139,7 +140,6 @@ button {
 // laptop
 @media (max-width: 1023px) {
   footer {
-    margin-top: 1rem;
     padding: 1rem 3%;
     font-size: 0.85rem;
   }
@@ -150,6 +150,7 @@ button {
   main {
     padding-bottom: 5rem;
   }
+
   footer {
     display: none;
   }

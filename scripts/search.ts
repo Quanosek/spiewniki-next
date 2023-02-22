@@ -75,7 +75,7 @@ export default async function Search(book: string, input: string) {
   if (!Collector[0]) {
     const paragraph = document.createElement("p");
     paragraph.setAttribute("class", `${styles.noResults}`);
-    paragraph.innerHTML = `Brak wyników wyszukiwania.`;
+    paragraph.innerHTML = `Brak wyników wyszukiwania`;
     results.appendChild(paragraph);
     results.appendChild(document.createElement("hr"));
   }

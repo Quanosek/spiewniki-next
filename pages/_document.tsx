@@ -1,6 +1,8 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import Script from "next/script";
 
+import Footer from "@/components/footer";
+
 export default function Document() {
   return (
     <Html lang="pl">
@@ -40,23 +42,7 @@ export default function Document() {
       </Head>
       <body>
         <Main />
-
-        <footer>
-          <div>
-            <p>
-              Stworzone przez{" "}
-              <a href="https://github.com/Krist0f0l0s">
-                Krzysztofa Olszewskiego
-              </a>{" "}
-              i <a href="https://github.com/Quanosek">Jakuba Kłało</a>.
-            </p>
-            <p>
-              Wszelkie prawa zastrzeżone &#169; 2023 │ domena{" "}
-              <a href="https://www.klalo.pl">klalo.pl</a>
-            </p>
-          </div>
-        </footer>
-
+        <Footer />
         <NextScript />
       </body>
     </Html>

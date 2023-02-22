@@ -83,25 +83,23 @@ export default async function Search(book: string, input: string) {
   // display results
   Collector.forEach(
     (hymn: { book: string; title: string; lyrics: string[] }) => {
-      const div = document.createElement("div");
+      const link = document.createElement("a");
+      link.setAttribute("href", `/hymn?book=${hymn.book}&title=${hymn.title}`);
+
       const title = document.createElement("h3");
       title.innerHTML = `${hymn.title}`;
-      div.appendChild(title);
+      link.appendChild(title);
 
       if (hymn.lyrics && input) {
         const lyrics = document.createElement("p");
         hymn.lyrics.forEach((line: string) => {
           if (line) lyrics.innerHTML += line;
         });
-        div.appendChild(lyrics);
+        link.appendChild(lyrics);
       }
 
-      results.appendChild(div);
+      results.appendChild(link);
       results.appendChild(document.createElement("hr"));
-
-      div.addEventListener("click", () => {
-        router.push(`/hymn?book=${hymn.book}&title=${hymn.title}`);
-      });
     }
   );
 

@@ -83,7 +83,7 @@ export default function IndexPage() {
           <div className={styles.searchIcon}></div>
           <input
             id="input"
-            placeholder="Wpisz tytuł lub numer pieśni"
+            placeholder="Kliknij, aby rozpocząć wyszukiwanie"
             disabled
           />
         </div>
@@ -163,7 +163,7 @@ export default function IndexPage() {
               "favoriteButton",
               "favorite",
               "gwiazdka",
-              "/icons/star_empty.svg",
+              "star_empty",
               "Lista ulubionych"
             )}
 
@@ -171,17 +171,11 @@ export default function IndexPage() {
               "settingsButton",
               "settings",
               "trybik",
-              "/icons/settings.svg",
+              "settings",
               "Ustawienia"
             )}
 
-            {OptionsButton(
-              "infoButton",
-              "info",
-              "info",
-              "/icons/info.svg",
-              "Informacje"
-            )}
+            {OptionsButton("infoButton", "info", "info", "info", "Informacje")}
           </div>
         </div>
       </main>
@@ -236,7 +230,13 @@ function OptionsButton(
         );
       }}
     >
-      <Image className="icon" alt={alt} src={src} width={10} height={10} />
+      <Image
+        className="icon"
+        alt={alt}
+        src={`/icons/${src}.svg`}
+        width={10}
+        height={10}
+      />
       <p>{name}</p>
     </button>
   );

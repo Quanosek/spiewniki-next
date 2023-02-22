@@ -5,8 +5,8 @@ import React, { useRef, useEffect } from "react";
 
 import styles from "@styles/pages/search.module.scss";
 
-import Search from "@/scripts/Search";
-import BookNames from "@/scripts/BookNames";
+import Search from "@/scripts/search";
+import BookNames from "@/scripts/bookNames";
 
 export default function SearchPage() {
   const router = useRouter();
@@ -51,9 +51,19 @@ export default function SearchPage() {
             <input
               ref={inputRef}
               id="input"
-              placeholder="Wpisz tytuł lub numer pieśni"
+              placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
               onFocus={(e) => e.target.select()}
-              onInput={(e: any) => Search(book, e.target.value)}
+              onInput={(e) => {
+                Search(book, (e.target as HTMLInputElement).value);
+              }}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  const results = document.getElementById("results")
+                    ?.firstChild as HTMLLinkElement;
+                  if (results.href) router.push(results.href);
+                  else clearSearch(book);
+                }
+              }}
             />
 
             <div id="searchIcon" className={styles.searchIcon}>
@@ -69,9 +79,7 @@ export default function SearchPage() {
             <div
               id="clearIcon"
               className={styles.clearIcon}
-              onClick={() => {
-                clearButton(book);
-              }}
+              onClick={() => clearSearch(book)}
             >
               <Image
                 className="icon"
@@ -97,7 +105,7 @@ export default function SearchPage() {
   );
 }
 
-function clearButton(book: string) {
+function clearSearch(book: string) {
   const input = document.getElementById("input") as HTMLInputElement;
   input.value = "";
   input.focus();

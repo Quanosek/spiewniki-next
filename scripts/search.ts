@@ -73,10 +73,10 @@ export default async function Search(book: string, input: string) {
 
   // no results
   if (!Collector[0]) {
-    const div = document.createElement("div");
-    div.setAttribute("class", `${styles.noResults}`);
-    div.innerHTML = `Brak wyników wyszukiwania.`;
-    results.appendChild(div);
+    const paragraph = document.createElement("p");
+    paragraph.setAttribute("class", `${styles.noResults}`);
+    paragraph.innerHTML = `Brak wyników wyszukiwania.`;
+    results.appendChild(paragraph);
     results.appendChild(document.createElement("hr"));
   }
 
@@ -86,7 +86,7 @@ export default async function Search(book: string, input: string) {
       const link = document.createElement("a");
       link.setAttribute("href", `/hymn?book=${hymn.book}&title=${hymn.title}`);
 
-      const title = document.createElement("h3");
+      const title = document.createElement("h2");
       title.innerHTML = `${hymn.title}`;
       link.appendChild(title);
 
@@ -103,14 +103,14 @@ export default async function Search(book: string, input: string) {
     }
   );
 
-  results.lastChild?.remove();
-  results.style.display = "flex";
+  results.lastChild?.remove(); // always remove last <hr/>
 
   // easter-egg
-  if (input === "2137")
+  if (input === "2137") {
     router.push(
       `/hymn?book=UP&title=7C. Pan kiedyś stanął nad brzegiem (Barka)`
     );
+  }
 }
 
 // change text to searching-friendly format

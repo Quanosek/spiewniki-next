@@ -29,77 +29,79 @@ export default function SearchPage() {
         <title>Wyszukiwanie | Śpiewniki</title>
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>Wyszukiwanie</h1>
-        <div className={styles.searchHolder}>
-          <button
-            className={styles.arrow}
-            title="Powrót do strony głównej"
-            onClick={() => router.push("/")}
-          >
-            <Image
-              className="icon"
-              alt="powrót"
-              src="/icons/arrow.svg"
-              width={45}
-              height={45}
-              priority
-            />
-          </button>
-
-          <div className={styles.searchbar}>
-            <input
-              ref={inputRef}
-              id="input"
-              placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
-              onFocus={(e) => e.target.select()}
-              onInput={(e) => {
-                Search(book, (e.target as HTMLInputElement).value);
-              }}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  const results = document.getElementById("results")
-                    ?.firstChild as HTMLLinkElement;
-                  if (results.href) router.push(results.href);
-                  else clearSearch(book);
-                }
-              }}
-            />
-
-            <div id="searchIcon" className={styles.searchIcon}>
-              <Image
-                className={`${styles.searchIcon} icon`}
-                alt="szukaj"
-                src="/icons/search.svg"
-                width={10}
-                height={10}
-              />
-            </div>
-
-            <div
-              id="clearIcon"
-              className={styles.clearIcon}
-              onClick={() => clearSearch(book)}
+      <main>
+        <div className={styles.container}>
+          <h1 className={styles.title}>Wyszukiwanie</h1>
+          <div className={styles.searchHolder}>
+            <button
+              className={styles.arrow}
+              title="Powrót do strony głównej"
+              onClick={() => router.push("/")}
             >
               <Image
                 className="icon"
-                alt="szukaj"
-                src="/icons/close.svg"
-                width={10}
-                height={10}
+                alt="powrót"
+                src="/icons/arrow.svg"
+                width={45}
+                height={45}
+                priority
               />
+            </button>
+
+            <div className={styles.searchbar}>
+              <input
+                ref={inputRef}
+                id="input"
+                placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
+                onFocus={(e) => e.target.select()}
+                onInput={(e) => {
+                  Search(book, (e.target as HTMLInputElement).value);
+                }}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    const results = document.getElementById("results")
+                      ?.firstChild as HTMLLinkElement;
+                    if (results.href) router.push(results.href);
+                    else clearSearch(book);
+                  }
+                }}
+              />
+
+              <div id="searchIcon" className={styles.searchIcon}>
+                <Image
+                  className={`${styles.searchIcon} icon`}
+                  alt="szukaj"
+                  src="/icons/search.svg"
+                  width={10}
+                  height={10}
+                />
+              </div>
+
+              <div
+                id="clearIcon"
+                className={styles.clearIcon}
+                onClick={() => clearSearch(book)}
+              >
+                <Image
+                  className="icon"
+                  alt="szukaj"
+                  src="/icons/close.svg"
+                  width={10}
+                  height={10}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div id="filters" className={styles.filters}>
-          <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
-          <button onClick={() => router.push("/filters")}>
-            <p>{BookNames(book)}</p>
-          </button>
-        </div>
+          <div id="filters" className={styles.filters}>
+            <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
+            <button onClick={() => router.push("/filters")}>
+              <p>{BookNames(book)}</p>
+            </button>
+          </div>
 
-        <div id="results" className={styles.results}></div>
+          <div id="results" className={styles.results}></div>
+        </div>
       </main>
     </>
   );

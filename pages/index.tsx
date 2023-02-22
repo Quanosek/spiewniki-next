@@ -16,11 +16,16 @@ export default function IndexPage() {
     const menuDiv = document.getElementById("menu") as HTMLElement;
 
     if (query.menu) {
-      document.getElementsByTagName("html")[0].style.overflowY = "hidden";
+      const TopScroll =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const LeftScroll =
+        window.pageXOffset || document.documentElement.scrollLeft;
+
+      window.onscroll = () => window.scrollTo(LeftScroll, TopScroll);
       menuDiv.style.visibility = "visible";
       menuDiv.style.opacity = "1";
     } else {
-      document.getElementsByTagName("html")[0].style.overflowY = "";
+      window.onscroll = () => {};
       menuDiv.style.visibility = "";
       menuDiv.style.opacity = "";
     }

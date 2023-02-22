@@ -27,18 +27,20 @@
   font-display: swap;
 }
 
+html,
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #ededed;
-  background-color: #000000;
   font-family: "Brutal Type Medium", "Gill Sans MT";
+  background-color: #000000;
+  color: #ededed;
+  overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
+body {
+  overflow: hidden;
+}
+
 main {
-  padding-bottom: 3rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -46,6 +48,7 @@ main {
 }
 
 input {
+  padding: 0.6rem 0.6rem 0.75rem 0.6rem;
   width: 100%;
   height: 3rem;
   display: flex;
@@ -53,6 +56,7 @@ input {
   font-size: 1.2rem;
   border-radius: 0.4rem;
   cursor: text;
+  transition: 0.05s ease-out;
 
   $bg: #202020;
   background-color: $bg;
@@ -130,8 +134,6 @@ button {
 ::placeholder {
   font-size: 1rem;
   opacity: 0.6;
-  position: relative;
-  bottom: 1px;
 }
 
 // laptop

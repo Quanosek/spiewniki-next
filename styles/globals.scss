@@ -41,7 +41,6 @@ body {
 }
 
 main {
-  padding-bottom: 3rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -147,10 +146,6 @@ button {
 
 // tablet
 @media (max-width: 767px) {
-  main {
-    padding-bottom: 6rem;
-  }
-
   footer {
     display: none;
   }
@@ -161,10 +156,6 @@ button {
   html,
   body {
     align-items: normal;
-  }
-
-  main {
-    padding-bottom: 30vw;
   }
 }
 

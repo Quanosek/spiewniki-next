@@ -4,32 +4,16 @@ import router, { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import styles from "@styles/pages/index.module.scss";
+import showMenu from "@scripts/showMenu";
 
 import Menu from "@components/menu";
-import Navbar from "@components/navbar";
+import BottomNavbar from "@components/navbar/bottom";
 
 export default function IndexPage() {
   const router = useRouter();
   const { query } = router;
 
-  useEffect(() => {
-    const menuDiv = document.getElementById("menu") as HTMLElement;
-
-    if (query.menu) {
-      const TopScroll =
-        window.pageYOffset || document.documentElement.scrollTop;
-      const LeftScroll =
-        window.pageXOffset || document.documentElement.scrollLeft;
-
-      window.onscroll = () => window.scrollTo(LeftScroll, TopScroll);
-      menuDiv.style.visibility = "visible";
-      menuDiv.style.opacity = "1";
-    } else {
-      window.onscroll = () => {};
-      menuDiv.style.visibility = "";
-      menuDiv.style.opacity = "";
-    }
-  });
+  useEffect(() => showMenu(query));
 
   return (
     <>
@@ -48,144 +32,152 @@ export default function IndexPage() {
       <main>
         <Menu />
 
-        <div className={styles.title}>
-          <h1>Śpiewniki</h1>
-          <button
-            id="infoButton"
-            title="Informacje o aplikacji"
-            onClick={() => {
-              router.push(
-                {
-                  pathname: router.asPath,
-                  query: { menu: "info" },
-                },
-                undefined,
-                {
-                  scroll: false,
-                }
-              );
-            }}
-          >
-            <Image
-              className="icon"
-              alt="info"
-              src="/icons/info.svg"
-              width={25}
-              height={25}
-            />
-          </button>
-        </div>
-
-        <div
-          className={styles.searchbar}
-          onClick={() => {
-            router.push({
-              pathname: "/search",
-              query: { book: "all" },
-            });
-          }}
-        >
-          <div className={styles.searchIcon}></div>
-          <input
-            id="input"
-            placeholder="Kliknij, aby rozpocząć wyszukiwanie"
-            disabled
-          />
-        </div>
-
-        <div className={styles.content}>
-          <div className={styles.hymnBooks}>
-            <h2>Wybierz śpiewnik:</h2>
-            <div className={styles.grid}>
-              {HymnbookButton(
-                "PBT",
-                <>
-                  Pieśni&nbsp;Brzasku
-                  <br />
-                  Tysiąclecia
-                </>
-              )}
-
-              {HymnbookButton(
-                "UP",
-                <>
-                  Uwielbiajmy&nbsp;Pana
-                  <br />
-                  (Cegiełki)
-                </>
-              )}
-
-              {HymnbookButton(
-                "N",
-                <>
-                  Śpiewajcie&nbsp;Panu
-                  <br />
-                  Pieśń&nbsp;Nową
-                </>
-              )}
-
-              {HymnbookButton(
-                "E",
-                <>
-                  Śpiewniczek
-                  <br />
-                  Młodzieżowy&nbsp;Epifanii
-                </>
-              )}
-            </div>
-
+        <div className={styles.container}>
+          <div className={styles.title}>
+            <h1>Śpiewniki</h1>
             <button
-              id="inne"
-              className={styles.otherHymns}
+              id="infoButton"
+              title="Informacje o aplikacji"
               onClick={() => {
-                router.push({
-                  pathname: "/search",
-                  query: { book: "I" },
-                });
+                router.push(
+                  {
+                    pathname: router.asPath,
+                    query: { menu: "info" },
+                  },
+                  undefined,
+                  {
+                    scroll: false,
+                  }
+                );
               }}
             >
-              <h3>Inne pieśni</h3>
+              <Image
+                className="icon"
+                alt="info"
+                src="/icons/info.svg"
+                width={25}
+                height={25}
+              />
             </button>
           </div>
 
-          <hr />
+          <div
+            className={styles.searchbar}
+            onClick={() => {
+              router.push({
+                pathname: "/search",
+                query: { book: "all" },
+              });
+            }}
+          >
+            <div className={styles.searchIcon}></div>
+            <input
+              id="input"
+              placeholder="Kliknij, aby rozpocząć wyszukiwanie"
+              disabled
+            />
+          </div>
 
-          <div className={styles.optionsMenu}>
-            <h2>Dostępne opcje:</h2>
+          <div className={styles.content}>
+            <div className={styles.hymnBooks}>
+              <h2>Wybierz śpiewnik:</h2>
+              <div className={styles.grid}>
+                {HymnbookButton(
+                  "PBT",
+                  <>
+                    Pieśni&nbsp;Brzasku
+                    <br />
+                    Tysiąclecia
+                  </>
+                )}
 
-            <button id="randomButton">
-              <Image
-                className="icon"
-                alt="kostka"
-                src="/icons/dice.svg"
-                width={10}
-                height={10}
-              />
-              Wylosuj pieśń
-            </button>
+                {HymnbookButton(
+                  "UP",
+                  <>
+                    Uwielbiajmy&nbsp;Pana
+                    <br />
+                    (Cegiełki)
+                  </>
+                )}
 
-            {OptionsButton(
-              "favoriteButton",
-              "favorite",
-              "gwiazdka",
-              "star_empty",
-              "Lista ulubionych"
-            )}
+                {HymnbookButton(
+                  "N",
+                  <>
+                    Śpiewajcie&nbsp;Panu
+                    <br />
+                    Pieśń&nbsp;Nową
+                  </>
+                )}
 
-            {OptionsButton(
-              "settingsButton",
-              "settings",
-              "trybik",
-              "settings",
-              "Ustawienia"
-            )}
+                {HymnbookButton(
+                  "E",
+                  <>
+                    Śpiewniczek
+                    <br />
+                    Młodzieżowy&nbsp;Epifanii
+                  </>
+                )}
+              </div>
 
-            {OptionsButton("infoButton", "info", "info", "info", "Informacje")}
+              <button
+                id="inne"
+                className={styles.otherHymns}
+                onClick={() => {
+                  router.push({
+                    pathname: "/search",
+                    query: { book: "I" },
+                  });
+                }}
+              >
+                <h3>Inne pieśni</h3>
+              </button>
+            </div>
+
+            <hr />
+
+            <div className={styles.optionsMenu}>
+              <h2>Dostępne opcje:</h2>
+
+              <button id="randomButton">
+                <Image
+                  className="icon"
+                  alt="kostka"
+                  src="/icons/dice.svg"
+                  width={10}
+                  height={10}
+                />
+                Wylosuj pieśń
+              </button>
+
+              {OptionsButton(
+                "favoriteButton",
+                "favorite",
+                "gwiazdka",
+                "star_empty",
+                "Lista ulubionych"
+              )}
+
+              {OptionsButton(
+                "settingsButton",
+                "settings",
+                "trybik",
+                "settings",
+                "Ustawienia"
+              )}
+
+              {OptionsButton(
+                "infoButton",
+                "info",
+                "info",
+                "info",
+                "Informacje"
+              )}
+            </div>
           </div>
         </div>
       </main>
 
-      <Navbar />
+      <BottomNavbar />
     </>
   );
 }

@@ -1,3 +1,11 @@
+.container {
+  padding-bottom: 3rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .title {
   margin: 2.5rem 0 2rem;
   display: flex;
@@ -5,7 +13,6 @@
   justify-content: center;
   align-items: center;
   font-size: 1.25rem;
-  user-select: none;
 
   // infoButton on mobile
   button {
@@ -34,7 +41,6 @@
 }
 
 .searchIcon {
-  z-index: 2;
   margin-left: 1rem;
   width: 24px;
   height: 24px;
@@ -184,6 +190,10 @@
 
 // tablet
 @media (max-width: 767px) {
+  .container {
+    padding-bottom: 6rem;
+  }
+
   .title {
     margin: 2.2rem 0 2rem;
     font-size: 1.1rem;
@@ -240,6 +250,10 @@
 
 // small-mobile
 @media (max-width: 319px) {
+  .container {
+    padding-bottom: 30vw;
+  }
+
   .title {
     margin: 10vw 0 8vw;
     position: relative;

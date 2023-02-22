@@ -5,8 +5,8 @@ import React, { useRef, useEffect } from "react";
 
 import styles from "@styles/pages/search.module.scss";
 
-import Search from "@/scripts/search";
-import BookNames from "@/scripts/bookNames";
+import Search from "@scripts/search";
+import BookNames from "@scripts/bookNames";
 
 export default function SearchPage() {
   const router = useRouter();

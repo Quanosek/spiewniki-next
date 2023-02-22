@@ -1,8 +1,7 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { parseString } from "xml2js";
 import fs from "fs";
 import path from "path";
-import { parseString } from "xml2js";
-
-import { NextApiRequest, NextApiResponse } from "next";
 
 export default function Database(req: NextApiRequest, res: NextApiResponse) {
   const { book, title } = req.query;

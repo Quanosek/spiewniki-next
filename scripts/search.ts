@@ -1,5 +1,5 @@
-import axios from "axios";
 import router from "next/router";
+import axios from "axios";
 
 import styles from "@styles/pages/search.module.scss";
 

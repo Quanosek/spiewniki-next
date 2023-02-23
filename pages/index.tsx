@@ -45,9 +45,7 @@ export default function IndexPage() {
                     query: { menu: "info" },
                   },
                   undefined,
-                  {
-                    scroll: false,
-                  }
+                  { scroll: false }
                 );
               }}
             >
@@ -177,7 +175,7 @@ export default function IndexPage() {
         </div>
       </main>
 
-      <BottomNavbar />
+      <BottomNavbar more={false} />
     </>
   );
 }

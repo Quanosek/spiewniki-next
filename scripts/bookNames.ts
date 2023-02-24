@@ -1,4 +1,4 @@
-export default function BookNames(shortName: string) {
+export default function BookNames(shortName: string | string[]) {
   let fullName = "";
 
   switch (shortName) {

@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import styles from "@styles/pages/hymn.module.scss";
-import BookNames from "@/scripts/bookNames";
 
 import Menu from "@components/menu";
 import TopNavbar from "@/components/navbar/top";
@@ -32,12 +31,12 @@ export default function HymnPage() {
   }, [router.isReady]);
 
   if (!state) return;
-  const hymn = state.hymn;
+  const hymn = state[0];
 
   return (
     <>
       <Head>
-        <title>{hymn.title} | Śpiewniki</title>
+        <title>{query.title} | Śpiewniki</title>
       </Head>
 
       <TopNavbar />
@@ -48,40 +47,31 @@ export default function HymnPage() {
         <div className={styles.container}>
           <div className={styles.title}>
             <h1>{hymn.title}</h1>
-            <h2>{BookNames(query.book as string)}</h2>
+            <h2>{hymn.book}</h2>
           </div>
 
-          {
-            // displaying formatted lyrics
-            hymn.lyrics.map((verses: any, index: number) => {
+          <div className={styles.lyrics}>
+            {hymn.lyrics.map((verses: string[], index: number) => {
               return (
-                <div className={styles.lyrics} key={index}>
-                  {verses.map((lines: any, index: number) => {
-                    return (
-                      <div className={styles.verse} key={index}>
-                        {lines.map((element: string, index: number) => {
-                          if (element.startsWith(".")) {
-                            // chord exception
-                            element = element.slice(1);
-                            return (
-                              <p className={styles.chord} key={index}>
-                                {element}
-                              </p>
-                            );
-                          } else {
-                            // lines of text
-                            if (element.startsWith(" "))
-                              element = element.slice(1);
-                            return <p key={index}>{element}</p>;
-                          }
-                        })}
-                      </div>
-                    );
+                <div className={styles.verse} key={index}>
+                  {verses.map((verse: string, index: number) => {
+                    if (verse.startsWith(".")) {
+                      // chord exception
+                      return (
+                        <p className={styles.chord} key={index}>
+                          {verse.slice(1)}
+                        </p>
+                      );
+                    } else {
+                      // lines of text correction
+                      if (verse.startsWith(" ")) verse = verse.slice(1);
+                      return <p key={index}>{verse}</p>;
+                    }
                   })}
                 </div>
               );
-            })
-          }
+            })}
+          </div>
         </div>
       </main>
 

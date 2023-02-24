@@ -1,23 +1,29 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { parseString } from "xml2js";
+
 import fs from "fs";
 import path from "path";
+import { parseString } from "xml2js";
+
+import BookNames from "@/scripts/bookNames";
 
 export default function Database(req: NextApiRequest, res: NextApiResponse) {
   const { book, title } = req.query;
-  if (!book) ListAll(res);
+  let results;
+
+  // main functions holder
+  if (!book) results = ListAll();
   else {
-    if (!title) {
-      const results = HymnList(book as string);
-      res.status(200).json({ results });
-    } else {
-      HymnData(req, res);
-    }
+    if (!title) results = HymnList(book);
+    else results = HymnData(book, title);
   }
+
+  return res.status(200).json(results);
 }
 
-function ListAll(res: NextApiResponse) {
+// return all hymns in all defined hymnbooks in database
+function ListAll() {
   let results = new Array();
+
   const books = ["PBT", "UP", "N", "E", "I"];
 
   books.forEach((book) => {
@@ -42,10 +48,11 @@ function ListAll(res: NextApiResponse) {
       });
   });
 
-  res.status(200).json({ results });
+  return results;
 }
 
-function HymnList(book: string) {
+// return all hymn within hymnbook
+function HymnList(book: string | string[]) {
   let results = new Array();
   const dirname = path.join(process.cwd(), `/database/${book}/xml/`);
 
@@ -54,7 +61,8 @@ function HymnList(book: string) {
       return a.localeCompare(b, "pl", { numeric: true });
     })
 
-    .forEach((filename: string) => {
+    .map((filename: string) => {
+      // read every hymn
       parseString(
         fs.readFileSync(dirname + filename, "utf-8"),
         (err, result) => {
@@ -70,27 +78,39 @@ function HymnList(book: string) {
   return results;
 }
 
-function HymnData(req: NextApiRequest, res: NextApiResponse) {
-  const { book, title } = req.query;
+// return hymn params json
+function HymnData(book: string | string[], title: string | string[]) {
+  let results = new Array();
 
+  // read hymn file
   const data = fs.readFileSync(
     path.join(process.cwd(), `/database/${book}/xml/${title}/`)
   );
 
-  parseString(data, (err, result) => {
-    result.song.lyrics[0] = LyricsFormat(result.song.lyrics[0]);
+  // define hymn id in hymnbook
+  const id = HymnList(book).findIndex((hymn) => hymn.title[0] === title);
 
-    const hymn = result.song;
-    res.status(200).json({ hymn });
+  parseString(data, (err, result) => {
+    // define result
+    const song = result.song;
+
+    song.id = [id];
+    song.book = [BookNames(book)];
+    song.lyrics = LyricsFormat(result.song.lyrics[0]);
+
+    results.push(song);
   });
+
+  return results;
 }
 
-function LyricsFormat(lyrics: any) {
+// reformat xml verses
+function LyricsFormat(lyrics: string) {
   const separator = /\s*\[\w*\]\s*/;
-  const verses = lyrics.split(separator).slice(1);
+  const verses = lyrics.split(separator).slice(1) as string[];
 
-  verses.forEach((element: any, index: number) => {
-    verses[index] = element.split(/\n/g).slice(0);
+  verses.map((verse: any, index: number) => {
+    verses[index] = verse.split(/\n/g).slice(0);
   });
 
   return verses;

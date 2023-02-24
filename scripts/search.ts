@@ -21,7 +21,7 @@ export default async function Search(book: string, input: string) {
   if (book === "all") path = `/api/xml`;
   else path = `/api/xml?book=${book}`;
 
-  const list = await axios.get(path).then(({ data }) => data.results);
+  const list = await axios.get(path).then(({ data }) => data);
 
   // create results
   let titlesCollector = new Array();

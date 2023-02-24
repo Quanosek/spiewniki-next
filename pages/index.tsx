@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import router, { useRouter } from "next/router";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 import styles from "@styles/pages/index.module.scss";
 import showMenu from "@scripts/showMenu";
@@ -180,7 +180,7 @@ export default function IndexPage() {
   );
 }
 
-function HymnbookButton(shortcut: string, name: any) {
+function HymnbookButton(shortcut: string, name: ReactElement) {
   return (
     <button
       onClick={() => {

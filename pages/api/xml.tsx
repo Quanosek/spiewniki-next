@@ -25,28 +25,7 @@ function ListAll() {
   let results = new Array();
 
   const books = ["PBT", "UP", "N", "E", "I"];
-
-  books.forEach((book) => {
-    const dirname = path.join(process.cwd(), `/database/${book}/xml/`);
-
-    fs.readdirSync(dirname)
-      .sort((a, b) => {
-        return a.localeCompare(b, "pl", { numeric: true });
-      })
-
-      .forEach((filename: string) => {
-        parseString(
-          fs.readFileSync(dirname + filename, "utf-8"),
-          (err, result) => {
-            results.push({
-              book: book,
-              title: filename,
-              lyrics: LyricsFormat(result.song.lyrics[0]),
-            });
-          }
-        );
-      });
-  });
+  books.map((book) => hymnBook(results, book));
 
   return results;
 }
@@ -54,6 +33,12 @@ function ListAll() {
 // return all hymn within hymnbook
 function HymnList(book: string | string[]) {
   let results = new Array();
+  hymnBook(results, book);
+  return results;
+}
+
+// read and save result of defined hymnbook
+function hymnBook(results: any, book: string | string[]) {
   const dirname = path.join(process.cwd(), `/database/${book}/xml/`);
 
   fs.readdirSync(dirname)
@@ -66,10 +51,21 @@ function HymnList(book: string | string[]) {
       parseString(
         fs.readFileSync(dirname + filename, "utf-8"),
         (err, result) => {
+          let lyrics = LyricsFormat(result.song.lyrics[0]);
+
+          lyrics = lyrics.map((verses: any) => {
+            return (verses = verses
+              .map((verse: string) => {
+                if (verse.startsWith(" ")) verse = verse.slice(1);
+                return verse;
+              })
+              .filter((verse: string) => !verse.startsWith(".")));
+          });
+
           results.push({
             book: book,
             title: filename,
-            lyrics: LyricsFormat(result.song.lyrics[0]),
+            lyrics: lyrics,
           });
         }
       );
@@ -88,7 +84,7 @@ function HymnData(book: string | string[], title: string | string[]) {
   );
 
   // define hymn id in hymnbook
-  const id = HymnList(book).findIndex((hymn) => hymn.title[0] === title);
+  const id = HymnList(book).findIndex((hymn) => hymn.title === title);
 
   parseString(data, (err, result) => {
     // define result

@@ -43,7 +43,7 @@ export default async function Search(book: string, input: string) {
               book: hymn.book,
               title: hymn.title,
               lyrics: [
-                verses[index - 2] ? "..." : "",
+                verses[index - 2] ? "... " : "",
                 verses[index - 1],
                 verses[index],
                 verses[index + 1],

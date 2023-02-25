@@ -11,31 +11,27 @@ import BottomNavbar from "@/components/navbar/bottom";
 
 export default function HymnPage() {
   const router = useRouter();
-  const title = router.query.title as string;
 
-  const [state, setState] = useState<any>(null);
+  const [hymn, setState] = useState<any>(null);
 
   useEffect(() => {
     if (!router.isReady) return;
-    const book = router.query.book as string;
-    const title = router.query.title as string;
 
-    axios
-      .get(`/api/xml`, {
-        params: { book: book, title: title },
-      })
-      .then(({ data }) => {
-        return setState(data);
-      });
+    (async () => {
+      return setState(await getData(router.query));
+    })();
   }, [router.isReady, router.query]);
-
-  if (!state) return;
-  const hymn = state[0];
 
   return (
     <>
       <Head>
-        <title>{title} | Śpiewniki</title>
+        {(router.query.title && (
+          // filename title
+          <title>{router.query.title} | Śpiewniki</title>
+        )) || (
+          // default title (placeholder)
+          <title>Śpiewniki</title>
+        )}
       </Head>
 
       <TopNavbar />
@@ -44,37 +40,51 @@ export default function HymnPage() {
         <Menu />
 
         <div className={styles.container}>
-          <div className={styles.title}>
-            <h1>{hymn.title}</h1>
-            <h2>{hymn.book}</h2>
-          </div>
+          {hymn && (
+            <>
+              <div className={styles.title}>
+                <h1>{hymn.title}</h1>
+                <h2>{hymn.book}</h2>
+              </div>
 
-          <div className={styles.lyrics}>
-            {hymn.lyrics.map((verses: string[], index: number) => {
-              return (
-                <div className={styles.verse} key={index}>
-                  {verses.map((verse: string, index: number) => {
-                    if (verse.startsWith(".")) {
-                      // chord exception
-                      return (
-                        <p className={styles.chord} key={index}>
-                          {verse.slice(1)}
-                        </p>
-                      );
-                    } else {
-                      // lines of text correction
-                      if (verse.startsWith(" ")) verse = verse.slice(1);
-                      return <p key={index}>{verse}</p>;
-                    }
-                  })}
-                </div>
-              );
-            })}
-          </div>
+              <div className={styles.lyrics}>
+                {hymn.lyrics.map((verses: string[], index: number) => {
+                  return (
+                    <div className={styles.verse} key={index}>
+                      {verses.map((verse: string, index: number) => {
+                        if (verse.startsWith(".")) {
+                          // chord exception
+                          return (
+                            <p className={styles.chord} key={index}>
+                              {verse.slice(1)}
+                            </p>
+                          );
+                        } else {
+                          // lines of text correction
+                          if (verse.startsWith(" ")) verse = verse.slice(1);
+                          return <p key={index}>{verse}</p>;
+                        }
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
       </main>
 
       <BottomNavbar more={true} />
     </>
   );
+}
+
+async function getData(query: any) {
+  return axios
+    .get(`/api/xml`, {
+      params: { book: query.book, title: query.title },
+    })
+    .then(({ data }) => {
+      return data[0];
+    });
 }

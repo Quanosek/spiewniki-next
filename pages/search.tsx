@@ -1,27 +1,29 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import styles from "@styles/pages/search.module.scss";
+
+import Results from "@components/results";
 
 import Search from "@scripts/search";
 import BookNames from "@scripts/bookNames";
 
 export default function SearchPage() {
   const router = useRouter();
-  const { query } = router;
-  const book = query.book as string;
+  const book = router.query.book as string;
 
-  const inputRef: any = useRef(null);
+  const [data, setData] = useState<any>(null);
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (book === "all") inputRef.current.focus();
+    const book = router.query.book as string;
 
-    const input = document.getElementById("input") as HTMLInputElement;
-    Search(book, input.value);
-  }, [router.isReady]);
+    (async () => setData(await Search(book, "")))();
+  }, [router.isReady, router.query]);
+
+  if (!data) return;
 
   return (
     <>
@@ -50,12 +52,33 @@ export default function SearchPage() {
 
             <div className={styles.searchbar}>
               <input
-                ref={inputRef}
                 id="input"
                 placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
                 onFocus={(e) => e.target.select()}
-                onInput={(e) => {
-                  Search(book, (e.target as HTMLInputElement).value);
+                onInput={async (e) => {
+                  const input = (e.target as HTMLInputElement).value;
+                  const searchIcon = document.getElementById(
+                    "searchIcon"
+                  ) as HTMLElement;
+                  const clearIcon = document.getElementById(
+                    "clearIcon"
+                  ) as HTMLElement;
+
+                  if (!input) {
+                    searchIcon.style.display = "";
+                    clearIcon.style.display = "";
+                  } else {
+                    searchIcon.style.display = "none";
+                    clearIcon.style.display = "flex";
+                  }
+
+                  if (input === "2137") {
+                    router.push(
+                      `/hymn?book=UP&title=7C. Pan kiedyś stanął nad brzegiem (Barka)`
+                    );
+                  }
+
+                  setData(await Search(book, input));
                 }}
                 onKeyUp={(e) => {
                   if (e.key === "Enter") {
@@ -100,7 +123,7 @@ export default function SearchPage() {
             </button>
           </div>
 
-          <div id="results" className={styles.results}></div>
+          <Results results={data} />
         </div>
       </main>
     </>

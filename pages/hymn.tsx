@@ -11,24 +11,23 @@ import BottomNavbar from "@/components/navbar/bottom";
 
 export default function HymnPage() {
   const router = useRouter();
-  const { query } = router;
+  const title = router.query.title as string;
 
   const [state, setState] = useState<any>(null);
 
   useEffect(() => {
     if (!router.isReady) return;
+    const book = router.query.book as string;
+    const title = router.query.title as string;
 
     axios
       .get(`/api/xml`, {
-        params: {
-          book: query.book,
-          title: query.title,
-        },
+        params: { book: book, title: title },
       })
       .then(({ data }) => {
         return setState(data);
       });
-  }, [router.isReady]);
+  }, [router.isReady, router.query]);
 
   if (!state) return;
   const hymn = state[0];
@@ -36,7 +35,7 @@ export default function HymnPage() {
   return (
     <>
       <Head>
-        <title>{query.title} | Śpiewniki</title>
+        <title>{title} | Śpiewniki</title>
       </Head>
 
       <TopNavbar />

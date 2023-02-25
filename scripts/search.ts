@@ -1,21 +1,6 @@
-import router from "next/router";
 import axios from "axios";
 
-import styles from "@styles/pages/search.module.scss";
-
 export default async function Search(book: string, input: string) {
-  // change icons
-  const searchIcon = document.getElementById("searchIcon") as HTMLElement;
-  const clearIcon = document.getElementById("clearIcon") as HTMLElement;
-
-  if (!input) {
-    searchIcon.style.display = "";
-    clearIcon.style.display = "";
-  } else {
-    searchIcon.style.display = "none";
-    clearIcon.style.display = "flex";
-  }
-
   // read books
   let path;
   if (book === "all") path = `/api/xml`;
@@ -43,11 +28,11 @@ export default async function Search(book: string, input: string) {
               book: hymn.book,
               title: hymn.title,
               lyrics: [
-                verses[index - 2] ? "... " : "",
+                verses[index - 2] ? "... " : undefined,
                 verses[index - 1],
                 verses[index],
                 verses[index + 1],
-                verses[index + 2] ? "..." : "",
+                verses[index + 2] ? "..." : undefined,
               ],
             });
           }
@@ -67,50 +52,7 @@ export default async function Search(book: string, input: string) {
     ({ id }, index) => !titles.includes(id, index + 1)
   );
 
-  // reset results div
-  const results = document.getElementById("results") as HTMLElement;
-  results.innerHTML = "";
-
-  // no results
-  if (!Collector[0]) {
-    const paragraph = document.createElement("p");
-    paragraph.setAttribute("class", `${styles.noResults}`);
-    paragraph.innerHTML = `Brak wyników wyszukiwania`;
-    results.appendChild(paragraph);
-    results.appendChild(document.createElement("hr"));
-  }
-
-  // display results
-  Collector.forEach(
-    (hymn: { book: string; title: string; lyrics: string[] }) => {
-      const link = document.createElement("a");
-      link.setAttribute("href", `/hymn?book=${hymn.book}&title=${hymn.title}`);
-
-      const title = document.createElement("h2");
-      title.innerHTML = `${hymn.title}`;
-      link.appendChild(title);
-
-      if (hymn.lyrics && input) {
-        const lyrics = document.createElement("p");
-        hymn.lyrics.forEach((line: string) => {
-          if (line) lyrics.innerHTML += line;
-        });
-        link.appendChild(lyrics);
-      }
-
-      results.appendChild(link);
-      results.appendChild(document.createElement("hr"));
-    }
-  );
-
-  results.lastChild?.remove(); // always remove last <hr/>
-
-  // easter-egg
-  if (input === "2137") {
-    router.push(
-      `/hymn?book=UP&title=7C. Pan kiedyś stanął nad brzegiem (Barka)`
-    );
-  }
+  return Collector;
 }
 
 // change text to searching-friendly format

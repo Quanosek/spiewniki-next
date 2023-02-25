@@ -42,7 +42,7 @@
   align-items: center;
 
   input {
-    padding-right: 3rem;
+    padding: 0 3rem 0 1rem;
     cursor: text;
   }
 
@@ -69,12 +69,15 @@
 
 .clearIcon {
   display: none; // hidden by default
-  scale: 0.75;
   cursor: pointer;
 
   &:hover {
     opacity: 1;
     background-color: #2f2f2f;
+  }
+
+  img {
+    scale: 0.75;
   }
 }
 
@@ -84,10 +87,16 @@
   align-items: center;
   gap: 8px;
 
-  button {
+  a {
     padding: 0.5rem 1rem;
     border-radius: 20px;
+    overflow: hidden;
     background-color: #203259;
+    transition: 0.06s background-color ease-out;
+
+    &:hover {
+      background-color: #234a70;
+    }
 
     p {
       overflow: hidden;
@@ -112,7 +121,7 @@
     margin: 4px;
     padding: 0.9rem 1rem;
     border-radius: 0.4rem;
-    transition: 0.05s background-color ease-out;
+    transition: 0.06s background-color ease-out;
 
     &:hover {
       background-color: #252525;
@@ -276,14 +285,14 @@
     padding: 3.5vw 0 3.5vw 6vw;
     gap: 2.5vw;
 
-    button {
+    a {
       padding: 3vw 4.8vw;
       border-radius: 10vw;
-    }
 
-    p {
-      margin: 0;
-      font-size: 4vw;
+      p {
+        margin: 0;
+        font-size: 4vw;
+      }
     }
   }
 

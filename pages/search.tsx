@@ -22,7 +22,9 @@ export default function SearchPage() {
     const input = document.getElementById("input") as HTMLInputElement;
     if (book === "all") input.focus();
 
-    (async () => setState(await search(book, "")))();
+    (async () => {
+      return setState(await search(book, ""));
+    })();
   }, [router.isReady, router.query]);
 
   return (
@@ -38,7 +40,7 @@ export default function SearchPage() {
             <button
               className={styles.arrow}
               title="Powrót do strony głównej"
-              onClick={() => router.push("/")}
+              onClick={() => router.back()}
             >
               <Image
                 className="icon"
@@ -54,38 +56,18 @@ export default function SearchPage() {
               <input
                 id="input"
                 placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
-                onFocus={(e) => e.target.select()}
                 onInput={async (e) => {
                   const input = (e.target as HTMLInputElement).value;
-                  const searchIcon = document.getElementById(
-                    "searchIcon"
-                  ) as HTMLElement;
-                  const clearIcon = document.getElementById(
-                    "clearIcon"
-                  ) as HTMLElement;
-
-                  if (!input) {
-                    searchIcon.style.display = "";
-                    clearIcon.style.display = "";
-                  } else {
-                    searchIcon.style.display = "none";
-                    clearIcon.style.display = "flex";
-                  }
-
-                  if (input === "2137") {
-                    router.push(
-                      `/hymn?book=UP&title=7C. Pan kiedyś stanął nad brzegiem (Barka)`
-                    );
-                  }
-
+                  changeIcons(input);
                   setState(await search(book, input));
                 }}
-                onKeyUp={(e) => {
+                onKeyUp={async (e) => {
                   if (e.key === "Enter") {
-                    const results = document.getElementById("results")
-                      ?.firstChild as HTMLLinkElement;
-                    if (results.href) router.push(results.href);
-                    else clearSearch(book);
+                    const firstResults = document.getElementById("results")
+                      ?.firstChild?.firstChild as HTMLLinkElement;
+
+                    if (firstResults.href) router.push(firstResults.href);
+                    else setState(await clearSearch(book));
                   }
                 }}
               />
@@ -103,7 +85,7 @@ export default function SearchPage() {
               <div
                 id="clearIcon"
                 className={styles.clearIcon}
-                onClick={() => clearSearch(book)}
+                onClick={async () => setState(await clearSearch(book))}
               >
                 <Image
                   className="icon"
@@ -118,12 +100,14 @@ export default function SearchPage() {
 
           <div id="filters" className={styles.filters}>
             <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
-            <button onClick={() => router.push("/filters")}>
-              <p>{(!book && "wybrany śpiewnik") || BookNames(book)}</p>
-            </button>
+            {book && (
+              <Link href={"/filters"}>
+                <p>{BookNames(book)}</p>
+              </Link>
+            )}
           </div>
 
-          <div className={styles.results}>
+          <div id="results" className={styles.results}>
             {(!data && ( // loading animation
               <div className={styles.loader} />
             )) ||
@@ -164,10 +148,25 @@ export default function SearchPage() {
   );
 }
 
-function clearSearch(book: string) {
+async function clearSearch(book: string) {
   const input = document.getElementById("input") as HTMLInputElement;
   input.value = "";
+
+  changeIcons(input.value);
   input.focus();
 
-  search(book, input.value);
+  return await search(book, input.value);
+}
+
+function changeIcons(input: string) {
+  const searchIcon = document.getElementById("searchIcon") as HTMLElement;
+  const clearIcon = document.getElementById("clearIcon") as HTMLElement;
+
+  if (!input) {
+    searchIcon.style.display = "";
+    clearIcon.style.display = "";
+  } else {
+    searchIcon.style.display = "none";
+    clearIcon.style.display = "flex";
+  }
 }

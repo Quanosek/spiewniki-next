@@ -56,7 +56,7 @@ input {
   font-size: 1.2rem;
   border-radius: 0.4rem;
   cursor: text;
-  transition: 0.05s ease-out;
+  transition: 0.06s ease-out;
 
   $bg: #202020;
   background-color: $bg;
@@ -123,7 +123,7 @@ button {
   align-items: center;
   border-radius: 0.4rem;
   background-color: #171717;
-  transition: 0.1s background-color ease-out;
+  transition: 0.06s background-color ease-out;
   cursor: pointer;
 
   &:hover {

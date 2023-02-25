@@ -12,16 +12,12 @@ export default function Menu() {
 
   return (
     <div id="menu" className={styles.holder}>
-      <div
-        className={styles.background}
-        onClick={() => {
-          // hide menu (go back)
-          return router.back();
-        }}
-      ></div>
+      <div className={styles.background} onClick={() => router.back()}></div>
+
       <div className={styles.menu}>
         <div className={styles.content}>
           {/* select menu */}
+
           {query.menu === "favorite" && <Favorite />}
           {query.menu === "info" && <Info />}
           {query.menu === "settings" && <Settings />}

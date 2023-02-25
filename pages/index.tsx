@@ -3,7 +3,7 @@ import Image from "next/image";
 import router, { useRouter } from "next/router";
 import { ReactElement, useEffect } from "react";
 
-import styles from "@styles/pages/index.module.scss";
+import styles from "@/styles/pages/index.module.scss";
 
 import Menu from "@/components/menu";
 import BottomNavbar from "@/components/navbar/bottom";
@@ -12,9 +12,10 @@ import showMenu from "@/scripts/showMenu";
 
 export default function IndexPage() {
   const router = useRouter();
-  const { query } = router;
 
-  useEffect(() => showMenu(query));
+  useEffect(() => {
+    return showMenu(router.query);
+  }, [router.query]);
 
   return (
     <>
@@ -208,14 +209,10 @@ function SideButton(
     <button
       id={id}
       onClick={() => {
-        router.push(
-          {
-            pathname: router.asPath,
-            query: { menu: link },
-          },
-          undefined,
-          { scroll: false }
-        );
+        router.push({ query: { menu: link } }, undefined, {
+          scroll: false,
+          shallow: true,
+        });
       }}
     >
       <Image

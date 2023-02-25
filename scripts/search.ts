@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default async function Search(book: string, input: string) {
+export default async function search(book: string, input: string) {
   // read books
   let path;
   if (book === "all") path = `/api/xml`;
@@ -52,6 +52,7 @@ export default async function Search(book: string, input: string) {
     ({ id }, index) => !titles.includes(id, index + 1)
   );
 
+  // return all results
   return Collector;
 }
 

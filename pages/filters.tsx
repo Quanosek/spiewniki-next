@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import styles from "@styles/pages/filters.module.scss";
+import styles from "@/styles/pages/filters.module.scss";
 
 export default function FiltersPage() {
   return (

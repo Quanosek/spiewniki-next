@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-import styles from "@styles/components/menu.module.scss";
+import styles from "@/styles/components/menu.module.scss";
 
 import Favorite from "./menu/favorite";
 import Info from "./menu/info";
@@ -15,8 +15,8 @@ export default function Menu() {
       <div
         className={styles.background}
         onClick={() => {
-          // hide menu
-          router.replace("/", undefined, { shallow: true });
+          // hide menu (go back)
+          return router.back();
         }}
       ></div>
       <div className={styles.menu}>

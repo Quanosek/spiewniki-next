@@ -1,29 +1,29 @@
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 
-import styles from "@styles/pages/search.module.scss";
+import styles from "@/styles/pages/search.module.scss";
 
-import Results from "@components/results";
-
-import Search from "@scripts/search";
-import BookNames from "@scripts/bookNames";
+import search from "@/scripts/search";
+import BookNames from "@/scripts/bookNames";
 
 export default function SearchPage() {
   const router = useRouter();
   const book = router.query.book as string;
 
-  const [data, setData] = useState<any>(null);
+  const [data, setState] = useState<any>(null);
 
   useEffect(() => {
     if (!router.isReady) return;
     const book = router.query.book as string;
 
-    (async () => setData(await Search(book, "")))();
-  }, [router.isReady, router.query]);
+    const input = document.getElementById("input") as HTMLInputElement;
+    if (book === "all") input.focus();
 
-  if (!data) return;
+    (async () => setState(await search(book, "")))();
+  }, [router.isReady, router.query]);
 
   return (
     <>
@@ -78,7 +78,7 @@ export default function SearchPage() {
                     );
                   }
 
-                  setData(await Search(book, input));
+                  setState(await search(book, input));
                 }}
                 onKeyUp={(e) => {
                   if (e.key === "Enter") {
@@ -119,11 +119,45 @@ export default function SearchPage() {
           <div id="filters" className={styles.filters}>
             <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
             <button onClick={() => router.push("/filters")}>
-              <p>{BookNames(book)}</p>
+              <p>{(!book && "wybrany śpiewnik") || BookNames(book)}</p>
             </button>
           </div>
 
-          <Results results={data} />
+          <div className={styles.results}>
+            {(!data && ( // loading animation
+              <div className={styles.loader} />
+            )) ||
+              (!data[0] && ( // no results
+                <p className={styles.noResults}>Brak wyników wyszukiwania</p>
+              )) ||
+              // display all searching results
+              data.map(
+                (
+                  hymn: { book: string; title: string; lyrics: string[] },
+                  index: number,
+                  row: { length: number }
+                ) => {
+                  return (
+                    <div key={index}>
+                      <Link
+                        href={{
+                          pathname: `/hymn`,
+                          query: { book: hymn.book, title: hymn.title },
+                        }}
+                      >
+                        <h2>{hymn.title}</h2>
+                        {hymn.lyrics && <p>{hymn.lyrics}</p>}
+                      </Link>
+
+                      {
+                        // separate results
+                        index + 1 !== row.length && <hr />
+                      }
+                    </div>
+                  );
+                }
+              )}
+          </div>
         </div>
       </main>
     </>
@@ -135,5 +169,5 @@ function clearSearch(book: string) {
   input.value = "";
   input.focus();
 
-  Search(book, input.value);
+  search(book, input.value);
 }

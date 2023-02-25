@@ -3,9 +3,9 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import styles from "@styles/pages/hymn.module.scss";
+import styles from "@/styles/pages/hymn.module.scss";
 
-import Menu from "@components/menu";
+import Menu from "@/components/menu";
 import TopNavbar from "@/components/navbar/top";
 import BottomNavbar from "@/components/navbar/bottom";
 

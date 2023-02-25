@@ -102,6 +102,105 @@
   font-size: 0.9rem;
 }
 
+.results {
+  margin: 0 1.65rem;
+  border-radius: 0.6rem;
+  background-color: #171717;
+
+  a {
+    display: block;
+    margin: 4px;
+    padding: 0.9rem 1rem;
+    border-radius: 0.4rem;
+    transition: 0.05s background-color ease-out;
+
+    &:hover {
+      background-color: #252525;
+    }
+
+    h2,
+    p {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    h2 {
+      height: 100%;
+      width: 100%;
+      font-size: 115%;
+    }
+
+    p {
+      opacity: 0.75;
+      margin: 8px 6px 0;
+      font-size: 90%;
+    }
+  }
+
+  hr {
+    margin: 0 1rem;
+    height: 1.5px;
+    background-color: #474747;
+    border-radius: 100%;
+  }
+}
+
+.noResults {
+  opacity: 0.65;
+  margin: 4px;
+  padding: 1rem 0.8rem;
+  font-size: 115%;
+  cursor: default;
+}
+
+/* loader */
+.loader,
+.loader:before,
+.loader:after {
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  animation-fill-mode: both;
+  animation: loadAnimation 1.8s infinite ease-in-out;
+}
+
+.loader {
+  margin: 2rem auto 5rem;
+  color: var(--text);
+  font-size: 10px;
+  transform: translateZ(0);
+  animation-delay: -0.16s;
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+  }
+
+  &:before {
+    left: -3.5em;
+    animation-delay: -0.32s;
+  }
+
+  &:after {
+    left: 3.5em;
+  }
+}
+
+@keyframes loadAnimation {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+
 // tablet
 @media (max-width: 767px) {
   $padding: 0.6rem;
@@ -121,6 +220,16 @@
   .arrow {
     position: static;
     height: 3rem;
+  }
+
+  .results {
+    margin: 0;
+    border-radius: 0;
+    font-size: 90%;
+
+    a {
+      margin: 2px;
+    }
   }
 }
 
@@ -180,5 +289,23 @@
 
   .filtersTitle {
     font-size: 4.5vw;
+  }
+
+  .results {
+    margin-bottom: 8vw;
+    font-size: 4.5vw;
+
+    a {
+      padding: 4vw 3vw;
+
+      p {
+        margin: 2vw 1vw 0;
+      }
+    }
+  }
+
+  .noResults {
+    padding: 4vw 3vw;
+    font-size: 4.7vw;
   }
 }

@@ -1,4 +1,4 @@
-import styles from "@styles/components/menu.module.scss";
+import styles from "@/styles/components/menu.module.scss";
 
 export default function SettingsMenu() {
   return (

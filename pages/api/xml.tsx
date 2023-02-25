@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import { parseString } from "xml2js";
 
-import BookNames from "@/scripts/bookNames";
+import bookNames from "@/scripts/bookNames";
 
 export default function Database(req: NextApiRequest, res: NextApiResponse) {
   const { book, title } = req.query;
@@ -91,7 +91,7 @@ function HymnData(book: string | string[], title: string | string[]) {
     const song = result.song;
 
     song.id = [id];
-    song.book = [BookNames(book)];
+    song.book = [bookNames(book)];
     song.lyrics = LyricsFormat(result.song.lyrics[0]);
 
     results.push(song);

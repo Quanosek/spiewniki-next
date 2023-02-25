@@ -4,10 +4,11 @@ import router, { useRouter } from "next/router";
 import { ReactElement, useEffect } from "react";
 
 import styles from "@styles/pages/index.module.scss";
-import showMenu from "@scripts/showMenu";
 
-import Menu from "@components/menu";
-import BottomNavbar from "@components/navbar/bottom";
+import Menu from "@/components/menu";
+import BottomNavbar from "@/components/navbar/bottom";
+
+import showMenu from "@/scripts/showMenu";
 
 export default function IndexPage() {
   const router = useRouter();
@@ -147,7 +148,7 @@ export default function IndexPage() {
                 Wylosuj pieśń
               </button>
 
-              {OptionsButton(
+              {SideButton(
                 "favoriteButton",
                 "favorite",
                 "gwiazdka",
@@ -155,7 +156,7 @@ export default function IndexPage() {
                 "Lista ulubionych"
               )}
 
-              {OptionsButton(
+              {SideButton(
                 "settingsButton",
                 "settings",
                 "trybik",
@@ -163,13 +164,7 @@ export default function IndexPage() {
                 "Ustawienia"
               )}
 
-              {OptionsButton(
-                "infoButton",
-                "info",
-                "info",
-                "info",
-                "Informacje"
-              )}
+              {SideButton("infoButton", "info", "info", "info", "Informacje")}
             </div>
           </div>
         </div>
@@ -202,7 +197,7 @@ function HymnbookButton(shortcut: string, name: ReactElement) {
   );
 }
 
-function OptionsButton(
+function SideButton(
   id: string,
   link: string,
   alt: string,
@@ -216,12 +211,10 @@ function OptionsButton(
         router.push(
           {
             pathname: router.asPath,
-            query: { menu: `${link}` },
+            query: { menu: link },
           },
           undefined,
-          {
-            scroll: false,
-          }
+          { scroll: false }
         );
       }}
     >

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import router from "next/router";
 
-import styles from "@styles/components/navbar.module.scss";
+import styles from "@/styles/components/navbar.module.scss";
 
 export default function topNavbar() {
   return (
@@ -26,6 +26,7 @@ export default function topNavbar() {
             height={30}
           />
         </button>
+
         <button onClick={() => {}}>
           <Image
             className="icon"
@@ -35,6 +36,7 @@ export default function topNavbar() {
             height={30}
           />
         </button>
+
         <button onClick={() => {}}>
           <Image
             className="icon"

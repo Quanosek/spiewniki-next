@@ -10,8 +10,6 @@ import Menu from "@/components/menu";
 import TopNavbar from "@/components/navbar/top";
 import BottomNavbar from "@/components/navbar/bottom";
 
-import showMenu from "@/scripts/showMenu";
-
 export default function HymnPage() {
   const router = useRouter();
 
@@ -19,8 +17,6 @@ export default function HymnPage() {
 
   useEffect(() => {
     if (!router.isReady) return;
-
-    showMenu(router.query);
 
     (async () => {
       const { book, title } = router.query;

@@ -1,23 +1,15 @@
 import Head from "next/head";
 import Image from "next/image";
 import router, { useRouter } from "next/router";
-import { ReactElement, useEffect } from "react";
+import React, { ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
 import Menu from "@/components/menu";
 import BottomNavbar from "@/components/navbar/bottom";
 
-import showMenu from "@/scripts/showMenu";
-
 export default function IndexPage() {
   const router = useRouter();
-
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    showMenu(router.query);
-  }, [router]);
 
   return (
     <>

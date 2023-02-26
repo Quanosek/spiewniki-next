@@ -23,9 +23,9 @@ export default function SearchPage() {
     if (book === "all") input.focus();
 
     (async () => {
-      return setState(await search(book, ""));
+      return setState(await search(book, input.value));
     })();
-  }, [router.isReady, router.query]);
+  }, [router]);
 
   return (
     <>
@@ -57,9 +57,9 @@ export default function SearchPage() {
                 id="input"
                 placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
                 onInput={async (e) => {
-                  const input = (e.target as HTMLInputElement).value;
-                  changeIcons(input);
-                  setState(await search(book, input));
+                  const input = e.target as HTMLInputElement;
+                  changeIcons(input.value);
+                  setState(await search(book, input.value));
                 }}
                 onKeyUp={async (e) => {
                   if (e.key === "Enter") {

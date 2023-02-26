@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
+
 import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
@@ -8,6 +9,8 @@ import styles from "@/styles/pages/hymn.module.scss";
 import Menu from "@/components/menu";
 import TopNavbar from "@/components/navbar/top";
 import BottomNavbar from "@/components/navbar/bottom";
+
+import showMenu from "@/scripts/showMenu";
 
 export default function HymnPage() {
   const router = useRouter();
@@ -17,10 +20,18 @@ export default function HymnPage() {
   useEffect(() => {
     if (!router.isReady) return;
 
+    showMenu(router.query);
+
     (async () => {
-      return setState(await getData(router.query));
+      const { book, title } = router.query;
+
+      axios
+        .get(`/api/xml`, {
+          params: { book: book, title: title },
+        })
+        .then(({ data }) => setState(data[0]));
     })();
-  }, [router.isReady, router.query]);
+  }, [router]);
 
   return (
     <>
@@ -77,14 +88,4 @@ export default function HymnPage() {
       <BottomNavbar more={true} />
     </>
   );
-}
-
-async function getData(query: any) {
-  return axios
-    .get(`/api/xml`, {
-      params: { book: query.book, title: query.title },
-    })
-    .then(({ data }) => {
-      return data[0];
-    });
 }

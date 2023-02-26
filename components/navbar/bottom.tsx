@@ -23,10 +23,12 @@ export default function bottomNavbar(param: { more: boolean }) {
 
       <button
         onClick={() => {
-          router.push(
-            { query: { ...router.query, menu: "settings" } },
+          router.replace(
+            {
+              query: { ...router.query, menu: "settings" },
+            },
             undefined,
-            { scroll: false }
+            { shallow: true, scroll: false }
           );
         }}
       >
@@ -53,10 +55,12 @@ export default function bottomNavbar(param: { more: boolean }) {
 
       <button
         onClick={() => {
-          router.push(
-            { query: { ...router.query, menu: "favorite" } },
+          router.replace(
+            {
+              query: { ...router.query, menu: "favorite" },
+            },
             undefined,
-            { scroll: false }
+            { shallow: true, scroll: false }
           );
         }}
       >

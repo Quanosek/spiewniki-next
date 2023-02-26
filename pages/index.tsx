@@ -14,8 +14,10 @@ export default function IndexPage() {
   const router = useRouter();
 
   useEffect(() => {
-    return showMenu(router.query);
-  }, [router.query]);
+    if (!router.isReady) return;
+
+    showMenu(router.query);
+  }, [router]);
 
   return (
     <>
@@ -41,13 +43,13 @@ export default function IndexPage() {
               id="infoButton"
               title="Informacje o aplikacji"
               onClick={() => {
-                router.push(
+                router.replace(
                   {
                     pathname: router.asPath,
                     query: { menu: "info" },
                   },
                   undefined,
-                  { scroll: false }
+                  { shallow: true, scroll: false }
                 );
               }}
             >
@@ -209,10 +211,13 @@ function SideButton(
     <button
       id={id}
       onClick={() => {
-        router.push({ query: { menu: link } }, undefined, {
-          scroll: false,
-          shallow: true,
-        });
+        router.replace(
+          {
+            query: { menu: link },
+          },
+          undefined,
+          { shallow: true, scroll: false }
+        );
       }}
     >
       <Image

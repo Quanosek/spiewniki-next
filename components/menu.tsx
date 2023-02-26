@@ -8,19 +8,30 @@ import Settings from "./menu/settings";
 
 export default function Menu() {
   const router = useRouter();
-  const { query } = router;
+  const menu = router.query.menu as string;
 
   return (
     <div id="menu" className={styles.holder}>
-      <div className={styles.background} onClick={() => router.back()}></div>
+      <div
+        className={styles.background}
+        onClick={() => {
+          const { menu, ...params } = router.query;
+          return router.replace(
+            {
+              query: { ...params },
+            },
+            undefined,
+            { shallow: true, scroll: false }
+          );
+        }}
+      ></div>
 
       <div className={styles.menu}>
         <div className={styles.content}>
-          {/* select menu */}
-
-          {query.menu === "favorite" && <Favorite />}
-          {query.menu === "info" && <Info />}
-          {query.menu === "settings" && <Settings />}
+          {/* select menu window */}
+          {menu === "favorite" && <Favorite />}
+          {menu === "info" && <Info />}
+          {menu === "settings" && <Settings />}
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
-export default function showMenu(query: any) {
+import { ParsedUrlQuery } from "querystring";
+
+export default function showMenu(query: ParsedUrlQuery) {
   const menuDiv = document.getElementById("menu") as HTMLElement;
 
   if (query.menu) {

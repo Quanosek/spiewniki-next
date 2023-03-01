@@ -1,15 +1,25 @@
 import Head from "next/head";
 import Image from "next/image";
 import router, { useRouter } from "next/router";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
 import Menu from "@/components/menu";
-import BottomNavbar from "@/components/navbar/bottom";
+import BottomNavbar, {
+  buttonLink,
+  randomButton,
+} from "@/components/navbar/bottom";
 
 export default function IndexPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    window.addEventListener("keydown", keydownListener, true);
+    return () => window.removeEventListener("keydown", keydownListener, true);
+  }, [router, keydownListener]);
 
   return (
     <>
@@ -17,11 +27,11 @@ export default function IndexPage() {
         <title>Śpiewniki</title>
         <meta
           name="description"
-          content="Oficjalna strona ze wszystkimi śpiewnikami Badaczy Pisma Świętego | Krzysztof Olszewski i Jakub Kłało, Wszelkie prawa zastrzeżone ©&nbsp;2022-2023"
+          content='Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami: Zrzeszenia Wolnych Badaczy Pisma Świętego, Świeckiego Ruchu Misyjnego "Epifania", Chóru "Syloe" i wielu innych. | Wszelkie prawa zastrzeżone &#169; 2023 | Jakub Kłało'
         />
         <meta
           name="keywords"
-          content="Dabhar, dabhar.org, ZWBPS, ZWBP ŚW, BPSW, Badacze, Wolni badacze, badaczy, Zrzeszenie Wolnych Badaczy Pisma Świętego, Świecki Ruch Misyjny Epifania, Zrzeszenie, Kraków, Warszawa, Białogard, Biłgoraj, nastrazy.org, Na Straży, Wędrówka, Wędrowniczek, Zbawienie.pl, 52Prawdy, śpiewniki, śpiewnik, śpiewnik młodzieżowy, Brzask, brzasku, Śpiewnik Brzasku Tysiąclecia, Cegiełki, Uwielbiajmy Pana, Nowe Pieśni, Koziańskie, Kozy, Poznańskie, Poznań, Śpiewajmy Panu Pieśń Nową, tekst, teksty, słowa, wszystkie pieśni, piosenki, obóz, obozowe, piosenki obozowe, kursy biblijne, kursy, kolonie, kolonia religijna, konwencja, konwencje, Krzysztof Olszewski, Jakub Kłało, klalo.pl"
+          content="Dabhar, dabhar.org, ZWBPS, ZWBP ŚW, BPSW, Badacze, Wolni badacze, badaczy, Zrzeszenie Wolnych Badaczy Pisma Świętego, Świecki Ruch Misyjny Epifania, Epifanii, Zrzeszenie, Kraków, Warszawa, Białogard, Biłgoraj, nastrazy.org, Na Straży, Wędrówka, Wędrowniczek, Zbawienie.pl, 52Prawdy, śpiewniki, śpiewnik, śpiewnik młodzieżowy, śpiewniczek, śpiewniczki, Brzask, brzasku, Śpiewnik Brzasku Tysiąclecia, Cegiełki, Uwielbiajmy Pana, Nowe Pieśni, Koziańskie, Kozy, Poznańskie, Poznań, Śpiewajmy Panu Pieśń Nową, tekst, teksty, słowa, wszystkie pieśni, piosenki, nuty, pdf, obóz, obozowe, piosenki obozowe, kursy biblijne, kursy, kolonie, kolonia religijna, konwencja, konwencje, Jakub Kłało, klalo.pl"
         />
       </Head>
 
@@ -31,20 +41,8 @@ export default function IndexPage() {
         <div className={styles.container}>
           <div className={styles.title}>
             <h1>Śpiewniki</h1>
-            <button
-              id="infoButton"
-              title="Informacje o aplikacji"
-              onClick={() => {
-                router.replace(
-                  {
-                    pathname: router.asPath,
-                    query: { menu: "info" },
-                  },
-                  undefined,
-                  { shallow: true, scroll: false }
-                );
-              }}
-            >
+
+            <button onClick={() => buttonLink("info")}>
               <Image
                 className="icon"
                 alt="info"
@@ -67,6 +65,7 @@ export default function IndexPage() {
             <div className={styles.searchIcon}></div>
             <input
               id="input"
+              title="Przejdź do sekcji wyszukiwania [/]"
               placeholder="Kliknij, aby rozpocząć wyszukiwanie"
               disabled
             />
@@ -75,6 +74,7 @@ export default function IndexPage() {
           <div className={styles.content}>
             <div className={styles.hymnBooks}>
               <h2>Wybierz śpiewnik:</h2>
+
               <div className={styles.grid}>
                 {HymnbookButton(
                   "PBT",
@@ -114,7 +114,6 @@ export default function IndexPage() {
               </div>
 
               <button
-                id="inne"
                 className={styles.otherHymns}
                 onClick={() => {
                   router.push({
@@ -132,34 +131,61 @@ export default function IndexPage() {
             <div className={styles.optionsMenu}>
               <h2>Dostępne opcje:</h2>
 
-              <button id="randomButton">
+              <button
+                title="Otwórz losową pieśń [R]"
+                onClick={() => randomButton()}
+              >
                 <Image
                   className="icon"
                   alt="kostka"
                   src="/icons/dice.svg"
-                  width={10}
-                  height={10}
+                  width={32}
+                  height={32}
                 />
                 Wylosuj pieśń
               </button>
 
-              {SideButton(
-                "favoriteButton",
-                "favorite",
-                "gwiazdka",
-                "star_empty",
-                "Lista ulubionych"
-              )}
+              <button
+                title="Przejdź do listy ulubionych pieśni [F]"
+                onClick={() => buttonLink("favorite")}
+              >
+                <Image
+                  className="icon"
+                  alt="gwiazdka"
+                  src="/icons/star_empty.svg"
+                  width={32}
+                  height={32}
+                />
+                <p>Lista ulubionych</p>
+              </button>
 
-              {SideButton(
-                "settingsButton",
-                "settings",
-                "trybik",
-                "settings",
-                "Ustawienia"
-              )}
+              <button
+                title="Przejdź do ustawień aplikacji [S]"
+                onClick={() => buttonLink("settings")}
+              >
+                <Image
+                  className="icon"
+                  alt="trybik"
+                  src="/icons/settings.svg"
+                  width={32}
+                  height={32}
+                />
+                <p>Ustawienia</p>
+              </button>
 
-              {SideButton("infoButton", "info", "info", "info", "Informacje")}
+              <button
+                title="Informacje od twórców strony [I]"
+                onClick={() => buttonLink("info")}
+              >
+                <Image
+                  className="icon"
+                  alt="info"
+                  src="/icons/info.svg"
+                  width={32}
+                  height={32}
+                />
+                <p>Informacje</p>
+              </button>
             </div>
           </div>
         </div>
@@ -183,8 +209,8 @@ function HymnbookButton(shortcut: string, name: ReactElement) {
       <Image
         alt="okładka śpiewnika"
         src={`/covers/${shortcut}.webp`}
-        width={183}
-        height={258}
+        width={850}
+        height={1200}
         priority={true}
       />
       <h3>{name}</h3>
@@ -192,34 +218,17 @@ function HymnbookButton(shortcut: string, name: ReactElement) {
   );
 }
 
-function SideButton(
-  id: string,
-  link: string,
-  alt: string,
-  src: string,
-  name: string
-) {
-  return (
-    <button
-      id={id}
-      onClick={() => {
-        router.replace(
-          {
-            query: { menu: link },
-          },
-          undefined,
-          { shallow: true, scroll: false }
-        );
-      }}
-    >
-      <Image
-        className="icon"
-        alt={alt}
-        src={`/icons/${src}.svg`}
-        width={10}
-        height={10}
-      />
-      <p>{name}</p>
-    </button>
-  );
+function keydownListener(e: KeyboardEvent) {
+  switch (e.key) {
+    case "/":
+      router.push({
+        pathname: "/search",
+        query: { book: "all" },
+      });
+      break;
+
+    case "i":
+      buttonLink("info");
+      break;
+  }
 }

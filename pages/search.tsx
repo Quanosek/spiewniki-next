@@ -25,7 +25,10 @@ export default function SearchPage() {
     (async () => {
       return setState(await search(book, input.value));
     })();
-  }, [router]);
+
+    window.addEventListener("keyup", keyupListener, true);
+    return () => window.removeEventListener("keyup", keyupListener, true);
+  }, [router, keyupListener]);
 
   return (
     <>
@@ -148,16 +151,6 @@ export default function SearchPage() {
   );
 }
 
-async function clearSearch(book: string) {
-  const input = document.getElementById("input") as HTMLInputElement;
-  input.value = "";
-
-  changeIcons(input.value);
-  input.focus();
-
-  return await search(book, input.value);
-}
-
 function changeIcons(input: string) {
   const searchIcon = document.getElementById("searchIcon") as HTMLElement;
   const clearIcon = document.getElementById("clearIcon") as HTMLElement;
@@ -168,5 +161,26 @@ function changeIcons(input: string) {
   } else {
     searchIcon.style.display = "none";
     clearIcon.style.display = "flex";
+  }
+}
+
+async function clearSearch(book: string) {
+  const input = document.getElementById("input") as HTMLInputElement;
+  input.value = "";
+
+  changeIcons(input.value);
+  input.focus();
+
+  return await search(book, input.value);
+}
+
+function keyupListener(e: KeyboardEvent) {
+  if (document.activeElement?.tagName !== "INPUT") {
+    switch (e.key) {
+      case "/":
+        const input = document.getElementById("input") as HTMLInputElement;
+        input.focus();
+        break;
+    }
   }
 }

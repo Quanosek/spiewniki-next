@@ -1,8 +1,10 @@
 import Image from "next/image";
 import router, { useRouter } from "next/router";
+import { useEffect } from "react";
+
+import axios from "axios";
 
 import styles from "@/styles/components/navbar.module.scss";
-import { useEffect } from "react";
 
 export default function bottomNavbar(param: { more: boolean }) {
   const more = param.more;
@@ -100,7 +102,18 @@ export function buttonLink(name: string) {
 }
 
 export function randomButton() {
-  return;
+  (async () => {
+    const data = await axios.get(`/api/xml`).then(({ data }) => data);
+    const random = Math.floor(Math.random() * (Math.floor(data.length) + 1));
+
+    router.push({
+      pathname: "/hymn",
+      query: {
+        book: data[random].book,
+        title: data[random].title,
+      },
+    });
+  })();
 }
 
 function keydownListener(e: KeyboardEvent) {

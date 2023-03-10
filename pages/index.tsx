@@ -64,6 +64,7 @@ export default function IndexPage() {
           >
             <div className={styles.searchIcon}></div>
             <input
+              type="text"
               id="input"
               title="Przejdź do sekcji wyszukiwania [/]"
               placeholder="Kliknij, aby rozpocząć wyszukiwanie"

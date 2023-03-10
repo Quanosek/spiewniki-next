@@ -57,6 +57,7 @@ export default function SearchPage() {
 
             <div className={styles.searchbar}>
               <input
+                type="text"
                 id="input"
                 placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
                 onInput={async (e) => {

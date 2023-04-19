@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>47N. Gdy uczniów swych</title>
+  <title>47. Gdy uczniów swych</title>
   <lyrics>[V1]
  1. Gdy uczniów swych posyłał Pan,
  by nieśli wieść radosną,
@@ -26,8 +26,8 @@
  w ostatnią drogę ruszyli.
  Patrzyli w niebo, na Ojca dom
  i tak z ufnością śpiewali:</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Łuk. 9:1-6</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
   <ccli></ccli>
@@ -39,8 +39,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

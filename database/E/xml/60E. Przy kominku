@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>60E. Przy kominku</title>
+  <title>60. Przy kominku</title>
   <lyrics>[V1]
  Z wiary kruchej, Panie, jak słomiany ogień,
  Twemu tułaczowi zbuduj dom przydrożny.
@@ -30,7 +30,7 @@
 
  [: Do domu wiecznego, jak najstarsze wino,
  będę szedł znów Panie z Tobą i z dziewczyną. :]</lyrics>
-  <author></author>
+  <author>sł. Aleksandra Bacińska, muz. Leonard Luter</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

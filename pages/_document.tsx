@@ -1,5 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Document() {
   return (
@@ -12,8 +13,11 @@ export default function Document() {
         {/* apple */}
         <meta name="mobile-wep-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="white" />
         <meta name="apple-mobile-web-app-title" content="Śpiewniki" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
 
         {/* favicon */}
         <link rel="icon" href="/logo/favicon.ico" sizes="any" />
@@ -25,17 +29,39 @@ export default function Document() {
       </Head>
 
       <body>
-        <Main />
+        <header>
+          <div className="container">
+            <h1>Śpiewniki</h1>
+
+            <Link href="https://www.nastrazy.org/" target="_blank">
+              Na Straży.org
+              <Image
+                className="icon"
+                alt="link"
+                src="/icons/external_link.svg"
+                width={20}
+                height={20}
+              />
+            </Link>
+          </div>
+        </header>
+
+        <div className="container">
+          <Main />
+        </div>
 
         <footer>
-          <p>
-            Stworzone z 💙 przez{" "}
-            <Link href="https://github.com/Quanosek">Jakuba Kłało</Link>
-          </p>
-          <p>
-            Wszelkie prawa zastrzeżone &#169; 2023 │ domena{" "}
-            <Link href="https://www.klalo.pl">klalo.pl</Link>
-          </p>
+          <div className="container">
+            <p>
+              Stworzone z 💙 przez{" "}
+              <Link href="https://github.com/Quanosek">Jakuba Kłało</Link>.
+            </p>
+
+            <p>
+              Wszelkie prawa zastrzeżone &#169; 2023 │ domena{" "}
+              <Link href="https://www.klalo.pl">klalo.pl</Link>
+            </p>
+          </div>
         </footer>
 
         <NextScript />

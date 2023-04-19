@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>244C. Panie powiedz kiedy</title>
+  <title>244. Panie powiedz kiedy</title>
   <lyrics>[C]
  Ref.: Panie powiedz kiedy,
  Panie powiedz kiedy,
@@ -18,7 +18,7 @@
  czekam na dzień Twój, Panie, na ten dzień,
  to On da ci chleb, On da ci swój chleb,
  czekam na dzień Twój, Panie, na ten dzień.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>C V1 C V2 C</presentation>
@@ -31,8 +31,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>15E. Ciągły niepokój na świecie</title>
+  <title>15. Ciągły niepokój na świecie</title>
   <lyrics>[V1]
  1. Ciągły niepokój na świecie, 
  wojny i wojny bez końca.
@@ -24,8 +24,8 @@
  w sobie, w rodzinie przy pracy.
  Nasze mozolne wysiłki
  Pan swoją łaską wzbogaci.</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Jan 14:27</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
   <ccli></ccli>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

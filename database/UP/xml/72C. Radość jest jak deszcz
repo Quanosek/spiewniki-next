@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>72C. Radość jest jak deszcz</title>
+  <title>72. Radość jest jak deszcz</title>
   <lyrics>[V1]
- 1. Krople deszczu na mym oknie.
- Radość jest jak deszcz.
- Chociaż często płyną łzy.
- W smutku radość dajesz mi.
- Radość jest jak deszcz.
+ 1. Krople deszczu na mym oknie,
+ radość jest jak deszcz.
+ Chociaż często płyną łzy,
+ w smutku radość dajesz mi,
+ radość jest jak deszcz.
 
 [V2]
- 2. Noc już gasi blaski słońca.
- Radość jest jak zmierzch.
+ 2. Noc już gasi blaski słońca,
+ radość jest jak zmierzch.
  Choć zwycięża nocy cień,
- jutro wstanie nowy dzień.
- Radość jest jak zmierzch.cd
+ jutro wstanie nowy dzień,
+ radość jest jak zmierzch.
 
 [V3]
- 3. W burzy w wichrze szukam Pana.
- Radość przetrwa sztorm.
- Jezu prowadź moją łódź,
- ucisz wiatr i radość wzbudź.
- Radość przetrwa sztorm.
+ 3. W burzy, w wichrze, szukam Pana,
+ radość przetrwa sztorm.
+ Jezu, prowadź moją łódź,
+ ucisz wiatr i radość wzbudź,
+ radość przetrwa sztorm.
 
 [V4]
- 4. W deszczu łez słoneczna tęcza.
- Radość jest jak deszcz.
- Panie słońce smutnych dni,
- naucz widzieć Cię przez łzy.
- Radość jest jak deszcz.</lyrics>
-  <author>(4 zwrotki)</author>
+ 4. W deszczu łez słoneczna tęcza,
+ radość jest jak deszcz.
+ Panie, słońce smutnych dni,
+ naucz widzieć Cię przez łzy,
+ radość jest jak deszcz.</lyrics>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -41,8 +41,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

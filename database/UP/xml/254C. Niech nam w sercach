@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>254C. Niech nam w sercach</title>
+  <title>254. Niech nam w sercach</title>
   <lyrics>[V1]
  1. Niech nam w sercach radość śpiewa,
  niech i w pieśni radość brzmi.
@@ -18,7 +18,7 @@
  niech rozbrzmiewa pieśnią las.
  Dzionek, tydzień, miesiąc, stale
  miłość Boża mieszka w nas.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
@@ -31,8 +31,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

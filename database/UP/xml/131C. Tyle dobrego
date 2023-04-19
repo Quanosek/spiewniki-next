@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>131C. Tyle dobrego</title>
+  <title>131. Tyle dobrego</title>
   <lyrics>[V1]
  1. Tyle dobrego
  zawdzięczam Tobie, Panie,
@@ -27,7 +27,7 @@
  bo jakże często wdzięczności w modłach brak.
  Mądrością życia jest widzieć sens cierpienia,
  dlatego, Boże, śpiewamy Tobie tak:</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
@@ -40,8 +40,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

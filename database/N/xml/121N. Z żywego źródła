@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>121N. Z żywego źródła</title>
+  <title>121. Z żywego źródła</title>
   <lyrics>[V1]
  1. Z żywego źródła mój Pan pić mi dał.
  Taki w miłości On miał dla mnie plan,
@@ -30,8 +30,8 @@
  Nie chcę już więcej bez Ciebie tu żyć.
  Kocham Cię mocno, o Jezu,
  tyś Pan mój, weź mnie, jam jest Twój.</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Jan 4:14</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
   <ccli></ccli>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>69N. Zanim powiem słowo</title>
+  <title>69. Zanim powiem słowo</title>
   <lyrics>[V1]
  Nie ma za trudnych spraw,
  nie ma zbyt błahych też
@@ -20,7 +20,7 @@
  Uwielbiam Cię,
  Twoja wola niech się stanie!</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Psalm 139:4</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -32,8 +32,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

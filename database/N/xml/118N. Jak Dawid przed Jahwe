@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>118N. Jak Dawid przed Jahwe</title>
+  <title>118. Jak Dawid przed Jahwe</title>
   <lyrics>[V1]
  Jak Dawid przez Jahwe, Bogiem swym,
  będą pląsać ze wszystkich sił
@@ -23,7 +23,7 @@
  Dał nam prawo Boga czcić,
  przez swą krew, przez krzyż.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>II Moj. 15:21</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -35,8 +35,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

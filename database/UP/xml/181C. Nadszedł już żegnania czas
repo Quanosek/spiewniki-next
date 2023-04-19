@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>181C. Nadszedł już żegnania czas</title>
+  <title>181. Nadszedł już żegnania czas</title>
   <lyrics>[V1]
  1. Nadszedł już żegnania czas,
  wkrótce rozstaniemy się.
@@ -18,8 +18,8 @@
  nam pomoże w górę iść.
  Tam do tronu Boga chwał,
  który w obietnicach dał.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Iz. 38:12</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -31,8 +31,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

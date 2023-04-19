@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>15C. Do celnika Zacheusza</title>
+  <title>15. Do celnika Zacheusza</title>
   <lyrics>[V1]
  1. Do celnika Zacheusza przyszedł Pan,
  czy przemieni jego życie pełne plam?
@@ -28,8 +28,8 @@
  "Jeślim kogoś skrzywdził z ludzi
  to podwójnie wynagradzam,
  a ubogim pół majątku swego dam."</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Łuk. 19:1-10</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -41,8 +41,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

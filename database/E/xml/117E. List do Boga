@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>117E. List do Boga</title>
+  <title>117. List do Boga</title>
   <lyrics>[V1]
  1. Drogi Boże, piszę chociaż kilka słów,
  innym razem napiszę więcej.
@@ -30,7 +30,7 @@
  z którym tak wiele mnie łączyło,
  lecz dopiero teraz zacząłem doceniać
  czym jest życie i prawdziwa miłość.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author>sł. i muz. Czesław Kroczek</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

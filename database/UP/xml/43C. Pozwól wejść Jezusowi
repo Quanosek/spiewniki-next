@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>43C. Pozwól wejść Jezusowi</title>
+  <title>43. Pozwól wejść Jezusowi</title>
   <lyrics>[V1]
  1. Gdy nie możesz znaleźć sobie miejsca,
  W świecie tym jesteś sam.
@@ -30,7 +30,7 @@
  bo On cię chroni i nie opuści.
  On za ciebie złożył swoje życie,
  więc w Jego ręce oddaj swój los.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

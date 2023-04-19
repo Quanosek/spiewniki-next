@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>39E. Pytania</title>
+  <title>39. Pytania</title>
   <lyrics>[V1]
  1. Skąd w naszym życiu tyle zła,
  skąd w naszych słowach tyle zdrad,
@@ -28,7 +28,7 @@
  i prowadź nas przez blask Twego odbicia,
  i prowadź nas wśród ludzi po kryjomu,
  i prowadź nas drogą do domu. :]</lyrics>
-  <author>(2 zwrotki)</author>
+  <author>sł. i muz. Andrzej Kaliszczyk</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -41,8 +41,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

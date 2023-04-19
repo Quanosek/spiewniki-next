@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>129E. Rozpocznij z Bogiem dzień!</title>
+  <title>129. Rozpocznij z Bogiem dzień!</title>
   <lyrics>[V1]
  1. Rozpocznij z Bogiem dzień!
  On Słońcem, życiem twym,
@@ -27,10 +27,10 @@
  
 [V5]
 5.  Z potrzebą, z troską spiesz
-do Niego — ufać chciej,
-że pomoc da ci Pan,
-[: pomoże w pracy twej :]</lyrics>
-  <author>(5 zwrotek)</author>
+ do Niego - ufać chciej,
+ że pomoc da ci Pan,
+ [: pomoże w pracy twej :]</lyrics>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -43,8 +43,8 @@ do Niego — ufać chciej,
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>124N. Boże, Zbawicielu</title>
+  <title>124. Boże, Zbawicielu</title>
   <lyrics>[V]
  [: Boże, Zbawicielu,
  wczesnym rankiem szukam Cię. :]
@@ -9,7 +9,7 @@
  jak wyschła ziemia wokół nas,
  której wody brak. :]</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Psalm 63:1-3</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -21,8 +21,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

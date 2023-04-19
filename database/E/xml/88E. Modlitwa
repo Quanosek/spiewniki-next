@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>88E. Modlitwa</title>
+  <title>88. Modlitwa</title>
   <lyrics>[K]
  Gdy Jezus przebywał w jakimś miejscu na modlitwie i skończył ją,
  rzekł jeden z uczniów do Niego: "Panie, naucz nas modlić się,
@@ -26,7 +26,7 @@
  Nie dopuść też byśmy słabli,
  gdy kusi ciało i diabeł,
  Twoja jest moc, Tyś jest silny.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>K V1 C V2 C</presentation>
@@ -39,8 +39,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

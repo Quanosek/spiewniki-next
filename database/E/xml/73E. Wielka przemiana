@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>73E. Wielka przemiana</title>
+  <title>73. Wielka przemiana</title>
   <lyrics>[V1]
  1. Jak wielka, o Panie, zachodzi przemiana,
  gdy przed Twym obliczem uginam kolana.
@@ -16,7 +16,7 @@
  wstajemy, by z mocą ogłaszać Twe wieści.
  Więc po co się sami i innych krzywdzimy
  i zamiast być mocni się stale martwimy?</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
@@ -29,8 +29,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

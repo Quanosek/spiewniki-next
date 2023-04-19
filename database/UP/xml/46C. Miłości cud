@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>46C. Miłości cud</title>
+  <title>46. Miłości cud</title>
   <lyrics>[V1]
  1. Miłości cud
  w mym sercu Jezus ziścił. 
@@ -22,8 +22,8 @@
  Z miłością tą me serce się spoiło,
  spoczęło w niej
  spokojnie wśród burz złych.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Iz. 53:6</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -35,8 +35,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,5 @@
 import Image from "next/image";
-import router, { useRouter } from "next/router";
-import { useEffect } from "react";
+import router from "next/router";
 
 import axios from "axios";
 
@@ -8,14 +7,6 @@ import styles from "@/styles/components/navbar.module.scss";
 
 export default function bottomNavbar(param: { more: boolean }) {
   const more = param.more;
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    window.addEventListener("keydown", keydownListener, true);
-    return () => window.removeEventListener("keydown", keydownListener, true);
-  }, [router, keydownListener]);
 
   return (
     <div className={styles.bottom}>
@@ -92,7 +83,7 @@ export default function bottomNavbar(param: { more: boolean }) {
 }
 
 export function buttonLink(name: string) {
-  router.replace(
+  router.push(
     {
       query: { ...router.query, menu: name },
     },
@@ -114,34 +105,4 @@ export function randomButton() {
       },
     });
   })();
-}
-
-function keydownListener(e: KeyboardEvent) {
-  (document.activeElement as HTMLElement).blur();
-  const { menu, ...params } = router.query;
-
-  switch (e.key) {
-    case "r":
-      if (!menu) {
-        randomButton();
-        return;
-      }
-      break;
-
-    case "f":
-      buttonLink("favorite");
-      break;
-
-    case "s":
-      buttonLink("settings");
-      break;
-
-    case "Escape":
-      if (menu) {
-        router.replace({
-          query: { ...params },
-        });
-      }
-      break;
-  }
 }

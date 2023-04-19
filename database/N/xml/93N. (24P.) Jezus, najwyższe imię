@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>93N. Jezus, najwyższe imię</title>
+  <title>93. Jezus, najwyższe imię</title>
   <lyrics>[V]
  Jezus, najwyższe imię,
  nasz Zbawiciel, Książę Pokoju.
@@ -11,7 +11,7 @@
  Zgładził grzech, Baranek wielki.
  królów Król i panów Pan.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Flp. 2:9</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -23,8 +23,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

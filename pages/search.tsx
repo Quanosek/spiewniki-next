@@ -1,34 +1,49 @@
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+
+import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
 
-import search from "@/scripts/search";
 import BookNames from "@/scripts/bookNames";
 
 export default function SearchPage() {
   const router = useRouter();
-  const book = router.query.book as string;
+  let { book, tags } = router.query as { book: string; tags: any };
 
-  const [data, setState] = useState<any>(null);
+  if (!book) book = "all";
+  if (tags) tags = tags.split("-");
+
+  const [data, setData] = useState<any>(null);
+  const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
     if (!router.isReady) return;
-    const book = router.query.book as string;
 
+    // define input element
     const input = document.getElementById("input") as HTMLInputElement;
-    if (book === "all") input.focus();
+    if (book === "all" && !tags) input.focus();
 
+    // searching script
     (async () => {
-      return setState(await search(book, input.value));
+      return setData(await search(book, input.value));
     })();
 
-    window.addEventListener("keyup", keyupListener, true);
-    return () => window.removeEventListener("keyup", keyupListener, true);
-  }, [router, keyupListener]);
+    // filter buttons
+    const filters = document.getElementById("filters") as HTMLElement;
+    filters.onclick = (e) => {
+      if ((e.target as HTMLElement).tagName === "BUTTON") router.push("/books");
+    };
+
+    // show/hide scroll-to-top button
+    window.onscroll = () => {
+      if (window.scrollY > 300) setShowTopBtn(true);
+      else setShowTopBtn(false);
+    };
+  }, [router, book, tags]);
 
   return (
     <>
@@ -37,151 +52,231 @@ export default function SearchPage() {
       </Head>
 
       <main>
-        <div className={styles.container}>
-          <h1 className={styles.title}>Wyszukiwanie</h1>
-          <div className={styles.searchHolder}>
-            <button
-              className={styles.arrow}
-              title="Powrót do strony głównej"
-              onClick={() => router.back()}
-            >
-              <Image
-                className="icon"
-                alt="powrót"
-                src="/icons/arrow.svg"
-                width={45}
-                height={45}
-                priority
-              />
-            </button>
+        <div className={styles.mobileTitle}>
+          <h2>Wyszukiwanie</h2>
 
-            <div className={styles.searchbar}>
-              <input
-                type="text"
-                id="input"
-                placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
-                onInput={async (e) => {
-                  const input = e.target as HTMLInputElement;
-                  changeIcons(input.value);
-                  setState(await search(book, input.value));
-                }}
-                onKeyUp={async (e) => {
-                  if (e.key === "Enter") {
-                    const firstResults = document.getElementById("results")
-                      ?.firstChild?.firstChild as HTMLLinkElement;
+          <button
+            title="Powrót do strony głównej"
+            className={styles.backArrow}
+            onClick={() => router.push("/")}
+          >
+            <Image
+              className="icon"
+              alt="info"
+              src="/icons/arrow.svg"
+              width={25}
+              height={25}
+              draggable="false"
+            />
+          </button>
+        </div>
 
-                    if (firstResults.href) router.push(firstResults.href);
-                    else setState(await clearSearch(book));
-                  }
-                }}
-              />
+        <div className={styles.searchBox}>
+          <input
+            autoComplete="off"
+            type="text"
+            id="input"
+            // placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
+            onInput={async (e) => {
+              const input = e.target as HTMLInputElement;
+              showClear(input.value);
+              setData(await search(book, input.value));
+            }}
+            onKeyUp={async (e) => {
+              if (e.key === "Enter") {
+                const firstResults = document.getElementById("results")
+                  ?.firstChild?.firstChild as HTMLLinkElement;
 
-              <div id="searchIcon" className={styles.searchIcon}>
-                <Image
-                  className={`${styles.searchIcon} icon`}
-                  alt="szukaj"
-                  src="/icons/search.svg"
-                  width={10}
-                  height={10}
-                />
-              </div>
+                if (firstResults.href) router.push(firstResults.href);
+                else setData(await clearSearch(book));
+              }
+            }}
+          />
 
-              <div
-                id="clearIcon"
-                className={styles.clearIcon}
-                onClick={async () => setState(await clearSearch(book))}
-              >
-                <Image
-                  className="icon"
-                  alt="szukaj"
-                  src="/icons/close.svg"
-                  width={10}
-                  height={10}
-                />
-              </div>
-            </div>
+          <div id="searchIcon" className={styles.searchIcon}>
+            <Image
+              className="icon"
+              alt="Ikonka wyszukiwania"
+              src="/icons/search.svg"
+              width={25}
+              height={25}
+              draggable="false"
+            />
           </div>
 
-          <div id="filters" className={styles.filters}>
-            <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
-            {book && (
-              <Link href={"/filters"}>
-                <p>{BookNames(book)}</p>
-              </Link>
-            )}
-          </div>
-
-          <div id="results" className={styles.results}>
-            {(!data && ( // loading animation
-              <div className={styles.loader} />
-            )) ||
-              (!data[0] && ( // no results
-                <p className={styles.noResults}>Brak wyników wyszukiwania</p>
-              )) ||
-              // display all searching results
-              data.map(
-                (
-                  hymn: { book: string; title: string; lyrics: string[] },
-                  index: number,
-                  row: { length: number }
-                ) => {
-                  return (
-                    <div key={index}>
-                      <Link
-                        href={{
-                          pathname: `/hymn`,
-                          query: { book: hymn.book, title: hymn.title },
-                        }}
-                      >
-                        <h2>{hymn.title}</h2>
-                        {hymn.lyrics && <p>{hymn.lyrics}</p>}
-                      </Link>
-
-                      {
-                        // separate results
-                        index + 1 !== row.length && <hr />
-                      }
-                    </div>
-                  );
-                }
-              )}
+          <div
+            id="clearIcon"
+            className={styles.clearIcon}
+            onClick={async () => setData(await clearSearch(book))}
+          >
+            <Image
+              className="icon"
+              alt="Wyczyść wyszukiwanie"
+              src="/icons/close.svg"
+              width={25}
+              height={25}
+              draggable="false"
+            />
           </div>
         </div>
+
+        <div id="filters" className={styles.filters}>
+          <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
+
+          {book && <button>{BookNames(book)}</button>}
+          {/* {tags &&
+            tags.map((name: string, index: number) => {
+              return (
+                <button key={index} className={styles.tagsButtons}>
+                  {name}
+                </button>
+              );
+            })}
+          <button className={styles.addMore}>+</button> */}
+        </div>
+
+        <div id="results" className={styles.results}>
+          {(!data && <div className="loader" />) ||
+            (!data[0] && (
+              <p className={styles.noResults}>Brak wyników wyszukiwania</p>
+            )) ||
+            data.map(
+              (
+                hymn: { book: string; title: string; lyrics: string[] },
+                index: number,
+                row: { length: number }
+              ) => {
+                return (
+                  <div key={index}>
+                    <Link
+                      href={{
+                        pathname: `/hymn`,
+                        query: { book: hymn.book, title: hymn.title },
+                      }}
+                    >
+                      <h2>{hymn.title}</h2>
+                      {hymn.lyrics && <p>{hymn.lyrics}</p>}
+                    </Link>
+
+                    {
+                      index + 1 !== row.length && <hr /> // separate results
+                    }
+                  </div>
+                );
+              }
+            )}
+        </div>
+
+        <button
+          title="Wróć na samą górę."
+          className={styles.scrollButton}
+          style={{
+            // show/hide button
+            visibility: showTopBtn ? "visible" : "hidden",
+            opacity: showTopBtn ? 0.8 : 0,
+          }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          <Image
+            className="icon"
+            alt="up"
+            src="/icons/arrow.svg"
+            width={25}
+            height={25}
+          />
+        </button>
       </main>
     </>
   );
 }
 
-function changeIcons(input: string) {
-  const searchIcon = document.getElementById("searchIcon") as HTMLElement;
+// searching main script
+async function search(book: string, input: string) {
+  // read books
+  let path;
+  if (book === "all") path = `/api/xml`;
+  else path = `/api/xml?book=${book}`;
+
+  const list = await axios.get(path).then(({ data }) => data);
+
+  // create results
+  let titlesCollector = new Array();
+  let lyricsCollector = new Array();
+
+  list.map((hymn: { book: string; title: string; lyrics: string[] }) => {
+    if (textFormat(hymn.title).includes(textFormat(input))) {
+      // title found
+      titlesCollector.push({
+        book: hymn.book,
+        title: hymn.title,
+      });
+    } else {
+      // lyrics found
+      hymn.lyrics.map((verses: any) => {
+        verses.map((lines: string, index: number) => {
+          if (textFormat(lines).includes(textFormat(input))) {
+            lyricsCollector.push({
+              book: hymn.book,
+              title: hymn.title,
+              lyrics: [
+                verses[index - 2] ? "... " : undefined,
+                verses[index - 1],
+                verses[index],
+                verses[index + 1],
+                verses[index + 2] ? "..." : undefined,
+              ],
+            });
+          }
+        });
+      });
+    }
+  });
+
+  // change text to searching-friendly format
+  function textFormat(text: string) {
+    return text
+      .toLowerCase()
+      .replaceAll("ą", "a")
+      .replaceAll("ć", "c")
+      .replaceAll("ę", "e")
+      .replaceAll("ł", "l")
+      .replaceAll("ń", "n")
+      .replaceAll("ó", "o")
+      .replaceAll("ś", "s")
+      .replaceAll("ż", "z")
+      .replaceAll("ź", "z")
+      .replace(/[^\w\s]/gi, "");
+  }
+
+  // merge Collectors
+  let Collector = [...titlesCollector, ...lyricsCollector];
+  Collector = Collector.filter((value, index, self) => {
+    return index === self.findIndex((x) => x.title === value.title);
+  });
+
+  const titles = Collector.map((i) => i.title);
+  Collector = Collector.filter(
+    ({ id }, index) => !titles.includes(id, index + 1)
+  );
+
+  // return all results
+  return Collector;
+}
+
+// clear search input button
+function showClear(input: string) {
   const clearIcon = document.getElementById("clearIcon") as HTMLElement;
 
-  if (!input) {
-    searchIcon.style.display = "";
-    clearIcon.style.display = "";
-  } else {
-    searchIcon.style.display = "none";
-    clearIcon.style.display = "flex";
-  }
+  if (!input) clearIcon.style.display = "";
+  else clearIcon.style.display = "flex";
 }
 
 async function clearSearch(book: string) {
   const input = document.getElementById("input") as HTMLInputElement;
   input.value = "";
 
-  changeIcons(input.value);
+  showClear(input.value); // recursive
   input.focus();
 
   return await search(book, input.value);
-}
-
-function keyupListener(e: KeyboardEvent) {
-  if (document.activeElement?.tagName !== "INPUT") {
-    switch (e.key) {
-      case "/":
-        const input = document.getElementById("input") as HTMLInputElement;
-        input.focus();
-        break;
-    }
-  }
 }

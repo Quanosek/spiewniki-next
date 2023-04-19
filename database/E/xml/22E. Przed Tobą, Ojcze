@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>22E. Przed Tobą, Ojcze</title>
+  <title>22. Przed Tobą, Ojcze</title>
   <lyrics>[V1]
  1. Przed Tobą, Ojcze, dzisiaj korzę się.
  Przed Tobą dziś wyznaję grzechy me.
@@ -24,7 +24,7 @@
  i wszystkie inne, choć nie znane mi.
  Sam prowadź mnie przez wszystkie życia dni,
  amen, amen.</lyrics>
-  <author>(4 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

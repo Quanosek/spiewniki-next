@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>8E. W drogę z nami</title>
+  <title>8. W drogę z nami</title>
   <lyrics>[V1]
  1. W drogę z nami wyrusz, Panie,
  nam nie wolno w miejscu stać.
@@ -47,7 +47,7 @@
  każdy krok nasz, każdy dzień.
  W bliźnich pozwól dojrzeć siebie,
  Nienawiści usuń cień.</lyrics>
-  <author>(8 zwrotek)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C V5 C V6 C V7 C</presentation>
@@ -60,8 +60,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

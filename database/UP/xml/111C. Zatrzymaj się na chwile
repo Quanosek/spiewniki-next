@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>111C. Zatrzymaj się na chwile</title>
+  <title>111. Zatrzymaj się na chwile</title>
   <lyrics>[V1]
  1. Szumią łany zboża,
  gra wiatr na jeziorze,
@@ -34,7 +34,7 @@
  zawsze znaleźć możesz,
  odejść z gwaru życia,
  spojrzeć w serce Boże.</lyrics>
-  <author>(4 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C</presentation>
@@ -47,8 +47,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

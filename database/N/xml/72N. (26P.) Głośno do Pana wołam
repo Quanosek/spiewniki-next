@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>72N. Głośno do Pana wołam</title>
+  <title>72. Głośno do Pana wołam</title>
   <lyrics>[V1]
  1. Głośno do Pana wołam,
  głośno Pana błagam,
@@ -25,8 +25,8 @@
  Tyś jest skałą moją,
  Panie, nie zawiodę się.
  Błagam, Panie, wysłuchaj mnie.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Psalm 130:1-2</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -38,8 +38,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

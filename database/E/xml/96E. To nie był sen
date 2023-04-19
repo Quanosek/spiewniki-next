@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>96E. To nie był sen</title>
+  <title>96. To nie był sen</title>
   <lyrics>[V1]
  1. To nie był sen,
  lecz to byleś Ty.
@@ -28,7 +28,7 @@
  i czasem jest mi źle,
  to jednak nigdy, Panie,
  nie zdradzę Cię.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
@@ -41,8 +41,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

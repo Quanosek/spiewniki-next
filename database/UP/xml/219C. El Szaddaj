@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>219C. El Szaddaj</title>
+  <title>219. El Szaddaj</title>
   <lyrics>[C]
  Ref.: El Szaddaj, El Szaddaj,
  E-Eljon na Adonaj,
@@ -11,7 +11,7 @@
  wywyższamy imię Twe, El Szaddaj.
 
 [V1]
- 1. Sam Barnka dałeś, by
+ 1. Sam Baranka dałeś, by
  nie zginął Abrahama syn. 
  Tyś potężną ręką swą
  morze zamienił w suchy ląd. 
@@ -41,8 +41,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

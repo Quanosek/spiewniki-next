@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
@@ -9,44 +9,34 @@ import Settings from "./menu/settings";
 
 export default function Menu() {
   const router = useRouter();
-  const menu = router.query.menu as string;
+  const { menu } = router.query as { menu: string };
+
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     if (!router.isReady) return;
 
-    const menu = document.getElementById("menu") as HTMLElement;
-
-    if (router.query.menu) {
+    if (menu) {
       const TopScroll =
         window.pageYOffset || document.documentElement.scrollTop;
       const LeftScroll =
         window.pageXOffset || document.documentElement.scrollLeft;
 
       window.onscroll = () => window.scrollTo(LeftScroll, TopScroll);
-      menu.style.visibility = "visible";
-      menu.style.opacity = "1";
+      setShowMenu(true);
     } else {
       window.onscroll = () => {};
-      menu.style.visibility = "";
-      menu.style.opacity = "";
+      setShowMenu(false);
     }
-  }, [router]);
+  }, [router, menu]);
 
   return (
-    <div id="menu" className={styles.holder}>
-      <div
-        className={styles.background}
-        onClick={() => {
-          const { menu, ...params } = router.query;
-          return router.replace(
-            {
-              query: { ...params },
-            },
-            undefined,
-            { shallow: true, scroll: false }
-          );
-        }}
-      ></div>
+    <div
+      id="menu"
+      className={styles.holder}
+      style={{ display: showMenu ? "flex" : "none" }}
+    >
+      <div className={styles.background} onClick={() => router.back()}></div>
 
       <div className={styles.menu}>
         <div className={styles.content}>

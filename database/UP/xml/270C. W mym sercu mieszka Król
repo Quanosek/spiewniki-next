@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>270C. W mym sercu mieszka Król</title>
+  <title>270. W mym sercu mieszka Król</title>
   <lyrics>[V]
  W mym sercu mieszka Król,
  [: a jego flagą radość jest :] x3
@@ -11,7 +11,7 @@
  podniosę flagę wysoko, niech pozna świat,
  że w mym sercu przebywa sam Król!</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Kol. 1:27</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -23,8 +23,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>89N. Nasz Pan</title>
+  <title>89. Nasz Pan</title>
   <lyrics>[V1]
  1. Nasz Pan jest dobrym pasterzem.
  Zagubionych szuka, stroskanych,
@@ -42,8 +42,8 @@
  lecz idziemy, szukając Ciebie
  w tej gorącej wierze,
  bo Ty jesteś naszym pasterzem.</lyrics>
-  <author>(6 zwrotek)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Jan 10:14</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -55,8 +55,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

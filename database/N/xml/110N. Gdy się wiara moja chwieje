@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>110N. Gdy się wiara moja chwieje</title>
+  <title>110. Gdy się wiara moja chwieje</title>
   <lyrics>[V1]
  1. Gdy się wiara moja chwieje,
  błądząc w gęstej życia mgle,
@@ -30,8 +30,8 @@
  patrząc w jego ciemną toń,
  tam, nad brzegiem będzie Jezus,
  aby podać mi swą dłoń.</lyrics>
-  <author>(4 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Dz. Ap. 18:9-10</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C</presentation>
   <ccli></ccli>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>9E. Modlitwa okudżawy</title>
+  <title>9. Modlitwa Okudżawy</title>
   <lyrics>[V1]
  1. Dopóki nam Ziemia kręci się,
  dopóki jest tak czy siak,
@@ -40,7 +40,7 @@
  wciąż jeszcze wystarcza jej,
  [: dajże nam wszystkim po trochu
  i mnie w opiece swej miej :]</lyrics>
-  <author>(4 zwrotki)</author>
+  <author>sł. i muz. Bułat Okudżawa</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -53,8 +53,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

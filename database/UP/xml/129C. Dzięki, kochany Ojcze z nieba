@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>129C. Dzięki, kochany Ojcze z nieba</title>
+  <title>129. Dzięki, kochany Ojcze z nieba</title>
   <lyrics>[V1]
  1. Dzięki,
  kochany Ojcze z nieba, dzięki
@@ -28,7 +28,7 @@
  że dajesz łaski czas. Dzięki,
  że miłość Twa na nowo
  wciąż otacza nas.</lyrics>
-  <author>(4 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -41,8 +41,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>70N. Wiem, że nic mnie nie odłączy</title>
+  <title>70. Wiem, że nic mnie nie odłączy</title>
   <lyrics>[V1]
  1. Wiem, że nic mnie nie odłączy
  od miłości mego Boga,
@@ -36,8 +36,8 @@
  poprzez śmierć swojego Syna.
  Szczęście czeka na nas w niebie
  przez Chrystusa zmartwychwstanie.</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Rzym. 8:35</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
   <ccli></ccli>
@@ -49,8 +49,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>195C. Do wieczerzy chodź</title>
+  <title>195. Do wieczerzy chodź</title>
   <lyrics>[V1]
  1. Przed laty, kiedy byłem dzieckiem małym,
  bawiłem się, aż nocny zapadł zmierzch.
@@ -19,7 +19,7 @@
  bo wkrótce przyjdzie ten wspaniały dzień.
  Gdy Bóg nas wezwie do wieczerzy w niebie,
  tam z dziećmi Jego będziesz cieszyć się.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
@@ -32,8 +32,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>85E. Jesteś, który jesteś</title>
+  <title>85. Jesteś, który jesteś</title>
   <lyrics>[V1]
  Przychodzimy, by odejść,
  a nasze życie - oka mgnienie,
@@ -48,8 +48,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

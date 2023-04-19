@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>260C. Jam nie jest godny</title>
+  <title>260. Jam nie jest godny</title>
   <lyrics>[V1]
  1. Jam nie jest godny, Jezusa miłości.
  Lecz On do mnie zniżył się sam.
@@ -24,7 +24,7 @@
  I teraz szykuje mi dom. Tam wiecznie zamieszkam
  z Jezusem, mym mistrzem.
  Gdy wezwie wieczności mię dzwon.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

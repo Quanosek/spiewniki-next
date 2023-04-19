@@ -1,5 +1,5 @@
 import styles from "@/styles/components/menu.module.scss";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 export default function InfoMenu() {
   const router = useRouter();
@@ -10,6 +10,7 @@ export default function InfoMenu() {
 
       <div className={`${styles.element} ${styles.info}`}>
         <h3>O aplikacji:</h3>
+
         <p>
           Przedstawiamy zupełnie nową, najbardziej zaawansowaną aplikację do
           wyświetlania pieśni. Umożliwia ona nie tylko wyszukanie i wyświetlanie
@@ -25,6 +26,7 @@ export default function InfoMenu() {
 
       <div className={`${styles.element} ${styles.info}`}>
         <h3>Od twórców:</h3>
+
         <p>
           Pomysł na napisanie aplikacji zrodził się z potrzeby posiadania
           wszystkich używanych śpiewników w jednym miejscu, bez dostępu do
@@ -43,9 +45,7 @@ export default function InfoMenu() {
       <div className={styles.buttons}>
         <button
           className={styles.supportButton}
-          onClick={() => {
-            router.push("https://ko-fi.com/Quanosek");
-          }}
+          onClick={() => router.push("https://ko-fi.com/Quanosek")}
         >
           Wesprzyj nas
         </button>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>86N. Każdego dnia</title>
+  <title>86. Każdego dnia</title>
   <lyrics>[V]
  [: Każdego dnia przy Tobie trwać,
  poznawać Ciebie. :]
@@ -10,7 +10,7 @@
  jeszcze dłużej wielbić chcę.
  Rozkochać się.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Jak. 4:8</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -22,8 +22,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

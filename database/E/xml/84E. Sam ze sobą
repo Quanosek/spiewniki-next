@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>84E. Sam ze sobą</title>
+  <title>84. Sam ze sobą</title>
   <lyrics>[V1]
  1. Najgorzej jest być sam ze sobą,
  gdy wokół jest pustka i smutek,
@@ -24,7 +24,7 @@
  wśród ludzi stać twarzą do słońca
  i wybrać sobie własną drogę,
  a wiatr powieje na pogodę.</lyrics>
-  <author>(4 zwrotki)</author>
+  <author>sł. i muz. Andrzej Kaliszczyk</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

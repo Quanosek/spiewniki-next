@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>113C. Gdy dotykasz mego życia</title>
+  <title>113. Gdy dotykasz mego życia</title>
   <lyrics>[V1]
  1. Gdy dotykasz mego życia się ręką swą,
  to budzi w sercu pokój Twój, 
@@ -10,7 +10,7 @@
  2. Z głębi ducha ślę wyznanie to, miłe Ci,
  Tyś jest mój Pan, Tyś jest mój Bóg, 
  Panie kocham Cię.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -23,8 +23,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

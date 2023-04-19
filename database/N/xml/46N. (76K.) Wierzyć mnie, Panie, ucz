@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>46N. Wierzyć mnie, Panie, ucz</title>
+  <title>46. Wierzyć mnie, Panie, ucz</title>
   <lyrics>[V1]
  1. Wierzyć mnie, Panie, ucz; modlić się ucz!
  Ufnie jak dziecię swe, modlić się ucz!
@@ -21,8 +21,8 @@
  Wejrzyj na słabość mą
  i małowierność mdlą,
  daj mi zwyciężyć ją, modlić się ucz!</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Rzym. 8:26-27</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -34,8 +34,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

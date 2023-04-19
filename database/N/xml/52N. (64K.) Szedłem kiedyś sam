@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>52N. Szedłem kiedyś sam</title>
+  <title>52. Szedłem kiedyś sam</title>
   <lyrics>[V1]
  1. Szedłem kiedyś sam,
  aż przyszedł do mnie Pan.
@@ -20,8 +20,8 @@
  lecz Pan pokierował mną.
  Me serce się raduje
  i Panu wyśpiewuje.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>II Tes. 3:16</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -33,8 +33,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -16,7 +16,7 @@
 [V3]
  3. Kto Ojcu był posłuszny wciąż?
  Kto wiernie aż do śmierci trwał?
- Kto ten największy święty Mąż?
+ Kto ten największy Święty Mąż?
  [: Pan, który za nas życie dał. :] 
 
 [V4]
@@ -36,7 +36,7 @@
  za tyle wielkich Twoich łask,
  że przez Twą dobroć dajesz mi
  [: w przyszłości ujrzeć nieba blask. :]</lyrics>
-  <author>(6 zwrotek)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -49,8 +49,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

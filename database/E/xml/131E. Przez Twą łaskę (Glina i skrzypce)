@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>131E. Przez Twą laskę</title>
+  <title>131. Przez Twą laskę</title>
   <lyrics>[V1]
  1. Niczym nic nie wartą glinę,
  Której garncarz kształt nadaje.
@@ -30,7 +30,7 @@
  na serca mego tablicy.
  Prostuj wszystkie ścieżki moje,
  daj zwycięstwa dojść granicy.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author>sł. i muz. Jonasz Ryl</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 V2 C V3 V4 C</presentation>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

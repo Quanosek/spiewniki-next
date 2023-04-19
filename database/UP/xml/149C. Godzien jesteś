@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>149C. Godzien jesteś</title>
+  <title>149. Godzien jesteś</title>
   <lyrics>[V]
  Godzien jesteś, godzien jesteś
  Panie i Boże nasz.
@@ -11,7 +11,7 @@
  I z woli Twojej zostało stworzone,
  godzien jesteś wziąć cześć.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Obj. 4:11</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -23,8 +23,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

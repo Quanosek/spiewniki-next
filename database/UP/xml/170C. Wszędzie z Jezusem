@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>170C. Wszędzie z Jezusem</title>
+  <title>170. Wszędzie z Jezusem</title>
   <lyrics>[V]
  Wszędzie z Jezusem każdy idzie rad,
  za Jezusem w ślad.
@@ -22,8 +22,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

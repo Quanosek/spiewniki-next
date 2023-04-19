@@ -1,10 +1,8 @@
 .holder {
-  z-index: 20;
-  visibility: hidden;
-  opacity: 0;
-  display: flex;
+  z-index: 999;
+
+  position: relative;
   justify-content: center;
-  transition: 0.06s ease-out;
 }
 
 .background {
@@ -12,15 +10,20 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background: transparentize($color: #000000, $amount: 0.55);
+  background: transparentize(#000000, 0.55);
+  backdrop-filter: blur(5px);
 }
 
 .menu {
+  $menuMargin: 5%;
+
   padding: 1.25rem 2rem;
   position: fixed;
-  top: 3%;
+  top: $menuMargin;
   width: 98%;
   max-width: 40rem;
+  max-height: calc(100vh - (2 * $menuMargin));
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;

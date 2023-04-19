@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>62C. Cieszę się wciąż</title>
+  <title>62. Cieszę się wciąż</title>
   <lyrics>[V]
  Cieszę się wciąż, Tyś radość mi dał.
  Miłość nad miód co wina ma smak.
  Uchwyć mocno mnie, pobiegnijmy razem.
  Cieszę się wciąż, Tyś radość mi dał.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>PnP. 1:4</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -19,8 +19,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

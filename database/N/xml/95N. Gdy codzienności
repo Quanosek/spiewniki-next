@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>95N. Gdy codzienności</title>
+  <title>95. Gdy codzienności</title>
   <lyrics>[V1]
  1. Gdy codzienności trud cię
  kiedyś zwali z nóg,
@@ -32,8 +32,8 @@
  idź jednak wciąż,
  przecieraj szlak dla słabszych,
  którzy oczekują na twój znak.</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Przyp. Sal. 3:5-6</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
   <ccli></ccli>
@@ -45,8 +45,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

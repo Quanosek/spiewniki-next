@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>160C. Cichy wieczorny mój śpiew</title>
+  <title>160. Cichy wieczorny mój śpiew</title>
   <lyrics>[C]
  Refren:
  [: Cichy wieczorny mój śpiew, 
@@ -25,7 +25,7 @@
  za szybki ptaka lot,
  za to, żeś stworzył nas,
  dziękuję Ci Boże.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>C V1 C V2 C</presentation>
@@ -38,8 +38,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

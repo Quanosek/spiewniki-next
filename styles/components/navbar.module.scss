@@ -4,11 +4,9 @@
   width: 100%;
   position: fixed;
   display: none; // hidden by default
-  color: #ffffff;
   user-select: none;
 
-  // tablet
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     display: flex;
   }
 }
@@ -37,7 +35,7 @@
     background-color: transparent;
 
     &:hover {
-      background-color: #084169;
+      background-color: #2b4376;
     }
 
     img {
@@ -58,7 +56,7 @@
   }
 
   // small-mobile
-  @media (max-width: 319px) {
+  @media (max-width: 320px) {
     height: 15vw;
     $gap: 2vw;
     padding: 0 $gap;
@@ -95,6 +93,7 @@
     padding: 15px 5px 10px;
     width: 5rem;
     height: $height;
+    flex-direction: column;
     gap: 2px;
     text-align: center;
     background-color: transparent;
@@ -116,13 +115,13 @@
   }
 
   // large-mobile
-  @media (max-width: 424px) {
+  @media (max-width: 425px) {
     gap: 0;
     padding: 0 3vw;
   }
 
   // small-mobile
-  @media (max-width: 319px) {
+  @media (max-width: 320px) {
     height: 17.5vw;
     padding: 0 2vw 0.5vw;
 

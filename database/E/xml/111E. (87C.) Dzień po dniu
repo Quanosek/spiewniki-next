@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>111E. Dzień po dniu</title>
+  <title>111. Dzień po dniu</title>
   <lyrics>[V1]
  1. Dzień pod dniu dla każdej nowej chwili,
  nowych sił udziela mi mój Bóg.
@@ -30,7 +30,7 @@
  przyjąć każdą z przeznaczonych dróg.
  Dzień po dniu, przez radość, trud i znoje,
  aż osiągnę wreszcie niebios próg.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author>sł. i muz. Karolina Sandell</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

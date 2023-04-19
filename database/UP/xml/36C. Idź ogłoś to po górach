@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>36C. Idź ogłoś to po górach</title>
+  <title>36. Idź ogłoś to po górach</title>
   <lyrics>[C]
  Ref.: Idź, ogłoś to po górach! 
  Wszystkim dolinom ogłoś rad.
@@ -24,7 +24,7 @@
  bym murów miasta strzegł.
  Gdy skończę swoją pracę
  na drugi przejdę brzeg.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>C V1 C V2 C V3 C</presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

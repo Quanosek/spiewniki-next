@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>47E. Kiedy nowy wstaje dzień</title>
+  <title>47. Kiedy nowy wstaje dzień</title>
   <lyrics>[V1]
  [: Kiedy nowy wstaje dzień, 
  aż gdy słońce w cień kładzie się, 
@@ -13,7 +13,7 @@
  Błogosławcie odtąd więc Mu, na wieki już,
  chwalcie Imię Jego Pan. 
 
-————————————
+ ————————————
 
 [V2]
  2. [: Kiedy niebo pełne gwiazd 
@@ -32,8 +32,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

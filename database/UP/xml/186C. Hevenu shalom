@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>186C. Hevenu shalom</title>
+  <title>186. Hevenu shalom</title>
   <lyrics>[V]
  [: Hevenu shalom alechem :] x3 
  Hevenu shalom, shalom, shalom alechem.
@@ -19,8 +19,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

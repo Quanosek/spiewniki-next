@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>113E. Ktoś zbudował dom na piasku</title>
+  <title>113. Ktoś zbudował dom na piasku</title>
   <lyrics>[V1]
  1. Ktoś zbudował dom na piasku,
  wymarzony, wspaniały dom.
@@ -39,8 +39,8 @@
  wiatr powieje prosto w dom,
  mój dom na skale będzie stać.
  Mocno stać, zawsze stać.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Mat. 7:24-27</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -52,8 +52,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

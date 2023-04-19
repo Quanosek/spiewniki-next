@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>105N. O potopie</title>
+  <title>105. O potopie</title>
   <lyrics>[V1]
  1. Czyście słyszały, lube dziateczki,
  jak potop zalał świat cały?
@@ -30,8 +30,8 @@
  ofiarę złożył tam Panu,
  a Bóg ofiarę przyjął Noego
  i znak ukazał się jemu.</lyrics>
-  <author>(5 zwrotek)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>I Moj. 7:7-9</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

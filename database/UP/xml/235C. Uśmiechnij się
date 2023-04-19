@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>235C. Uśmiechnij się</title>
+  <title>235. Uśmiechnij się</title>
   <lyrics>[V1]
  1. Znowu widzę przygnębioną twarz,
  znowu widzę zasmucone oczy.
@@ -41,7 +41,7 @@
  cóż ci może się stać
  gdy Boga za Ojca masz.
  Coda: Uśmiechnij się.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C1 V2 C1 V3 C2</presentation>
@@ -54,8 +54,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

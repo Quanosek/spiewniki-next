@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>124E. Wszystko Jezusowi</title>
+  <title>124. Wszystko Jezusowi</title>
   <lyrics>[V1]
  1. Wszystko Zbawcy Jezusowi!
  Wszystko moje, Jego jest.
@@ -24,7 +24,7 @@
  ukrzyżowany mój Pan.
  Wszystko Zbawcy Jezusowi!
  Ukrzyżowanemu tam.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

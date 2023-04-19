@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>77N. Lepszy jeden dzień</title>
+  <title>77. Lepszy jeden dzień</title>
   <lyrics>[V]
  Lepszy jeden dzień w przedsionkach Twych.
  lepszy jeden dzień w domu Twym,
@@ -12,7 +12,7 @@
  moją twierdzą, nie boję się.
  Wywyższam, chwalę Cię, ja kocham Cię.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Psalm 84:11</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -24,8 +24,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

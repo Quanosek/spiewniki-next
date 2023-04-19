@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>52E. W czekaniu na Ciebie</title>
+  <title>52. W czekaniu na Ciebie</title>
   <lyrics>[V1]
  1. W czekaniu na Ciebie
  przyjmiemy każdy cios,
@@ -30,7 +30,7 @@
  czasem deszcz, czasem wiatr,
  rozpacz do dna,
  [: w życiu słony krzyża smak :]</lyrics>
-  <author>(5 zwrotek)</author>
+  <author>sł. i muz. Andrzej Kaliszczyk</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

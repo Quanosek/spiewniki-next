@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>187C. W drogę z nami</title>
+  <title>187. W drogę z nami</title>
   <lyrics>[V1]
  1. W drogę z nami wyrusz, Panie,
  nam nie wolno w miejscu stać.
@@ -29,7 +29,7 @@
  niech nie płacze po nas nikt,
  bo my przecież z Nim być chcemy,
  w Jego chwale wiecznie żyć.</lyrics>
-  <author>(4 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C</presentation>
@@ -42,8 +42,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

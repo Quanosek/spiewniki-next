@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>17C. Jeszcze się kiedyś rozsmucę</title>
+  <title>17. Jeszcze się kiedyś rozsmucę</title>
   <lyrics>[V1]
  1. Jeszcze się kiedyś rozsmucę,
  jeszcze do Ciebie powrócę, Chrystusie.
@@ -12,7 +12,7 @@
  będę się żalił przed Tobą, Chrystusie,
  [: że duch mój przed Tobą klęknie
  I wtedy serce mi pęknie, Chrystusie. :]</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -25,8 +25,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

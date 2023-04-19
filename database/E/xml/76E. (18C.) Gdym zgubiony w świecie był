@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>76E. Gdym zgubiony w świecie był</title>
+  <title>76. Gdym zgubiony w świecie był</title>
   <lyrics>[V1]
  1. Gdym zgubiony w świecie był
  wśród trosk i zła,
@@ -37,7 +37,7 @@
  nie chcąc żyć,
  gdym przed wszystkim w przerażeniu
  chciał się skryć.</lyrics>
-  <author>(5 zwrotek)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C V5 C</presentation>
@@ -50,8 +50,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>122E. Chwalcie Pana</title>
+  <title>122. Chwalcie Pana</title>
   <lyrics>[C]
  Ref.: Chwalcie Pana niebios,
  chwalcie Go na cytrze,
@@ -24,7 +24,7 @@
  Bóg twój, Syonie, przez pokolenia.
  On dał Ci życie, On dał Ci wszystko,
  śpiewaj Mu, wysławiaj Go: "Alleluja!"</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>C V1 C V2 C V3 C</presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

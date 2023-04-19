@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>111N. Wśród życia burz</title>
+  <title>111. Wśród życia burz</title>
   <lyrics>[V1]
  1. Wśród życia burz,
  ku światłu wciąż ziemski
@@ -44,8 +44,8 @@
  niech cię nie słabi żaden bój,
  a kiedyś Pan nagrodę da!
  Ach, jak przyjemna prawda ta.</lyrics>
-  <author>(6 zwrotek)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Jan 12:46</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C V5 C V6 C</presentation>
   <ccli></ccli>
@@ -57,8 +57,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

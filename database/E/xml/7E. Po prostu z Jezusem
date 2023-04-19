@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>7E. Po prostu z Jezusem</title>
+  <title>7. Po prostu z Jezusem</title>
   <lyrics>[V1]
  1. Wśród trosk mieć marzeń czas,
  a kłamstwem nie plamić swoich ust.
@@ -22,7 +22,7 @@
 [V4]
  4. Mocno uścisnąć bratnią dłoń,
  każdemu w oczy spojrzeć móc.</lyrics>
-  <author>(4 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C</presentation>
@@ -35,8 +35,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

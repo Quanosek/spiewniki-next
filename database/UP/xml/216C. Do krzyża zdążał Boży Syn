@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>216C. Do krzyża zdążał Boży Syn</title>
+  <title>216. Do krzyża zdążał Boży Syn</title>
   <lyrics>[V1]
  1. Do krzyża zdążał Boży Syn, 
  choć czysty był bez win.
@@ -24,7 +24,7 @@
  tam do nieba złotych bram.
  Za krzyżem Pan prowadzi nas, 
  z Nim błogo mija czas.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

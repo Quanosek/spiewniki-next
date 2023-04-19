@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>36N. Chcę wam dzisiaj powiedzieć</title>
+  <title>36. Chcę wam dzisiaj powiedzieć</title>
   <lyrics>[C]
  Ref.: Chcę wam dzisiaj powiedzieć,
  naprawdę powiedzieć to,
@@ -29,8 +29,8 @@
  trudno minąć je,
  lecz Jezus wciąż idzie ze mną,
  ochrania w drodze mnie.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Jan 8:12</copyright>
   <hymn_number></hymn_number>
   <presentation>C V1 C V2 C</presentation>
   <ccli></ccli>
@@ -42,8 +42,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

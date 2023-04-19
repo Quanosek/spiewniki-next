@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>106N. Doświadczenia</title>
+  <title>106. Doświadczenia</title>
   <lyrics>[V1]
  1. Jeśli cię dopadną zewsząd doświadczenia
  i wcale nie będziesz miał mocy i sił,
@@ -32,8 +32,8 @@
  a miłość twe serce niechaj porusza.
  Bo smutki, cierpienia uczą w życiu nas
  miłości, pokory co raz.</lyrics>
-  <author>(4 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>I Kor. 10:13</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -45,8 +45,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

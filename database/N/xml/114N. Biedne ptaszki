@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>114N. Biedne ptaszki</title>
+  <title>114. Biedne ptaszki</title>
   <lyrics>[V1]
  1. Biedne ptaszki, mają swoje gniazdka,
  lisy chroni w jamach ciemny bór,
@@ -31,8 +31,8 @@
  że nie jasne drogi życia są?
  Nie narzekaj, lecz zaufaj Temu,
  który hojnie daje łaskę swą.</lyrics>
-  <author>(5 zwrotek)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Mat. 8:20</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -44,8 +44,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

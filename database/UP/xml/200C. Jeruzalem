@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>200C. Jeruzalem</title>
+  <title>200. Jeruzalem</title>
   <lyrics>[V1]
  Raz w nocy mi się przyśnił
  Jerozolimski gród,
@@ -53,7 +53,7 @@
  [: Hosanna na wysokościach!
  Hosanna po wszystek czas. :]</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Obj. 21</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -65,8 +65,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

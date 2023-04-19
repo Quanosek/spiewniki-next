@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>166C. On trzyma całą ziemię</title>
+  <title>166. On trzyma całą ziemię</title>
   <lyrics>[V1]
  1. [: On trzyma całą ziemię
  w ręku Swym. :] x3 
@@ -25,7 +25,7 @@
  5. [: On trzyma wszystkich ludzi
  w ręku Swym. :] x3 
  On trzyma wszystko w ręku Swym.</lyrics>
-  <author>(5 zwrotek)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -38,8 +38,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

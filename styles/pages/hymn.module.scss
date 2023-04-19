@@ -1,13 +1,74 @@
 .container {
-  margin: 2rem 0;
-  padding: 1.5rem 1rem 2.5rem;
-  max-width: 100%;
-  width: min(42rem, 2500px);
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+}
+
+.options {
+  width: 25%; // grid
+  position: relative;
+
+  .backArrow {
+    z-index: 20;
+    padding: 0.5rem 1rem;
+    position: sticky;
+    top: 1.2rem;
+    gap: 8px;
+    background-color: transparent;
+
+    img {
+      transform: rotate(90deg);
+    }
+  }
+
+  .buttons {
+    margin: min(10vw, 8rem) 0 0 min(3.3vw, 3rem);
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+
+    &.leftSide {
+      margin-left: 2.5rem;
+      font-size: 110%;
+      gap: 1.2rem;
+
+      button {
+        opacity: 0.9;
+      }
+    }
+
+    button {
+      opacity: 0.75;
+      padding: 12px 26px;
+      gap: 12px;
+      background-color: transparent;
+      transition: 0.2s ease-out;
+
+      &:hover {
+        opacity: 1;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+.center {
+  width: 50%; // grid
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
-  color: #ededed;
-  background-color: #141414;
+  gap: 1rem;
+}
+
+.text {
+  padding: 2rem 2rem 3rem;
+  min-height: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  background-color: #161514;
   border-radius: 0.4rem;
 }
 
@@ -16,14 +77,12 @@
   flex-direction: column;
   gap: 0.6rem;
 
-  h1 {
-    font-size: 200%;
-    color: #d6e9ff;
+  p {
+    color: #bacdf6;
   }
 
-  h2 {
-    font-size: 80%;
-    opacity: 0.75;
+  h1 {
+    font-size: 225%;
   }
 }
 
@@ -31,7 +90,7 @@
   padding-left: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
   font-size: 19px;
 }
 
@@ -54,12 +113,43 @@
   }
 }
 
-// tablet
-@media (max-width: 767px) {
-  .container {
-    margin: 0;
+.controls {
+  display: flex;
+  justify-content: space-between;
+  font-size: 90%;
+
+  button {
+    padding: 12px 26px;
+    gap: 8px;
+  }
+
+  .previous {
+    transform: rotate(90deg);
+  }
+
+  .next {
+    transform: rotate(-90deg);
+  }
+}
+
+@media (max-width: 1024px) {
+  .options button p {
+    display: none;
+  }
+
+  .center {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .options {
+    display: none;
+  }
+
+  .text {
+    width: 100%;
     padding: calc(3rem + 1.5rem) 1rem calc(3rem + 6rem);
-    min-height: 100vh;
     color: #dfdfdf;
     background-color: transparent;
     border-radius: 0;

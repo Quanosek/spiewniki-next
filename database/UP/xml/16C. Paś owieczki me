@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>16C. Paś owieczki me</title>
+  <title>16. Paś owieczki me</title>
   <lyrics>[V1]
  1. Paś owieczki me, synu paś.
  Jeśli kochasz mnie, nie będziesz spać
@@ -30,7 +30,7 @@
  Jeśli kochasz mnie, nie będziesz spać
  W polu, synu mój, pracuj, płacz.
  Paś owieczki me, synu, paś!</lyrics>
-  <author>(5 zwrotek)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

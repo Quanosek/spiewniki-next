@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>143C. Gotowe jest serce moje</title>
+  <title>143. Gotowe jest serce moje</title>
   <lyrics>[V1]
  Gotowe jest serce moje Boże,
  będę śpiewał i grał.
@@ -16,7 +16,7 @@
  Wznieś się nad niebiosa Panie Boże,
  Twa chwała niech będzie ponad ziemią.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Psalm 57:8-12</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -28,8 +28,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

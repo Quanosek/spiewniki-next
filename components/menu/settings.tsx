@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import styles from "@/styles/components/menu.module.scss";
 
 export default function SettingsMenu() {
@@ -10,37 +12,41 @@ export default function SettingsMenu() {
 
         <form className={styles.colorTheme}>
           <label className={styles.black} htmlFor="black">
-            <img
+            <Image
               alt="przykładowy tekst"
               src="/icons/text.svg"
-              draggable="false"
+              width={50}
+              height={50}
             />
             <input type="radio" name="theme" value="black" />
           </label>
 
           <label className={styles.dark} htmlFor="dark">
-            <img
+            <Image
               alt="przykładowy tekst"
               src="/icons/text.svg"
-              draggable="false"
+              width={50}
+              height={50}
             />
             <input type="radio" name="theme" value="dark" />
           </label>
 
           <label className={styles.light} htmlFor="light">
-            <img
+            <Image
               alt="przykładowy tekst"
               src="/icons/text.svg"
-              draggable="false"
+              width={50}
+              height={50}
             />
             <input type="radio" name="theme" value="light" />
           </label>
 
           <label className={styles.reading} htmlFor="reading">
-            <img
+            <Image
               alt="przykładowy tekst"
               src="/icons/text.svg"
-              draggable="false"
+              width={50}
+              height={50}
             />
             <input type="radio" name="theme" value="reading" />
           </label>

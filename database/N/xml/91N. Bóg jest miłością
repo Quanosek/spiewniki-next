@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>91N. Bóg jest miłością</title>
+  <title>91. Bóg jest miłością</title>
   <lyrics>[V1]
  1. Bóg jest miłością,
  On mnie ocalił,
@@ -48,8 +48,8 @@
  Więc wołam raz jeszcze:
  Ref.: Bóg jest miłością,
  Bóg jest miłością, miłuje mnie.</lyrics>
-  <author>(6 zwrotek)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>I Jan 4:8, 16</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -61,8 +61,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

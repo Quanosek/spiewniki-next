@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>102N. Nie zachwieje się</title>
+  <title>102. Nie zachwieje się</title>
   <lyrics>[C]
  Ref.: [: Nie zachwieję, 
  nie zachwieję się. :]
@@ -24,8 +24,8 @@
  nie zachwieję się. :]
  tak jak drzewo przy źródle,
  nie zachwieję się.</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Psalm 16:8</copyright>
   <hymn_number></hymn_number>
   <presentation>C V1 C V2 C V3 C</presentation>
   <ccli></ccli>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

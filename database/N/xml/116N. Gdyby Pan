@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>116N. Gdyby Pan</title>
+  <title>116. Gdyby Pan</title>
   <lyrics>[V1]
  1. Gdyby Pan nie dał chleba
  na życia trud,
@@ -29,8 +29,8 @@
  nie mógłbyś z Panem być.
  Gdyby Pan też nie zmartwychwstał,
  nie mógłbyś wiecznie żyć.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Jan 6:35</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -42,8 +42,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

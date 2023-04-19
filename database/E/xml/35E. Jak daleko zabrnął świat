@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>35E. Jak daleko zabrnął świat</title>
+  <title>35. Jak daleko zabrnął świat</title>
   <lyrics>[V1]
  1. Jak daleko zabrnął świat,
  pięść za pięść, fałsz za fałsz,
@@ -36,7 +36,7 @@
  by Twój uśmiech świecił nam,
  by Twa czystość kwitła
  w sercach, tak jak kryształ, wszystkich nas.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author>sł. i muz. Andrzej Kaliszczyk</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
@@ -49,8 +49,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

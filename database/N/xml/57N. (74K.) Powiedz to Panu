@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>57N. Powiedz to Panu</title>
+  <title>57. Powiedz to Panu</title>
   <lyrics>[V1]
  1. Kiedy świat się pali, pali, pali,
  gdy płomienie wkrąg szaleją,
@@ -26,8 +26,8 @@
  gdy cię głębia wód zalewa,
  kiedy ucisk cię przygniata,
  [: uczyń tylko jedną rzecz. :]</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Psalm 31</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
   <ccli></ccli>
@@ -39,8 +39,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

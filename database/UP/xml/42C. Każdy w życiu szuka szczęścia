@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>42C. Każdy w życiu szuka szczęścia</title>
+  <title>42. Każdy w życiu szuka szczęścia</title>
   <lyrics>[V1]
  1. Tak już jest,
  każdy w życiu szuka szczęścia,
@@ -32,8 +32,8 @@
  Co mi tam jeśli
  wiem, że Bóg mnie kocha
  i ja Jego kocham też.</lyrics>
-  <author>(4 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Iz. 51:11</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -45,8 +45,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

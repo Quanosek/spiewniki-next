@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>217aC. Kołysanka</title>
+  <title>217a. Kołysanka</title>
   <lyrics>[V1]
  1. Gaśnie światło dnia u wieczoru bram. 
  Czy jest pokój pod twym dachem,  
- gdy świat wokół zdjęty strachem o przyszłości dni, 
- czy spokojnie śpisz.
+ gdy świat wokół zdjęty strachem
+ o przyszłości dni, czy spokojnie śpisz.
 
 [V2]
  2. Dziś cię skrzywdził ktoś i masz w sercu złość. 
@@ -28,15 +28,15 @@
 [V5]
  5. Zda się w życiu twym, każdy dzień jest złym. 
  Pomyśl pośród chwil goryczy,
- że cierpienia Bóg policzy i nagrodzi łzy, 
- więc spokojnie śpij.
+ że cierpienia Bóg policzy
+ i nagrodzi łzy, więc spokojnie śpij.
 
 [V6]
  6. Boże w zmierzchu czas, łaską okryj nas. 
  Gdy przychodzi noc wśród cieniów,
- ty człekowi zmęczonemu ześlij dobre sny. 
- Niech spokojnie śpi.</lyrics>
-  <author>(6 zwrotek)</author>
+ ty człekowi zmęczonemu
+ ześlij dobre sny. Niech spokojnie śpi.</lyrics>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -49,8 +49,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

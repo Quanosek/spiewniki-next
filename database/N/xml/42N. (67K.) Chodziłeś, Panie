@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>42N. Chodziłeś, Panie</title>
+  <title>42. Chodziłeś, Panie</title>
   <lyrics>[V1]
  1. Chodziłeś, Panie, po ziemi jak człowiek.
  Jak człowiek serce i dwie ręce miałeś.
@@ -18,8 +18,8 @@
  bo one dają wciąż tak, jak dawały.
  Więc w swoje ręce weź mnie o, Panie,
  jak dar, bo Twój jestem cały.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Jan 6:51</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -31,8 +31,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

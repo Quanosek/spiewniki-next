@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>37N. Chwała, chwała, Barankowi cześć</title>
+  <title>37. Chwała, chwała, Barankowi cześć</title>
   <lyrics>[V]
  [: Chwała, chwała, Barankowi cześć! :]
  On godzien chwały jest
@@ -9,7 +9,7 @@
  Wielbmy Go, bo godzien chwały jest,
  nasz Pan na tronie swym.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Obj. 5:12</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -21,8 +21,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

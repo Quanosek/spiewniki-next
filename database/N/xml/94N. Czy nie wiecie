@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>94N. Czy nie wiecie</title>
+  <title>94. Czy nie wiecie</title>
   <lyrics>[V1]
  1. [: Czy nie wiecie,
  że jesteście świątynią? :] x3
@@ -30,8 +30,8 @@
  my jesteśmy świątynią :] x3
  Ref.: Świątynią,
  w której mieszka święty duch.</lyrics>
-  <author>(5 zwrotek)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>I Kor. 3:16</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

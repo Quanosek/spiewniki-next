@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>70E. Radości hymn</title>
+  <title>70. Radości hymn</title>
   <lyrics>[V1]
  1. Z radością wznieśmy pieśń ku czci
  i chwale Jedynego,
@@ -36,7 +36,7 @@
  Mojżesza i Baranka.
  Tak, radość wieczna w Nim,
  wesele w Panu jest.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -49,8 +49,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

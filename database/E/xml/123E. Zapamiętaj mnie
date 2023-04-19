@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>123E. Zapamiętaj mnie</title>
+  <title>123. Zapamiętaj mnie</title>
   <lyrics>[V1]
  1. Spełnię Twą łaskawą prośbę,
  w cichej pokorze,
@@ -30,7 +30,7 @@
  jak obraz Twój stanę się,
  gdy przyjdziesz w Swoim Królestwie,
  to wspomnisz także i mnie.</lyrics>
-  <author>(5 zwrotek)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

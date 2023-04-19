@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>22C. Śpiewałem o Boże</title>
+  <title>22. Śpiewałem o Boże</title>
   <lyrics>[V1]
  1. Śpiewałem o Boże, swą pieśń w ciemną noc.
  Jej echo przebrzmiało, a ja myślę drżąc.
@@ -21,7 +21,7 @@
  Boś Ty mnie usłyszał, Ty znasz imię me.
  [: Przychodzę z daleka
  i wciąż szukam Cię. :]</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -34,8 +34,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

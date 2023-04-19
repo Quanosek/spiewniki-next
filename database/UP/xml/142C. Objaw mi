@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>142C. Objaw mi</title>
+  <title>142. Objaw mi</title>
   <lyrics>[V1]
  1. Objaw mi, Panie mój, 
  czym naprawdę jest Twój krzyż.
@@ -24,7 +24,7 @@
  Pozwól mi w służbie trwać,
  tajemnice Twoje znać.
  Panie chcę wszystkie dni dla Ciebie żyć.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

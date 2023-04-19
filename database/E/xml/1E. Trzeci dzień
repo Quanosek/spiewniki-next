@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>1E. Trzeci dzień</title>
+  <title>1. Trzeci dzień</title>
   <lyrics>[V1]
  1. Dzień się budzi, wstaje świt,
  nadzieja jeszcze śpi,
@@ -24,7 +24,7 @@
  Spójrz, jak pusty jest ten grób,
  przypomnij sobie dzień,
  gdy mówił o tym Pan ucząc cię.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author>sł. i muz. Andrzej Kaliszczyk</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

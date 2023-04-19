@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>165C. Trzeba choć jeden raz</title>
+  <title>165. Trzeba choć jeden raz</title>
   <lyrics>[V1]
  1. Trzeba choć jeden raz
  przejść po trawie boso,
@@ -35,7 +35,7 @@
  już cię nie nasyci nic.
  [: Kto nie poznał tej tęsknoty, 
  nie wie co to znaczy żyć. :]</lyrics>
-  <author>(5 zwrotek)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -48,8 +48,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

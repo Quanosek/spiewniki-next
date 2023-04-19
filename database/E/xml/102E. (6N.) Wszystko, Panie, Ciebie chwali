@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>102E. Wszystko, Panie, Ciebie chwali</title>
+  <title>102. Wszystko, Panie, Ciebie chwali</title>
   <lyrics>[V1]
- Wszystko, Panie, Ciebie chwali:
+.  Em                      C
+ 1. Wszystko, Panie, Ciebie chwali:
+.G                 H7
  ptaki, kwiaty, wicher, woda;
+.Em                    C
  bo Ty wszystko masz w opiece,
+.G                     H7              Em
  wszystko Tobie się podobać chce.
 
 [C]
- Panie jestem Twoim dzieckiem,
+.                          C
+ Ref.: Panie jestem Twoim dzieckiem,
+.G             H7
  ukochałeś mnie nad życie.
+.Em              C
  Mocną ręką mnie prowadzisz,
+.G                H7            Em
  błogosławisz mi sowicie sam.
 
-————————————
+ ————————————
 
 [V2]
  2. Ożywiłeś moje serce,
@@ -27,7 +35,7 @@
  Zmierzam do nagrody wiecznej,
  którą sam przygotowałeś mi.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>1 Jan 3:1</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V1 C</presentation>
   <ccli></ccli>
@@ -39,8 +47,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>41N. Dziś jest czas</title>
+  <title>41. Dziś jest czas</title>
   <lyrics>[V1]
  1. Dziś jest czas, by oddać Bogu chwałę,
  w tej świątyni, którą my jesteśmy sami.
@@ -17,8 +17,8 @@
  On pragnie, aby wzywać Jego Imię.
  Więc otwórz serce swe i zacznij wielbić Go,
  Jego chwała wnet wypełni miejsce to.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>I Kor. 6:19-20</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -30,8 +30,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

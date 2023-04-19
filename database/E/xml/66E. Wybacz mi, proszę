@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>66E. Wybacz mi, proszę</title>
+  <title>66. Wybacz mi, proszę</title>
   <lyrics>[V1]
  1. Wybacz mi, proszę, że moje życie
  ciągle jest takie złe.
@@ -40,7 +40,7 @@
  mieszkać pod dachem Twym,
  w cieniu Twej chwały, tutaj na ziemi,
  pragniemy czystymi być. :]</lyrics>
-  <author>(4 zwrotki)</author>
+  <author>sł. i muz. Andrzej Kaliszczyk</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -53,8 +53,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

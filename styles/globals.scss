@@ -1,17 +1,25 @@
 :root {
-  color-scheme: dark only;
+  color-scheme: dark only; // only dark-mode
 }
 
+// tan navigation focus
 *:focus-visible {
-  box-shadow: 0px 0px 15px 3px rgba($color: #ededed, $alpha: 0.65);
+  box-shadow: 0px 0px 15px 3px rgba(#ededed, 0.65);
 }
 
+// text selection behavior
 ::selection {
   color: #ededed;
   background: #2170d0;
 }
 
-// fonts
+// input placeholder visibility
+::placeholder {
+  font-size: 1rem;
+  opacity: 0.6;
+}
+
+// used fonts
 @font-face {
   font-family: "Gill Sans MT";
   src: url("/fonts/Gill_Sans_MT.woff2") format("woff2");
@@ -27,89 +35,120 @@
   font-display: swap;
 }
 
+// html basic tags
 html,
 body {
   font-family: "Brutal Type Medium", "Gill Sans MT";
+  color: #edebe5;
   background-color: #000000;
-  color: #ededed;
-  overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  overflow: hidden;
-}
-
-main {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-input[type="text"] {
-  padding: 0.6rem 0.6rem 0.75rem 0.6rem;
+.container {
+  margin: 0 auto;
   width: 100%;
-  height: 3rem;
-  display: flex;
+  height: 100%;
+  max-width: calc(1440px + 3%);
+  justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
-  border-radius: 0.4rem;
-  cursor: text;
-  transition: 0.06s ease-out;
-
-  $bg: #202020;
-  background-color: $bg;
-  border: solid 2px $bg;
-
-  &:hover,
-  &:focus {
-    $blue: #68aafa;
-    border-color: rgba($color: $blue, $alpha: 0.75);
-    box-shadow: 0px 0px 15px 3px rgba($color: $blue, $alpha: 0.65);
-  }
 }
 
+header,
 footer {
-  padding: 1rem 3rem;
+  z-index: 10;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  background-color: #171717;
+  background-color: #161514;
+  font-size: 80%;
+
+  .container {
+    display: flex;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 
   a {
-    opacity: 0.7;
+    opacity: 75%;
+    transition: 0.1s opacity ease-out;
 
     &:hover {
-      opacity: 0.85;
+      opacity: 100%;
       text-decoration: underline;
     }
   }
 }
 
+$headerHeight: 4.5rem;
+
+header {
+  padding: 1rem 3rem;
+  position: sticky;
+  top: 0;
+  height: $headerHeight;
+  box-shadow: 0 3px 12px -2px #000000;
+
+  .container {
+    position: relative;
+
+    a {
+      padding: 0.5rem 1rem;
+      position: absolute;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 0.4rem;
+
+      img {
+        position: relative;
+        top: 1px;
+      }
+    }
+  }
+}
+
+footer {
+  padding: 1.25rem 3rem;
+
+  .container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+main {
+  padding: 2rem 3% 4rem;
+  width: 100%;
+  min-height: calc(100vh - $headerHeight);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 3% 2%;
+  }
+
+  @media (max-width: 425px) {
+    gap: 6.8vw;
+  }
+}
+
 h1 {
   font-size: 200%;
+  font-weight: bold;
 }
 
 h2 {
-  font-size: 115%;
+  font-size: 125%;
 }
 
-h1,
-b {
-  font-weight: 600;
-}
-
-p {
-  font-size: 80%;
-  margin: 3px 6px;
-}
-
+// default behavior
 img {
-  width: 100%;
-  height: 100%;
+  user-select: none;
 }
 
 .icon {
@@ -118,47 +157,66 @@ img {
 
 button {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 0.4rem;
-  background-color: #171717;
-  transition: 0.06s background-color ease-out;
+  background-color: #161514;
+  transition: 0.2s background-color ease-out;
   cursor: pointer;
 
   &:hover {
-    background-color: #252525;
+    background-color: #1e1d1c;
   }
 }
 
-::placeholder {
-  font-size: 1rem;
-  opacity: 0.6;
-}
-
-// laptop
-@media (max-width: 1023px) {
-  footer {
-    padding: 1rem 3%;
-    font-size: 0.85rem;
-  }
-}
-
-// tablet
-@media (max-width: 767px) {
-  footer {
-    display: none;
-  }
-}
-
-// small-mobile
-@media (max-width: 319px) {
-  html,
-  body {
-    align-items: normal;
-  }
-}
-
+// navbar hidden buttons
 .onlyOnHymn {
   display: none;
+}
+
+// loading dots
+.loader,
+.loader:before,
+.loader:after {
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  animation-fill-mode: both;
+  animation: loadAnimation 1.8s infinite ease-in-out;
+}
+
+.loader {
+  margin: 2rem auto 5rem;
+  color: var(--text);
+  font-size: 10px;
+  transform: translateZ(0);
+  animation-delay: -0.16s;
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+  }
+
+  &:before {
+    left: -3.5em;
+    animation-delay: -0.32s;
+  }
+
+  &:after {
+    left: 3.5em;
+  }
+}
+
+@keyframes loadAnimation {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
 }

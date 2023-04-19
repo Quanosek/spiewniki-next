@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>259C. Módl się, aż błyśnie świt</title>
+  <title>259. Módl się, aż błyśnie świt</title>
   <lyrics>[V1]
  1. Módl się, gdy chmura słońca blask ćmi,
  Módl się i w burzy zgrzyt.
@@ -24,8 +24,8 @@
  On twój zapewni byt.
  Wszak nie zostawi On dzieci swych,
  Módl się, aż błyśnie świt.</lyrics>
-  <author>(3 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Hbr. 10:23</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C</presentation>
   <ccli></ccli>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

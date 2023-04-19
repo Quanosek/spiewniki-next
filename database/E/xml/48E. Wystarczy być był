@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>48E. Wystarczy byś był</title>
+  <title>48. Wystarczy byś był</title>
   <lyrics>[V]
- Wystarczy byc był - nic więcej
+ Wystarczy byś był - nic więcej
  Tylko byś był - nic więcej
  By Twoje skrzydła otuliły mnie.</lyrics>
   <author></author>
@@ -18,8 +18,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

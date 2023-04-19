@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>94E. O, Jezu, mój Zbawco</title>
+  <title>94. O, Jezu, mój Zbawco</title>
   <lyrics>[V1]
  O, Jezu, mój Zbawco,
  któż mógłby przewyższyć Cię.
@@ -34,8 +34,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

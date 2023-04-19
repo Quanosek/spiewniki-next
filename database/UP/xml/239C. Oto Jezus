@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>239C. Oto Jezus</title>
+  <title>239. Oto Jezus</title>
   <lyrics>[V1]
  1. Oto Jezus, patrz po wodzie tutaj kroczy, 
  podniesie cię i pomoże ci stać.
@@ -18,7 +18,7 @@
  uzdrowi cię, wskaże w życiu twym cel.
  Tak, oto Jezus On jest wielkim lekarzem serc,
  oto Jezus, więc nie bój się.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -31,8 +31,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

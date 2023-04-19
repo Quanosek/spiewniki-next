@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>84C. Gdy będę mieć siedem latek</title>
+  <title>84. Gdy będę mieć siedem latek</title>
   <lyrics>[V1]
  1. Gdy będę mieć siedem latek
  do szkoły pójdę ja.
@@ -18,8 +18,8 @@
  literki będę znać,
  mama, tata kupią mi Biblię
  i Biblię poznam ja.</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Łuk. 9:46-48</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -31,8 +31,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

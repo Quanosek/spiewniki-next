@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>100N. Gdy jesienną szedłem drogą</title>
+  <title>100. Gdy jesienną szedłem drogą</title>
   <lyrics>[V1]
  1. Gdy jesienną szedłem drogą,
  z drzewa spadł z wolna zżółkły liść.
@@ -56,8 +56,8 @@
  i nie zazna rozłąki nikt z nas.
  [: O tak, o tak
  być powinno, kochani, wśród nas. :]</lyrics>
-  <author>(4 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Hbr. 10:24</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -69,8 +69,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

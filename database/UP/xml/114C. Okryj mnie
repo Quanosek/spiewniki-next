@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>114C. Okryj mnie</title>
+  <title>114. Okryj mnie</title>
   <lyrics>[V]
  Okryj mnie, okryj mnie,
  rozciągnij skraj swojej szaty na mnie.
  Ponieważ Tyś mi Panie najmilszy,
  okryj mnie, okryj mnie, okryj mnie.</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Rut. 3:9</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -19,8 +19,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

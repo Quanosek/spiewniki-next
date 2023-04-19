@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>3C. Tak wiele już minęło lat</title>
+  <title>3. Tak wiele już minęło lat</title>
   <lyrics>[C]
  Ref.: Czy nie chciałbyś żyć
  wiecznie tam, gdzie mieszka Bóg?
@@ -33,7 +33,7 @@
  i nigdy już nie będziesz chciał
  od Pana odejść znowu
  w świat wszak On za ciebie życie dał.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>C V1 C V2 C</presentation>
@@ -46,8 +46,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

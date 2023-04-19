@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>50N. De colores</title>
+  <title>50. De colores</title>
   <lyrics>[V1]
  1. De colores; wiosną zbudzonych barw,
  zieleń liści i traw rozlał Pan.
@@ -30,8 +30,8 @@
  na swą wylał chwałę nasz Pan.
  De colores; dla mnie jeden z ich tęczy
  się stał najpiękniejszy, bo Pan</lyrics>
-  <author>(4 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Psalm 104</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C</presentation>
   <ccli></ccli>
@@ -43,8 +43,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>62N. Ty tylko mnie poprowadź</title>
+  <title>62. Ty tylko mnie poprowadź</title>
   <lyrics>[V1]
  1. Gdy drogi pomyli los zły
  i oczy mgłą zasnuje,
@@ -24,8 +24,8 @@
  i karmić się będę nim co dzień:
  "Miej w sobie tę ufność,
  nie lękaj się."</lyrics>
-  <author>(2 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>Psalm 139:23-24</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
   <ccli></ccli>
@@ -37,8 +37,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

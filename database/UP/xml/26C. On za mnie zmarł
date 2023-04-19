@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>26C. On za mnie zmarł</title>
+  <title>26. On za mnie zmarł</title>
   <lyrics>[C]
  Refren:
  On za mnie zmarł,
@@ -23,7 +23,7 @@
  dziś do ciebie wyciąga się też.
  Weź tę rękę twojego Wybawcy,
  poprowadzi cię pewnie o wierz.</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>C V1 C V2 C V3 C</presentation>
@@ -36,8 +36,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

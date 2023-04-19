@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>247C. Gdy Noe dryfował</title>
+  <title>247. Gdy Noe dryfował</title>
   <lyrics>[V1]
  1. Gdy Noe dryfował po wodach potopu, 
  wyglądał już ziemi ze wszystkich stron.
@@ -20,7 +20,7 @@
  Choć mało masz wiary,
  lecz Bóg będzie pamiętał
  i ześle swą miłość na skrzydłach gołębich.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
@@ -33,8 +33,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

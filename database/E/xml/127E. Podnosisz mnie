@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>127E. Podnosisz mnie</title>
+  <title>127. Podnosisz mnie</title>
   <lyrics>[V1]
  1. Gdy ciężko mi i dusza ma zraniona,
  przychodzi ból i serce moje łka.
@@ -20,7 +20,7 @@
  i serce bije niespokojnie tak,
  O, Panie, przyjdź, cierpliwie czekam w ciszy,
  aż przyjdziesz tu, usiądziesz ze mną znów.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C</presentation>
@@ -33,8 +33,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>274C. Jezus kocha małe dzieci</title>
+  <title>274. Jezus kocha małe dzieci</title>
   <lyrics>[V1]
  1. Jezus kocha małe dzieci, kocha mnie.
  Jezus kocha małe dzieci, kocha mnie.
@@ -12,7 +12,7 @@
  Dobry Jezus kocha starszych, ciebie też.
  Z wszystkich twoich win, omył cię w swej krwi.
  Dobry Jezus kocha ciebie, kocha mnie.</lyrics>
-  <author>(2 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -25,8 +25,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

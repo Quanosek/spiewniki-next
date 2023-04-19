@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>53E. Pastorałka</title>
+  <title>53. Pastorałka</title>
   <lyrics>[V1]
  1. Wśród nocy w przepastnej głębinie,
  w pustkowiu samotni zdrętwiali
@@ -59,7 +59,7 @@
  przez wielkość oddany w ofierze
  i umarł za wszystkich sam jeden,
  dlatego kocham...</lyrics>
-  <author>(3 zwrotki)</author>
+  <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
@@ -72,8 +72,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

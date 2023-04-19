@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>242C. W Panu mym rozraduje się</title>
+  <title>242. W Panu mym rozraduje się</title>
   <lyrics>[V1]
  W Panu mym rozraduję się,
  bo w Nim najwyższe szczęście me. 
@@ -32,8 +32,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

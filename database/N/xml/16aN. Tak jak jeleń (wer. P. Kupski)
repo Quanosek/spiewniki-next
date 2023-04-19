@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>16aN. Tak jak jeleń (wer. P. Kupski)</title>
+  <title>16a. Tak jak jeleń (wer. P. Kupski)</title>
   <lyrics>[V1]
  [: Tak jak jeleń do źródła wody,
  dusza ma do Ciebie lgnie.
  Tyś pragnieniem mojego serca!
- Ciebie, Panie, wielbić chcę. :] x4
- [: Ciebie, Panie, wielbić chcę. :] x2
+ Ciebie, Panie, wielbić chcę. :]
+ [: Ciebie, Panie, wielbić chcę. :] x4
 
 [V2]
  [: Tyś mą siłą, Tyś tarczą jest,
- na Tobie tylko polegać chcę. :] x3
+ na Tobie tylko polegać chcę. :] x4
 
 [V3]
  [: Tak jak jeleń do źródła wody,
  dusza ma do Ciebie lgnie.
  Tyś pragnieniem mojego serca!
- Ciebie, Panie, wielbić chcę. :] x4
- [: Ciebie, Panie, wielbić chcę. :] x2</lyrics>
+ Ciebie, Panie, wielbić chcę. :]
+ [: Ciebie, Panie, wielbić chcę. :] x4</lyrics>
   <author></author>
   <copyright></copyright>
   <hymn_number></hymn_number>
@@ -31,8 +31,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

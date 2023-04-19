@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>113N. Czemuż idziesz</title>
+  <title>113. Czemuż idziesz</title>
   <lyrics>[V1]
  1. Czemuż idziesz po tej drodze złej,
  słysząc: "Przyjdź,
@@ -31,8 +31,8 @@
  gdy poświęcisz Jemu swoje dni.
  Do niebiańskich przywiedzie cię stron,
  o których człek teraz tylko śni.</lyrics>
-  <author>(4 zwrotki)</author>
-  <copyright></copyright>
+  <author></author>
+  <copyright>I Piotr 2:25</copyright>
   <hymn_number></hymn_number>
   <presentation>V1 C V2 C V3 C V4 C</presentation>
   <ccli></ccli>
@@ -44,8 +44,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

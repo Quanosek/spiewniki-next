@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>184C. Przeżyte razem dni</title>
+  <title>184. Przeżyte razem dni</title>
   <lyrics>[V]
  Przeżyte razem dni, dobiegły oto końca.
  Odchodzisz bracie mój w dalekie, obce strony.
@@ -23,8 +23,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

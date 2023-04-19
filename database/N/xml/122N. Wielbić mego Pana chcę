@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>122N. Wielbić mego Pana chcę</title>
+  <title>122. Wielbić mego Pana chcę</title>
   <lyrics>[V]
  Wielbić mego Pana chcę,
  bo On godzien chwały jest.
@@ -8,7 +8,7 @@
  [: Mój Pan żyje, opoką moją On,
  niechaj będzie wywyższony mój Zbawiciel. :]</lyrics>
   <author></author>
-  <copyright></copyright>
+  <copyright>Psalm 60:13-14</copyright>
   <hymn_number></hymn_number>
   <presentation></presentation>
   <ccli></ccli>
@@ -20,8 +20,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="true" link="false" background_as_text="false"/>
 </song>

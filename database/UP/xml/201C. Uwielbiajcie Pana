@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <song>
-  <title>201C. Uwielbiajcie Pana</title>
+  <title>201. Uwielbiajcie Pana</title>
   <lyrics>[V1]
  Uwielbiajcie Pana
  ludzkich serc, bijące dzwony.
@@ -16,7 +16,7 @@
  święty, święty Bóg miłości.
  Śpiewaj Panu Ziemio,
  chwalcie wszystkie świata strony!</lyrics>
-  <author></author>
+  <author>sł. i muz. Krystyna Żak-Rzucidło</author>
   <copyright></copyright>
   <hymn_number></hymn_number>
   <presentation>V1 V2 V1 V2</presentation>
@@ -29,8 +29,8 @@
   <user2></user2>
   <user3></user3>
   <theme></theme>
-  <linked_songs />
+  <linked_songs/>
   <tempo></tempo>
   <time_sig></time_sig>
-  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false" />
+  <backgrounds resize="screen" keep_aspect="false" link="false" background_as_text="false"/>
 </song>

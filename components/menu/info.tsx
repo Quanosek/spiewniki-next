@@ -43,12 +43,6 @@ export default function InfoMenu() {
       </div>
 
       <div className={styles.buttons}>
-        <button
-          className={styles.supportButton}
-          onClick={() => router.push("https://ko-fi.com/Quanosek")}
-        >
-          Wesprzyj nas
-        </button>
         <button>Zamknij</button>
       </div>
     </>

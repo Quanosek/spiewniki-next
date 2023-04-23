@@ -178,7 +178,7 @@ export default function IndexPage() {
           </div>
         </div>
 
-        {/* <div className={styles.tagsMenu}>
+        <div className={styles.tagsMenu}>
           <h2>Przeglądaj pieśni według słów kluczowych:</h2>
 
           {TagButtons([
@@ -204,7 +204,7 @@ export default function IndexPage() {
             "Dla chóru",
             "Śpiewane na głosy",
           ])}
-        </div> */}
+        </div>
       </main>
 
       {/* navbar buttons on mobile view */}
@@ -236,25 +236,25 @@ function HymnbookButton(shortcut: string, alt: string, name: ReactElement) {
   );
 }
 
-// // quick tag selection
-// function TagButtons(buttons: any) {
-//   return (
-//     <div className={styles.tagsCategory}>
-//       {buttons.map((name: string, index: number) => {
-//         return (
-//           <button
-//             key={index}
-//             onClick={() => {
-//               router.push({
-//                 pathname: "/search",
-//                 query: { tags: name },
-//               });
-//             }}
-//           >
-//             <p>{name}</p>
-//           </button>
-//         );
-//       })}
-//     </div>
-//   );
-// }
+// quick tag selection
+function TagButtons(buttons: any) {
+  return (
+    <div className={styles.tagsCategory}>
+      {buttons.map((name: string, index: number) => {
+        return (
+          <button
+            key={index}
+            onClick={() => {
+              router.push({
+                pathname: "/search",
+                query: { tags: name },
+              });
+            }}
+          >
+            <p>{name}</p>
+          </button>
+        );
+      })}
+    </div>
+  );
+}

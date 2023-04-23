@@ -83,7 +83,7 @@ export default function HymnPage() {
                 <p>Wybierz śpiewnik</p>
               </button>
 
-              <button onClick={() => router.push("/")}>
+              <button onClick={() => {}}>
                 <Image
                   className="icon"
                   alt="dom"

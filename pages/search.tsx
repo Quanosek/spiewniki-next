@@ -124,15 +124,15 @@ export default function SearchPage() {
           <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
 
           {book && <button>{BookNames(book)}</button>}
-          {tags &&
-            tags.map((name: string, index: number) => {
+          {/* {tags &&
+            tags.map((name: string) => {
               return (
-                <button key={index} className={styles.tagsButtons}>
+                <button className={styles.tagsButtons} key={name}>
                   {name}
                 </button>
               );
             })}
-          <button className={styles.addMore}>+</button>
+          <button className={styles.addMore}>+</button> */}
         </div>
 
         <div id="results" className={styles.results}>

@@ -15,7 +15,7 @@ export default function bookNames(shortName: string | string[]) {
       fullName = "Śpiewajcie Panu Pieśń Nową";
       break;
     case "E":
-      fullName = "Śpiewniczek Młodzieżowy Epifanii";
+      fullName = "Śpiewniczek Młodzieżowy";
       break;
     case "S":
       fullName = "Pieśni Chóru Syloe";

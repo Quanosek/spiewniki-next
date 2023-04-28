@@ -1,15 +1,17 @@
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import router from "next/router";
 import { ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
+import bookNames from "@/scripts/bookNames";
+
 import Menu from "@/components/menu";
-import BottomNavbar, {
-  buttonLink,
-  randomButton,
-} from "@/components/navbar/bottom";
+import BottomNavbar from "@/components/navbar/bottom";
+
+import { buttonLink, randomButton } from "@/scripts/buttons";
 
 export default function IndexPage() {
   return (
@@ -32,26 +34,9 @@ export default function IndexPage() {
       <main>
         <div className={styles.mobileTitle}>
           <h1>Śpiewniki</h1>
-
-          <button
-            className={styles.infoButton}
-            onClick={() => buttonLink("info")}
-          >
-            <Image
-              className="icon"
-              alt="info"
-              src="/icons/info.svg"
-              width={25}
-              height={25}
-              draggable="false"
-            />
-          </button>
         </div>
 
-        <button
-          className={styles.searchBox}
-          onClick={() => router.push("/search")}
-        >
+        <Link href={"/search"} className={styles.searchBox}>
           <Image
             className="icon"
             alt="search"
@@ -61,63 +46,20 @@ export default function IndexPage() {
             draggable="false"
           />
           <p>Rozpocznij wyszukiwanie...</p>
-        </button>
+        </Link>
 
         <div className={styles.container}>
           <div className={styles.hymnBooks}>
-            <div className={styles.grid}>
-              {HymnbookButton(
-                "PBT",
-                "Okładka śpiewnika Pieśni Brzasku Tysiąclecia",
-                <>
-                  Pieśni&nbsp;Brzasku
-                  <br />
-                  Tysiąclecia
-                </>
-              )}
+            {Books(["PBT", "UP", "N", "E"])}
 
-              {HymnbookButton(
-                "UP",
-                "Okładka śpiewnika Uwielbiamy Pana (Cegiełki)",
-                <>
-                  Uwielbiajmy&nbsp;Pana
-                  <br />
-                  (Cegiełki)
-                </>
-              )}
-
-              {HymnbookButton(
-                "N",
-                "Okładka śpiewnika Śpiewajmy Panu Pieśń Nową",
-                <>
-                  Śpiewajcie&nbsp;Panu
-                  <br />
-                  Pieśń&nbsp;Nową
-                </>
-              )}
-
-              {HymnbookButton(
-                "E",
-                "Okładka Śpiewniczka Młodzieżowego Epifanii",
-                <>
-                  Śpiewniczek
-                  <br />
-                  Młodzieżowy&nbsp;Epifanii
-                </>
-              )}
-            </div>
-
-            <button
-              className={styles.otherHymns}
-              onClick={() => router.push("/books")}
-            >
-              <h3>Lista wszystkich śpiewników</h3>
-            </button>
+            <Link href={"/books"} className={styles.all}>
+              <p>Lista wszystkich śpiewników</p>
+            </Link>
           </div>
 
           <hr />
 
-          <div className={styles.optionsMenu}>
+          <div className={styles.optionsButtons}>
             <h2>Dostępne opcje:</h2>
 
             <button
@@ -163,6 +105,28 @@ export default function IndexPage() {
             </button>
 
             <button
+              title="Skopiuj link do aplikacji i podziel się nią ze znajomymi!"
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: "Śpiewniki",
+                    text: "Udostępnij śpiewniki!",
+                    url: router.asPath,
+                  });
+                }
+              }}
+            >
+              <Image
+                className="icon"
+                alt="link"
+                src="/icons/link.svg"
+                width={20}
+                height={20}
+              />
+              <p>Udostępnij</p>
+            </button>
+
+            <button
               title="Informacje od twórców strony [I]"
               onClick={() => buttonLink("info")}
             >
@@ -178,10 +142,10 @@ export default function IndexPage() {
           </div>
         </div>
 
-        <div className={styles.tagsMenu}>
+        {/* <div className={styles.tagsMenu}>
           <h2>Przeglądaj pieśni według słów kluczowych:</h2>
 
-          {TagButtons([
+          {Tags([
             "Wieczerza Pańska",
             "Chrzest",
             "Pogrzeb",
@@ -189,7 +153,7 @@ export default function IndexPage() {
             "Nabożeństwo noworoczne",
           ])}
 
-          {TagButtons([
+          {Tags([
             "Dla najmłodszych",
             "Radosne",
             "Szybkie",
@@ -204,7 +168,7 @@ export default function IndexPage() {
             "Dla chóru",
             "Śpiewane na głosy",
           ])}
-        </div>
+        </div> */}
       </main>
 
       {/* navbar buttons on mobile view */}
@@ -213,48 +177,50 @@ export default function IndexPage() {
   );
 }
 
-// quick hymnbook selection
-function HymnbookButton(shortcut: string, alt: string, name: ReactElement) {
-  return (
-    <button
-      onClick={() => {
-        router.push({
-          pathname: "/search",
-          query: { book: shortcut },
-        });
-      }}
-    >
-      <Image
-        alt={alt}
-        src={`/covers/${shortcut}.webp`}
-        width={850}
-        height={1200}
-        priority={true}
-      />
-      <h3>{name}</h3>
-    </button>
-  );
+function Books(names: string[]) {
+  const books: ReactElement[] = [];
+
+  names.forEach((name) => {
+    books.push(
+      <Link
+        href={{
+          pathname: `/search`,
+          query: { book: name },
+        }}
+        key={name}
+      >
+        <Image
+          alt="okładka"
+          src={`/covers/${name}.webp`}
+          width={850}
+          height={1200}
+          priority={true}
+        />
+        <p>{bookNames(name)}</p>
+      </Link>
+    );
+  });
+
+  return <div className={styles.books}>{books}</div>;
 }
 
-// quick tag selection
-function TagButtons(buttons: any) {
-  return (
-    <div className={styles.tagsCategory}>
-      {buttons.map((name: string, index: number) => {
-        return (
-          <button
-            key={index}
-            onClick={() => {
-              router.push({
-                pathname: "/search",
-                query: { tags: name },
-              });
-            }}
-          >
-            <p>{name}</p>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
+// // quick tag selection
+// function Tags(buttons: string[]) {
+//   const tags: ReactElement[] = [];
+
+//   buttons.forEach((name) => {
+//     tags.push(
+//       <Link
+//         href={{
+//           pathname: "/search",
+//           query: { tags: name },
+//         }}
+//         key={name}
+//       >
+//         <p>{name}</p>
+//       </Link>
+//     );
+//   });
+
+//   return <div className={styles.tagsCategory}>{tags}</div>;
+// }

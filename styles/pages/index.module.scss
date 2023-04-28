@@ -19,7 +19,8 @@
   width: 55%;
   height: 3.5rem;
   position: relative;
-  justify-content: flex-start;
+  display: flex;
+  align-items: center;
   border-radius: 30px;
   transition: 0.1s ease-out, 0.2s width ease-in-out;
   cursor: text;
@@ -53,12 +54,12 @@
 
   hr::after {
     content: "";
-    width: 1px;
+    width: 1.5px;
     height: 106%;
     position: relative;
     bottom: 3%;
     display: block;
-    background-color: #edebe5;
+    background-color: #474747;
     border-radius: 100%;
   }
 }
@@ -70,71 +71,91 @@
   flex-direction: column;
   align-items: center;
   font-size: min(1.2vw, 100%);
-}
 
-$gridGap: 1rem;
+  $gridGap: 1rem;
 
-.grid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  justify-items: center;
-  gap: $gridGap;
-
-  button {
-    padding: 1rem;
+  .books {
     width: 100%;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
     gap: $gridGap;
 
-    h3 {
+    a {
+      padding: 1rem;
       width: 100%;
-      text-align: center;
-    }
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: $gridGap;
+      border-radius: 0.4rem;
+      background-color: #161514;
+      transition: 0.2s background-color ease-out;
 
-    img {
-      max-width: 200px;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 0.2rem;
+      &:hover {
+        background-color: #1e1d1c;
+      }
+
+      p {
+        padding: 0 min(2.65vw, 3rem);
+        text-align: center;
+      }
+
+      img {
+        max-width: 200px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0.2rem;
+        box-shadow: rgba(#000000, 0.2) 0px 10px 20px,
+          rgba(#000000, 0.22) 0px 6px 6px;
+      }
+    }
+  }
+
+  .all {
+    margin-top: $gridGap;
+    padding: 1.5rem;
+    width: 100%;
+    text-align: center;
+    border-radius: 0.4rem;
+    background-color: #161514;
+    transition: 0.2s background-color ease-out;
+
+    &:hover {
+      background-color: #1e1d1c;
     }
   }
 }
 
-.otherHymns {
-  margin-top: $gridGap;
-  padding: 1.5rem;
-  width: 100%;
-}
-
-.optionsMenu {
+.optionsButtons {
   width: 20%; // grid
+
+  // display: flex;
+  // flex-direction: column;
+  // gap: 0.35rem;
+
+  h2 {
+    margin: 10px 0 6px 12px;
+    font-size: 110%;
+  }
 
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-
-  h2 {
-    margin: 0.5rem 0 1rem 0.5rem;
-    font-size: 105%;
-  }
+  align-items: flex-start;
+  gap: 1rem;
 
   button {
-    padding: 0.8rem 1rem;
-    width: 100%;
-    justify-content: flex-start;
-    gap: 8px;
+    opacity: 0.75;
+    padding: 12px 26px;
+    gap: 12px;
+    font-size: 105%;
+    background-color: transparent;
+    transition: 0.2s ease-out;
 
-    img {
-      width: 20px;
-      height: 20px;
-    }
-
-    p {
-      font-size: min(1.2vw, 90%);
-      margin: 0;
+    &:hover {
+      opacity: 1;
+      transform: translateY(-1px);
     }
   }
 }
@@ -144,32 +165,32 @@ $gridGap: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
 
-  div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
+.tagsCategory {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
 
-    button {
-      padding: 12px 26px;
-      border-radius: 30px;
-      transition: 0.2s filter ease-out;
+  a {
+    padding: 12px 26px;
+    border-radius: 30px;
+    transition: 0.2s filter ease-out;
 
-      &:hover {
-        filter: contrast(1.2);
-      }
+    &:hover {
+      filter: contrast(1.2);
     }
+  }
 
-    &:nth-child(2) {
-      button {
-        background-color: #273f74;
-      }
+  &:nth-child(2) {
+    a {
+      background-color: #273f74;
     }
+  }
 
-    &:nth-child(3) {
-      button {
-        background-color: #275a74;
-      }
+  &:nth-child(3) {
+    a {
+      background-color: #275a74;
     }
   }
 }
@@ -193,20 +214,17 @@ $gridGap: 1rem;
   .hymnBooks {
     width: 75%;
     font-size: min(2vw, 1.1rem);
-  }
 
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
+    .books {
+      grid-template-columns: repeat(2, 1fr);
 
-    button img {
-      width: 60%;
+      a img {
+        width: 60%;
+      }
     }
-  }
 
-  .optionsMenu {
-    width: 25%;
-
-    button p {
+    .all {
+      width: 25%;
       font-size: min(1.6vw, 90%);
     }
   }
@@ -239,26 +257,26 @@ $gridGap: 1rem;
   .hymnBooks {
     width: 100%;
     font-size: min(1.25rem, 3.5vw);
-  }
 
-  .grid {
-    gap: 1%;
+    .books {
+      gap: 1%;
 
-    button {
-      padding: 2.5vw;
-      gap: 2vw;
+      a {
+        padding: 2.5vw;
+        gap: 2vw;
 
-      img {
-        width: 75%;
+        img {
+          width: 75%;
+        }
       }
+    }
+
+    .all {
+      padding: min(1.5rem, 5%);
     }
   }
 
-  .otherHymns {
-    padding: min(1.5rem, 5%);
-  }
-
-  .optionsMenu {
+  .optionsButtons {
     display: none;
   }
 
@@ -269,14 +287,14 @@ $gridGap: 1rem;
     h2 {
       font-size: min(4vw, 115%);
     }
+  }
 
-    div {
-      justify-content: center;
-      font-size: min(3vw, 100%);
+  .tagsCategory {
+    justify-content: center;
+    font-size: min(3vw, 100%);
 
-      button {
-        padding: min(2.5vw, 12px) min(4.6vw, 26px);
-      }
+    a {
+      padding: min(2.5vw, 12px) min(4.6vw, 26px);
     }
   }
 }

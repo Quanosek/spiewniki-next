@@ -1,16 +1,16 @@
 import Image from "next/image";
 import router from "next/router";
 
-import axios from "axios";
-
 import styles from "@/styles/components/navbar.module.scss";
+
+import { buttonLink, randomButton } from "@/scripts/buttons";
 
 export default function bottomNavbar(param: { more: boolean }) {
   const more = param.more;
 
   return (
     <div className={styles.bottom}>
-      {more && (
+      {(more && (
         <button onClick={() => window.print()}>
           <Image
             className="icon"
@@ -20,6 +20,17 @@ export default function bottomNavbar(param: { more: boolean }) {
             height={16}
           />
           <p>Wydrukuj</p>
+        </button>
+      )) || (
+        <button onClick={() => buttonLink("info")}>
+          <Image
+            className="icon"
+            alt="info"
+            src="/icons/info.svg"
+            width={16}
+            height={16}
+          />
+          <p>Informacje</p>
         </button>
       )}
 
@@ -56,53 +67,26 @@ export default function bottomNavbar(param: { more: boolean }) {
         <p>Ulubione</p>
       </button>
 
-      {more && (
-        <button
-          onClick={() => {
-            if (navigator.share) {
-              navigator.share({
-                title: "Śpiewniki",
-                text: "Udostępnij pieśń znajomym!",
-                url: router.asPath,
-              });
-            }
-          }}
-        >
-          <Image
-            className="icon"
-            alt="link"
-            src="/icons/link.svg"
-            width={16}
-            height={16}
-          />
-          <p>Udostępnij</p>
-        </button>
-      )}
+      <button
+        onClick={() => {
+          if (navigator.share) {
+            navigator.share({
+              title: "Śpiewniki",
+              text: "Udostępnij pieśń znajomym!",
+              url: router.asPath,
+            });
+          }
+        }}
+      >
+        <Image
+          className="icon"
+          alt="link"
+          src="/icons/link.svg"
+          width={16}
+          height={16}
+        />
+        <p>Udostępnij</p>
+      </button>
     </div>
   );
-}
-
-export function buttonLink(name: string) {
-  router.push(
-    {
-      query: { ...router.query, menu: name },
-    },
-    undefined,
-    { shallow: true, scroll: false }
-  );
-}
-
-export function randomButton() {
-  (async () => {
-    const data = await axios.get(`/api/xml`).then(({ data }) => data);
-    const random = Math.floor(Math.random() * (Math.floor(data.length) + 1));
-
-    router.push({
-      pathname: "/hymn",
-      query: {
-        book: data[random].book,
-        title: data[random].title,
-      },
-    });
-  })();
 }

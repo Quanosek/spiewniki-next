@@ -1,6 +1,6 @@
 import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
@@ -29,7 +29,7 @@ export default function SearchPage() {
 
     // searching script
     (async () => {
-      return setData(await search(book, input.value));
+      setData(await search(book, input.value));
     })();
 
     // filter buttons
@@ -48,13 +48,24 @@ export default function SearchPage() {
   return (
     <>
       <Head>
-        <title>Wyszukiwanie | Śpiewniki</title>
+        <title>Wyszukiwanie / Śpiewniki</title>
       </Head>
+
+      <div className="backArrow">
+        <button onClick={() => router.push("/")}>
+          <Image
+            className="icon"
+            alt="strzałka"
+            src="/icons/arrow.svg"
+            width={20}
+            height={20}
+          />
+          <p>Powrót na stronę główną</p>
+        </button>
+      </div>
 
       <main>
         <div className={styles.mobileTitle}>
-          <h2>Wyszukiwanie</h2>
-
           <button
             title="Powrót do strony głównej"
             className={styles.backArrow}
@@ -69,6 +80,8 @@ export default function SearchPage() {
               draggable="false"
             />
           </button>
+
+          <h2>Wyszukiwanie</h2>
         </div>
 
         <div className={styles.searchBox}>
@@ -76,7 +89,7 @@ export default function SearchPage() {
             autoComplete="off"
             type="text"
             id="input"
-            // placeholder="Wpisz numer, tytuł, lub fragment tekstu pieśni"
+            placeholder="Rozpocznij wyszukiwanie..."
             onInput={async (e) => {
               const input = e.target as HTMLInputElement;
               showClear(input.value);
@@ -264,19 +277,19 @@ async function search(book: string, input: string) {
 }
 
 // clear search input button
+async function clearSearch(book: string) {
+  const input = document.getElementById("input") as HTMLInputElement;
+  input.value = "";
+
+  showClear(input.value);
+  input.focus();
+
+  return await search(book, input.value);
+}
+
 function showClear(input: string) {
   const clearIcon = document.getElementById("clearIcon") as HTMLElement;
 
   if (!input) clearIcon.style.display = "";
   else clearIcon.style.display = "flex";
-}
-
-async function clearSearch(book: string) {
-  const input = document.getElementById("input") as HTMLInputElement;
-  input.value = "";
-
-  showClear(input.value); // recursive
-  input.focus();
-
-  return await search(book, input.value);
 }

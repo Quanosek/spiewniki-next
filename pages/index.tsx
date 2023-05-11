@@ -1,34 +1,30 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
 import bookNames from "@/scripts/bookNames";
-
-import Menu from "@/components/menu";
-import BottomNavbar from "@/components/navbar/bottom";
-
 import { buttonLink, randomButton } from "@/scripts/buttons";
 
+import Menu from "@/components/menu";
+import Navbar from "@/components/navbar";
+
 export default function IndexPage() {
+  const router = useRouter();
+
   return (
     <>
       <Head>
         <title>Śpiewniki</title>
         <meta
           name="description"
-          content='Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami: Zrzeszenia Wolnych Badaczy Pisma Świętego, Świeckiego Ruchu Misyjnego "Epifania", Chóru "Syloe" i wielu innych. | Wszelkie prawa zastrzeżone &#169; 2023 | Jakub Kłało'
-        />
-        <meta
-          name="keywords"
-          content="Dabhar, dabhar.org, ZWBPS, ZWBP ŚW, BPSW, Badacze, Wolni badacze, badaczy, Zrzeszenie Wolnych Badaczy Pisma Świętego, Świecki Ruch Misyjny Epifania, Epifanii, Zrzeszenie, Kraków, Warszawa, Białogard, Biłgoraj, nastrazy.org, Na Straży, Wędrówka, Wędrowniczek, Zbawienie.pl, 52Prawdy, śpiewniki, śpiewnik, śpiewnik młodzieżowy, śpiewniczek, śpiewniczki, Brzask, brzasku, Śpiewnik Brzasku Tysiąclecia, Cegiełki, Uwielbiajmy Pana, Nowe Pieśni, Koziańskie, Kozy, Poznańskie, Poznań, Śpiewajmy Panu Pieśń Nową, tekst, teksty, słowa, wszystkie pieśni, piosenki, nuty, pdf, obóz, obozowe, piosenki obozowe, kursy biblijne, kursy, kolonie, kolonia religijna, konwencja, konwencje, Jakub Kłało, klalo.pl"
+          content="Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami. | Wszelkie prawa zastrzeżone &#169; 2023"
         />
       </Head>
 
-      {/* menu buttons display */}
       <Menu />
 
       <main>
@@ -50,7 +46,7 @@ export default function IndexPage() {
 
         <div className={styles.container}>
           <div className={styles.hymnBooks}>
-            {Books(["PBT", "UP", "N", "E"])}
+            {Books(["PBT", "UP", "N"])}
 
             <Link href={"/books"} className={styles.all}>
               <p>Lista wszystkich śpiewników</p>
@@ -59,7 +55,7 @@ export default function IndexPage() {
 
           <hr />
 
-          <div className={styles.optionsButtons}>
+          <div className={styles.options}>
             <h2>Dostępne opcje:</h2>
 
             <button
@@ -142,7 +138,7 @@ export default function IndexPage() {
           </div>
         </div>
 
-        {/* <div className={styles.tagsMenu}>
+        <div className={styles.tagsMenu}>
           <h2>Przeglądaj pieśni według słów kluczowych:</h2>
 
           {Tags([
@@ -168,15 +164,15 @@ export default function IndexPage() {
             "Dla chóru",
             "Śpiewane na głosy",
           ])}
-        </div> */}
+        </div>
       </main>
 
-      {/* navbar buttons on mobile view */}
-      <BottomNavbar more={false} />
+      <Navbar more={false} />
     </>
   );
 }
 
+// quick books selection
 function Books(names: string[]) {
   const books: ReactElement[] = [];
 
@@ -204,23 +200,23 @@ function Books(names: string[]) {
   return <div className={styles.books}>{books}</div>;
 }
 
-// // quick tag selection
-// function Tags(buttons: string[]) {
-//   const tags: ReactElement[] = [];
+// tag selection
+function Tags(buttons: string[]) {
+  const tags: ReactElement[] = [];
 
-//   buttons.forEach((name) => {
-//     tags.push(
-//       <Link
-//         href={{
-//           pathname: "/search",
-//           query: { tags: name },
-//         }}
-//         key={name}
-//       >
-//         <p>{name}</p>
-//       </Link>
-//     );
-//   });
+  buttons.forEach((name) => {
+    tags.push(
+      <Link
+        href={{
+          pathname: "/search",
+          query: { tags: name },
+        }}
+        key={name}
+      >
+        <p>{name}</p>
+      </Link>
+    );
+  });
 
-//   return <div className={styles.tagsCategory}>{tags}</div>;
-// }
+  return <div className={styles.tagsCategory}>{tags}</div>;
+}

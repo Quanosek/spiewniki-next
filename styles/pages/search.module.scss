@@ -5,7 +5,6 @@
   display: none;
   justify-content: center;
   align-items: center;
-  text-align: center;
 
   button {
     width: 3rem;
@@ -127,16 +126,6 @@
   border-radius: 0.6rem;
   background-color: #161514;
 
-  div {
-    position: relative;
-
-    @media (min-width: 1024px) {
-      &:hover .quickActions {
-        display: flex;
-      }
-    }
-  }
-
   a {
     margin: 4px;
     padding: 0.85rem 1rem;
@@ -194,12 +183,14 @@
   position: sticky;
   bottom: 3%;
   left: 100%;
-  background-color: #203259;
+  background-color: #203259 !important;
   box-shadow: 0 3px 8px -1px #000000;
   transition: 0.15s ease-in-out;
 
-  &:hover {
-    background-color: #2b4376;
+  @media (min-width: 768px) {
+    &:hover {
+      background-color: #2b4376 !important;
+    }
   }
 
   img {
@@ -226,9 +217,15 @@
     display: flex;
   }
 
-  .searchBox input {
-    height: 3rem;
-    font-size: min(8vw, 100%);
+  .searchBox {
+    input {
+      height: 3.5rem;
+      font-size: min(4vw, 105%);
+    }
+
+    img {
+      scale: 85%;
+    }
   }
 
   .filters {
@@ -263,7 +260,7 @@
 @media (max-width: 425px) {
   .mobileTitle {
     margin: 2vw 0 -1.6vw;
-    font-size: 3.8vw;
+    font-size: 3.65vw;
 
     button {
       width: 12vw;
@@ -273,9 +270,15 @@
 
   .searchBox {
     input {
-      padding: 0 14vw;
+      $fontSize: 3.6vw;
+
+      padding: 1vw 1.5vw 1vw 13.5vw;
       height: 11.5vw;
-      font-size: 3.6vw;
+      font-size: $fontSize;
+
+      &::placeholder {
+        font-size: $fontSize;
+      }
     }
 
     .searchIcon {
@@ -283,6 +286,7 @@
 
       img {
         width: 6vw;
+        height: auto;
       }
     }
 

@@ -1,3 +1,52 @@
+.navbar {
+  $height: 3rem;
+  $gap: 5px;
+
+  z-index: 10;
+  padding: 0 $gap;
+  position: fixed;
+  top: 0;
+  height: $height;
+  width: 100%;
+  display: none;
+  justify-content: space-between;
+  align-items: stretch;
+  background-color: #203259;
+  user-select: none;
+
+  div {
+    display: flex;
+    gap: $gap;
+  }
+
+  button {
+    padding: 0;
+    width: $height;
+    height: $height;
+    background-color: transparent;
+
+    &:hover {
+      background-color: #2b4376;
+    }
+
+    img {
+      $size: 25px;
+      width: $size;
+      height: $size;
+    }
+
+    p {
+      font-size: 11px;
+    }
+  }
+
+  .back {
+    rotate: 90deg;
+    position: relative;
+    right: 2px;
+  }
+}
+
 .container {
   width: 100%;
   display: flex;
@@ -6,57 +55,41 @@
 
 .options {
   width: 25%; // grid
+
   position: relative;
+  margin: min(10vw, 6rem) 0 0 min(3.3vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 
-  .backArrow {
-    z-index: 20;
-    padding: 0.5rem 1rem;
-    position: sticky;
-    top: 1.2rem;
-    gap: 8px;
-    background-color: transparent;
+  &.leftSide {
+    margin-left: 2.5rem;
+    font-size: 110%;
+    gap: 1.2rem;
 
-    img {
-      transform: rotate(90deg);
+    button {
+      opacity: 0.9;
     }
   }
 
-  .buttons {
-    margin: min(10vw, 8rem) 0 0 min(3.3vw, 3rem);
-    position: absolute;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+  button {
+    opacity: 0.75;
+    padding: 12px 26px;
+    gap: 12px;
+    background-color: transparent;
+    transition: 0.2s ease-out;
 
-    &.leftSide {
-      margin-left: 2.5rem;
-      font-size: 110%;
-      gap: 1.2rem;
-
-      button {
-        opacity: 0.9;
-      }
-    }
-
-    button {
-      opacity: 0.75;
-      padding: 12px 26px;
-      gap: 12px;
-      background-color: transparent;
-      transition: 0.2s ease-out;
-
-      &:hover {
-        opacity: 1;
-        transform: translateY(-1px);
-      }
+    &:hover {
+      opacity: 1;
+      transform: translateY(-1px);
     }
   }
 }
 
 .center {
   width: 50%; // grid
+
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -124,7 +157,7 @@
   }
 
   .previous {
-    transform: rotate(90deg);
+    rotate: 90deg;
   }
 
   .next {
@@ -143,6 +176,10 @@
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    display: flex;
+  }
+
   .options {
     display: none;
   }
@@ -159,5 +196,28 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+  }
+}
+
+@media (max-width: 320px) {
+  .navbar {
+    $gap: 2vw;
+
+    height: 15vw;
+    padding: 0 $gap;
+
+    div {
+      gap: $gap;
+    }
+
+    button {
+      width: 15vw;
+      height: 100%;
+
+      img {
+        width: 9vw;
+        height: auto;
+      }
+    }
   }
 }

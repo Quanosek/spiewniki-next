@@ -1,5 +1,5 @@
 import Image from "next/image";
-import router from "next/router";
+import { useRouter } from "next/router";
 
 import styles from "@/styles/components/navbar.module.scss";
 
@@ -7,6 +7,8 @@ import { buttonLink, randomButton } from "@/scripts/buttons";
 
 export default function bottomNavbar(param: { more: boolean }) {
   const more = param.more;
+
+  const router = useRouter();
 
   return (
     <div className={styles.bottom}>
@@ -72,7 +74,7 @@ export default function bottomNavbar(param: { more: boolean }) {
           if (navigator.share) {
             navigator.share({
               title: "Śpiewniki",
-              text: "Udostępnij pieśń znajomym!",
+              text: "Udostępnij śpiewniki!",
               url: router.asPath,
             });
           }

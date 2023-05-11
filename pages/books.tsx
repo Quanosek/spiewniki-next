@@ -1,22 +1,68 @@
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { ReactElement } from "react";
 
 import styles from "@/styles/pages/books.module.scss";
 
 import bookNames from "@/scripts/bookNames";
 
-export default function FiltersPage() {
+export default function BooksPage() {
+  const router = useRouter();
+
   return (
     <>
       <Head>
-        <title>Wszystkie śpiewniki | Śpiewniki</title>
+        <title>Wszystkie śpiewniki / Śpiewniki</title>
       </Head>
 
-      <main>
-        <h2>Lista wszystkich śpiewników:</h2>
+      <div className="backArrow">
+        <button onClick={() => router.back()}>
+          <Image
+            className="icon"
+            alt="strzałka"
+            src="/icons/arrow.svg"
+            width={20}
+            height={20}
+          />
+          <p>Powrót</p>
+        </button>
+      </div>
 
-        {Books(["PBT", "UP", "N", "E", "S", "R"])}
+      <main>
+        <div className={styles.title}>
+          <button
+            title="Powrót do strony głównej"
+            className={styles.backArrow}
+            onClick={() => router.back()}
+          >
+            <Image
+              className="icon"
+              alt="info"
+              src="/icons/arrow.svg"
+              width={25}
+              height={25}
+              draggable="false"
+            />
+          </button>
+
+          <h2>Lista wszystkich śpiewników:</h2>
+        </div>
+
+        <div className={styles.books}>
+          <Link
+            className={styles.all}
+            href={{
+              pathname: `/search`,
+              query: { book: "all" },
+            }}
+          >
+            <p>{bookNames("all")}</p>
+          </Link>
+
+          {Books(["PBT", "UP", "N", "E", "S", "R"])}
+        </div>
       </main>
     </>
   );
@@ -27,25 +73,22 @@ function Books(names: string[]) {
 
   names.forEach((name, index) => {
     books.push(
-      <>
+      <div key={index}>
         <Link
           href={{
             pathname: `/search`,
             query: { book: name },
           }}
-          key={name}
         >
-          <p>
-            {index + 1}. {bookNames(name)}
-          </p>
+          <p>{bookNames(name)}</p>
         </Link>
 
         {
           index + 1 !== names.length && <hr /> // separate results
         }
-      </>
+      </div>
     );
   });
 
-  return <div className={styles.books}>{books}</div>;
+  return <div className={styles.list}>{books}</div>;
 }

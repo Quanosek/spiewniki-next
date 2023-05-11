@@ -1,5 +1,27 @@
+.title {
+  margin: 0.5rem 0 -0.5rem;
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    width: 3rem;
+    aspect-ratio: 1/1;
+    position: absolute;
+    left: 1%;
+    display: none;
+    background-color: transparent;
+
+    img {
+      rotate: 90deg;
+    }
+  }
+}
+
 .books {
-  width: 80%;
+  width: max(65%, 40rem);
   display: flex;
   flex-direction: column;
   border-radius: 0.6rem;
@@ -11,13 +33,9 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    font-size: 125%;
+    font-size: 110%;
     border-radius: 0.4rem;
     transition: 0.06s background-color ease-out;
-
-    &:hover {
-      background-color: #1e1d1c;
-    }
   }
 
   hr {
@@ -25,5 +43,57 @@
     height: 1.5px;
     background-color: #474747;
     border-radius: 100%;
+  }
+}
+
+.all {
+  background-color: #273f74;
+
+  &:hover {
+    filter: contrast(1.2);
+  }
+}
+
+.list a {
+  &:hover {
+    background-color: #1e1d1c;
+  }
+}
+
+@media (max-width: 768px) {
+  .title button {
+    display: flex;
+  }
+
+  .books {
+    width: 100%;
+    font-size: 80%;
+
+    a {
+      margin: 0;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .title {
+    margin: 2vw 0 -1.6vw;
+    font-size: 3.65vw;
+
+    button {
+      width: 12vw;
+      padding: 3vw;
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .books {
+    margin-bottom: 8vw;
+    font-size: 4.2vw;
+
+    a {
+      padding: 4vw 3.5vw;
+    }
   }
 }

@@ -1,98 +1,22 @@
-.top,
 .bottom {
   z-index: 10;
-  width: 100%;
-  position: fixed;
-  display: none; // hidden by default
-  user-select: none;
-
-  @media (max-width: 768px) {
-    display: flex;
-  }
-}
-
-.top {
-  $height: 3rem;
-
-  top: 0;
-  height: $height;
-  align-items: stretch;
-  justify-content: space-between;
-  background-color: #203259;
-
-  $gap: 5px;
-  padding: 0 $gap;
-
-  div {
-    display: flex;
-    gap: $gap;
-  }
-
-  button {
-    padding: 0;
-    width: $height;
-    height: $height;
-    background-color: transparent;
-
-    &:hover {
-      background-color: #2b4376;
-    }
-
-    img {
-      $size: 25px;
-      width: $size;
-      height: $size;
-    }
-
-    p {
-      font-size: 11px;
-    }
-  }
-
-  .back {
-    transform: rotate(90deg);
-    position: relative;
-    right: 2px;
-  }
-
-  // small-mobile
-  @media (max-width: 320px) {
-    height: 15vw;
-    $gap: 2vw;
-    padding: 0 $gap;
-
-    div {
-      gap: $gap;
-    }
-
-    button {
-      width: 15vw;
-      height: 100%;
-
-      img {
-        width: 9vw;
-        height: auto;
-      }
-    }
-  }
-}
-
-.bottom {
-  $height: 3.5rem;
-
-  bottom: 0;
-  height: $height;
-  align-items: center;
-  justify-content: center;
-  background-color: #141414;
-
-  gap: 3vw;
   padding: 0 1rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: var(--navbarHeight);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 3vw;
+  user-select: none;
+  background-color: #141414;
+  box-shadow: 0 22px 24px 10px #ededed;
 
   button {
     padding: 15px 5px 10px;
     width: 5rem;
-    height: $height;
+    height: 100%;
     flex-direction: column;
     gap: 2px;
     text-align: center;
@@ -109,21 +33,23 @@
     }
 
     p {
-      margin: 2px 0 5px;
-      font-size: 11px;
+      margin: max(1px, 0.3vw) 0 5px;
+      font-size: max(10px, 1.5vw);
     }
   }
 
-  // large-mobile
+  @media (max-width: 768px) {
+    display: flex;
+  }
+
   @media (max-width: 425px) {
     gap: 0;
     padding: 0 3vw;
   }
 
-  // small-mobile
   @media (max-width: 320px) {
     height: 17.5vw;
-    padding: 0 2vw 0.5vw;
+    padding: 0.5vw 2vw 0.5vw;
 
     button {
       padding: 2vw 0 1vw;
@@ -132,13 +58,13 @@
       gap: 0.6vw;
 
       img {
-        width: 8vw;
+        width: 7.5vw;
         height: auto;
       }
 
       p {
         margin: 0.8vw;
-        font-size: 3.5vw;
+        font-size: 3vw;
       }
     }
   }

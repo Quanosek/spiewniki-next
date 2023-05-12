@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import axios from "axios";
 
@@ -19,6 +19,18 @@ export default function SearchPage() {
 
   const [data, setData] = useState<any>(null);
   const [showTopBtn, setShowTopBtn] = useState(false);
+
+  const handleKeyPress = useCallback((e: { key: string }) => {
+    const key = e.key.toUpperCase();
+
+    // shortcuts
+    switch (key) {
+      case "/":
+        const input = document.getElementById("input") as HTMLInputElement;
+        input.focus();
+        break;
+    }
+  }, []);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -48,7 +60,11 @@ export default function SearchPage() {
     ["searchPage", "focusSearchBox"].forEach((item) => {
       localStorage.removeItem(item);
     });
-  }, [router, book, tags]);
+
+    // keyboard shortcuts handler
+    document.addEventListener("keyup", handleKeyPress);
+    return () => document.removeEventListener("keyup", handleKeyPress);
+  }, [router, book, tags, handleKeyPress]);
 
   return (
     <>
@@ -95,6 +111,8 @@ export default function SearchPage() {
             type="text"
             id="input"
             placeholder="Rozpocznij wyszukiwanie..."
+            title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie"
+            onFocus={(e) => e.target.select()}
             onInput={async (e) => {
               const input = e.target as HTMLInputElement;
               showClear(input.value);
@@ -141,7 +159,11 @@ export default function SearchPage() {
         <div id="filters" className={styles.filters}>
           <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
 
-          {book && <button>{BookNames(book)}</button>}
+          {book && (
+            <button title="Kliknij, aby przejść to listy wszystkich śpiewników">
+              {BookNames(book)}
+            </button>
+          )}
           {/* {tags &&
             tags.map((name: string) => {
               return (

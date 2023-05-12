@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import router, { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import axios from "axios";
 
@@ -22,6 +22,21 @@ export default function HymnPage() {
   const router = useRouter();
   const [hymn, setState] = useState<any>(null);
 
+  const handleKeyPress = useCallback((e: { key: string }) => {
+    const key = e.key.toUpperCase();
+
+    // shortcuts
+    switch (key) {
+      case "P":
+        presentationButton();
+        break;
+      case "ARROWLEFT":
+        break;
+      case "ARROWRIGHT":
+        break;
+    }
+  }, []);
+
   useEffect(() => {
     if (!router.isReady) return;
     let { book, title } = router.query as { book: string; title: string };
@@ -35,7 +50,11 @@ export default function HymnPage() {
           return setState(data[0]);
         });
     })();
-  }, [router]);
+
+    // keyboard shortcuts handler
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, [router, handleKeyPress]);
 
   return (
     <>
@@ -311,6 +330,7 @@ export default function HymnPage() {
 
 // back to specific book search page
 function backButton() {
+  localStorage.setItem("focusSearchBox", "true");
   const book = localStorage.getItem("searchPage");
 
   if (book) {

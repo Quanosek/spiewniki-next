@@ -1,7 +1,8 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { ReactElement } from "react";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
@@ -12,6 +13,32 @@ import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
 
 export default function IndexPage() {
+  const router = useRouter();
+
+  const handleKeyPress = useCallback(
+    (e: { key: string }) => {
+      const key = e.key.toUpperCase();
+
+      // shortcuts
+      switch (key) {
+        case "/":
+          router.push("/search");
+          localStorage.setItem("focusSearchBox", "true");
+          break;
+        case "I":
+          !router.query.menu && menuLink("info");
+          break;
+      }
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    // keyboard shortcuts handler
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, [handleKeyPress]);
+
   return (
     <>
       <Head>
@@ -31,6 +58,7 @@ export default function IndexPage() {
 
         <Link
           href={"/search"}
+          title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie"
           className={styles.searchBox}
           onClick={() => localStorage.setItem("focusSearchBox", "true")}
         >

@@ -176,7 +176,7 @@
 .scrollButton {
   z-index: 99; // always on top
 
-  margin: -1rem 0;
+  margin: -4.5rem 0 -2.5rem;
   padding: 1rem;
   width: 3.5rem;
   aspect-ratio: 1/1;
@@ -186,6 +186,7 @@
   background-color: #203259 !important;
   box-shadow: 0 3px 8px -1px #000000;
   transition: 0.15s ease-in-out;
+  border-radius: 100%;
 
   @media (min-width: 768px) {
     &:hover {
@@ -251,7 +252,7 @@
   }
 
   .scrollButton {
-    margin-right: 1%;
+    margin: -3vw 1% 0 0;
     scale: 80%;
     bottom: 2%;
   }

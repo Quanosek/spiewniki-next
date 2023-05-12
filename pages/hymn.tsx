@@ -107,7 +107,12 @@ export default function HymnPage() {
       </div>
 
       <div className="backArrow">
-        <button onClick={backButton}>
+        <button
+          onClick={() => {
+            localStorage.setItem("focusSearchBox", "true");
+            backButton();
+          }}
+        >
           <Image
             className="icon"
             alt="strzałka"
@@ -330,7 +335,6 @@ export default function HymnPage() {
 
 // back to specific book search page
 function backButton() {
-  localStorage.setItem("focusSearchBox", "true");
   const book = localStorage.getItem("searchPage");
 
   if (book) {

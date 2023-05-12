@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 26.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" baseProfile="tiny" id="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-	 x="0px" y="0px" viewBox="0 0 50 50" overflow="visible" xml:space="preserve">
+<!-- Generator: Adobe Illustrator 26.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;}
+</style>
 <g id="printer">
-	
-		<rect id="bottom" x="12.4" y="29.2" fill="none" stroke="#000000" stroke-width="4.2167" stroke-linecap="round" stroke-linejoin="round" width="25.3" height="16.9"/>
-	
-		<path id="middle_00000052788529499272729660000013469079027879159974_" fill="none" stroke="#000000" stroke-width="4.2167" stroke-linecap="round" stroke-linejoin="round" d="
-		M12.4,37.7H8.1c-2.3,0-4.2-1.9-4.2-4.2V22.9c0-2.3,1.9-4.2,4.2-4.2h33.7c2.3,0,4.2,1.9,4.2,4.2v10.5c0,2.3-1.9,4.2-4.2,4.2h-4.2"/>
-	<polyline id="top" fill="none" stroke="#000000" stroke-width="4.2167" stroke-linecap="round" stroke-linejoin="round" points="
-		12.4,18.7 12.4,3.9 37.7,3.9 37.7,18.7 	"/>
+	<rect id="bottom" x="12.48" y="29.19" class="st0" width="25.24" height="16.86"/>
+	<path id="middle_00000052788529499272729660000013469079027879159974_" class="st0" d="M12.48,37.67H8.19
+		C5.9,37.67,4,35.77,4,33.48V22.9c0-2.29,1.9-4.19,4.19-4.19h33.62c2.29,0,4.19,1.9,4.19,4.19v10.48c0,2.29-1.9,4.19-4.19,4.19
+		h-4.19"/>
+	<polyline id="top" class="st0" points="12.48,18.71 12.48,3.95 37.72,3.95 37.72,18.71 	"/>
 </g>
 </svg>

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="System / Monitor">
-<path id="Vector" d="M15 20H9M4 13.8002V8.2002C4 7.08009 4 6.51962 4.21799 6.0918C4.40973 5.71547 4.71547 5.40973 5.0918 5.21799C5.51962 5 6.08009 5 7.2002 5H16.8002C17.9203 5 18.4796 5 18.9074 5.21799C19.2837 5.40973 19.5905 5.71547 19.7822 6.0918C20 6.5192 20 7.07899 20 8.19691V13.8031C20 14.921 20 15.48 19.7822 15.9074C19.5905 16.2837 19.2837 16.5905 18.9074 16.7822C18.48 17 17.921 17 16.8031 17H7.19691C6.07899 17 5.5192 17 5.0918 16.7822C4.71547 16.5905 4.40973 16.2837 4.21799 15.9074C4 15.4796 4 14.9203 4 13.8002Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
+<!-- Generator: Adobe Illustrator 26.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:4.3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:133.3333;}
+</style>
+<path id="monitor" class="st0" d="M32.5,43.15h-15 M5,28.85v-14c0-2.8,0-4.2,0.54-5.27c0.48-0.94,1.24-1.71,2.18-2.18
+	C8.8,6.85,10.2,6.85,13,6.85h24c2.8,0,4.2,0,5.27,0.54c0.94,0.48,1.71,1.24,2.19,2.18C45,10.65,45,12.04,45,14.84v14.02
+	c0,2.79,0,4.19-0.54,5.26c-0.48,0.94-1.25,1.71-2.19,2.19c-1.07,0.54-2.47,0.54-5.26,0.54H12.99c-2.79,0-4.19,0-5.26-0.54
+	c-0.94-0.48-1.71-1.25-2.18-2.19C5,33.05,5,31.65,5,28.85z"/>
 </svg>

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 26.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" baseProfile="tiny" id="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-	 x="0px" y="0px" viewBox="0 0 50 50" overflow="visible" xml:space="preserve">
-<polygon id="star" stroke="#000000" stroke-width="4.35" stroke-linecap="round" stroke-linejoin="round" points="25,4.3 31.7,17.9 
-	46.8,20.1 35.9,30.7 38.4,45.7 25,38.6 11.6,45.7 14.1,30.7 3.2,20.1 18.3,17.9 "/>
+<!-- Generator: Adobe Illustrator 26.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<style type="text/css">
+	.st0{stroke:#000000;stroke-width:4.3;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+<polygon id="star" class="st0" points="25,4.57 31.61,17.99 46.51,20.17 35.76,30.62 38.22,45.42 25,38.42 11.78,45.42 14.24,30.62 
+	3.49,20.17 18.39,17.99 "/>
 </svg>

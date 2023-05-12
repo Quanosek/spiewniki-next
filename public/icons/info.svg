@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 26.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" baseProfile="tiny" id="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-	 x="0px" y="0px" viewBox="0 0 50 50" overflow="visible" xml:space="preserve">
-<path id="Icon_material-info-outline" d="M22.7,36.6h4.6V22.7h-4.6V36.6z M25,1.8C12.2,1.8,1.8,12.2,1.8,25S12.2,48.2,25,48.2
-	S48.2,37.8,48.2,25C48.2,12.2,37.8,1.8,25,1.8z M25,43.5C14.8,43.5,6.5,35.2,6.5,25S14.8,6.5,25,6.5S43.5,14.8,43.5,25l0,0
-	C43.5,35.2,35.2,43.5,25,43.5z M22.7,18.1h4.6v-4.6h-4.6V18.1z"/>
+<!-- Generator: Adobe Illustrator 26.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+<path id="info" d="M22.77,36.25h4.46V22.77h-4.46V36.25z M25,2.5C12.59,2.5,2.5,12.59,2.5,25S12.59,47.5,25,47.5S47.5,37.41,47.5,25
+	S37.41,2.5,25,2.5z M25,42.94c-9.89,0-17.94-8.05-17.94-17.94S15.11,7.06,25,7.06S42.94,15.11,42.94,25l0,0
+	C42.94,34.89,34.89,42.94,25,42.94z M22.77,18.31h4.46v-4.46h-4.46V18.31z"/>
 </svg>

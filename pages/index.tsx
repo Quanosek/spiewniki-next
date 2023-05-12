@@ -1,20 +1,17 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
 import bookNames from "@/scripts/bookNames";
-import { buttonLink, randomButton } from "@/scripts/buttons";
+import { menuLink, shareButton, randomButton } from "@/scripts/buttons";
 
 import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
 
 export default function IndexPage() {
-  const router = useRouter();
-
   return (
     <>
       <Head>
@@ -32,7 +29,11 @@ export default function IndexPage() {
           <h1>Śpiewniki</h1>
         </div>
 
-        <Link href={"/search"} className={styles.searchBox}>
+        <Link
+          href={"/search"}
+          className={styles.searchBox}
+          onClick={() => localStorage.setItem("focusSearchBox", "true")}
+        >
           <Image
             className="icon"
             alt="search"
@@ -58,10 +59,7 @@ export default function IndexPage() {
           <div className={styles.options}>
             <h2>Dostępne opcje:</h2>
 
-            <button
-              title="Otwórz losową pieśń [R]"
-              onClick={() => randomButton()}
-            >
+            <button title="Otwórz losową pieśń [R]" onClick={randomButton}>
               <Image
                 className="icon"
                 alt="kostka"
@@ -74,7 +72,7 @@ export default function IndexPage() {
 
             <button
               title="Przejdź do listy ulubionych pieśni [F]"
-              onClick={() => buttonLink("favorite")}
+              onClick={() => menuLink("favorite")}
             >
               <Image
                 className="icon"
@@ -88,7 +86,7 @@ export default function IndexPage() {
 
             <button
               title="Przejdź do ustawień aplikacji [S]"
-              onClick={() => buttonLink("settings")}
+              onClick={() => menuLink("settings")}
             >
               <Image
                 className="icon"
@@ -100,18 +98,7 @@ export default function IndexPage() {
               <p>Ustawienia</p>
             </button>
 
-            <button
-              title="Skopiuj link do aplikacji i podziel się nią ze znajomymi!"
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({
-                    title: "Śpiewniki",
-                    text: "Udostępnij śpiewniki!",
-                    url: router.asPath,
-                  });
-                }
-              }}
-            >
+            <button title="Skopiuj link do aplikacji" onClick={shareButton}>
               <Image
                 className="icon"
                 alt="link"
@@ -124,7 +111,7 @@ export default function IndexPage() {
 
             <button
               title="Informacje od twórców strony [I]"
-              onClick={() => buttonLink("info")}
+              onClick={() => menuLink("info")}
             >
               <Image
                 className="icon"

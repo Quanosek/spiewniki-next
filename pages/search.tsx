@@ -23,9 +23,9 @@ export default function SearchPage() {
   useEffect(() => {
     if (!router.isReady) return;
 
-    // define input element
+    // special focus
     const input = document.getElementById("input") as HTMLInputElement;
-    if (book === "all" && !tags) input.focus();
+    localStorage.getItem("focusSearchBox") === "true" && input.focus();
 
     // searching script
     (async () => {
@@ -43,6 +43,11 @@ export default function SearchPage() {
       if (window.scrollY > 300) setShowTopBtn(true);
       else setShowTopBtn(false);
     };
+
+    // remove localStorage temporary tags
+    ["searchPage", "focusSearchBox"].forEach((item) => {
+      localStorage.removeItem(item);
+    });
   }, [router, book, tags]);
 
   return (
@@ -162,6 +167,7 @@ export default function SearchPage() {
                 return (
                   <div key={index}>
                     <Link
+                      onClick={() => localStorage.setItem("searchPage", book)}
                       href={{
                         pathname: `/hymn`,
                         query: { book: hymn.book, title: hymn.title },

@@ -1,14 +1,11 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
 
 import styles from "@/styles/components/navbar.module.scss";
 
-import { buttonLink, randomButton } from "@/scripts/buttons";
+import { shareButton, menuLink, randomButton } from "@/scripts/buttons";
 
 export default function bottomNavbar(param: { more: boolean }) {
   const more = param.more;
-
-  const router = useRouter();
 
   return (
     <div className={styles.bottom}>
@@ -24,7 +21,7 @@ export default function bottomNavbar(param: { more: boolean }) {
           <p>Wydrukuj</p>
         </button>
       )) || (
-        <button onClick={() => buttonLink("info")}>
+        <button onClick={() => menuLink("info")}>
           <Image
             className="icon"
             alt="info"
@@ -36,7 +33,7 @@ export default function bottomNavbar(param: { more: boolean }) {
         </button>
       )}
 
-      <button onClick={() => buttonLink("settings")}>
+      <button onClick={() => menuLink("settings")}>
         <Image
           className="icon"
           alt="trybik"
@@ -47,7 +44,7 @@ export default function bottomNavbar(param: { more: boolean }) {
         <p>Ustawienia</p>
       </button>
 
-      <button onClick={() => randomButton()}>
+      <button onClick={randomButton}>
         <Image
           className="icon"
           alt="kostka"
@@ -58,28 +55,18 @@ export default function bottomNavbar(param: { more: boolean }) {
         <p>Wylosuj</p>
       </button>
 
-      <button onClick={() => buttonLink("favorite")}>
+      <button onClick={() => menuLink("favorite")}>
         <Image
           className="icon"
           alt="gwiazdka"
-          src="/icons/star_empty.svg"
+          src="/icons/bookmark.svg"
           width={16}
           height={16}
         />
-        <p>Ulubione</p>
+        <p>Zakładki</p>
       </button>
 
-      <button
-        onClick={() => {
-          if (navigator.share) {
-            navigator.share({
-              title: "Śpiewniki",
-              text: "Udostępnij śpiewniki!",
-              url: router.asPath,
-            });
-          }
-        }}
-      >
+      <button onClick={shareButton}>
         <Image
           className="icon"
           alt="link"

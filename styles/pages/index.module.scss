@@ -125,19 +125,18 @@
 
 .options {
   width: min(12rem, 20%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 
   h2 {
     margin: 10px 0 6px 10px;
     font-size: 110%;
   }
 
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-
   button {
-    opacity: 0.75;
+    opacity: 75%;
     padding: 12px 16px;
     justify-content: flex-start;
     gap: 12px;
@@ -147,7 +146,7 @@
     white-space: nowrap;
 
     &:hover {
-      opacity: 1;
+      opacity: 100%;
       transform: translateY(-1px);
     }
   }
@@ -176,16 +175,12 @@
     }
   }
 
-  &:nth-child(2) {
-    a {
-      background-color: #273f74;
-    }
+  &:nth-child(2) a {
+    background-color: #273f74;
   }
 
-  &:nth-child(3) {
-    a {
-      background-color: #275a74;
-    }
+  &:nth-child(3) a {
+    background-color: #275a74;
   }
 }
 

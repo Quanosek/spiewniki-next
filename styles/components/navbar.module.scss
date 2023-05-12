@@ -48,7 +48,7 @@
   }
 
   @media (max-width: 320px) {
-    height: 17.5vw;
+    height: var(--navbarHeight_mobile);
     padding: 0.5vw 2vw 0.5vw;
 
     button {

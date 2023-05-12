@@ -1,12 +1,20 @@
 import Head from "next/head";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
 
+import {
+  menuLink,
+  shareButton,
+  randomButton,
+  presentationButton,
+} from "@/scripts/buttons";
+
+import Presentation from "@/components/presentation";
 import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
 
@@ -16,17 +24,18 @@ export default function HymnPage() {
 
   useEffect(() => {
     if (!router.isReady) return;
+    let { book, title } = router.query as { book: string; title: string };
 
     (async () => {
-      const { book, title } = router.query;
-
       axios
         .get(`/api/xml`, {
           params: { book: book, title: title },
         })
-        .then(({ data }) => setState(data[0]));
+        .then(({ data }) => {
+          return setState(data[0]);
+        });
     })();
-  });
+  }, [router]);
 
   return (
     <>
@@ -40,10 +49,12 @@ export default function HymnPage() {
         )}
       </Head>
 
+      <Presentation hymn={hymn} />
       <Menu />
 
+      {/* top navbar */}
       <div className={styles.navbar}>
-        <button onClick={() => router.back()}>
+        <button onClick={backButton}>
           <Image
             className={`${styles.back} icon`}
             alt="wstecz"
@@ -54,16 +65,6 @@ export default function HymnPage() {
         </button>
 
         <div>
-          <button onClick={() => {}}>
-            <Image
-              className="icon"
-              alt="mp3"
-              src="/icons/music.svg"
-              width={30}
-              height={30}
-            />
-          </button>
-
           <button onClick={() => {}}>
             <Image
               className="icon"
@@ -87,7 +88,7 @@ export default function HymnPage() {
       </div>
 
       <div className="backArrow">
-        <button onClick={() => router.back()}>
+        <button onClick={backButton}>
           <Image
             className="icon"
             alt="strzałka"
@@ -101,6 +102,7 @@ export default function HymnPage() {
 
       <main>
         <div className={styles.container}>
+          {/* left side buttons */}
           <div className={`${styles.options} ${styles.leftSide}`}>
             <button onClick={() => router.push("/")}>
               <Image
@@ -136,6 +138,7 @@ export default function HymnPage() {
             </button>
           </div>
 
+          {/* hymn text */}
           <div className={styles.center}>
             <div className={styles.text}>
               {(!hymn && <div className="loader" />) ||
@@ -169,10 +172,16 @@ export default function HymnPage() {
                         );
                       })}
                     </div>
+
+                    <div className={styles.credits}>
+                      <h3>{hymn.copyright}</h3>
+                      <p>{hymn.author}</p>
+                    </div>
                   </>
                 ))}
             </div>
 
+            {/* bottom buttons */}
             <div className={styles.controls}>
               <button title="Przejdź do poprzedniej pieśni" onClick={() => {}}>
                 <Image
@@ -186,7 +195,11 @@ export default function HymnPage() {
                 <p>Poprzednia</p>
               </button>
 
-              <button onClick={() => {}}>
+              <button
+                title="Otwórz losową pieśń [R]"
+                className={styles.randomButton}
+                onClick={randomButton}
+              >
                 <p>Wylosuj pieśń</p>
               </button>
 
@@ -204,11 +217,15 @@ export default function HymnPage() {
             </div>
           </div>
 
+          {/* right side buttons */}
           <div className={styles.options}>
-            <button onClick={() => {}}>
+            <button
+              title="Przejdź do listy ulubionych pieśni [F]"
+              onClick={() => menuLink("favorite")}
+            >
               <Image
                 className="icon"
-                alt="klucz"
+                alt="favorite"
                 src="/icons/bookmark.svg"
                 width={20}
                 height={20}
@@ -216,10 +233,13 @@ export default function HymnPage() {
               <p>Zakładki</p>
             </button>
 
-            <button onClick={() => {}}>
+            <button
+              title="Przejdź do ustawień aplikacji [S]"
+              onClick={() => menuLink("settings")}
+            >
               <Image
                 className="icon"
-                alt="klucz"
+                alt="settings"
                 src="/icons/settings.svg"
                 width={20}
                 height={20}
@@ -227,10 +247,13 @@ export default function HymnPage() {
               <p>Ustawienia</p>
             </button>
 
-            <button onClick={() => {}}>
+            <button
+              title="Pobierz oryginalną stronę ze śpiewnika"
+              onClick={() => {}}
+            >
               <Image
                 className="icon"
-                alt="klucz"
+                alt="pdf"
                 src="/icons/document.svg"
                 width={20}
                 height={20}
@@ -238,21 +261,13 @@ export default function HymnPage() {
               <p>Pobierz PDF</p>
             </button>
 
-            <button onClick={() => {}}>
+            <button
+              title="Wydrukuj tekst pieśni"
+              onClick={() => window.print()}
+            >
               <Image
                 className="icon"
-                alt="klucz"
-                src="/icons/music.svg"
-                width={20}
-                height={20}
-              />
-              <p>Odtwórz melodię</p>
-            </button>
-
-            <button onClick={() => {}}>
-              <Image
-                className="icon"
-                alt="klucz"
+                alt="print"
                 src="/icons/printer.svg"
                 width={20}
                 height={20}
@@ -260,10 +275,10 @@ export default function HymnPage() {
               <p>Wydrukuj</p>
             </button>
 
-            <button onClick={() => {}}>
+            <button title="Skopiuj link do pieśni" onClick={shareButton}>
               <Image
                 className="icon"
-                alt="klucz"
+                alt="share"
                 src="/icons/link.svg"
                 width={20}
                 height={20}
@@ -271,10 +286,13 @@ export default function HymnPage() {
               <p>Udostępnij</p>
             </button>
 
-            <button onClick={() => {}}>
+            <button
+              title="Włącz prezentację pieśni na pełen ekran [P]"
+              onClick={presentationButton}
+            >
               <Image
                 className="icon"
-                alt="klucz"
+                alt="presentation"
                 src="/icons/monitor.svg"
                 width={20}
                 height={20}
@@ -285,7 +303,20 @@ export default function HymnPage() {
         </div>
       </main>
 
+      {/* bottom navbar */}
       <Navbar more={true} />
     </>
   );
+}
+
+// back to specific book search page
+function backButton() {
+  const book = localStorage.getItem("searchPage");
+
+  if (book) {
+    router.push({
+      pathname: "/search",
+      query: { book: book },
+    });
+  } else router.push("/search");
 }

@@ -68,6 +68,7 @@ export default function BooksPage() {
   );
 }
 
+// show all books
 function Books(names: string[]) {
   const books: ReactElement[] = [];
 

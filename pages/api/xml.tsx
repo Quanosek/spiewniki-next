@@ -39,7 +39,7 @@ function HymnList(book: string | string[]) {
 
 // read and save result of defined hymnbook
 function hymnBook(results: any, book: string | string[]) {
-  const dirname = path.join(process.cwd(), `/database/${book}/xml/`);
+  const dirname = path.join(process.cwd(), `/public/database/${book}/xml/`);
 
   fs.readdirSync(dirname)
     .sort((a, b) => {
@@ -80,7 +80,7 @@ function HymnData(book: string | string[], title: string | string[]) {
 
   // read hymn file
   const data = fs.readFileSync(
-    path.join(process.cwd(), `/database/${book}/xml/${title}/`)
+    path.join(process.cwd(), `/public/database/${book}/xml/${title}`)
   );
 
   // define hymn id in hymnbook

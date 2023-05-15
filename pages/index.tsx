@@ -76,10 +76,6 @@ export default function IndexPage() {
         <div className={styles.container}>
           <div className={styles.hymnBooks}>
             {Books(["PBT", "UP", "N"])}
-
-            <Link href={"/books"} className={styles.all}>
-              <p>Lista wszystkich śpiewników</p>
-            </Link>
           </div>
 
           <hr />
@@ -164,7 +160,7 @@ export default function IndexPage() {
             "Nabożeństwo noworoczne",
           ])}
 
-          {Tags([
+          {/* {Tags([
             "Dla najmłodszych",
             "Radosne",
             "Szybkie",
@@ -178,7 +174,7 @@ export default function IndexPage() {
             "Po hebrajsku",
             "Dla chóru",
             "Śpiewane na głosy",
-          ])}
+          ])} */}
         </div>
       </main>
 

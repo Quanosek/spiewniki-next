@@ -1,6 +1,9 @@
 import styles from "@/styles/components/menu.module.scss";
+import { useRouter } from "next/router";
 
 export default function FavoriteMenu() {
+  const router = useRouter();
+
   return (
     <>
       <div className={styles.favoriteTitle}>
@@ -16,7 +19,7 @@ export default function FavoriteMenu() {
 
       <div className={styles.buttons}>
         <button>Wyczyść listę</button>
-        <button>Zamknij</button>
+        <button onClick={()=>router.back()}>Zamknij</button>
       </div>
     </>
   );

@@ -1,8 +1,10 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import styles from "@/styles/components/menu.module.scss";
 
 export default function SettingsMenu() {
+  const router = useRouter();
   return (
     <>
       <h2>Ustawienia</h2>
@@ -74,7 +76,7 @@ export default function SettingsMenu() {
 
       <div className={styles.buttons}>
         <button>Resetuj</button>
-        <button>Zamknij</button>
+        <button onClick={()=>router.back()}>Zamknij</button>
       </div>
     </>
   );

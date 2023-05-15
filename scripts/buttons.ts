@@ -19,6 +19,10 @@ export function shareButton() {
       url: router.asPath,
     });
   }
+  navigator.clipboard.writeText(window.location.href).then(() => {
+  }, () => {
+    console.log('Copy failed!')
+  });
 }
 
 export function randomButton() {

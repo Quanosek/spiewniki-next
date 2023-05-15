@@ -2,7 +2,7 @@ import styles from "@/styles/components/menu.module.scss";
 import { useRouter } from "next/router";
 
 export default function InfoMenu() {
-  const router = useRouter()
+  const router = useRouter();
   
   return (
     <>

@@ -12,10 +12,9 @@ import BookNames from "@/scripts/bookNames";
 
 export default function SearchPage() {
   const router = useRouter();
-  let { book, tags } = router.query as { book: string; tags: any };
+  let { book } = router.query as { book: string };
 
   if (!book) book = "all";
-  if (tags) tags = tags.split("-");
 
   const [data, setData] = useState<any>(null);
   const [showTopBtn, setShowTopBtn] = useState(false);
@@ -56,7 +55,7 @@ export default function SearchPage() {
       else setShowTopBtn(false);
     };
 
-    // remove localStorage temporary tags
+    // remove temporary localStorage files
     ["searchPage", "focusSearchBox"].forEach((item) => {
       localStorage.removeItem(item);
     });
@@ -64,7 +63,7 @@ export default function SearchPage() {
     // keyboard shortcuts handler
     document.addEventListener("keyup", handleKeyPress);
     return () => document.removeEventListener("keyup", handleKeyPress);
-  }, [router, book, tags, handleKeyPress]);
+  }, [router, book, handleKeyPress]);
 
   return (
     <>
@@ -164,15 +163,6 @@ export default function SearchPage() {
               {BookNames(book)}
             </button>
           )}
-          {/* {tags &&
-            tags.map((name: string) => {
-              return (
-                <button className={styles.tagsButtons} key={name}>
-                  {name}
-                </button>
-              );
-            })}
-          <button className={styles.addMore}>+</button> */}
         </div>
 
         <div id="results" className={styles.results}>
@@ -218,13 +208,7 @@ export default function SearchPage() {
           }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <Image
-            className="icon"
-            alt="up"
-            src="/icons/arrow.svg"
-            width={25}
-            height={25}
-          />
+          <Image alt="up" src="/icons/arrow.svg" width={25} height={25} />
         </button>
       </main>
     </>

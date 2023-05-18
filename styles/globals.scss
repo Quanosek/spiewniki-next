@@ -1,5 +1,4 @@
 :root {
-  color-scheme: dark;
   --navbarHeight: 3.5rem;
   --navbarHeight_mobile: 17.5vw;
 }
@@ -41,9 +40,10 @@
 html,
 body {
   font-family: "Brutal Type Medium", "Gill Sans MT";
-  color: #edebe5;
-  background-color: #000000;
+  color: var(--text);
+  background-color: var(--background);
   -webkit-tap-highlight-color: transparent;
+  transition: 0.15s background-color ease-out;
 }
 
 .container {
@@ -59,7 +59,7 @@ header,
 footer {
   z-index: 10;
   width: 100%;
-  background-color: #161514;
+  background-color: var(--elements);
   font-size: 80%;
 
   .container {
@@ -115,7 +115,7 @@ footer {
 
   .container {
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
   }
 }
@@ -178,21 +178,17 @@ img {
   user-select: none;
 }
 
-.icon {
-  filter: invert(1);
-}
-
 button {
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 0.4rem;
-  background-color: #161514;
+  background-color: var(--elements);
   transition: 0.2s background-color ease-out;
   cursor: pointer;
 
   &:hover {
-    background-color: #1e1d1c;
+    background-color: var(--elements-hover);
   }
 }
 
@@ -207,7 +203,7 @@ button {
 .loader:after {
   width: 2.5em;
   height: 2.5em;
-  border-radius: 50%;
+  border-radius: 100%;
   animation-fill-mode: both;
   animation: loadAnimation 1.8s infinite ease-in-out;
 }

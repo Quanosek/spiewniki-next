@@ -1,0 +1,52 @@
+:root {
+  color-scheme: light only;
+}
+
+:root.black,
+:root.dark {
+  color-scheme: dark only;
+
+  .icon {
+    filter: invert(1);
+  }
+}
+
+:root.black {
+  --text: #edebe5;
+  --background: #000000;
+  --elements: #161514;
+  --elements-hover: #1e1d1c;
+
+  --menu-background: #171717;
+  --menu-elements: #212121;
+}
+
+:root.dark {
+  --text: #ffffff;
+  --background: #202020;
+  --elements: #303030;
+  --elements-hover: #373635;
+
+  --menu-background: #232323;
+  --menu-elements: #383838;
+}
+
+:root.light {
+  --text: #1a1917;
+  --background: #ffffff;
+  --elements: #d1d1d1;
+  --elements-hover: #b4b4b4;
+
+  --menu-background: #e3e3e3;
+  --menu-elements: #cdcdcd;
+}
+
+:root.reading {
+  --text: #14120d;
+  --background: #e5dcc9;
+  --elements: #c6bba6;
+  --elements-hover: #b6ac95;
+
+  --menu-background: #dcd3c3;
+  --menu-elements: #c6bcab;
+}

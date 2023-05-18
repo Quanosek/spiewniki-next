@@ -6,9 +6,13 @@ export default function Document() {
   return (
     <Html lang="pl">
       <Head>
-        {/* meta */}
         <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
         <meta name="theme-color" content="#000000" />
+
+        <meta
+          name="description"
+          content="Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami. | Wszelkie prawa zastrzeżone &#169; 2023"
+        />
 
         {/* apple */}
         <meta name="mobile-wep-app-capable" content="yes" />
@@ -24,7 +28,7 @@ export default function Document() {
         <link rel="icon" href="/logo/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/logo/apple-180x180.png" />
 
-        {/* manifest */}
+        {/* working PWA */}
         <link rel="manifest" href="/manifest.json" />
       </Head>
 
@@ -52,6 +56,16 @@ export default function Document() {
 
         <footer>
           <div className="container">
+            <p>
+              Stworzone z 💙 przez{" "}
+              <Link href="https://github.com/Quanosek">Jakuba Kłało</Link>
+              {" i "}
+              <Link href="https://github.com/Krist0f0l0s">
+                Krzysztofa Olszewskiego
+              </Link>
+              .
+            </p>
+
             <p>Wszelkie prawa zastrzeżone &#169; 2023</p>
           </div>
         </footer>

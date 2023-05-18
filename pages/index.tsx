@@ -43,10 +43,6 @@ export default function IndexPage() {
     <>
       <Head>
         <title>Śpiewniki</title>
-        <meta
-          name="description"
-          content="Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami. | Wszelkie prawa zastrzeżone &#169; 2023"
-        />
       </Head>
 
       <Menu />
@@ -76,8 +72,8 @@ export default function IndexPage() {
         <div className={styles.container}>
           <div className={styles.hymnBooks}>
             {Books(["PBT", "UP", "N"])}
-{/* 
-            <Link href={"/books"} className={styles.all}>
+
+            {/* <Link href={"/books"} className={styles.all}>
               <p>Lista wszystkich śpiewników</p>
             </Link> */}
           </div>
@@ -152,34 +148,6 @@ export default function IndexPage() {
             </button>
           </div>
         </div>
-
-        {/* <div className={styles.tagsMenu}>
-          <h2>Przeglądaj pieśni według słów kluczowych:</h2>
-
-          {Tags([
-            "Wieczerza Pańska",
-            "Chrzest",
-            "Pogrzeb",
-            "Nabożeństwo świadectw i modlitw",
-            "Nabożeństwo noworoczne",
-          ])}
-
-          {Tags([
-            "Dla najmłodszych",
-            "Radosne",
-            "Szybkie",
-            "Krótkie",
-            "O poranku",
-            "Na wieczór",
-            "Spokojne",
-            "Długie",
-            "Smutne",
-            "Z pokazywaniem",
-            "Po hebrajsku",
-            "Dla chóru",
-            "Śpiewane na głosy",
-          ])}
-        </div> */}
       </main>
 
       <Navbar more={false} />
@@ -213,25 +181,4 @@ function Books(names: string[]) {
   });
 
   return <div className={styles.books}>{books}</div>;
-}
-
-// tag selection
-function Tags(buttons: string[]) {
-  const tags: ReactElement[] = [];
-
-  buttons.forEach((name) => {
-    tags.push(
-      <Link
-        href={{
-          pathname: "/search",
-          query: { tags: name },
-        }}
-        key={name}
-      >
-        <p>{name}</p>
-      </Link>
-    );
-  });
-
-  return <div className={styles.tagsCategory}>{tags}</div>;
 }

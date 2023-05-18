@@ -10,8 +10,8 @@
   align-items: center;
   gap: 3vw;
   user-select: none;
-  background-color: #141414;
-  box-shadow: 0 22px 24px 10px #ededed;
+  background-color: var(--elements);
+  box-shadow: 0 0 20px -8px var(--text);
 
   button {
     padding: 15px 5px 10px;
@@ -23,7 +23,7 @@
     background-color: transparent;
 
     &:hover {
-      background-color: #252525;
+      background-color: var(--elements-hover);
     }
 
     img {

@@ -1,14 +1,24 @@
 :root {
   color-scheme: light only;
+  --lines: #474747;
 }
 
 :root.black,
 :root.dark {
   color-scheme: dark only;
 
+  --accent-color-1: #acc2ee;
+  --accent-color-2: #cbe3ff;
+
   .icon {
     filter: invert(1);
   }
+}
+
+:root.light,
+:root.reading {
+  --accent-color-1: #7699df;
+  --accent-color-2: #3e6ece;
 }
 
 :root.black {
@@ -32,21 +42,21 @@
 }
 
 :root.light {
-  --text: #1a1917;
-  --background: #ffffff;
-  --elements: #d1d1d1;
-  --elements-hover: #b4b4b4;
+  --text: #3d3d3f;
+  --background: #f3f3f3;
+  --elements: #ffffff;
+  --elements-hover: #f8f8f8;
 
-  --menu-background: #e3e3e3;
-  --menu-elements: #cdcdcd;
+  --menu-background: #f8f8f8;
+  --menu-elements: #e4e4e4;
 }
 
 :root.reading {
   --text: #14120d;
-  --background: #e5dcc9;
-  --elements: #c6bba6;
-  --elements-hover: #b6ac95;
+  --background: #f6efe2;
+  --elements: #f9f5ee;
+  --elements-hover: #efebe5;
 
-  --menu-background: #dcd3c3;
-  --menu-elements: #c6bcab;
+  --menu-background: #efebe5;
+  --menu-elements: #e6e2dc;
 }

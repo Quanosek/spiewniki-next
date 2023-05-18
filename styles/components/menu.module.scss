@@ -151,6 +151,7 @@
     align-items: center;
     gap: 5px;
     border-radius: 0.4rem;
+    transition: 0.1s filter ease-out;
     cursor: pointer;
 
     &[for="black"] {
@@ -166,10 +167,14 @@
       }
     }
     &[for="light"] {
-      background-color: #ffffff;
+      background-color: #f3f3f3;
     }
     &[for="reading"] {
-      background-color: #e5dcc9;
+      background-color: #f6efe2;
+    }
+
+    &:hover {
+      filter: brightness(110%);
     }
 
     img {
@@ -240,18 +245,18 @@
       width: 26px;
       left: 4px;
       bottom: 4px;
-      background-color: #ededed;
+      background-color: #f3f3f3;
       transition: 0.2s;
       border-radius: 100%;
     }
   }
 
   input:focus + span {
-    box-shadow: 0 0 1px #2170d0;
+    box-shadow: 0 0 1px var(--accent-color-1);
   }
 
   input:checked + span {
-    background-color: #2170d0;
+    background-color: var(--accent-color-2);
   }
 
   input:checked + span:before {

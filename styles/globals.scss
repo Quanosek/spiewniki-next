@@ -5,13 +5,13 @@
 
 // tab navigation focus
 *:focus-visible {
-  box-shadow: 0px 0px 15px 3px rgba(#ededed, 0.65);
+  box-shadow: 0px 0px 15px 3px rgba(#f3f3f3, 0.65);
 }
 
 // text selection behavior
 ::selection {
-  color: #ededed;
-  background: #2170d0;
+  color: #f3f3f3;
+  background: var(--accent-color-2);
 }
 
 // input placeholder visibility
@@ -88,7 +88,7 @@ header {
   position: sticky;
   top: 0;
   height: $headerHeight;
-  box-shadow: 0 3px 12px -2px #000000;
+  box-shadow: 0 0px 16px -8px var(--text);
 
   .container {
     position: relative;

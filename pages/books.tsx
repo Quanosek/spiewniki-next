@@ -61,6 +61,7 @@ export default function BooksPage() {
             <p>{bookNames("all")}</p>
           </Link>
 
+          {/* {Books(["PBT", "UP", "N", "E", "S", "R"])} */}
           {Books(["PBT", "UP", "N"])}
         </div>
       </main>

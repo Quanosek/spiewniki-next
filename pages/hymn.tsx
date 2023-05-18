@@ -169,8 +169,8 @@ export default function HymnPage() {
                 (hymn && (
                   <>
                     <div className={styles.title}>
-                      <p>{hymn.book}</p>
                       <h1>{hymn.title}</h1>
+                      <h2>{hymn.book}</h2>
                     </div>
 
                     <div className={styles.lyrics}>
@@ -310,7 +310,7 @@ export default function HymnPage() {
               <p>Udostępnij</p>
             </button>
 
-            {/* <button
+            <button
               title="Włącz prezentację pieśni na pełen ekran [P]"
               onClick={presentationButton}
             >
@@ -322,7 +322,7 @@ export default function HymnPage() {
                 height={20}
               />
               <p>Prezentacja</p>
-            </button> */}
+            </button>
           </div>
         </div>
       </main>

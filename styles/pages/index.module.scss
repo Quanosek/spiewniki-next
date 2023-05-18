@@ -25,14 +25,12 @@
   transition: 0.1s ease-out, 0.2s width ease-in-out;
   cursor: text;
 
-  $backgroundColor: #161514;
-  background-color: $backgroundColor;
-  border: 2px solid $backgroundColor;
+  background-color: var(--elements);
+  border: 2px solid var(--elements);
 
   &:hover {
-    $hoverColor: #1e1d1c;
-    background-color: $hoverColor;
-    border-color: $hoverColor;
+    background-color: var(--elements-hover);
+    border-color: var(--elements-hover);
 
     @media (min-width: 768px) {
       width: 85%;
@@ -85,11 +83,11 @@
       align-items: center;
       gap: $gridGap;
       border-radius: 0.4rem;
-      background-color: #161514;
+      background-color: var(--elements);
       transition: 0.2s background-color ease-out;
 
       &:hover {
-        background-color: #1e1d1c;
+        background-color: var(--elements-hover);
       }
     }
 
@@ -114,11 +112,11 @@
     width: 100%;
     text-align: center;
     border-radius: 0.4rem;
-    background-color: #161514;
+    background-color: var(--elements);
     transition: 0.2s background-color ease-out;
 
     &:hover {
-      background-color: #1e1d1c;
+      background-color: var(--elements-hover);
     }
   }
 }
@@ -149,38 +147,6 @@
       opacity: 100%;
       transform: translateY(-1px);
     }
-  }
-}
-
-.tagsMenu {
-  margin-top: 1%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.tagsCategory {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-
-  a {
-    padding: 12px 26px;
-    border-radius: 30px;
-    transition: 0.2s filter ease-out;
-
-    &:hover {
-      filter: contrast(1.2);
-    }
-  }
-
-  &:nth-child(2) a {
-    background-color: #273f74;
-  }
-
-  &:nth-child(3) a {
-    background-color: #275a74;
   }
 }
 
@@ -233,10 +199,6 @@
       }
     }
   }
-
-  .tagsMenu {
-    font-size: 1.8vw;
-  }
 }
 
 @media (max-width: 768px) {
@@ -255,8 +217,11 @@
     }
   }
 
-  .container hr {
-    display: none;
+  .container {
+    margin-bottom: calc(var(--navbarHeight) + 2rem);
+    hr {
+      display: none;
+    }
   }
 
   .hymnBooks {
@@ -298,25 +263,6 @@
   .options {
     display: none;
   }
-
-  .tagsMenu {
-    margin: 2vw 0 calc(var(--navbarHeight) + 2rem);
-    align-items: center;
-    gap: 5vw;
-
-    h2 {
-      font-size: min(4.2vw, 1.5rem);
-    }
-  }
-
-  .tagsCategory {
-    justify-content: center;
-    font-size: min(3vw, 1.2rem);
-
-    a {
-      padding: min(2.5vw, 12px) min(4.6vw, 26px);
-    }
-  }
 }
 
 @media (max-width: 425px) {
@@ -339,11 +285,5 @@
       height: auto;
       left: 4.2vw;
     }
-  }
-}
-
-@media (max-width: 320px) {
-  .tagsCategory {
-    gap: 3vw;
   }
 }

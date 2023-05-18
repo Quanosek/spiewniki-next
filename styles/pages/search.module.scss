@@ -47,14 +47,12 @@
 
     cursor: text;
 
-    $backgroundColor: #161514;
-    background-color: $backgroundColor;
-    border: 2px solid $backgroundColor;
+    background-color: var(--elements);
+    border: 2px solid var(--elements);
 
     &:hover {
-      $hoverColor: #1e1d1c;
-      background-color: $hoverColor;
-      border-color: $hoverColor;
+      background-color: var(--elements-hover);
+      border-color: var(--elements-hover);
     }
 
     &:focus {
@@ -107,24 +105,12 @@
       filter: contrast(1.2);
     }
   }
-
-  .tagsButtons {
-    background-color: #275a74;
-  }
-
-  .addMore {
-    padding: 0;
-    height: 2.25rem;
-    aspect-ratio: 1/1;
-    font-size: 125%;
-    background-color: #474747;
-  }
 }
 
 .results {
   width: 80%;
   border-radius: 0.6rem;
-  background-color: #161514;
+  background-color: var(--elements);
 
   a {
     margin: 4px;
@@ -134,7 +120,7 @@
     transition: 0.06s background-color ease-out;
 
     &:hover {
-      background-color: #1e1d1c;
+      background-color: var(--elements-hover);
     }
 
     h2,
@@ -199,6 +185,7 @@
     width: 100%;
     height: 100%;
     transform: rotate(180deg);
+    filter: invert(1);
   }
 }
 
@@ -234,11 +221,6 @@
 
     button {
       padding: min(2.5vw, 12px) min(4.6vw, 26px);
-    }
-
-    .addMore {
-      height: min(8vw, 2.25rem);
-      font-size: min(4vw, 105%);
     }
   }
 

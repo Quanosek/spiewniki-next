@@ -13,16 +13,20 @@ export function menuLink(name: string) {
 
 export function shareButton() {
   if (navigator.share) {
+    // default share screen
     navigator.share({
       title: "Śpiewniki",
       text: "Udostępnij śpiewniki!",
       url: router.asPath,
     });
+  } else if (navigator.clipboard) {
+    // copy to clipboard
+    navigator.clipboard.writeText(location.href);
+    alert("Skopiowano link do schowka!");
+  } else {
+    // error alert
+    alert("Twoja przeglądarka nie obsługuje tej funkcji!");
   }
-  navigator.clipboard.writeText(window.location.href).then(() => {
-  }, () => {
-    console.log('Copy failed!')
-  });
 }
 
 export function randomButton() {

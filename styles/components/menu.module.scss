@@ -26,7 +26,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #171717;
+  background-color: var(--menu-background);
+  border-radius: 0.6rem;
 }
 
 .content {
@@ -34,12 +35,14 @@
   display: flex;
   flex-direction: column;
   text-align: center;
-  gap: 0.5rem;
+
+  $gap: min(2vw, 0.5rem);
+  gap: $gap;
 
   h2 {
-    margin-bottom: 0.5rem;
-    font-size: 150%;
-    font-weight: 600;
+    margin: calc($gap / 2) 0 calc($gap * 1.5);
+    font-size: min(5vw, 150%);
+    font-weight: bold;
   }
 }
 
@@ -51,7 +54,7 @@
   align-items: center;
   text-align: center;
   gap: 1rem;
-  background-color: #212121;
+  background-color: var(--menu-elements);
   border-radius: 0.4rem;
 }
 
@@ -60,65 +63,133 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 2rem;
+  gap: min(4vw, 1rem);
   background-color: unset;
 
   button {
-    padding: 0.6rem 1.5rem;
-    background-color: #212121;
+    padding: min(2vw, 0.6rem) min(5vw, 1.5rem);
+    background-color: var(--menu-elements);
+  }
+}
+
+@media (max-width: 768px) {
+  .menu {
+    padding: min(4vw, 1.25rem) 2.5vw;
+  }
+
+  .element {
+    padding: 3% 2vw;
+    gap: min(6vw, 1rem);
+
+    h3 {
+      font-size: min(3.5vw, 100%);
+    }
+  }
+
+  .buttons {
+    margin: 2% 0 0.5%;
+
+    button {
+      font-size: min(3.5vw, 100%);
+    }
+  }
+}
+
+// FAVORITE MENU
+
+.favTitle {
+  p {
+    margin: -0.2rem 0 0.8rem;
+  }
+}
+
+.favList {
+  .placeholder {
+    opacity: 85%;
+  }
+}
+
+// INFO MENU
+
+.info {
+  padding: 4% 3%;
+  display: block;
+
+  img {
+    margin: min(3vw, 0.5rem) min(6vw, 1rem);
+    float: left;
+
+    @media (max-width: 768px) {
+      width: min(20vw, 5rem);
+      height: auto;
+    }
+  }
+
+  p {
+    align-items: flex-start;
+    text-align: justify;
+    font-size: min(3.5vw, 100%);
   }
 }
 
 // SETTINGS MENU
 
 .colorTheme {
+  width: 100%;
   display: flex;
+  justify-content: center;
   gap: 1.2rem;
+  overflow-x: auto;
 
   label {
-    width: 3rem;
-    height: 4.5rem;
+    padding: min(2vw, 6px) min(1.6vw, 5px) min(3vw, 8px);
+    width: min(14vw, 3.2rem);
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    gap: 5px;
     border-radius: 0.4rem;
     cursor: pointer;
 
+    &[for="black"] {
+      background-color: #000000;
+      & > * {
+        filter: invert(1);
+      }
+    }
+    &[for="dark"] {
+      background-color: #303030;
+      & > * {
+        filter: invert(1);
+      }
+    }
+    &[for="light"] {
+      background-color: #ffffff;
+    }
+    &[for="reading"] {
+      background-color: #e5dcc9;
+    }
+
     img {
-      width: 2.8rem;
-      scale: 90%;
+      height: auto;
     }
 
     input {
-      scale: 125% !important;
-      margin: 0 0 0.5rem 0 !important;
-      all: revert;
-      cursor: pointer;
+      width: min(7vw, 1.5rem);
+      aspect-ratio: 1/1;
+      border: 2px solid #000000;
+      border-radius: 100%;
+
+      &:checked {
+        background: url("/icons/check.svg") no-repeat center/60%;
+      }
     }
   }
 
-  .black,
-  .dark {
-    img {
-      filter: invert(1);
-    }
-  }
-
-  .black {
-    background-color: #000000;
-  }
-
-  .dark {
-    background-color: #212121;
-  }
-
-  .light {
-    background-color: #ffffff;
-  }
-
-  .reading {
-    background-color: #fbf9f6;
+  @media (max-width: 768px) {
+    gap: 2.5vw;
   }
 }
 
@@ -160,7 +231,7 @@
     background-color: #cccccc;
     transition: 0.2s;
     cursor: pointer;
-    border-radius: 34px;
+    border-radius: 30px;
 
     &:before {
       content: "";
@@ -171,7 +242,7 @@
       bottom: 4px;
       background-color: #ededed;
       transition: 0.2s;
-      border-radius: 50%;
+      border-radius: 100%;
     }
   }
 
@@ -186,46 +257,4 @@
   input:checked + span:before {
     transform: translateX(26px);
   }
-}
-
-// FAVORITE MENU
-
-.favoriteTitle {
-  p {
-    margin: -0.2rem 0 0.8rem;
-  }
-}
-
-.favoriteList {
-  max-width: 35rem;
-  text-align: left;
-  background-color: #212121;
-  border-radius: 0.4rem;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    border-radius: 0.4rem;
-  }
-}
-
-// INFO MENU
-
-.info {
-  padding: 1.2rem 1rem;
-  align-items: flex-start;
-  text-align: justify;
-  gap: 0.6rem;
-
-  h3 {
-    font-weight: 600;
-  }
-
-  p {
-    margin: 0;
-  }
-}
-
-.supportButton {
-  color: #000000 !important;
-  background-color: #68ac6c !important;
 }

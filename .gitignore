@@ -40,3 +40,7 @@ next-env.d.ts
 /public/sw.js.map
 /public/fallback-*.js
 /public/fallback-*.js.map
+
+#.env
+.env
+.env.test

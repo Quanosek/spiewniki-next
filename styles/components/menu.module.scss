@@ -151,30 +151,24 @@
     align-items: center;
     gap: 5px;
     border-radius: 0.4rem;
-    transition: 0.1s filter ease-out;
     cursor: pointer;
 
-    &[for="black"] {
-      background-color: #000000;
-      & > * {
-        filter: invert(1);
-      }
-    }
-    &[for="dark"] {
-      background-color: #303030;
-      & > * {
-        filter: invert(1);
-      }
-    }
     &[for="light"] {
       background-color: #f3f3f3;
     }
     &[for="reading"] {
       background-color: #f6efe2;
     }
+    &[for="black"] {
+      background-color: #000000;
+    }
+    &[for="dark"] {
+      background-color: #303030;
+    }
 
-    &:hover {
-      filter: brightness(110%);
+    &[for="black"] > *,
+    &[for="dark"] > * {
+      filter: invert(1);
     }
 
     img {
@@ -252,11 +246,11 @@
   }
 
   input:focus + span {
-    box-shadow: 0 0 1px var(--accent-color-1);
+    box-shadow: 0 0 1px var(--accent-color);
   }
 
   input:checked + span {
-    background-color: var(--accent-color-2);
+    background-color: var(--accent-color);
   }
 
   input:checked + span:before {

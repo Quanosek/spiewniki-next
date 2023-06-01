@@ -31,6 +31,7 @@
   &:hover {
     background-color: var(--elements-hover);
     border-color: var(--elements-hover);
+    filter: brightness(0.9);
 
     @media (min-width: 768px) {
       width: 85%;
@@ -57,7 +58,7 @@
     position: relative;
     bottom: 3%;
     display: block;
-    background-color: var(--lines);
+    background-color: #474747;
     border-radius: 100%;
   }
 }

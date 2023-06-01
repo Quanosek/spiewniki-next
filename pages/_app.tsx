@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     // set theme
     let theme = localStorage.getItem("theme");
-    if (!theme) theme = "black"; // default theme
+    if (!theme) theme = "light"; // default theme
     document.documentElement.className = theme;
   }, []);
 

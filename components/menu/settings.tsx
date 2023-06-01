@@ -23,7 +23,7 @@ export default function SettingsMenu() {
       <div className={styles.element}>
         <h3>Motyw kolorów:</h3>
 
-        {Themes(["black", "dark", "light", "reading"])}
+        {Themes(["light", "reading", "black", "dark"])}
       </div>
 
       <div className={styles.element}>
@@ -62,7 +62,7 @@ export default function SettingsMenu() {
           title="Kliknij, lub użyj [Esc] na klawiaturze"
           onClick={() => router.back()}
         >
-          Zamknij
+          Zapisz
         </button>
       </div>
     </>

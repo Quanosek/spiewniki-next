@@ -52,11 +52,12 @@
     &:hover {
       background-color: var(--elements-hover);
       border-color: var(--elements-hover);
+      filter: brightness(0.9);
     }
 
     &:focus {
-      border-color: var(--accent-color-1);
-      box-shadow: 0px 0px 12px 2px var(--accent-color-1);
+      border-color: var(--accent-color);
+      box-shadow: 0px 0px 20px -5px var(--accent-color);
     }
   }
 
@@ -85,7 +86,7 @@
   width: 80%;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   flex-wrap: wrap;
 
   .filtersTitle {
@@ -94,14 +95,24 @@
   }
 
   button {
-    padding: 12px 26px;
+    padding: 6px;
     border-radius: 30px;
-    color: var(--elements);
-    background-color: var(--accent-color-1);
-    transition: 0.2s filter ease-out;
+    color: var(--accent-color);
+    transition: 0.15s ease-out;
+
+    p {
+      padding: 8px 22px;
+      border: 1px solid var(--accent-color);
+      border-radius: 30px;
+    }
 
     &:hover {
-      filter: contrast(1.2);
+      color: #ffffff;
+      background-color: var(--accent-color);
+
+      p {
+        border-color: #ffffff;
+      }
     }
   }
 }
@@ -143,10 +154,8 @@
   }
 
   hr {
-    margin: 0 1rem;
-    height: 1.5px;
-    background-color: var(--lines);
-    border-radius: 100%;
+    height: 2px;
+    background-color: var(--background);
   }
 }
 
@@ -168,7 +177,7 @@
   position: sticky;
   bottom: 3%;
   left: 100%;
-  background-color: var(--accent-color-2) !important;
+  background-color: var(--accent-color) !important;
   box-shadow: 0 3px 8px -1px #000000;
   transition: 0.15s ease-in-out;
   border-radius: 100%;
@@ -217,10 +226,6 @@
 
   .filters {
     font-size: min(3.5vw, 90%);
-
-    button {
-      padding: min(2.5vw, 12px) min(4.6vw, 26px);
-    }
   }
 
   .results {
@@ -288,6 +293,14 @@
   .filters {
     margin: -4.5vw 0 -3vw;
     gap: 2.5vw;
+
+    button {
+      padding: 1.5vw;
+
+      p {
+        padding: 2.4vw 6vw;
+      }
+    }
   }
 
   .filtersTitle {

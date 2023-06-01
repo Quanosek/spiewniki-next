@@ -57,7 +57,7 @@ export default function Document() {
         <footer>
           <div className="container">
             <p>
-              Stworzone z 💙 przez{" "}
+              Stworzone z ❤️ przez{" "}
               <Link href="https://github.com/Quanosek">Jakuba Kłało</Link>
               {" i "}
               <Link href="https://github.com/Krist0f0l0s">

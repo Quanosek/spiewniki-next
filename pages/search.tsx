@@ -43,12 +43,6 @@ export default function SearchPage() {
       setData(await search(book, input.value));
     })();
 
-    // filter buttons
-    const filters = document.getElementById("filters") as HTMLElement;
-    filters.onclick = (e) => {
-      if ((e.target as HTMLElement).tagName === "BUTTON") router.push("/books");
-    };
-
     // show/hide scroll-to-top button
     window.onscroll = () => {
       if (window.scrollY > 300) setShowTopBtn(true);
@@ -159,8 +153,11 @@ export default function SearchPage() {
           <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
 
           {book && (
-            <button title="Kliknij, aby przejść to listy wszystkich śpiewników">
-              {BookNames(book)}
+            <button
+              onClick={() => router.push("/books")}
+              title="Kliknij, aby przejść to listy wszystkich śpiewników"
+            >
+              <p>{BookNames(book)}</p>
             </button>
           )}
         </div>
@@ -243,13 +240,13 @@ async function search(book: string, input: string) {
             lyricsCollector.push({
               book: hymn.book,
               title: hymn.title,
-              lyrics: [
-                verses[index - 2] ? "... " : undefined,
-                verses[index - 1],
-                verses[index],
-                verses[index + 1],
-                verses[index + 2] ? "..." : undefined,
-              ],
+              lyrics: `
+                ${verses[index - 2] ? "..." : ""}
+                ${verses[index - 1] ? `${verses[index - 1]}` : ""}
+                ${verses[index]}
+                ${verses[index + 1] ? `${verses[index + 1]}` : ""}
+                ${verses[index + 2] ? "..." : ""}
+                `,
             });
           }
         });

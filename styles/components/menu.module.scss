@@ -193,21 +193,32 @@
 }
 
 .fontSize {
-  width: 85%;
+  width: 75%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 1.25rem;
 
   .smaller {
     font-size: 0.8rem;
   }
 
   input {
-    margin: 0 0.8rem !important;
-    width: 100% !important;
-    all: revert;
+    width: 100%;
+    height: 0.45rem;
+    background: var(--accent-color);
+    border-radius: 0.4rem;
     cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 1.5rem;
+      height: 1.5rem;
+      background-color: #ffffff;
+      border-radius: 100%;
+      transition: 0.2s ease-in-out;
+    }
   }
 
   .bigger {

@@ -39,7 +39,7 @@ function HymnList(book: string | string[]) {
 }
 
 // read and save result of defined hymnbook
-function hymnBook(results: any, book: string | string[]) {
+function hymnBook(results: any[], book: string | string[]) {
   const dirname = path.join(process.cwd(), `/public/database/${book}/xml/`);
 
   fs.readdirSync(dirname)
@@ -104,9 +104,9 @@ function HymnData(book: string | string[], title: string | string[]) {
 // reformat xml verses
 function LyricsFormat(lyrics: string) {
   const separator = /\s*\[\w*\]\s*/;
-  const verses = lyrics.split(separator).slice(1) as string[];
+  const verses = lyrics.split(separator).slice(1) as any;
 
-  verses.map((verse: any, index: number) => {
+  verses.map((verse: string, index: number) => {
     verses[index] = verse.split(/\n/g).slice(0);
   });
 

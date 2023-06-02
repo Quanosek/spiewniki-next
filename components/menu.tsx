@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
@@ -11,16 +11,27 @@ import Settings from "./menu/settings";
 
 export default function Menu() {
   const router = useRouter();
-  const { menu, ...params } = router.query;
-
   const [showMenu, setShowMenu] = useState(false);
 
-  const handleKeyPress = useCallback(
-    (e: { key: string }) => {
-      const key = e.key.toUpperCase();
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { menu, ...params } = router.query;
 
-      // shortcuts
-      switch (key) {
+    // prevent scrolling
+    if (menu) {
+      const TopScroll = document.documentElement.scrollTop;
+      const LeftScroll = document.documentElement.scrollLeft;
+
+      window.onscroll = () => window.scrollTo(LeftScroll, TopScroll);
+      setShowMenu(true);
+    } else {
+      window.onscroll = () => {};
+      setShowMenu(false);
+    }
+
+    // handle keyboard shortcuts
+    const handleKeyPress = (event: KeyboardEvent) => {
+      switch (event.key.toUpperCase()) {
         case "R":
           !menu && randomButton();
           break;
@@ -37,29 +48,12 @@ export default function Menu() {
             });
           break;
       }
-    },
-    [router, menu, params]
-  );
+    };
 
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    // prevent scrolling
-    if (menu) {
-      const TopScroll = document.documentElement.scrollTop;
-      const LeftScroll = document.documentElement.scrollLeft;
-
-      window.onscroll = () => window.scrollTo(LeftScroll, TopScroll);
-      setShowMenu(true);
-    } else {
-      window.onscroll = () => {};
-      setShowMenu(false);
-    }
-
-    // keyboard shortcuts handler
+    // keyboard events
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [router, menu, handleKeyPress]);
+  }, [router]);
 
   return (
     <div
@@ -72,9 +66,9 @@ export default function Menu() {
       <div className={styles.menu}>
         <div className={styles.content}>
           {/* select menu window */}
-          {menu === "favorite" && <Favorite />}
-          {menu === "info" && <Info />}
-          {menu === "settings" && <Settings />}
+          {router.query.menu === "favorite" && <Favorite />}
+          {router.query.menu === "info" && <Info />}
+          {router.query.menu === "settings" && <Settings />}
         </div>
       </div>
     </div>

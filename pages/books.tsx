@@ -54,8 +54,7 @@ export default function BooksPage() {
           <Link
             className={styles.all}
             href={{
-              pathname: `/search`,
-              query: { book: "all" },
+              pathname: "/search",
             }}
           >
             <p>{bookNames("all")}</p>
@@ -80,7 +79,7 @@ function Books(names: string[]) {
       <div key={index}>
         <Link
           href={{
-            pathname: `/search`,
+            pathname: "/search",
             query: { book: name },
           }}
         >

@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import axios from "axios";
 
@@ -12,24 +12,13 @@ import BookNames from "@/scripts/bookNames";
 
 export default function SearchPage() {
   const router = useRouter();
-  let { book } = router.query as { book: string };
+  const book = router.query.book as string;
 
-  if (!book) book = "all";
+  const [hymns, setHymns] = useState<any>(); // all hymns in book
+  const [data, setData] = useState<any>(); // filtered hymns
 
-  const [data, setData] = useState<any>(null);
-  const [showTopBtn, setShowTopBtn] = useState(false);
-
-  const handleKeyPress = useCallback((e: { key: string }) => {
-    const key = e.key.toUpperCase();
-
-    // shortcuts
-    switch (key) {
-      case "/":
-        const input = document.getElementById("input") as HTMLInputElement;
-        input.focus();
-        break;
-    }
-  }, []);
+  const [showTopBtn, setShowTopBtn] = useState(false); // show/hide scroll-to-top button
+  const [showClear, setShowClear] = useState(false); // show/hide clear button
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -38,26 +27,42 @@ export default function SearchPage() {
     const input = document.getElementById("input") as HTMLInputElement;
     localStorage.getItem("focusSearchBox") === "true" && input.focus();
 
-    // searching script
-    (async () => {
-      setData(await search(book, input.value));
-    })();
-
-    // show/hide scroll-to-top button
-    window.onscroll = () => {
-      if (window.scrollY > 300) setShowTopBtn(true);
-      else setShowTopBtn(false);
-    };
-
     // remove temporary localStorage files
     ["searchPage", "focusSearchBox"].forEach((item) => {
       localStorage.removeItem(item);
     });
 
-    // keyboard shortcuts handler
+    // show all hymns in book on load
+    (async () => {
+      axios
+        .get("/api/xml", {
+          params: { book: router.query.book },
+        })
+        .then(({ data }) => {
+          setHymns(data);
+          setData(search(data, ""));
+        });
+    })();
+
+    // show/hide scroll-to-top button
+    window.onscroll = () => {
+      window.scrollY > 300 ? setShowTopBtn(true) : setShowTopBtn(false);
+    };
+
+    // handle keyboard shortcuts
+    const handleKeyPress = (event: KeyboardEvent) => {
+      switch (event.key.toUpperCase()) {
+        case "/":
+          const input = document.getElementById("input") as HTMLInputElement;
+          input.focus();
+          break;
+      }
+    };
+
+    // keyboard events
     document.addEventListener("keyup", handleKeyPress);
     return () => document.removeEventListener("keyup", handleKeyPress);
-  }, [router, book, handleKeyPress]);
+  }, [router]);
 
   return (
     <>
@@ -106,18 +111,24 @@ export default function SearchPage() {
             placeholder="Rozpocznij wyszukiwanie..."
             title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie"
             onFocus={(e) => e.target.select()}
-            onInput={async (e) => {
+            onInput={(e) => {
               const input = e.target as HTMLInputElement;
-              showClear(input.value);
-              setData(await search(book, input.value));
+              input.value ? setShowClear(true) : setShowClear(false);
+              setData(search(hymns, input.value));
             }}
             onKeyUp={async (e) => {
               if (e.key === "Enter") {
                 const firstResults = document.getElementById("results")
                   ?.firstChild?.firstChild as HTMLLinkElement;
 
-                if (firstResults.href) router.push(firstResults.href);
-                else setData(await clearSearch(book));
+                if (firstResults.href) {
+                  router.push(firstResults.href);
+                } else {
+                  const input = e.target as HTMLInputElement;
+
+                  input.value = "";
+                  setData(search(hymns, input.value));
+                }
               }
             }}
           />
@@ -134,9 +145,20 @@ export default function SearchPage() {
           </div>
 
           <div
-            id="clearIcon"
-            className={styles.clearIcon}
-            onClick={async () => setData(await clearSearch(book))}
+            id="clearButton"
+            className={styles.clearButton}
+            style={{ display: showClear ? "flex" : "none" }}
+            onClick={() => {
+              const input = document.getElementById(
+                "input"
+              ) as HTMLInputElement;
+
+              input.value = "";
+              input.focus();
+
+              setData(search(hymns, input.value));
+              setShowClear(false);
+            }}
           >
             <Image
               className="icon"
@@ -152,16 +174,15 @@ export default function SearchPage() {
         <div id="filters" className={styles.filters}>
           <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
 
-          {book && (
-            <button
-              onClick={() => router.push("/books")}
-              title="Kliknij, aby przejść to listy wszystkich śpiewników"
-            >
-              <p>{BookNames(book)}</p>
-            </button>
-          )}
+          <button
+            onClick={() => router.push("/books")}
+            title="Kliknij, aby przejść to listy wszystkich śpiewników"
+          >
+            <p>{BookNames(book ? book : "all")}</p>
+          </button>
         </div>
 
+        {/* dynamically show results */}
         <div id="results" className={styles.results}>
           {(!data && <div className="loader" />) ||
             (!data[0] && (
@@ -176,9 +197,11 @@ export default function SearchPage() {
                 return (
                   <div key={index}>
                     <Link
-                      onClick={() => localStorage.setItem("searchPage", book)}
+                      onClick={() => {
+                        localStorage.setItem("searchPage", book ? book : "all");
+                      }}
                       href={{
-                        pathname: `/hymn`,
+                        pathname: "/hymn",
                         query: { book: hymn.book, title: hymn.title },
                       }}
                     >
@@ -213,19 +236,12 @@ export default function SearchPage() {
 }
 
 // searching main script
-async function search(book: string, input: string) {
-  // read books
-  let path;
-  if (book === "all") path = `/api/xml`;
-  else path = `/api/xml?book=${book}`;
-
-  const list = await axios.get(path).then(({ data }) => data);
-
+function search(hymns: [], input: string) {
   // create results
   let titlesCollector = new Array();
   let lyricsCollector = new Array();
 
-  list.map((hymn: { book: string; title: string; lyrics: string[] }) => {
+  hymns.map((hymn: { book: string; title: string; lyrics: string[] }) => {
     if (textFormat(hymn.title).includes(textFormat(input))) {
       // title found
       titlesCollector.push({
@@ -283,22 +299,4 @@ async function search(book: string, input: string) {
 
   // return all results
   return Collector;
-}
-
-// clear search input button
-async function clearSearch(book: string) {
-  const input = document.getElementById("input") as HTMLInputElement;
-  input.value = "";
-
-  showClear(input.value);
-  input.focus();
-
-  return await search(book, input.value);
-}
-
-function showClear(input: string) {
-  const clearIcon = document.getElementById("clearIcon") as HTMLElement;
-
-  if (!input) clearIcon.style.display = "";
-  else clearIcon.style.display = "flex";
 }

@@ -1,6 +1,8 @@
 import styles from "@/styles/components/presentation.module.scss";
 
-export default function Presentation(param: { hymn: any }) {
+export default function Presentation(param: {
+  hymn: { title: string; book: string; lyrics: string[][] };
+}) {
   const hymn = param.hymn;
   if (!hymn) return null;
 

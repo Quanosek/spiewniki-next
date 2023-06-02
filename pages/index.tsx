@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, ReactElement } from "react";
+import { useEffect, ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
@@ -15,12 +15,12 @@ import Navbar from "@/components/navbar";
 export default function IndexPage() {
   const router = useRouter();
 
-  const handleKeyPress = useCallback(
-    (e: { key: string }) => {
-      const key = e.key.toUpperCase();
+  useEffect(() => {
+    if (!router.isReady) return;
 
-      // shortcuts
-      switch (key) {
+    // handle keyboard shortcuts
+    const handleKeyPress = (event: KeyboardEvent) => {
+      switch (event.key.toUpperCase()) {
         case "/":
           router.push("/search");
           localStorage.setItem("focusSearchBox", "true");
@@ -29,15 +29,12 @@ export default function IndexPage() {
           !router.query.menu && menuLink("info");
           break;
       }
-    },
-    [router]
-  );
+    };
 
-  useEffect(() => {
-    // keyboard shortcuts handler
+    // keyboard events
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [handleKeyPress]);
+  }, [router]);
 
   return (
     <>
@@ -95,6 +92,7 @@ export default function IndexPage() {
             </button>
 
             <button
+              className="disabledTemporary"
               title="Przejdź do listy ulubionych pieśni [F]"
               onClick={() => menuLink("favorite")}
             >
@@ -105,7 +103,7 @@ export default function IndexPage() {
                 width={20}
                 height={20}
               />
-              <p>Zakładki</p>
+              <p>Lista ulubionych</p>
             </button>
 
             <button
@@ -150,7 +148,7 @@ export default function IndexPage() {
         </div>
       </main>
 
-      <Navbar more={false} />
+      <Navbar setup={"home"} />
     </>
   );
 }
@@ -163,7 +161,7 @@ function Books(names: string[]) {
     books.push(
       <Link
         href={{
-          pathname: `/search`,
+          pathname: "/search",
           query: { book: name },
         }}
         key={name}

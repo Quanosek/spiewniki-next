@@ -204,6 +204,7 @@
 
 @media (max-width: 768px) {
   .mobileTitle {
+    margin-top: min(4vw, 0.6rem);
     display: block;
   }
 
@@ -268,7 +269,7 @@
 
 @media (max-width: 425px) {
   .mobileTitle {
-    margin-top: 2vw;
+    margin-top: 4vw;
     font-size: 3.8vw;
 
     button {

@@ -33,7 +33,7 @@ export function randomButton() {
   localStorage.removeItem("searchPage");
 
   (async () => {
-    const data = await axios.get(`/api/xml`).then(({ data }) => data);
+    const data = await axios.get("/api/xml").then(({ data }) => data);
     const random = Math.floor(Math.random() * (Math.floor(data.length) + 1));
 
     router.push({

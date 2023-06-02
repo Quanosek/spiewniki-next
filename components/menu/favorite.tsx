@@ -26,6 +26,8 @@ export default function FavoriteMenu() {
             );
             if (prompt == true) {
               //
+              //
+              //
             }
           }}
         >

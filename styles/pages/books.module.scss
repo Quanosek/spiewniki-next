@@ -72,10 +72,11 @@
 
   .books {
     width: 100%;
-    font-size: 80%;
+    font-size: 90%;
 
     a {
       margin: 0;
+      padding: 1rem 1.25rem;
     }
   }
 }
@@ -95,10 +96,10 @@
 @media (max-width: 320px) {
   .books {
     margin-bottom: 8vw;
-    font-size: 4.2vw;
+    font-size: 4.25vw;
 
     a {
-      padding: 4vw 3.5vw;
+      padding: 5vw 3vw 5vw 5vw;
     }
   }
 }

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import router, { useRouter } from "next/router";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import axios from "axios";
 
@@ -20,52 +20,50 @@ import Navbar from "@/components/navbar";
 
 export default function HymnPage() {
   const router = useRouter();
-  const [hymn, setState] = useState<any>(null);
-
-  const handleKeyPress = useCallback((e: { key: string }) => {
-    const key = e.key.toUpperCase();
-
-    // shortcuts
-    switch (key) {
-      case "P":
-        presentationButton();
-        break;
-      case "ARROWLEFT":
-        break;
-      case "ARROWRIGHT":
-        break;
-    }
-  }, []);
+  const [hymn, setHymn] = useState<any>(); // all hymn data
 
   useEffect(() => {
     if (!router.isReady) return;
-    let { book, title } = router.query as { book: string; title: string };
 
+    // get hymn data
     (async () => {
-      axios
-        .get(`/api/xml`, {
-          params: { book: book, title: title },
-        })
-        .then(({ data }) => {
-          return setState(data[0]);
+      try {
+        const hymn = await axios.get("/api/xml", {
+          params: { book: router.query.book, title: router.query.title },
         });
+        return setHymn(hymn.data[0]);
+      } catch (err) {
+        console.error(err);
+      }
     })();
 
-    // keyboard shortcuts handler
+    // handle keyboard shortcuts
+    const handleKeyPress = (event: KeyboardEvent) => {
+      switch (event.key.toUpperCase()) {
+        case "P":
+          presentationButton();
+          break;
+        case "ARROWLEFT":
+          // changeHymn(hymn, "prev");
+          break;
+        case "ARROWRIGHT":
+          // changeHymn(hymn, "next");
+          break;
+      }
+    };
+
+    // keyboard events
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [router, handleKeyPress]);
+  }, [router]);
+
+  // set default title
+  const pageTitle = hymn ? `${router.query.title} / Śpiewniki` : "Śpiewniki";
 
   return (
     <>
       <Head>
-        {(router.query.title && (
-          // filename title
-          <title>{router.query.title} / Śpiewniki</title>
-        )) || (
-          // default title (placeholder)
-          <title>Śpiewniki</title>
-        )}
+        <title>{pageTitle}</title>
       </Head>
 
       <Presentation hymn={hymn} />
@@ -84,17 +82,17 @@ export default function HymnPage() {
         </button>
 
         <div>
-          <button onClick={() => {}}>
+          <button onClick={shareButton}>
             <Image
               className="icon"
-              alt="pdf"
-              src="/icons/document.svg"
+              alt="ulubione"
+              src="/icons/link.svg"
               width={30}
               height={30}
             />
           </button>
 
-          <button onClick={() => {}}>
+          <button className="disabledTemporary" onClick={() => {}}>
             <Image
               className="icon"
               alt="ulubione"
@@ -150,7 +148,7 @@ export default function HymnPage() {
               <p>Wybierz śpiewnik</p>
             </button>
 
-            <button onClick={() => {}}>
+            <button className="disabledTemporary" onClick={() => {}}>
               <Image
                 className="icon"
                 alt="dom"
@@ -162,7 +160,7 @@ export default function HymnPage() {
             </button>
           </div>
 
-          {/* hymn text */}
+          {/* show all hymn parameters */}
           <div className={styles.center}>
             <div className={styles.text}>
               {(!hymn && <div className="loader" />) ||
@@ -181,9 +179,13 @@ export default function HymnPage() {
                               if (verse.startsWith(".")) {
                                 // chord exception
                                 return (
-                                  <p className={styles.chord} key={index}>
-                                    {verse.slice(1)}
-                                  </p>
+                                  <>
+                                    {localStorage.getItem("showChords") && (
+                                      <p className={styles.chord} key={index}>
+                                        {verse.slice(1)}
+                                      </p>
+                                    )}
+                                  </>
                                 );
                               } else {
                                 // lines of text correction
@@ -207,7 +209,10 @@ export default function HymnPage() {
 
             {/* bottom buttons */}
             <div className={styles.controls}>
-              <button title="Przejdź do poprzedniej pieśni" onClick={() => {}}>
+              <button
+                title="Przejdź do poprzedniej pieśni [←]"
+                onClick={() => changeHymn(hymn, "prev")}
+              >
                 <Image
                   className={`${styles.previous} icon`}
                   alt="strzałka w lewo"
@@ -227,7 +232,10 @@ export default function HymnPage() {
                 <p>Wylosuj pieśń</p>
               </button>
 
-              <button title="Przejdź do następnej pieśni" onClick={() => {}}>
+              <button
+                title="Przejdź do następnej pieśni [→]"
+                onClick={() => changeHymn(hymn, "next")}
+              >
                 <p>Następna</p>
 
                 <Image
@@ -244,6 +252,22 @@ export default function HymnPage() {
           {/* right side buttons */}
           <div className={styles.options}>
             <button
+              className="disabledTemporary"
+              title="Włącz prezentację pieśni na pełen ekran [P]"
+              onClick={presentationButton}
+            >
+              <Image
+                className="icon"
+                alt="presentation"
+                src="/icons/monitor.svg"
+                width={20}
+                height={20}
+              />
+              <p>Prezentacja</p>
+            </button>
+
+            <button
+              className="disabledTemporary"
               title="Przejdź do listy ulubionych pieśni [F]"
               onClick={() => menuLink("favorite")}
             >
@@ -254,7 +278,7 @@ export default function HymnPage() {
                 width={20}
                 height={20}
               />
-              <p>Zakładki</p>
+              <p>Lista ulubionych</p>
             </button>
 
             <button
@@ -272,6 +296,7 @@ export default function HymnPage() {
             </button>
 
             <button
+              className="disabledTemporary"
               title="Pobierz oryginalną stronę ze śpiewnika"
               onClick={() => {}}
             >
@@ -309,26 +334,12 @@ export default function HymnPage() {
               />
               <p>Udostępnij</p>
             </button>
-
-            <button
-              title="Włącz prezentację pieśni na pełen ekran [P]"
-              onClick={presentationButton}
-            >
-              <Image
-                className="icon"
-                alt="presentation"
-                src="/icons/monitor.svg"
-                width={20}
-                height={20}
-              />
-              <p>Prezentacja</p>
-            </button>
           </div>
         </div>
       </main>
 
       {/* bottom navbar */}
-      <Navbar more={true} />
+      <Navbar setup={"hymn"} />
     </>
   );
 }
@@ -337,10 +348,42 @@ export default function HymnPage() {
 function backButton() {
   const book = localStorage.getItem("searchPage");
 
-  if (book) {
+  if (book == "all") {
+    router.push("/search");
+  } else {
     router.push({
       pathname: "/search",
-      query: { book: book },
+      query: { book },
     });
-  } else router.push("/search");
+  }
+}
+
+// previous & next hymn button
+function changeHymn(hymn: { id: string }, operator: string) {
+  let position = 0;
+
+  switch (operator) {
+    case "prev":
+      position = parseInt(hymn.id) - 1;
+      break;
+    case "next":
+      position = parseInt(hymn.id) + 1;
+      break;
+  }
+
+  axios
+    .get("/api/xml", {
+      params: { book: router.query.book },
+    })
+    .then(({ data }) => {
+      if (position < 0 || position >= data.length) return;
+
+      router.push({
+        pathname: "/hymn",
+        query: {
+          book: router.query.book,
+          title: data[position].title,
+        },
+      });
+    });
 }

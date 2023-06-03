@@ -28,10 +28,13 @@ export default function HymnPage() {
     // get hymn data
     (async () => {
       try {
-        const hymn = await axios.get("/api/xml", {
-          params: { book: router.query.book, title: router.query.title },
-        });
-        return setHymn(hymn.data[0]);
+        axios
+          .get("/api/xml", {
+            params: { book: router.query.book, title: router.query.title },
+          })
+          .then(({ data }) => {
+            setHymn(data[0]);
+          });
       } catch (err) {
         console.error(err);
       }
@@ -176,23 +179,22 @@ export default function HymnPage() {
                         return (
                           <div className={styles.verse} key={index}>
                             {verses.map((verse: string, index: number) => {
-                              if (verse.startsWith(".")) {
-                                // chord exception
-                                return (
-                                  <>
-                                    {localStorage.getItem("showChords") && (
-                                      <p className={styles.chord} key={index}>
-                                        {verse.slice(1)}
-                                      </p>
-                                    )}
-                                  </>
-                                );
-                              } else {
-                                // lines of text correction
-                                if (verse.startsWith(" "))
-                                  verse = verse.slice(1);
-                                return <p key={index}>{verse}</p>;
-                              }
+                              if (
+                                verse.startsWith(".") &&
+                                !localStorage.getItem("showChords")
+                              )
+                                return;
+
+                              return (
+                                <p
+                                  className={
+                                    verse.startsWith(".") ? styles.chord : ""
+                                  }
+                                  key={index}
+                                >
+                                  {verse.slice(1)}
+                                </p>
+                              );
                             })}
                           </div>
                         );
@@ -371,19 +373,23 @@ function changeHymn(hymn: { id: string }, operator: string) {
       break;
   }
 
-  axios
-    .get("/api/xml", {
-      params: { book: router.query.book },
-    })
-    .then(({ data }) => {
-      if (position < 0 || position >= data.length) return;
+  try {
+    axios
+      .get("/api/xml", {
+        params: { book: router.query.book },
+      })
+      .then(({ data }) => {
+        if (position < 0 || position >= data.length) return;
 
-      router.push({
-        pathname: "/hymn",
-        query: {
-          book: router.query.book,
-          title: data[position].title,
-        },
+        router.push({
+          pathname: "/hymn",
+          query: {
+            book: router.query.book,
+            title: data[position].title,
+          },
+        });
       });
-    });
+  } catch (err) {
+    console.error(err);
+  }
 }

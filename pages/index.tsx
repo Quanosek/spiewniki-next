@@ -70,9 +70,9 @@ export default function IndexPage() {
           <div className={styles.hymnBooks}>
             {Books(["PBT", "UP", "N"])}
 
-            {/* <Link href={"/books"} className={styles.all}>
+            <Link href={"/books"} className={styles.all}>
               <p>Lista wszystkich śpiewników</p>
-            </Link> */}
+            </Link>
           </div>
 
           <hr />

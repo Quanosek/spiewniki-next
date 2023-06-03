@@ -43,7 +43,10 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Wylosuj</p>
           </button>
 
-          <button onClick={() => menuLink("favorite")}>
+          <button
+            className="disabledTemporary"
+            onClick={() => menuLink("favorite")}
+          >
             <Image
               className="icon"
               alt="gwiazdka"

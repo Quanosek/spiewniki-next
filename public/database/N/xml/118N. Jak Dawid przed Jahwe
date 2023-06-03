@@ -2,11 +2,17 @@
 <song>
   <title>118. Jak Dawid przed Jahwe</title>
   <lyrics>[V1]
+.     Dm                         Dm
  Jak Dawid przez Jahwe, Bogiem swym,
- będą pląsać ze wszystkich sił
+.Gm                 Dm
+ będę pląsać ze wszystkich sił
+.          F              Gm
  przed Królem królów!
+.                              Dm
  Jak niegdyś Miriam i siostry jej,
+.Gm                 Dm
  będą śpiewać i cieszyć się
+.          F              Gm
  przed Królem królów!
 
 [V2]
@@ -18,14 +24,18 @@
  przed Królem królów!
 
 [V3]
+.Em             F
  Jezus tylko drogą jest,
- Ojca wiedzie wzwyż.
+.     Em               Gm
+ do Ojca wiedzie wzwyż.
+.Em                    F
  Dał nam prawo Boga czcić,
+.Em                             Gm
  przez swą krew, przez krzyż.</lyrics>
   <author></author>
-  <copyright>II Moj. 15:21</copyright>
+  <copyright>2 Mojż. 15:21</copyright>
   <hymn_number></hymn_number>
-  <presentation></presentation>
+  <presentation>V1 V2 V3 V1 V2 V3 V1</presentation>
   <ccli></ccli>
   <capo print="false" sharp="true"></capo>
   <key></key>

@@ -24,8 +24,8 @@ export default function Database(req: NextApiRequest, res: NextApiResponse) {
 function ListAll() {
   let results = new Array();
 
-  // const books = ["PBT", "UP", "N", "E", "S", "R"];
-  const books = ["PBT", "UP", "N"];
+  const books = ["PBT", "UP", "N", "K", "P", "E", "S", "R"];
+  // const books = ["PBT", "UP", "N"];
   books.map((book) => hymnBook(results, book));
 
   return results;
@@ -52,6 +52,8 @@ function hymnBook(results: any[], book: string | string[]) {
       parseString(
         fs.readFileSync(dirname + filename, "utf-8"),
         (err, result) => {
+          if (!result) return;
+
           let lyrics = LyricsFormat(result.song.lyrics[0]);
 
           lyrics = lyrics.map((verses: any) => {

@@ -62,8 +62,8 @@ export default function BooksPage() {
 
           <hr />
 
-          {/* {Books(["PBT", "UP", "N", "E", "S", "R"])} */}
-          {Books(["PBT", "UP", "N"])}
+          {Books(["PBT", "UP", "N", "K", "P", "E", "S", "R"])}
+          {/* {Books(["PBT", "UP", "N"])} */}
         </div>
       </main>
     </>

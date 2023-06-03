@@ -8,10 +8,12 @@ import "@/styles/globals.scss";
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    // set theme
-    let theme = localStorage.getItem("theme");
-    if (!theme) theme = "light"; // default theme
-    document.documentElement.className = theme;
+    // set global color theme
+    const theme = localStorage.getItem("colorTheme")
+      ? localStorage.getItem("colorTheme")
+      : "black";
+
+    document.documentElement.className = theme as string;
   }, []);
 
   return (

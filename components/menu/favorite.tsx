@@ -24,7 +24,7 @@ export default function FavoriteMenu() {
             const prompt = confirm(
               "Czy na pewno chcesz wyczyścić listę ulubionych?"
             );
-            if (prompt == true) {
+            if (prompt) {
               //
               //
               //

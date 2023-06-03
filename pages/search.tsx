@@ -34,18 +34,18 @@ export default function SearchPage() {
 
     // show all hymns in book on load
     (async () => {
-      try {
-        axios
-          .get("/api/xml", {
-            params: { book: router.query.book },
-          })
-          .then(({ data }) => {
-            setHymns(data);
-            setData(search(data, ""));
-          });
-      } catch (err) {
-        console.error(err);
-      }
+      axios
+        .get("/api/xml", {
+          params: { book: router.query.book },
+        })
+        .then(({ data }) => {
+          setHymns(data);
+          setData(search(data, ""));
+        })
+        .catch((err) => {
+          console.error(err);
+          router.push("/search");
+        });
     })();
 
     // show/hide scroll-to-top button

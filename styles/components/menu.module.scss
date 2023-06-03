@@ -79,7 +79,7 @@
 
   .element {
     padding: 3% 2vw;
-    gap: min(6vw, 1rem);
+    gap: min(3vw, 1rem);
 
     h3 {
       font-size: min(3.5vw, 100%);
@@ -192,7 +192,25 @@
   }
 }
 
-.fontSize {
+.fontPreview {
+  width: 60%;
+  height: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  background-color: #000000;
+
+  p {
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    width: min(90%, 22rem);
+  }
+}
+
+.fontSlider {
   width: 75%;
   display: flex;
   flex-direction: row;
@@ -200,13 +218,13 @@
   align-items: center;
   gap: 1.25rem;
 
-  .smaller {
-    font-size: 0.8rem;
+  @media (max-width: 768px) {
+    width: min(90%, 30rem);
   }
 
   input {
     width: 100%;
-    height: 0.45rem;
+    height: 0.5rem;
     background: var(--accent-color);
     border-radius: 0.4rem;
     cursor: pointer;
@@ -217,8 +235,17 @@
       height: 1.5rem;
       background-color: #ffffff;
       border-radius: 100%;
-      transition: 0.2s ease-in-out;
+
+      @media (max-width: 425px) {
+        $size: min(8vw, 1.5rem);
+        width: $size;
+        height: $size;
+      }
     }
+  }
+
+  .smaller {
+    font-size: 0.8rem;
   }
 
   .bigger {
@@ -228,9 +255,13 @@
 
 .chordsToggle {
   position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+
+  $buttonWidth: 4rem;
+  $buttonHeight: 1.5rem;
+  $dotMargin: 0.25rem;
+
+  width: $buttonWidth;
+  height: calc($buttonHeight + ($dotMargin * 2.5));
 
   span {
     position: absolute;
@@ -238,33 +269,54 @@
     left: 0;
     right: 0;
     bottom: 0;
+    display: flex;
+    align-items: center;
     background-color: #cccccc;
-    transition: 0.2s;
-    cursor: pointer;
+    transition: 0.1s ease-in-out;
     border-radius: 30px;
+    cursor: pointer;
 
     &:before {
       content: "";
-      position: absolute;
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
+      margin: $dotMargin;
+      height: $buttonHeight;
+      width: $buttonHeight;
       background-color: #f3f3f3;
-      transition: 0.2s;
+      transition: 0.1s ease-in-out;
       border-radius: 100%;
     }
   }
 
-  input:focus + span {
-    box-shadow: 0 0 1px var(--accent-color);
+  input:checked {
+    & + span {
+      background-color: var(--accent-color);
+    }
+
+    & + span:before {
+      transform: translateX(
+        calc($buttonWidth - $buttonHeight - ($dotMargin * 2))
+      );
+    }
   }
 
-  input:checked + span {
-    background-color: var(--accent-color);
-  }
+  @media (max-width: 425px) {
+    $buttonWidth: min(18vw, 4rem);
+    $buttonHeight: min(8vw, 1.5rem);
+    $dotMargin: 1vw;
 
-  input:checked + span:before {
-    transform: translateX(26px);
+    width: $buttonWidth;
+    height: calc($buttonHeight + ($dotMargin * 2.5));
+
+    span:before {
+      margin: $dotMargin;
+      height: $buttonHeight;
+      width: $buttonHeight;
+    }
+
+    input:checked + span:before {
+      transform: translateX(
+        calc($buttonWidth - $buttonHeight - ($dotMargin * 2))
+      );
+    }
   }
 }

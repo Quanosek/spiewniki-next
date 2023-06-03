@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import router, { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 
 import axios from "axios";
 
@@ -20,37 +20,65 @@ import Navbar from "@/components/navbar";
 
 export default function HymnPage() {
   const router = useRouter();
+
   const [hymn, setHymn] = useState<any>(); // all hymn data
+  const hymnID = useRef<number>(hymn?.id); // current hymn id
+  const fontSize = useRef<string>(); // default font size
+
+  const clearHymn = useCallback(() => {
+    setHymn(null);
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (!router.isReady) return;
 
+    const { book, title } = router.query as any;
+    // redirect on invalid url
+    if (!title)
+      router.push({
+        pathname: "/search",
+        query: { book },
+      });
+    if (!book) router.push("/");
+
     // get hymn data
     (async () => {
-      try {
-        axios
-          .get("/api/xml", {
-            params: { book: router.query.book, title: router.query.title },
-          })
-          .then(({ data }) => {
-            setHymn(data[0]);
-          });
-      } catch (err) {
-        console.error(err);
-      }
+      axios
+        .get("/api/xml", {
+          params: { book, title },
+        })
+        .then(({ data }) => {
+          const hymn = data[0];
+
+          hymnID.current = parseInt(hymn.id);
+          setHymn(hymn);
+        })
+        .catch((err) => {
+          console.error(err);
+          router.push("/search");
+        });
     })();
+
+    // set change displayed font size
+    fontSize.current = localStorage.getItem("fontSize")
+      ? (localStorage.getItem("fontSize") as string)
+      : "21";
 
     // handle keyboard shortcuts
     const handleKeyPress = (event: KeyboardEvent) => {
       switch (event.key.toUpperCase()) {
-        case "P":
-          presentationButton();
+        case "R":
+          clearHymn();
           break;
+        // case "P":
+        //   presentationButton();
+        //   break;
         case "ARROWLEFT":
-          // changeHymn(hymn, "prev");
+          changeHymn(hymnID.current, "prev", clearHymn);
           break;
         case "ARROWRIGHT":
-          // changeHymn(hymn, "next");
+          changeHymn(hymnID.current, "next", clearHymn);
           break;
       }
     };
@@ -58,7 +86,7 @@ export default function HymnPage() {
     // keyboard events
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [router]);
+  }, [router, hymnID, fontSize, clearHymn]);
 
   // set default title
   const pageTitle = hymn ? `${router.query.title} / Śpiewniki` : "Śpiewniki";
@@ -165,7 +193,12 @@ export default function HymnPage() {
 
           {/* show all hymn parameters */}
           <div className={styles.center}>
-            <div className={styles.text}>
+            <div
+              className={styles.text}
+              style={{
+                fontSize: `${fontSize.current}px`,
+              }}
+            >
               {(!hymn && <div className="loader" />) ||
                 (hymn && (
                   <>
@@ -182,17 +215,18 @@ export default function HymnPage() {
                               if (
                                 verse.startsWith(".") &&
                                 !localStorage.getItem("showChords")
-                              )
+                              ) {
                                 return;
+                              }
 
                               return (
                                 <p
+                                  key={index}
                                   className={
                                     verse.startsWith(".") ? styles.chord : ""
                                   }
-                                  key={index}
                                 >
-                                  {verse.slice(1)}
+                                  {verse.replace(/^[\s.]/, "")}
                                 </p>
                               );
                             })}
@@ -213,7 +247,7 @@ export default function HymnPage() {
             <div className={styles.controls}>
               <button
                 title="Przejdź do poprzedniej pieśni [←]"
-                onClick={() => changeHymn(hymn, "prev")}
+                onClick={() => changeHymn(hymnID.current, "prev", clearHymn)}
               >
                 <Image
                   className={`${styles.previous} icon`}
@@ -229,14 +263,17 @@ export default function HymnPage() {
               <button
                 title="Otwórz losową pieśń [R]"
                 className={styles.randomButton}
-                onClick={randomButton}
+                onClick={() => {
+                  clearHymn();
+                  randomButton();
+                }}
               >
                 <p>Wylosuj pieśń</p>
               </button>
 
               <button
                 title="Przejdź do następnej pieśni [→]"
-                onClick={() => changeHymn(hymn, "next")}
+                onClick={() => changeHymn(hymnID.current, "next", clearHymn)}
               >
                 <p>Następna</p>
 
@@ -361,35 +398,37 @@ function backButton() {
 }
 
 // previous & next hymn button
-function changeHymn(hymn: { id: string }, operator: string) {
+function changeHymn(id: number, operator: string, clearHymn: Function) {
   let position = 0;
 
   switch (operator) {
     case "prev":
-      position = parseInt(hymn.id) - 1;
+      position = id - 1;
       break;
     case "next":
-      position = parseInt(hymn.id) + 1;
+      position = id + 1;
       break;
   }
 
-  try {
-    axios
-      .get("/api/xml", {
-        params: { book: router.query.book },
-      })
-      .then(({ data }) => {
-        if (position < 0 || position >= data.length) return;
+  axios
+    .get("/api/xml", {
+      params: { book: router.query.book },
+    })
+    .then(({ data }) => {
+      if (position < 0 || position >= data.length) return;
 
-        router.push({
-          pathname: "/hymn",
-          query: {
-            book: router.query.book,
-            title: data[position].title,
-          },
-        });
+      clearHymn();
+
+      router.push({
+        pathname: "/hymn",
+        query: {
+          book: router.query.book,
+          title: data[position].title,
+        },
       });
-  } catch (err) {
-    console.error(err);
-  }
+    })
+    .catch((err) => {
+      console.error(err);
+      router.back();
+    });
 }

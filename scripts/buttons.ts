@@ -33,16 +33,25 @@ export function randomButton() {
   localStorage.removeItem("searchPage");
 
   (async () => {
-    const data = await axios.get("/api/xml").then(({ data }) => data);
-    const random = Math.floor(Math.random() * (Math.floor(data.length) + 1));
+    axios
+      .get("/api/xml")
+      .then(({ data }) => {
+        const random = Math.floor(
+          Math.random() * (Math.floor(data.length) + 1)
+        );
 
-    router.push({
-      pathname: "/hymn",
-      query: {
-        book: data[random].book,
-        title: data[random].title,
-      },
-    });
+        router.push({
+          pathname: "/hymn",
+          query: {
+            book: data[random].book,
+            title: data[random].title,
+          },
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        router.push("/");
+      });
   })();
 }
 

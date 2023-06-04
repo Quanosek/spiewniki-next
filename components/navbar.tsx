@@ -98,7 +98,7 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Ulubione</p>
           </button>
 
-          <button onClick={randomButton}>
+          <button id="randomButton" onClick={randomButton}>
             <Image
               className="icon"
               alt="kostka"

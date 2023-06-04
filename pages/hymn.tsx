@@ -65,6 +65,12 @@ export default function HymnPage() {
       ? (localStorage.getItem("fontSize") as string)
       : "21";
 
+    // mobile random button fix
+    const randomButton = document.getElementById(
+      "randomButton"
+    ) as HTMLButtonElement;
+    randomButton.addEventListener("click", clearHymn);
+
     // handle keyboard shortcuts
     const handleKeyPress = (event: KeyboardEvent) => {
       switch (event.key.toUpperCase()) {

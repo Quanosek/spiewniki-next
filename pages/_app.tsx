@@ -12,6 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
     const theme = localStorage.getItem("colorTheme")
       ? localStorage.getItem("colorTheme")
       : "black";
+    // : "light";
 
     document.documentElement.className = theme as string;
   }, []);

@@ -45,7 +45,8 @@ export default function SettingsMenu() {
       <div className={styles.element}>
         <h3>Motyw kolorów:</h3>
 
-        {Themes(["light", "reading", "black", "dark"])}
+        {Themes(["black", "dark", "light", "reading"])}
+        {/* {Themes(["light", "reading", "black", "dark"])} */}
       </div>
 
       {/* FONT SIZE */}

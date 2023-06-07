@@ -1,18 +1,17 @@
-.navbar {
-  $height: 3rem;
+.topNavbar {
   $gap: 5px;
 
   z-index: 10;
-  padding: 0 $gap;
+  padding: $gap;
+  width: 100%;
+  height: var(--navbarHeight);
   position: fixed;
   top: 0;
-  height: $height;
-  width: 100%;
   display: none;
   justify-content: space-between;
-  align-items: stretch;
   background-color: var(--elements);
   user-select: none;
+  transition: 0.15s top ease-out;
 
   div {
     display: flex;
@@ -20,30 +19,23 @@
   }
 
   button {
-    padding: 0;
-    width: $height;
-    height: $height;
+    height: 100%;
+    aspect-ratio: 1/1;
     background-color: transparent;
 
     &:hover {
       background-color: var(--elements-hover);
     }
-
-    img {
-      $size: 25px;
-      width: $size;
-      height: $size;
-    }
-
-    p {
-      font-size: 11px;
-    }
   }
 
   .back {
-    rotate: 90deg;
     position: relative;
-    right: 2px;
+    right: 1px;
+    rotate: 90deg;
+  }
+
+  &.hide {
+    top: calc(var(--navbarHeight) * -1);
   }
 }
 
@@ -98,7 +90,7 @@
 
 .text {
   padding: 2rem 2rem 3rem;
-  min-height: 40rem;
+  min-height: 35rem;
   display: flex;
   flex-direction: column;
   gap: 1.2em;
@@ -162,10 +154,16 @@
   display: flex;
   justify-content: space-between;
   font-size: 90%;
+  transition: 0.2s ease-out;
 
   button {
     padding: 12px 26px;
     gap: 8px;
+
+    img {
+      width: 15px;
+      height: auto;
+    }
   }
 
   .previous {
@@ -204,7 +202,7 @@
 }
 
 @media (max-width: 768px) {
-  .navbar {
+  .topNavbar {
     display: flex;
   }
 
@@ -216,6 +214,7 @@
     padding: 4rem 1rem calc(var(--navbarHeight) + 4rem);
     color: var(--text);
     background-color: transparent;
+    min-height: unset;
   }
 
   .credits {
@@ -230,12 +229,16 @@
     left: 0;
 
     button {
-      padding: 0.9rem;
-      width: 3rem;
+      opacity: 100%;
+      position: relative;
+      top: 0;
+      padding: 0.8rem;
+      width: 2.8rem;
       height: auto;
       aspect-ratio: 1/1;
       border-radius: 100%;
       opacity: 80%;
+      transition: 0.2s ease-out;
 
       &.randomButton,
       p {
@@ -244,42 +247,47 @@
 
       img {
         position: relative;
-        width: 100%;
-        height: 100%;
+        width: unset;
         aspect-ratio: 1/1;
       }
 
       &:nth-child(1) img {
         right: 1px;
       }
-
       &:nth-child(3) img {
         left: 1px;
       }
+    }
+
+    .hide {
+      opacity: 0;
+      scale: 0;
+      top: calc(var(--navbarHeight) / 2);
     }
   }
 }
 
 @media (max-width: 320px) {
-  .navbar {
-    $gap: 2vw;
-
-    height: 15vw;
-    padding: 0 $gap;
+  .topNavbar {
+    height: var(--navbarHeight_mobile);
 
     div {
-      gap: $gap;
+      gap: 1.5vw;
     }
 
     button {
-      width: 15vw;
       height: 100%;
+      aspect-ratio: 1/1;
 
       img {
-        width: 9vw;
+        width: 8vw;
         height: auto;
       }
     }
+  }
+
+  .text {
+    padding-top: 20vw;
   }
 
   .controls {

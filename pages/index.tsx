@@ -7,7 +7,7 @@ import { useEffect, ReactElement } from "react";
 import styles from "@/styles/pages/index.module.scss";
 
 import bookNames from "@/scripts/bookNames";
-import { menuLink, shareButton, randomButton } from "@/scripts/buttons";
+import { menuLink, shareButton, randomHymn } from "@/scripts/buttons";
 
 import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
@@ -25,6 +25,9 @@ export default function IndexPage() {
           router.push("/search");
           localStorage.setItem("focusSearchBox", "true");
           break;
+        case "R":
+          !router.query.menu && randomHymn(undefined);
+          break;
         case "I":
           !router.query.menu && menuLink("info");
           break;
@@ -32,8 +35,8 @@ export default function IndexPage() {
     };
 
     // keyboard events
-    document.addEventListener("keydown", handleKeyPress);
-    return () => document.removeEventListener("keydown", handleKeyPress);
+    document.addEventListener("keyup", handleKeyPress);
+    return () => document.removeEventListener("keyup", handleKeyPress);
   }, [router]);
 
   return (
@@ -80,7 +83,10 @@ export default function IndexPage() {
           <div className={styles.options}>
             <h2>Dostępne opcje:</h2>
 
-            <button title="Otwórz losową pieśń [R]" onClick={randomButton}>
+            <button
+              title="Otwórz losową pieśń [R]"
+              onClick={() => randomHymn(undefined)}
+            >
               <Image
                 className="icon"
                 alt="kostka"

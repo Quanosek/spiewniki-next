@@ -26,7 +26,9 @@ export default function SettingsMenu() {
     const fontSlider = document.getElementById(
       "fontSlider"
     ) as HTMLInputElement;
-    const fontPreview = document.getElementById("fontPreview") as HTMLElement;
+    const fontPreview = document.getElementById(
+      "fontPreview"
+    ) as HTMLDivElement;
     fontSlider.value = fontSize as string;
     fontPreview.style.fontSize = fontSize + "px";
 

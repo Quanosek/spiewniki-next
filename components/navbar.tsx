@@ -3,7 +3,7 @@ import router from "next/router";
 
 import styles from "@/styles/components/navbar.module.scss";
 
-import { shareButton, menuLink, randomButton } from "@/scripts/buttons";
+import { shareButton, menuLink, randomHymn } from "@/scripts/buttons";
 
 export default function bottomNavbar(param: { setup: string }) {
   switch (param.setup) {
@@ -32,7 +32,7 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Ustawienia</p>
           </button>
 
-          <button onClick={randomButton}>
+          <button onClick={() => randomHymn(undefined)}>
             <Image
               className="icon"
               alt="kostka"
@@ -98,7 +98,13 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Ulubione</p>
           </button>
 
-          <button id="randomButton" onClick={randomButton}>
+          <button
+            id="randomButton"
+            onClick={() => {
+              randomHymn(router.query.book);
+              localStorage.setItem("searchPage", router.query.book as string);
+            }}
+          >
             <Image
               className="icon"
               alt="kostka"

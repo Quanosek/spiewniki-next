@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { menuLink, randomButton } from "@/scripts/buttons";
+import { menuLink } from "@/scripts/buttons";
 
 import Favorite from "./menu/favorite";
 import Info from "./menu/info";
@@ -32,9 +32,6 @@ export default function Menu() {
     // handle keyboard shortcuts
     const handleKeyPress = (event: KeyboardEvent) => {
       switch (event.key.toUpperCase()) {
-        case "R":
-          !menu && randomButton();
-          break;
         case "F":
           !menu && menuLink("favorite");
           break;
@@ -51,8 +48,8 @@ export default function Menu() {
     };
 
     // keyboard events
-    document.addEventListener("keydown", handleKeyPress);
-    return () => document.removeEventListener("keydown", handleKeyPress);
+    document.addEventListener("keyup", handleKeyPress);
+    return () => document.removeEventListener("keyup", handleKeyPress);
   }, [router]);
 
   return (

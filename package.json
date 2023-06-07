@@ -11,7 +11,7 @@
   "dependencies": {
     "@prisma/client": "^4.15.0",
     "@types/node": "20.2.5",
-    "@types/react": "18.2.8",
+    "@types/react": "18.2.9",
     "@types/react-dom": "18.2.4",
     "axios": "^1.4.0",
     "eslint": "8.42.0",
@@ -20,7 +20,7 @@
     "next-pwa": "^5.6.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "sass": "^1.62.1",
+    "sass": "^1.63.0",
     "sharp": "^0.32.1",
     "the-new-css-reset": "^1.8.4",
     "typescript": "5.1.3",

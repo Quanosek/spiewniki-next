@@ -135,12 +135,12 @@ footer {
 }
 
 .backArrow {
-  $topPosition: 6.8rem;
+  $topPosition: 7rem;
+
   z-index: 20;
+  margin-left: 1rem;
   position: sticky;
   top: $topPosition;
-  display: flex;
-  align-items: center;
 
   button {
     position: absolute;
@@ -162,7 +162,7 @@ footer {
 main {
   padding: 2rem 3% 4rem;
   width: 100%;
-  min-height: calc(100vh - $headerHeight);
+  min-height: calc(100svh - $headerHeight);
   position: relative;
   display: flex;
   flex-direction: column;

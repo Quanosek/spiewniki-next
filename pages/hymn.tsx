@@ -7,12 +7,7 @@ import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
 
-import {
-  menuLink,
-  shareButton,
-  randomButton,
-  presentationButton,
-} from "@/scripts/buttons";
+import { menuLink, shareButton, randomHymn } from "@/scripts/buttons";
 
 import Presentation from "@/components/presentation";
 import Menu from "@/components/menu";
@@ -22,25 +17,36 @@ export default function HymnPage() {
   const router = useRouter();
 
   const [hymn, setHymn] = useState<any>(); // all hymn data
-  const hymnID = useRef<number>(hymn?.id); // current hymn id
-  const fontSize = useRef<string>(); // default font size
+  const [fontSize, setFontSize] = useState<string>(); // displayed font size
 
+  const [hideNavigation, setHideNavigation] = useState<boolean>(false); // navigator elements style on scroll
+  const [presentation, setPresentation] = useState<boolean>(false); // navigator elements style on scroll
+
+  // show placeholder element
   const clearHymn = useCallback(() => {
     setHymn(null);
     window.scrollTo(0, 0);
   }, []);
 
+  // handling random buttons
+  const randomButtonHandler = useCallback(() => {
+    clearHymn();
+    randomHymn(router.query.book);
+    localStorage.setItem("searchPage", router.query.book as string);
+  }, [clearHymn, router]);
+
+  // showing presentation layout
+  const presentationButton = useCallback(() => {
+    setPresentation(true);
+    const elem = document.documentElement;
+    elem.requestFullscreen && elem.requestFullscreen();
+  }, []);
+
+  const hymnID = useRef<number>(hymn?.id); // current hymn id
+
   useEffect(() => {
     if (!router.isReady) return;
-
-    const { book, title } = router.query as any;
-    // redirect on invalid url
-    if (!title)
-      router.push({
-        pathname: "/search",
-        query: { book },
-      });
-    if (!book) router.push("/");
+    const { book, title } = router.query;
 
     // get hymn data
     (async () => {
@@ -56,14 +62,22 @@ export default function HymnPage() {
         })
         .catch((err) => {
           console.error(err);
-          router.push("/search");
+
+          if (book) {
+            router.push({
+              pathname: "/search",
+              query: { book },
+            });
+          } else router.push("/search");
         });
     })();
 
-    // set change displayed font size
-    fontSize.current = localStorage.getItem("fontSize")
-      ? (localStorage.getItem("fontSize") as string)
-      : "21";
+    // setting displayed font size
+    setFontSize(
+      localStorage.getItem("fontSize")
+        ? (localStorage.getItem("fontSize") as string)
+        : "21"
+    );
 
     // mobile random button fix
     const randomButton = document.getElementById(
@@ -72,27 +86,59 @@ export default function HymnPage() {
     randomButton.addEventListener("click", clearHymn);
 
     // handle keyboard shortcuts
-    const handleKeyPress = (event: KeyboardEvent) => {
-      switch (event.key.toUpperCase()) {
-        case "R":
-          clearHymn();
-          break;
-        // case "P":
-        //   presentationButton();
-        //   break;
-        case "ARROWLEFT":
-          changeHymn(hymnID.current, "prev", clearHymn);
-          break;
-        case "ARROWRIGHT":
-          changeHymn(hymnID.current, "next", clearHymn);
-          break;
+    function handleKeyPress(event: KeyboardEvent) {
+      if (!presentation) {
+        switch (event.key.toUpperCase()) {
+          case "R":
+            !router.query.menu && randomButtonHandler();
+            break;
+          case "P":
+            presentationButton();
+            break;
+          case "ARROWLEFT":
+            changeHymn(hymnID.current, "prev", clearHymn);
+            break;
+          case "ARROWRIGHT":
+            changeHymn(hymnID.current, "next", clearHymn);
+            break;
+        }
       }
-    };
+    }
 
-    // keyboard events
-    document.addEventListener("keydown", handleKeyPress);
-    return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [router, hymnID, fontSize, clearHymn]);
+    // hide navigation on scroll
+    let lastScrollY = window.scrollY;
+    function hideNavigators() {
+      if (window.scrollY > lastScrollY) setHideNavigation(true);
+      else setHideNavigation(false);
+      lastScrollY = window.scrollY;
+    }
+
+    // fullscreen overflow fix for presentation layout
+    function fullscreenHandler() {
+      if (document.fullscreenElement)
+        document.documentElement.style.overflow = "hidden";
+      else {
+        setPresentation(false);
+        document.documentElement.style.overflow = "";
+      }
+    }
+
+    // events handlers
+    document.addEventListener("keyup", handleKeyPress);
+    document.addEventListener("scroll", hideNavigators);
+    document.addEventListener("fullscreenchange", fullscreenHandler);
+    return () => {
+      document.removeEventListener("keyup", handleKeyPress);
+      document.removeEventListener("scroll", hideNavigators);
+      document.removeEventListener("fullscreenchange", fullscreenHandler);
+    };
+  }, [
+    router,
+    clearHymn,
+    presentation,
+    presentationButton,
+    randomButtonHandler,
+  ]);
 
   // set default title
   const pageTitle = hymn ? `${router.query.title} / Śpiewniki` : "Śpiewniki";
@@ -103,18 +149,26 @@ export default function HymnPage() {
         <title>{pageTitle}</title>
       </Head>
 
-      <Presentation hymn={hymn} />
+      {hymn && presentation && <Presentation data={hymn} />}
       <Menu />
 
       {/* top navbar */}
-      <div className={styles.navbar}>
-        <button onClick={backButton}>
+      <div
+        id="topNavbar"
+        className={`${styles.topNavbar} ${hideNavigation ? styles.hide : ""}`}
+      >
+        <button
+          onClick={() => {
+            localStorage.setItem("focusSearchBox", "true");
+            backButton();
+          }}
+        >
           <Image
             className={`${styles.back} icon`}
             alt="wstecz"
             src="/icons/arrow.svg"
-            width={30}
-            height={30}
+            width={25}
+            height={25}
           />
         </button>
 
@@ -124,8 +178,8 @@ export default function HymnPage() {
               className="icon"
               alt="ulubione"
               src="/icons/link.svg"
-              width={30}
-              height={30}
+              width={25}
+              height={25}
             />
           </button>
 
@@ -134,8 +188,8 @@ export default function HymnPage() {
               className="icon"
               alt="ulubione"
               src="/icons/star_empty.svg"
-              width={30}
-              height={30}
+              width={25}
+              height={25}
             />
           </button>
         </div>
@@ -202,7 +256,7 @@ export default function HymnPage() {
             <div
               className={styles.text}
               style={{
-                fontSize: `${fontSize.current}px`,
+                fontSize: `${fontSize}px`,
               }}
             >
               {(!hymn && <div className="loader" />) ||
@@ -250,17 +304,18 @@ export default function HymnPage() {
             </div>
 
             {/* bottom buttons */}
-            <div className={styles.controls}>
+            <div id="controls" className={styles.controls}>
               <button
                 title="Przejdź do poprzedniej pieśni [←]"
                 onClick={() => changeHymn(hymnID.current, "prev", clearHymn)}
+                className={hideNavigation ? styles.hide : ""}
               >
                 <Image
                   className={`${styles.previous} icon`}
                   alt="strzałka w lewo"
                   src="/icons/arrow.svg"
-                  width={15}
-                  height={15}
+                  width={30}
+                  height={30}
                 />
 
                 <p>Poprzednia</p>
@@ -269,10 +324,7 @@ export default function HymnPage() {
               <button
                 title="Otwórz losową pieśń [R]"
                 className={styles.randomButton}
-                onClick={() => {
-                  clearHymn();
-                  randomButton();
-                }}
+                onClick={randomButtonHandler}
               >
                 <p>Wylosuj pieśń</p>
               </button>
@@ -280,6 +332,7 @@ export default function HymnPage() {
               <button
                 title="Przejdź do następnej pieśni [→]"
                 onClick={() => changeHymn(hymnID.current, "next", clearHymn)}
+                className={hideNavigation ? styles.hide : ""}
               >
                 <p>Następna</p>
 
@@ -287,8 +340,8 @@ export default function HymnPage() {
                   className={`${styles.next} icon`}
                   alt="strzałka w prawo"
                   src="/icons/arrow.svg"
-                  width={15}
-                  height={15}
+                  width={30}
+                  height={30}
                 />
               </button>
             </div>
@@ -393,7 +446,7 @@ export default function HymnPage() {
 function backButton() {
   const book = localStorage.getItem("searchPage");
 
-  if (book == "all") {
+  if (!book || book == "all") {
     router.push("/search");
   } else {
     router.push({

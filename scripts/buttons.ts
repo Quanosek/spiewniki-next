@@ -29,12 +29,10 @@ export function shareButton() {
   }
 }
 
-export function randomButton() {
-  localStorage.removeItem("searchPage");
-
+export function randomHymn(book: string | string[] | undefined) {
   (async () => {
     axios
-      .get("/api/xml")
+      .get(book ? `/api/xml?book=${book}` : "/api/xml")
       .then(({ data }) => {
         const random = Math.floor(
           Math.random() * (Math.floor(data.length) + 1)
@@ -53,26 +51,4 @@ export function randomButton() {
         router.push("/");
       });
   })();
-}
-
-export function presentationButton() {
-  // enable fullscreen
-  const elem = document.documentElement;
-  if (elem.requestFullscreen) elem.requestFullscreen();
-
-  const presentation = document.getElementById("presentation") as HTMLElement;
-
-  if (presentation) {
-    // show presentation
-    presentation.style.display = "flex";
-    document.documentElement.style.overflow = "hidden";
-
-    // exit fullscreen
-    document.addEventListener("fullscreenchange", () => {
-      if (!document.fullscreenElement) {
-        presentation.style.display = "";
-        document.documentElement.style.overflowY = "";
-      }
-    });
-  }
 }

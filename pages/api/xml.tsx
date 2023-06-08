@@ -57,12 +57,9 @@ function hymnBook(results: any[], book: string | string[]) {
           let lyrics = LyricsFormat(result.song.lyrics[0]);
 
           lyrics = lyrics.map((verses: any) => {
-            return (verses = verses
-              .map((verse: string) => {
-                if (verse.startsWith(" ")) verse = verse.slice(1);
-                return verse;
-              })
-              .filter((verse: string) => !verse.startsWith(".")));
+            return (verses = verses.filter(
+              (verse: string) => !verse.startsWith(".")
+            ));
           });
 
           results.push({
@@ -86,16 +83,13 @@ function HymnData(book: string | string[], title: string | string[]) {
     path.join(process.cwd(), `/public/database/${book}/xml/${title}`)
   );
 
-  // define hymn id in hymnbook
-  const id = HymnList(book).findIndex((hymn) => hymn.title === title);
-
+  // define result
   parseString(data, (err, result) => {
-    // define result
     const song = result.song;
 
-    song.id = [id];
-    song.book = [bookNames(book)];
     song.lyrics = LyricsFormat(result.song.lyrics[0]);
+    song.id = [HymnList(book).findIndex((hymn) => hymn.title === title)];
+    song.book = [bookNames(book)];
 
     results.push(song);
   });
@@ -105,12 +99,19 @@ function HymnData(book: string | string[], title: string | string[]) {
 
 // reformat xml verses
 function LyricsFormat(lyrics: string) {
-  const separator = /\s*\[\w*\]\s*/;
-  const verses = lyrics.split(separator).slice(1) as any;
+  const regex = /\s*\[\w*\]\s*/;
+  const verses = lyrics.split(regex).slice(1);
+
+  const array = new Array();
 
   verses.map((verse: string, index: number) => {
-    verses[index] = verse.split(/\n/g).slice(0);
+    const formattedVerse = verse.split(/\n/g).slice(0);
+    formattedVerse.forEach((line: string, index: number) => {
+      if (line.startsWith(" ")) formattedVerse[index] = line.slice(1);
+    });
+
+    array[index] = formattedVerse;
   });
 
-  return verses;
+  return array;
 }

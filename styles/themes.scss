@@ -1,16 +1,13 @@
 :root {
-  color-scheme: light only;
   --accent-color: #5496e7;
   // --accent-color: #ee866d;
 }
 
-:root.black,
-:root.dark {
-  color-scheme: dark only;
-
-  .icon {
-    filter: invert(1);
-  }
+:root.light,
+:root.reading {
+  color-scheme: light only;
+  --slide-background: #ffffff;
+  --slide-text: #000000;
 }
 
 :root.light {
@@ -34,6 +31,17 @@
 
   --menu-background: #efebe5;
   --menu-elements: #e6e2dc;
+}
+
+:root.black,
+:root.dark {
+  color-scheme: dark only;
+  --slide-background: #000000;
+  --slide-text: #ffffff;
+
+  .icon {
+    filter: invert(1);
+  }
 }
 
 :root.black {

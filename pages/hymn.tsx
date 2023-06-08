@@ -16,6 +16,7 @@ import Navbar from "@/components/navbar";
 export default function HymnPage() {
   const router = useRouter();
 
+  // operators
   const [hymn, setHymn] = useState<any>(); // all hymn data
   const [fontSize, setFontSize] = useState<string>(); // displayed font size
 
@@ -47,6 +48,14 @@ export default function HymnPage() {
   useEffect(() => {
     if (!router.isReady) return;
     const { book, title } = router.query;
+
+    // redirect on invalid url
+    if (!title)
+      router.push({
+        pathname: "/search",
+        query: { book },
+      });
+    if (!book) router.push("/search");
 
     // get hymn data
     (async () => {
@@ -127,6 +136,7 @@ export default function HymnPage() {
     document.addEventListener("keyup", handleKeyPress);
     document.addEventListener("scroll", hideNavigators);
     document.addEventListener("fullscreenchange", fullscreenHandler);
+
     return () => {
       document.removeEventListener("keyup", handleKeyPress);
       document.removeEventListener("scroll", hideNavigators);
@@ -350,7 +360,6 @@ export default function HymnPage() {
           {/* right side buttons */}
           <div className={styles.options}>
             <button
-              className="disabledTemporary"
               title="Włącz prezentację pieśni na pełen ekran [P]"
               onClick={presentationButton}
             >

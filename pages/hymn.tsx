@@ -20,8 +20,8 @@ export default function HymnPage() {
   const [hymn, setHymn] = useState<any>(); // all hymn data
   const [fontSize, setFontSize] = useState<string>(); // displayed font size
 
-  const [hideNavigation, setHideNavigation] = useState<boolean>(false); // navigator elements style on scroll
-  const [presentation, setPresentation] = useState<boolean>(false); // navigator elements style on scroll
+  const [hideNavigation, setHideNavigation] = useState(false); // navigator elements style on scroll
+  const [presentation, setPresentation] = useState(false); // navigator elements style on scroll
 
   // show placeholder element
   const clearHymn = useCallback(() => {
@@ -39,6 +39,7 @@ export default function HymnPage() {
   // showing presentation layout
   const presentationButton = useCallback(() => {
     setPresentation(true);
+
     const elem = document.documentElement;
     elem.requestFullscreen && elem.requestFullscreen();
   }, []);

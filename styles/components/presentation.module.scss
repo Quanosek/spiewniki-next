@@ -1,6 +1,6 @@
 .component {
   z-index: 999;
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
   left: 0;
@@ -21,7 +21,12 @@
   gap: 1.5vw;
   color: var(--slide-text);
   background-color: var(--slide-background);
+  transition: 0.1s background-color ease-out;
   text-align: center;
+
+  & > * {
+    transition: 0.1s ease-out;
+  }
 
   &.first {
     justify-content: center;
@@ -33,24 +38,38 @@
 
       h1 {
         opacity: 100%;
-        font-size: 4.6em;
+        font-size: 4.6vw;
       }
 
       h2 {
         opacity: 80%;
-        font-size: 2.5em;
+        font-size: 2.5vw;
       }
     }
 
     .verse {
       display: none;
     }
+
+    .progress {
+      background-color: transparent;
+    }
+  }
+
+  &.last {
+    background-color: #000000;
+
+    & > * {
+      opacity: 0;
+    }
   }
 }
 
 .title {
+  display: flex;
   flex-direction: column;
   gap: 0.2vw;
+  transition: none;
 
   h1 {
     opacity: 80%;
@@ -71,20 +90,63 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 4em;
+  font-size: 4vw;
   white-space: normal;
 }
 
-.progressBar {
+.progress {
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 1.2vh;
-  background-color: var(--elements-hover);
+  background-color: var(--menu-background);
 
   .fulfill {
     height: 100%;
     transition: 0.1s ease-in-out;
     background-color: var(--accent-color);
+  }
+}
+
+.navigation {
+  opacity: 0%;
+  position: absolute;
+  bottom: -1.5vw;
+  left: 1.5vw;
+  display: flex;
+  gap: 1vw;
+  transition: 0.1s ease-out;
+
+  &.show {
+    opacity: 100%;
+    bottom: 1.5vw;
+  }
+
+  button {
+    opacity: 25%;
+    padding: 0.4vw;
+    border: 1px solid var(--slide-text);
+    border-radius: 100%;
+    background-color: transparent;
+    transition: 0.1s opacity ease-out;
+
+    img {
+      position: relative;
+      padding: 0.4vw;
+      cursor: pointer;
+    }
+
+    &:hover {
+      opacity: 45%;
+    }
+
+    &:nth-child(1) img {
+      right: 0.1vw;
+      rotate: 90deg;
+    }
+    &:nth-child(2) img {
+      left: 0.1vw;
+      rotate: -90deg;
+    }
   }
 }

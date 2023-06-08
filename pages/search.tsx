@@ -241,6 +241,8 @@ export default function SearchPage() {
 
 // searching main script
 function search(hymns: [], input: string) {
+  if (!hymns) return;
+
   // create results
   let titlesCollector = new Array();
   let lyricsCollector = new Array();

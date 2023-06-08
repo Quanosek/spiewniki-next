@@ -1,10 +1,12 @@
-import styles from "@/styles/components/presentation.module.scss";
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
-export default function Presentation(params: { data: any }) {
-  const hymn = params.data;
+import styles from "@/styles/components/presentation.module.scss";
 
-  // define presentation slides order
+export default function Presentation(params: { data: any }) {
+  const hymn = params.data; // hymn API data
+
+  // presentation slides order
   const presentationOrder = useCallback(() => {
     const presentation = hymn.presentation[0];
     const seenParams: { [param: string]: number } = {};
@@ -27,22 +29,50 @@ export default function Presentation(params: { data: any }) {
     return uniqueNumbers;
   }, [hymn]);
 
+  // slide numbers parameters
   const [slide, setSlide] = useState({
     current: -1,
     order: presentationOrder(),
   });
 
+  // navigation main functions
+  const prevSlide = useCallback(() => {
+    if (slide.current >= 0) {
+      setSlide({ ...slide, current: slide.current - 1 }); // change param
+    }
+  }, [slide]);
+
+  const nextSlide = useCallback(() => {
+    if (slide.current <= slide.order.length) {
+      setSlide({ ...slide, current: slide.current + 1 }); // change param
+    }
+    if (slide.current == slide.order.length) {
+      document.exitFullscreen(); // exit fullscreen/end presentation/hide component
+    }
+  }, [slide]);
+
+  // mouse behavior parameters
   const [showCursor, setShowCursor] = useState(false);
 
   useEffect(() => {
+    // hide mouse cursor on idle
+    let idleTimer: NodeJS.Timeout;
+    const mouseMoveEvent = () => {
+      clearTimeout(idleTimer);
+      setShowCursor(true);
+
+      idleTimer = setTimeout(() => setShowCursor(false), 1500);
+    };
+
     // handle fullscreen navigation
     let startPosition: number, endPosition: number;
-
     function handleEvent(e: Event) {
+      // custom event types
       const KeyboardEvent = e as KeyboardEvent;
       const WheelEvent = e as WheelEvent;
       const TouchEvent = e as TouchEvent;
 
+      // touch screen navigation
       if (e.type == "touchstart") {
         startPosition = TouchEvent.touches[0].clientX;
       }
@@ -50,37 +80,22 @@ export default function Presentation(params: { data: any }) {
         endPosition = TouchEvent.changedTouches[0].clientX - startPosition;
       }
 
+      // navigation handlers
       if (
         ["ArrowLeft", "ArrowUp"].includes(KeyboardEvent.key) ||
         WheelEvent.deltaY < -100 ||
         endPosition < 0
       ) {
-        if (slide.current >= 0) {
-          setSlide({ ...slide, current: slide.current - 1 });
-        }
+        prevSlide();
       }
       if (
         ["ArrowRight", "ArrowDown"].includes(KeyboardEvent.key) ||
         WheelEvent.deltaY > 100 ||
         endPosition >= 0
       ) {
-        if (slide.current <= slide.order.length) {
-          setSlide({ ...slide, current: slide.current + 1 });
-        }
-        if (slide.current == slide.order.length) {
-          document.exitFullscreen();
-        }
+        nextSlide();
       }
     }
-
-    // hide mouse cursor on idle
-    let idleTimer: NodeJS.Timeout;
-    const mouseMoveEvent = () => {
-      clearTimeout(idleTimer);
-      setShowCursor(true);
-
-      idleTimer = setTimeout(() => setShowCursor(false), 2000);
-    };
 
     // events handlers
     const eventTypes: Array<string> = [
@@ -90,18 +105,18 @@ export default function Presentation(params: { data: any }) {
       "touchend",
     ];
 
+    document.addEventListener("mousemove", mouseMoveEvent);
     eventTypes.forEach((eventType) => {
       document.addEventListener(eventType, handleEvent);
     });
-    document.addEventListener("mousemove", mouseMoveEvent);
 
     return () => {
+      document.removeEventListener("mousemove", mouseMoveEvent);
       eventTypes.forEach((eventType) => {
         document.removeEventListener(eventType, handleEvent);
       });
-      document.removeEventListener("mousemove", mouseMoveEvent);
     };
-  }, [hymn, slide]);
+  }, [prevSlide, nextSlide]);
 
   return (
     <div
@@ -110,17 +125,13 @@ export default function Presentation(params: { data: any }) {
       style={{ cursor: showCursor ? "default" : "none" }}
     >
       <div
-        className={`${styles.presentation} ${
-          slide.current < 0 ? styles.first : ""
-        }`}
+        // dynamic class names
+        className={`${styles.presentation}
+          ${slide.current < 0 ? styles.first : ""}
+          ${slide.current >= slide.order.length ? styles.last : ""}`}
       >
         {/* title section */}
-        <div
-          className={styles.title}
-          style={{
-            display: slide.current >= slide.order.length ? "none" : "flex",
-          }}
-        >
+        <div className={styles.title}>
           <h1>{hymn.title}</h1>
           <h2>{hymn.book}</h2>
         </div>
@@ -137,18 +148,44 @@ export default function Presentation(params: { data: any }) {
         </div>
 
         {/* progress bar section */}
-        <div
-          className={styles.progressBar}
-          style={{
-            display: slide.current >= slide.order.length ? "none" : "flex",
-          }}
-        >
+        <div className={styles.progress}>
           <div
             className={styles.fulfill}
             style={{
               width: `${(100 / slide.order.length) * (slide.current + 1)}%`,
             }}
           />
+        </div>
+
+        <div
+          id="navigation"
+          className={`${styles.navigation} ${showCursor ? styles.show : ""}`}
+        >
+          <button
+            title="Poprzedni slajd. Użyj [←], [↑] lub kółka myszy."
+            onClick={prevSlide}
+          >
+            <Image
+              className="icon"
+              alt="poprzedni"
+              src="/icons/arrow.svg"
+              width={30}
+              height={30}
+            />
+          </button>
+
+          <button
+            title="Następny slajd. Użyj [→], [↓] lub kółka myszy."
+            onClick={nextSlide}
+          >
+            <Image
+              className="icon"
+              alt="następny"
+              src="/icons/arrow.svg"
+              width={30}
+              height={30}
+            />
+          </button>
         </div>
       </div>
     </div>

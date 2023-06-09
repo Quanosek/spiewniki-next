@@ -200,7 +200,7 @@ export default function HymnPage() {
           </button>
 
           <button
-            // className="disabledTemporary"
+            className="disabledTemporary"
             onClick={() => {
               return favoriteButon({
                 title: router.query.title as string,
@@ -265,7 +265,7 @@ export default function HymnPage() {
             </button>
 
             <button
-              // className="disabledTemporary"
+              className="disabledTemporary"
               onClick={() => {
                 return favoriteButon({
                   title: router.query.title as string,

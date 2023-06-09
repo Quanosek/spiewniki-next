@@ -6,10 +6,10 @@ import styles from "@/styles/components/navbar.module.scss";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function bottomNavbar(param: { setup: string }) {
-  switch (param.setup) {
-    case "home":
-      return (
-        <div className={styles.bottom}>
+  return (
+    <div className={styles.navbar}>
+      {param.setup === "home" && (
+        <>
           <button onClick={() => replaceLink("info")}>
             <Image
               className="icon"
@@ -67,12 +67,11 @@ export default function bottomNavbar(param: { setup: string }) {
             />
             <p>Udostępnij</p>
           </button>
-        </div>
-      );
+        </>
+      )}
 
-    case "hymn":
-      return (
-        <div className={styles.navbar}>
+      {param.setup === "hymn" && (
+        <>
           <button onClick={() => replaceLink("settings")}>
             <Image
               className="icon"
@@ -139,7 +138,8 @@ export default function bottomNavbar(param: { setup: string }) {
             />
             <p>Pokaż PDF</p>
           </button>
-        </div>
-      );
-  }
+        </>
+      )}
+    </div>
+  );
 }

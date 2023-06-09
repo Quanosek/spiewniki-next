@@ -36,6 +36,12 @@
   font-display: swap;
 }
 
+// printing mode
+@page {
+  size: A4;
+  margin: 1.5cm 1cm !important;
+}
+
 // html basic tags
 html,
 body {
@@ -44,6 +50,11 @@ body {
   background-color: var(--background);
   -webkit-tap-highlight-color: transparent;
   transition: 0.15s background-color ease-out;
+
+  @media print {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
 }
 
 .container {
@@ -64,6 +75,10 @@ footer {
 
   .container {
     display: flex;
+  }
+
+  @media print {
+    display: none;
   }
 
   @media (max-width: 768px) {
@@ -154,6 +169,10 @@ footer {
     }
   }
 
+  @media print {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     display: none;
   }
@@ -168,6 +187,11 @@ main {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+
+  @media print {
+    padding: 0 !important;
+    min-height: unset;
+  }
 
   @media (max-width: 768px) {
     padding: 3% 2%;

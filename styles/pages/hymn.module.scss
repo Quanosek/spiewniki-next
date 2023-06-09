@@ -37,6 +37,10 @@
   &.hide {
     top: calc(var(--navbarHeight) * -1);
   }
+
+  @media print {
+    display: none !important;
+  }
 }
 
 .container {
@@ -86,6 +90,10 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  @media print {
+    width: 100%;
+  }
 }
 
 .text {
@@ -96,6 +104,12 @@
   gap: 1.2em;
   background-color: var(--elements);
   border-radius: 0.4rem;
+
+  @media print {
+    padding: 0 !important;
+    color: #000000 !important;
+    font-size: 125% !important;
+  }
 }
 
 .title {
@@ -113,11 +127,28 @@
   }
 }
 
+.printLine {
+  display: none;
+  width: 100%;
+  border-top: solid 0.05cm #000000;
+
+  @media print {
+    display: block;
+  }
+}
+
 .lyrics {
   padding-left: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 1em;
+
+  @media print {
+    padding: 0 10px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .verse {
@@ -125,6 +156,10 @@
   flex-direction: column;
   gap: 0.05em;
   white-space: break-spaces;
+
+  @media print {
+    page-break-inside: avoid;
+  }
 
   p {
     margin: 0;
@@ -156,6 +191,10 @@
   font-size: 90%;
   transition: 0.2s ease-out;
 
+  @media print {
+    display: none !important;
+  }
+
   button {
     padding: 12px 26px;
     gap: 8px;
@@ -177,8 +216,7 @@
 
 @media (max-width: 1024px) {
   .options {
-    position: sticky;
-    top: 6rem;
+    margin-top: 2rem;
     width: auto;
     height: 100%;
 

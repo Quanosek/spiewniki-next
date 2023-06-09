@@ -161,7 +161,7 @@ export default function SearchPage() {
               input.focus();
 
               setData(search(hymns, input.value));
-              setShowClear(false);
+              return setShowClear(false);
             }}
           >
             <Image
@@ -202,7 +202,10 @@ export default function SearchPage() {
                   <div key={index}>
                     <Link
                       onClick={() => {
-                        localStorage.setItem("searchPage", book ? book : "all");
+                        return localStorage.setItem(
+                          "searchPage",
+                          book ? book : "all"
+                        );
                       }}
                       href={{
                         pathname: "/hymn",

@@ -3,14 +3,14 @@ import router from "next/router";
 
 import styles from "@/styles/components/navbar.module.scss";
 
-import { shareButton, menuLink, randomHymn } from "@/scripts/buttons";
+import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function bottomNavbar(param: { setup: string }) {
   switch (param.setup) {
     case "home":
       return (
         <div className={styles.bottom}>
-          <button onClick={() => menuLink("info")}>
+          <button onClick={() => replaceLink("info")}>
             <Image
               className="icon"
               alt="info"
@@ -21,7 +21,7 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Informacje</p>
           </button>
 
-          <button onClick={() => menuLink("settings")}>
+          <button onClick={() => replaceLink("settings")}>
             <Image
               className="icon"
               alt="trybik"
@@ -45,7 +45,7 @@ export default function bottomNavbar(param: { setup: string }) {
 
           <button
             className="disabledTemporary"
-            onClick={() => menuLink("favorite")}
+            onClick={() => replaceLink("favorite")}
           >
             <Image
               className="icon"
@@ -72,8 +72,8 @@ export default function bottomNavbar(param: { setup: string }) {
 
     case "hymn":
       return (
-        <div className={styles.bottom}>
-          <button onClick={() => menuLink("settings")}>
+        <div className={styles.navbar}>
+          <button onClick={() => replaceLink("settings")}>
             <Image
               className="icon"
               alt="trybik"
@@ -86,7 +86,7 @@ export default function bottomNavbar(param: { setup: string }) {
 
           <button
             className="disabledTemporary"
-            onClick={() => menuLink("favorite")}
+            onClick={() => replaceLink("favorite")}
           >
             <Image
               className="icon"
@@ -128,7 +128,7 @@ export default function bottomNavbar(param: { setup: string }) {
 
           <button
             className="disabledTemporary"
-            onClick={() => menuLink("favorite")}
+            onClick={() => replaceLink("favorite")}
           >
             <Image
               className="icon"

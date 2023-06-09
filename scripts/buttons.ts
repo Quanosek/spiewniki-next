@@ -1,31 +1,19 @@
 import router from "next/router";
 import axios from "axios";
 
-export function menuLink(name: string) {
-  router.push(
-    {
-      query: { ...router.query, menu: name },
-    },
-    undefined,
-    { shallow: true, scroll: false }
-  );
-}
+export function replaceLink(name: string | undefined) {
+  const { menu, ...params } = router.query;
 
-export function shareButton() {
-  if (navigator.share) {
-    // default share screen
-    navigator.share({
-      title: "Śpiewniki",
-      text: "Udostępnij śpiewniki!",
-      url: router.asPath,
+  if (name) {
+    router.push({ query: { ...params, menu: name } }, undefined, {
+      scroll: false,
+      shallow: true,
     });
-  } else if (navigator.clipboard) {
-    // copy to clipboard
-    navigator.clipboard.writeText(location.href);
-    alert("Skopiowano link do schowka!");
   } else {
-    // error alert
-    alert("Twoja przeglądarka nie obsługuje tej funkcji!");
+    router.replace({ query: { ...params } }, undefined, {
+      scroll: false,
+      shallow: true,
+    });
   }
 }
 
@@ -51,4 +39,53 @@ export function randomHymn(book: string | string[] | undefined) {
         router.push("/");
       });
   })();
+}
+
+export function shareButton() {
+  if (navigator.share) {
+    // default share screen
+    navigator.share({
+      title: "Śpiewniki",
+      text: "Udostępnij śpiewniki!",
+      url: router.asPath,
+    });
+  } else if (navigator.clipboard) {
+    // copy to clipboard
+    navigator.clipboard.writeText(location.href);
+    alert("Skopiowano link do schowka!");
+  } else {
+    // error alert
+    alert("Twoja przeglądarka nie obsługuje tej funkcji!");
+  }
+}
+
+export function favoriteButon(params: {
+  title: string;
+  book: string;
+  id: number;
+}) {
+  let boolean = false;
+  let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+  if (
+    favorites.some(
+      (element: { title: string; book: string; id: number }) =>
+        element.title === params.title &&
+        element.book === params.book &&
+        element.id === params.id
+    )
+  ) {
+    favorites = favorites.filter(
+      (element: { title: string; book: string; id: number }) =>
+        element.title !== params.title ||
+        element.book !== params.book ||
+        element.id !== params.id
+    );
+  } else {
+    boolean = true;
+    favorites.push(params);
+  }
+
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  return boolean;
 }

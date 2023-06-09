@@ -4,6 +4,8 @@ import { useState, useEffect, ReactElement } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
+import { replaceLink } from "@/scripts/buttons";
+
 export default function SettingsMenu() {
   const router = useRouter();
 
@@ -105,7 +107,7 @@ export default function SettingsMenu() {
               localStorage.removeItem("fontSize");
               localStorage.removeItem("showChords");
 
-              router.reload();
+              return router.reload();
             }
           }}
         >
@@ -114,7 +116,7 @@ export default function SettingsMenu() {
 
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze"
-          onClick={() => router.back()}
+          onClick={() => replaceLink(undefined)}
         >
           Zapisz
         </button>

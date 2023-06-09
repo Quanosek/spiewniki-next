@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 import styles from "@/styles/components/presentation.module.scss";
 
@@ -57,7 +57,9 @@ export default function Presentation(params: { data: any }) {
   useEffect(() => {
     // hide mouse cursor on idle
     let idleTimer: NodeJS.Timeout;
-    const mouseMoveEvent = () => {
+    const mouseMoveEvent = (e: MouseEvent) => {
+      if ((e.movementX && e.movementY) == 0) return;
+
       clearTimeout(idleTimer);
       setShowCursor(true);
 

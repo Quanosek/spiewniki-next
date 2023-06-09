@@ -7,7 +7,7 @@ import { useEffect, ReactElement } from "react";
 import styles from "@/styles/pages/index.module.scss";
 
 import bookNames from "@/scripts/bookNames";
-import { menuLink, shareButton, randomHymn } from "@/scripts/buttons";
+import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
@@ -26,10 +26,10 @@ export default function IndexPage() {
           localStorage.setItem("focusSearchBox", "true");
           break;
         case "R":
-          !router.query.menu && randomHymn(undefined);
+          if (!router.query.menu) randomHymn(undefined);
           break;
         case "I":
-          !router.query.menu && menuLink("info");
+          if (!router.query.menu) replaceLink("info");
           break;
       }
     };
@@ -100,7 +100,7 @@ export default function IndexPage() {
             <button
               className="disabledTemporary"
               title="Przejdź do listy ulubionych pieśni [F]"
-              onClick={() => menuLink("favorite")}
+              onClick={() => replaceLink("favorite")}
             >
               <Image
                 className="icon"
@@ -114,7 +114,7 @@ export default function IndexPage() {
 
             <button
               title="Przejdź do ustawień aplikacji [S]"
-              onClick={() => menuLink("settings")}
+              onClick={() => replaceLink("settings")}
             >
               <Image
                 className="icon"
@@ -139,7 +139,7 @@ export default function IndexPage() {
 
             <button
               title="Informacje od twórców strony [I]"
-              onClick={() => menuLink("info")}
+              onClick={() => replaceLink("info")}
             >
               <Image
                 className="icon"

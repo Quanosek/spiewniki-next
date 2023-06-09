@@ -7,7 +7,12 @@ import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
 
-import { menuLink, shareButton, randomHymn } from "@/scripts/buttons";
+import {
+  replaceLink,
+  randomHymn,
+  shareButton,
+  favoriteButon,
+} from "@/scripts/buttons";
 
 import Presentation from "@/components/presentation";
 import Menu from "@/components/menu";
@@ -50,8 +55,8 @@ export default function HymnPage() {
     if (!router.isReady) return;
     const { book, title } = router.query;
 
-    // redirect on invalid url
     if (!title)
+      // redirect on invalid url
       router.push({
         pathname: "/search",
         query: { book },
@@ -100,7 +105,7 @@ export default function HymnPage() {
       if (!presentation) {
         switch (event.key.toUpperCase()) {
           case "R":
-            !router.query.menu && randomButtonHandler();
+            if (!router.query.menu) randomButtonHandler();
             break;
           case "P":
             presentationButton();
@@ -171,7 +176,7 @@ export default function HymnPage() {
         <button
           onClick={() => {
             localStorage.setItem("focusSearchBox", "true");
-            backButton();
+            return backButton();
           }}
         >
           <Image
@@ -194,7 +199,16 @@ export default function HymnPage() {
             />
           </button>
 
-          <button className="disabledTemporary" onClick={() => {}}>
+          <button
+            // className="disabledTemporary"
+            onClick={() => {
+              return favoriteButon({
+                title: router.query.title as string,
+                book: router.query.book as string,
+                id: hymn.id[0],
+              });
+            }}
+          >
             <Image
               className="icon"
               alt="ulubione"
@@ -210,7 +224,7 @@ export default function HymnPage() {
         <button
           onClick={() => {
             localStorage.setItem("focusSearchBox", "true");
-            backButton();
+            return backButton();
           }}
         >
           <Image
@@ -250,7 +264,16 @@ export default function HymnPage() {
               <p>Wybierz śpiewnik</p>
             </button>
 
-            <button className="disabledTemporary" onClick={() => {}}>
+            <button
+              // className="disabledTemporary"
+              onClick={() => {
+                return favoriteButon({
+                  title: router.query.title as string,
+                  book: router.query.book as string,
+                  id: hymn.id[0],
+                });
+              }}
+            >
               <Image
                 className="icon"
                 alt="dom"
@@ -270,48 +293,51 @@ export default function HymnPage() {
                 fontSize: `${fontSize}px`,
               }}
             >
-              {(!hymn && <div className="loader" />) ||
-                (hymn && (
-                  <>
-                    <div className={styles.title}>
-                      <h1>{hymn.title}</h1>
-                      <h2>{hymn.book}</h2>
-                    </div>
+              {!hymn && <div className="loader" />}
 
-                    <div className={styles.lyrics}>
-                      {hymn.lyrics.map((verses: string[], index: number) => {
-                        return (
-                          <div className={styles.verse} key={index}>
-                            {verses.map((verse: string, index: number) => {
-                              if (
-                                verse.startsWith(".") &&
-                                !localStorage.getItem("showChords")
-                              ) {
-                                return;
-                              }
+              {hymn && (
+                <>
+                  <div className={styles.title}>
+                    <h1>{hymn.title}</h1>
+                    <h2>{hymn.book}</h2>
+                  </div>
 
-                              return (
-                                <p
-                                  key={index}
-                                  className={
-                                    verse.startsWith(".") ? styles.chord : ""
-                                  }
-                                >
-                                  {verse.replace(/^[\s.]/, "")}
-                                </p>
-                              );
-                            })}
-                          </div>
-                        );
-                      })}
-                    </div>
+                  <hr className={styles.printLine} />
 
-                    <div className={styles.credits}>
-                      <h3>{hymn.copyright}</h3>
-                      <p>{hymn.author}</p>
-                    </div>
-                  </>
-                ))}
+                  <div className={styles.lyrics}>
+                    {hymn.lyrics.map((verses: string[], index: number) => {
+                      return (
+                        <div className={styles.verse} key={index}>
+                          {verses.map((verse: string, index: number) => {
+                            if (
+                              verse.startsWith(".") &&
+                              !localStorage.getItem("showChords")
+                            ) {
+                              return;
+                            }
+
+                            return (
+                              <p
+                                key={index}
+                                className={
+                                  verse.startsWith(".") ? styles.chord : ""
+                                }
+                              >
+                                {verse.replace(/^[\s.]/, "")}
+                              </p>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className={styles.credits}>
+                    <h3>{hymn.copyright}</h3>
+                    <p>{hymn.author}</p>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* bottom buttons */}
@@ -371,13 +397,13 @@ export default function HymnPage() {
                 width={20}
                 height={20}
               />
-              <p>Prezentacja</p>
+              <p>Pokaz slajdów</p>
             </button>
 
             <button
               className="disabledTemporary"
               title="Przejdź do listy ulubionych pieśni [F]"
-              onClick={() => menuLink("favorite")}
+              onClick={() => replaceLink("favorite")}
             >
               <Image
                 className="icon"
@@ -391,7 +417,7 @@ export default function HymnPage() {
 
             <button
               title="Przejdź do ustawień aplikacji [S]"
-              onClick={() => menuLink("settings")}
+              onClick={() => replaceLink("settings")}
             >
               <Image
                 className="icon"
@@ -420,7 +446,9 @@ export default function HymnPage() {
 
             <button
               title="Wydrukuj tekst pieśni"
-              onClick={() => window.print()}
+              onClick={() => {
+                return hymn && window.print();
+              }}
             >
               <Image
                 className="icon"

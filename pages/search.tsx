@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import axios from "axios";
 
@@ -19,6 +19,74 @@ export default function SearchPage() {
 
   const [showTopBtn, setShowTopBtn] = useState(false); // show/hide scroll-to-top button
   const [showClear, setShowClear] = useState(false); // show/hide clear button
+
+  // searching main script
+  const search = useCallback((hymns: [], input: string) => {
+    if (!hymns) return;
+
+    // create results
+    let titlesCollector = new Array();
+    let lyricsCollector = new Array();
+
+    hymns.map((hymn: { book: string; title: string; lyrics: string[] }) => {
+      if (textFormat(hymn.title).includes(textFormat(input))) {
+        // title found
+        titlesCollector.push({
+          book: hymn.book,
+          title: hymn.title,
+        });
+      } else {
+        // lyrics found
+        hymn.lyrics.map((verses: any) => {
+          verses.map((lines: string, index: number) => {
+            if (textFormat(lines).includes(textFormat(input))) {
+              lyricsCollector.push({
+                book: hymn.book,
+                title: hymn.title,
+                lyrics: `
+                ${verses[index - 2] ? "..." : ""}
+                ${verses[index - 1] ? `${verses[index - 1]}` : ""}
+                ${verses[index]}
+                ${verses[index + 1] ? `${verses[index + 1]}` : ""}
+                ${verses[index + 2] ? "..." : ""}
+                `,
+              });
+            }
+          });
+        });
+      }
+    });
+
+    // change text to searching-friendly format
+    function textFormat(text: string) {
+      return text
+        .toLowerCase()
+        .replaceAll("ą", "a")
+        .replaceAll("ć", "c")
+        .replaceAll("ę", "e")
+        .replaceAll("ł", "l")
+        .replaceAll("ń", "n")
+        .replaceAll("ó", "o")
+        .replaceAll("ś", "s")
+        .replaceAll("ż", "z")
+        .replaceAll("ź", "z")
+        .replace(/[^\w\s]/gi, "");
+    }
+
+    // merge Collectors
+    let Collector = [...titlesCollector, ...lyricsCollector];
+    Collector = Collector.filter((value, index, self) => {
+      return index === self.findIndex((x) => x.title === value.title);
+    });
+
+    const titles = Collector.map((i) => i.title);
+    Collector = Collector.filter(
+      ({ id }, index) => !titles.includes(id, index + 1)
+    );
+
+    // return all results
+    return Collector;
+  }, []);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -66,7 +134,7 @@ export default function SearchPage() {
     // keyboard events
     document.addEventListener("keyup", handleKeyPress);
     return () => document.removeEventListener("keyup", handleKeyPress);
-  }, [router]);
+  }, [router, search]);
 
   return (
     <>
@@ -240,72 +308,4 @@ export default function SearchPage() {
       </main>
     </>
   );
-}
-
-// searching main script
-function search(hymns: [], input: string) {
-  if (!hymns) return;
-
-  // create results
-  let titlesCollector = new Array();
-  let lyricsCollector = new Array();
-
-  hymns.map((hymn: { book: string; title: string; lyrics: string[] }) => {
-    if (textFormat(hymn.title).includes(textFormat(input))) {
-      // title found
-      titlesCollector.push({
-        book: hymn.book,
-        title: hymn.title,
-      });
-    } else {
-      // lyrics found
-      hymn.lyrics.map((verses: any) => {
-        verses.map((lines: string, index: number) => {
-          if (textFormat(lines).includes(textFormat(input))) {
-            lyricsCollector.push({
-              book: hymn.book,
-              title: hymn.title,
-              lyrics: `
-                ${verses[index - 2] ? "..." : ""}
-                ${verses[index - 1] ? `${verses[index - 1]}` : ""}
-                ${verses[index]}
-                ${verses[index + 1] ? `${verses[index + 1]}` : ""}
-                ${verses[index + 2] ? "..." : ""}
-                `,
-            });
-          }
-        });
-      });
-    }
-  });
-
-  // change text to searching-friendly format
-  function textFormat(text: string) {
-    return text
-      .toLowerCase()
-      .replaceAll("ą", "a")
-      .replaceAll("ć", "c")
-      .replaceAll("ę", "e")
-      .replaceAll("ł", "l")
-      .replaceAll("ń", "n")
-      .replaceAll("ó", "o")
-      .replaceAll("ś", "s")
-      .replaceAll("ż", "z")
-      .replaceAll("ź", "z")
-      .replace(/[^\w\s]/gi, "");
-  }
-
-  // merge Collectors
-  let Collector = [...titlesCollector, ...lyricsCollector];
-  Collector = Collector.filter((value, index, self) => {
-    return index === self.findIndex((x) => x.title === value.title);
-  });
-
-  const titles = Collector.map((i) => i.title);
-  Collector = Collector.filter(
-    ({ id }, index) => !titles.includes(id, index + 1)
-  );
-
-  // return all results
-  return Collector;
 }

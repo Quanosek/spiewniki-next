@@ -54,34 +54,3 @@ export function shareButton() {
     alert("Twoja przeglądarka nie obsługuje tej funkcji!");
   }
 }
-
-export function favoriteButon(params: {
-  title: string;
-  book: string;
-  id: number;
-}) {
-  let boolean = false;
-  let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-
-  if (
-    favorites.some(
-      (element: { title: string; book: string; id: number }) =>
-        element.title === params.title &&
-        element.book === params.book &&
-        element.id === params.id
-    )
-  ) {
-    favorites = favorites.filter(
-      (element: { title: string; book: string; id: number }) =>
-        element.title !== params.title ||
-        element.book !== params.book ||
-        element.id !== params.id
-    );
-  } else {
-    boolean = true;
-    favorites.push(params);
-  }
-
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-  return boolean;
-}

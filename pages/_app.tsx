@@ -32,6 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
         console.error(err);
       }
     };
+
     if ("wakeLock" in navigator) requestWakeLock();
 
     return () => {

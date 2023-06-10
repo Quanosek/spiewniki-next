@@ -18,27 +18,23 @@ export function replaceLink(name: string | undefined) {
 }
 
 export function randomHymn(book: string | string[] | undefined) {
-  (async () => {
-    axios
-      .get(book ? `/api/xml?book=${book}` : "/api/xml")
-      .then(({ data }) => {
-        const random = Math.floor(
-          Math.random() * (Math.floor(data.length) + 1)
-        );
+  axios
+    .get(book ? `/api/xml?book=${book}` : "/api/xml")
+    .then(({ data }) => {
+      const random = Math.floor(Math.random() * (Math.floor(data.length) + 1));
 
-        router.push({
-          pathname: "/hymn",
-          query: {
-            book: data[random].book,
-            title: data[random].title,
-          },
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-        router.push("/");
+      router.push({
+        pathname: "/hymn",
+        query: {
+          book: data[random].book,
+          title: data[random].title,
+        },
       });
-  })();
+    })
+    .catch((err) => {
+      console.error(err);
+      router.push("/");
+    });
 }
 
 export function shareButton() {

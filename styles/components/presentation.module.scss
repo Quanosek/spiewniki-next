@@ -59,8 +59,16 @@
   &.last {
     background-color: #000000;
 
-    & > * {
+    .progress {
       opacity: 0;
+    }
+
+    .navigation button {
+      border-color: #ffffff;
+
+      img {
+        filter: invert(1);
+      }
     }
   }
 }

@@ -64,7 +64,7 @@ export default function HymnPage() {
     if (!book) router.push("/search");
 
     // get hymn data
-    (async () => {
+    (() => {
       axios
         .get("/api/xml", {
           params: { book, title },

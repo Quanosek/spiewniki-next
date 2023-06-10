@@ -33,7 +33,7 @@ export default function SearchPage() {
     });
 
     // show all hymns in book on load
-    (async () => {
+    (() => {
       axios
         .get("/api/xml", {
           params: { book: router.query.book },
@@ -120,7 +120,7 @@ export default function SearchPage() {
               input.value ? setShowClear(true) : setShowClear(false);
               setData(search(hymns, input.value));
             }}
-            onKeyUp={async (e) => {
+            onKeyUp={(e) => {
               if (e.key === "Enter") {
                 const firstResults = document.getElementById("results")
                   ?.firstChild?.firstChild as HTMLLinkElement;

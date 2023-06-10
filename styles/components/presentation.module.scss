@@ -59,6 +59,8 @@
   &.last {
     background-color: #000000;
 
+    .title,
+    .verse,
     .progress {
       opacity: 0;
     }

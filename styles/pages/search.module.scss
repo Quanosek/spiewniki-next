@@ -190,9 +190,6 @@
   }
 
   img {
-    top: 0;
-    width: 100%;
-    height: 100%;
     transform: rotate(180deg);
     filter: invert(1);
   }
@@ -240,7 +237,7 @@
 
   .scrollButton {
     margin: -3vw 1% 0 0;
-    scale: 80%;
+    scale: 85%;
     bottom: 2%;
   }
 }

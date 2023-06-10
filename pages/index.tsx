@@ -66,23 +66,21 @@ export default function IndexPage() {
             height={25}
             draggable="false"
           />
-          <p>Rozpocznij wyszukiwanie...</p>
+          <p>Rozpocznij wyszukiwanie</p>
         </Link>
 
         <div className={styles.container}>
           <div className={styles.hymnBooks}>
             {Books(["PBT", "UP", "N"])}
 
-            <Link href={"/books"} className={styles.all}>
-              <p>Lista wszystkich śpiewników</p>
-            </Link>
+            {process.env.showAll && (
+              <Link href={"/books"} className={styles.all}>
+                <p>Lista wszystkich śpiewników</p>
+              </Link>
+            )}
           </div>
 
-          <hr />
-
           <div className={styles.options}>
-            <h2>Dostępne opcje:</h2>
-
             <button
               title="Otwórz losową pieśń [R]"
               onClick={() => randomHymn(undefined)}

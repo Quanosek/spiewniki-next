@@ -112,7 +112,7 @@ export default function SearchPage() {
             autoComplete="off"
             type="text"
             id="input"
-            placeholder="Rozpocznij wyszukiwanie..."
+            placeholder="Rozpocznij wyszukiwanie"
             title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie"
             onFocus={(e) => e.target.select()}
             onInput={(e) => {

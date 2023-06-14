@@ -6,6 +6,7 @@ export default function Document() {
   return (
     <Html lang="pl">
       <Head>
+        {/* default setup */}
         <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
         <meta name="theme-color" content="#000000" />
 

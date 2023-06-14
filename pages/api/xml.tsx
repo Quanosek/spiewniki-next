@@ -24,11 +24,7 @@ export default function Database(req: NextApiRequest, res: NextApiResponse) {
 function ListAll() {
   let results = new Array();
 
-  let books = [];
-  if (process.env.showAll) books = ["PBT", "UP", "N", "K", "P", "E", "S", "R"];
-  else books = ["PBT", "UP", "N"];
-
-  books.map((book) => hymnBook(results, book));
+  ["PBT", "UP", "N"].map((book) => hymnBook(results, book));
 
   return results;
 }

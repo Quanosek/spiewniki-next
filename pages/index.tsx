@@ -70,15 +70,7 @@ export default function IndexPage() {
         </Link>
 
         <div className={styles.container}>
-          <div className={styles.hymnBooks}>
-            {Books(["PBT", "UP", "N"])}
-
-            {process.env.showAll && (
-              <Link href={"/books"} className={styles.all}>
-                <p>Lista wszystkich śpiewników</p>
-              </Link>
-            )}
-          </div>
+          <div className={styles.hymnBooks}>{Books(["PBT", "UP", "N"])}</div>
 
           <div className={styles.options}>
             <button

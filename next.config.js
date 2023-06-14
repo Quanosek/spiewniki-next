@@ -10,6 +10,6 @@ const withPWA = require("next-pwa")({
 module.exports = withPWA({
   reactStrictMode: true,
   env: {
-    showAll: true, // change default behavior
+    showAll: false, // change default behavior
   },
 });

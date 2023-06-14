@@ -1,4 +1,8 @@
+import Image from "next/image";
+
 import styles from "@/styles/components/menu.module.scss";
+
+import { replaceLink } from "@/scripts/buttons";
 
 export default function InfoMenu() {
   return (
@@ -6,42 +10,38 @@ export default function InfoMenu() {
       <h2>Informacje</h2>
 
       <div className={`${styles.element} ${styles.info}`}>
-        <h3>O aplikacji:</h3>
+        <Image alt="spiewniki" src="/logo/icon.svg" width={80} height={80} />
 
-        <p>
-          Przedstawiamy zupełnie nową, najbardziej zaawansowaną aplikację do
-          wyświetlania pieśni. Umożliwia ona nie tylko wyszukanie i wyświetlanie
-          treści wybranej pieśni, ale również wgląd na akordy bezpośrednio w
-          tekście, lub pokazanie strony PDF z oryginalnego śpiewnika. Poza tym,
-          istnieje możliwość dodawania ulubionych pieśni, aby nigdy o nich nie
-          zapomnieć i mieć je zawsze pod ręką. Na komputerach i tabletach
-          dostępny jest także pokaz slajdów, dzięki któremu można wyświetlić
-          zwrotki pieśni, jedna po drugiej. Wszystkie funkcje obsługują skróty
-          klawiszowe (podpisane po najechaniu kursorem na wybrany przycisk).
-        </p>
-      </div>
-
-      <div className={`${styles.element} ${styles.info}`}>
-        <h3>Od twórców:</h3>
-
-        <p>
-          Pomysł na napisanie aplikacji zrodził się z potrzeby posiadania
-          wszystkich używanych śpiewników w jednym miejscu, bez dostępu do
-          internetu. Zaczęło się od prostego programu umożliwiającego
-          wyszukiwanie po numerze pieśni z jednego ze śpiewników, a przerodziło
-          się z czasem w skomplikowany projekt.
-        </p>
-        <p>
-          Nic nas nie motywuje tak bardzo do pracy jak komentarze i wsparcie ze
-          strony osób, które zdecydowały się skorzystać z naszego programu.
-          Jeśli więc możesz przekazać dobrowolnie kilka złotych w ramach
-          podziękowania, bylibyśmy bardzo wdzięczni.
-        </p>
+        {textFormat(
+          `Przedstawiamy zupełnie nową, najbardziej zaawansowaną aplikację do wyświetlania pieśni.
+          Umożliwia ona nie tylko wyszukanie i wyświetlanie treści wybranej pieśni,
+          ale również wgląd na akordy bezpośrednio w tekście, lub pokazanie strony PDF
+          z oryginalnego śpiewnika. Poza tym, istnieje możliwość dodawania ulubionych pieśni,
+          aby nigdy o nich nie zapomnieć i mieć je zawsze pod ręką.
+          Na komputerach i tabletach dostępny jest także pokaz slajdów,
+          dzięki któremu można wyświetlić zwrotki pieśni, jedna po drugiej.
+          Wszystkie funkcje obsługują skróty klawiszowe
+          (podpisane po najechaniu kursorem na wybrany przycisk).`
+        )}
       </div>
 
       <div className={styles.buttons}>
-        <button>Zamknij</button>
+        <button
+          title="Kliknij, lub użyj [Esc] na klawiaturze"
+          onClick={() => replaceLink(undefined)}
+        >
+          Zamknij
+        </button>
       </div>
     </>
   );
+}
+
+function textFormat(text: string) {
+  // add non-breaking spaces with single letters words
+  let pattern = /(\s)([wzoia])(\s)/g;
+  let replacement = "$1$2\xa0";
+
+  text = text.replace(pattern, replacement);
+  return <p>{text}</p>;
 }

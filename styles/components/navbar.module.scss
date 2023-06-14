@@ -1,4 +1,4 @@
-.bottom {
+.navbar {
   z-index: 10;
   padding: 0 1rem;
   position: fixed;
@@ -10,8 +10,8 @@
   align-items: center;
   gap: 3vw;
   user-select: none;
-  background-color: #141414;
-  box-shadow: 0 22px 24px 10px #ededed;
+  background-color: var(--elements);
+  box-shadow: 0 18px 20px 8px var(--text);
 
   button {
     padding: 15px 5px 10px;
@@ -23,7 +23,7 @@
     background-color: transparent;
 
     &:hover {
-      background-color: #252525;
+      background-color: var(--elements-hover);
     }
 
     img {
@@ -36,6 +36,10 @@
       margin: max(1px, 0.3vw) 0 5px;
       font-size: max(10px, 1.5vw);
     }
+  }
+
+  @media print {
+    display: none !important;
   }
 
   @media (max-width: 768px) {

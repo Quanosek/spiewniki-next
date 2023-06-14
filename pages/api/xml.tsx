@@ -24,7 +24,10 @@ export default function Database(req: NextApiRequest, res: NextApiResponse) {
 function ListAll() {
   let results = new Array();
 
-  const books = ["PBT", "UP", "N", "E", "S", "R"];
+  let books = [];
+  if (process.env.showAll) books = ["PBT", "UP", "N", "K", "P", "E", "S", "R"];
+  else books = ["PBT", "UP", "N"];
+
   books.map((book) => hymnBook(results, book));
 
   return results;
@@ -38,8 +41,8 @@ function HymnList(book: string | string[]) {
 }
 
 // read and save result of defined hymnbook
-function hymnBook(results: any, book: string | string[]) {
-  const dirname = path.join(process.cwd(), `/database/${book}/xml/`);
+function hymnBook(results: any[], book: string | string[]) {
+  const dirname = path.join(process.cwd(), `/public/database/${book}/xml/`);
 
   fs.readdirSync(dirname)
     .sort((a, b) => {
@@ -51,15 +54,14 @@ function hymnBook(results: any, book: string | string[]) {
       parseString(
         fs.readFileSync(dirname + filename, "utf-8"),
         (err, result) => {
+          if (!result) return;
+
           let lyrics = LyricsFormat(result.song.lyrics[0]);
 
           lyrics = lyrics.map((verses: any) => {
-            return (verses = verses
-              .map((verse: string) => {
-                if (verse.startsWith(" ")) verse = verse.slice(1);
-                return verse;
-              })
-              .filter((verse: string) => !verse.startsWith(".")));
+            return (verses = verses.filter(
+              (verse: string) => !verse.startsWith(".")
+            ));
           });
 
           results.push({
@@ -80,19 +82,16 @@ function HymnData(book: string | string[], title: string | string[]) {
 
   // read hymn file
   const data = fs.readFileSync(
-    path.join(process.cwd(), `/database/${book}/xml/${title}/`)
+    path.join(process.cwd(), `/public/database/${book}/xml/${title}`)
   );
 
-  // define hymn id in hymnbook
-  const id = HymnList(book).findIndex((hymn) => hymn.title === title);
-
+  // define result
   parseString(data, (err, result) => {
-    // define result
     const song = result.song;
 
-    song.id = [id];
-    song.book = [bookNames(book)];
     song.lyrics = LyricsFormat(result.song.lyrics[0]);
+    song.id = [HymnList(book).findIndex((hymn) => hymn.title === title)];
+    song.book = [bookNames(book)];
 
     results.push(song);
   });
@@ -102,12 +101,19 @@ function HymnData(book: string | string[], title: string | string[]) {
 
 // reformat xml verses
 function LyricsFormat(lyrics: string) {
-  const separator = /\s*\[\w*\]\s*/;
-  const verses = lyrics.split(separator).slice(1) as string[];
+  const regex = /\s*\[\w*\]\s*/;
+  const verses = lyrics.split(regex).slice(1);
 
-  verses.map((verse: any, index: number) => {
-    verses[index] = verse.split(/\n/g).slice(0);
+  const array = new Array();
+
+  verses.map((verse: string, index: number) => {
+    const formattedVerse = verse.split(/\n/g).slice(0);
+    formattedVerse.forEach((line: string, index: number) => {
+      if (line.startsWith(" ")) formattedVerse[index] = line.slice(1);
+    });
+
+    array[index] = formattedVerse;
   });
 
-  return verses;
+  return array;
 }

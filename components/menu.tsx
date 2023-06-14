@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { menuLink, randomButton } from "@/scripts/buttons";
+import { replaceLink } from "@/scripts/buttons";
 
 import Favorite from "./menu/favorite";
 import Info from "./menu/info";
@@ -14,32 +14,6 @@ export default function Menu() {
   const { menu, ...params } = router.query;
 
   const [showMenu, setShowMenu] = useState(false);
-
-  const handleKeyPress = useCallback(
-    (e: { key: string }) => {
-      const key = e.key.toUpperCase();
-
-      // shortcuts
-      switch (key) {
-        case "R":
-          !menu && randomButton();
-          break;
-        case "F":
-          !menu && menuLink("favorite");
-          break;
-        case "S":
-          !menu && menuLink("settings");
-          break;
-        case "ESCAPE":
-          menu &&
-            router.replace({
-              query: { ...params },
-            });
-          break;
-      }
-    },
-    [router, menu, params]
-  );
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -56,18 +30,35 @@ export default function Menu() {
       setShowMenu(false);
     }
 
-    // keyboard shortcuts handler
-    document.addEventListener("keydown", handleKeyPress);
-    return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [router, menu, handleKeyPress]);
+    // handle keyboard shortcuts
+    const handleKeyPress = (event: KeyboardEvent) => {
+      switch (event.key.toUpperCase()) {
+        // case "F":
+        //   if (!menu) replaceLink("favorite");
+        //   break;
+        case "S":
+          if (!menu) replaceLink("settings");
+          break;
+        case "ESCAPE":
+          if (menu) replaceLink(undefined);
+          break;
+      }
+    };
+
+    // keyboard events
+    document.addEventListener("keyup", handleKeyPress);
+    return () => document.removeEventListener("keyup", handleKeyPress);
+  }, [router, menu, params]);
 
   return (
     <div
-      id="menu"
-      className={styles.holder}
+      className={styles.component}
       style={{ display: showMenu ? "flex" : "none" }}
     >
-      <div className={styles.background} onClick={() => router.back()}></div>
+      <div
+        className={styles.background}
+        onClick={() => replaceLink(undefined)}
+      />
 
       <div className={styles.menu}>
         <div className={styles.content}>

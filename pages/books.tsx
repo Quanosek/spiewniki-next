@@ -62,9 +62,7 @@ export default function BooksPage() {
 
           <hr />
 
-          {process.env.showAll &&
-            Books(["PBT", "UP", "N", "K", "P", "E", "S", "R"])}
-          {!process.env.showAll && Books(["PBT", "UP", "N"])}
+          {Books(["PBT", "UP", "N", "K", "P", "E", "S", "R"])}
         </div>
       </main>
     </>

@@ -1,11 +1,11 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Document() {
   return (
     <Html lang="pl">
       <Head>
+        {/* default setup */}
         <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
         <meta name="theme-color" content="#000000" />
 
@@ -13,6 +13,9 @@ export default function Document() {
           name="description"
           content="Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami. | Wszelkie prawa zastrzeżone &#169; 2023"
         />
+
+        {/* prevent indexing */}
+        <meta name="robots" content="none" />
 
         {/* apple */}
         <meta name="mobile-wep-app-capable" content="yes" />
@@ -36,17 +39,6 @@ export default function Document() {
         <header>
           <div className="container">
             <h1>Śpiewniki</h1>
-
-            <Link href="https://www.nastrazy.org/" target="_blank">
-              Na Straży.org
-              <Image
-                className="icon"
-                alt="link"
-                src="/icons/external_link.svg"
-                width={16}
-                height={16}
-              />
-            </Link>
           </div>
         </header>
 

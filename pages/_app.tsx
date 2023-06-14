@@ -13,17 +13,9 @@ export default function App({ Component, pageProps }: AppProps) {
     // set global color theme
     const theme = localStorage.getItem("colorTheme")
       ? localStorage.getItem("colorTheme")
-      : process.env.showAll
-      ? "black"
-      : "light";
+      : "black";
 
     document.documentElement.className = theme as string;
-
-    // pre-defined accent colors
-    document.documentElement.style.setProperty(
-      "--accent-color",
-      process.env.showAll ? "#5496e7" : "#ee866d" // blue or orange
-    );
 
     // prevent screen from sleeping
     let wakeLock: WakeLockSentinel | null = null;

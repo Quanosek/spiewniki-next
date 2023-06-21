@@ -10,15 +10,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Piesn {
+model Hymn {
   id  String @id @default(uuid())
   hymnbook String @db.Char(1)
   number String @db.VarChar(4)
   title String @db.VarChar(100)
-  lirycs String
+  lyrics String
 }
 
-model Spiewnik {
+model Hymnbook {
   name String @id @db.Char(1)
   full_name String @db.VarChar(50)
 }

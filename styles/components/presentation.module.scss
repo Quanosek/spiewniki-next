@@ -1,41 +1,101 @@
-.presentation {
+.component {
   z-index: 999;
-  padding: 0 3%;
-  position: absolute;
-  top: 0;
+  position: fixed;
   right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
-  display: none;
+  user-select: none;
+}
+
+.presentation {
+  padding: 1% 3%;
+  width: 100%;
+  height: 100%;
+  display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 1.5vw;
-  color: var(--text);
-  background-color: var(--background);
+  color: var(--slide-text);
+  background-color: var(--slide-background);
+  transition: 0.1s background-color ease-out;
   text-align: center;
+
+  & > * {
+    transition: 0.1s ease-out;
+  }
+
+  &.first {
+    justify-content: center;
+
+    .title {
+      position: relative;
+      bottom: 2vw;
+      gap: 1vw;
+
+      h1 {
+        opacity: 100%;
+        font-size: 4.6vw;
+      }
+
+      h2 {
+        opacity: 80%;
+        font-size: 2.5vw;
+      }
+    }
+
+    .verse {
+      display: none;
+    }
+
+    .progress {
+      background-color: transparent;
+    }
+  }
+
+  &.last {
+    background-color: #000000;
+
+    .title,
+    .verse,
+    .progress {
+      opacity: 0;
+    }
+
+    .navigation button {
+      border-color: #ffffff;
+
+      img {
+        filter: invert(1);
+      }
+    }
+  }
 }
 
 .title {
-  position: absolute;
-  top: 1vw;
   display: flex;
   flex-direction: column;
-  gap: 0.5vw;
+  gap: 0.2vw;
+  transition: none;
 
   h1 {
     opacity: 80%;
-    font-size: 2.6vw;
+    font-size: 2.4vw;
     font-weight: normal;
   }
 
   h2 {
-    opacity: 65%;
-    font-size: 1.5vw;
+    opacity: 60%;
+    font-size: 1.4vw;
   }
 }
 
 .verse {
+  margin-bottom: 6vw;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -44,16 +104,59 @@
   white-space: normal;
 }
 
-.progressBar {
+.progress {
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 1.2vh;
-  background-color: var(--elements-hover);
+  background-color: var(--menu-background);
 
   .fulfill {
     height: 100%;
     transition: 0.1s ease-in-out;
-    background-color: var(--accent-color-1);
+    background-color: var(--accent-color);
+  }
+}
+
+.navigation {
+  opacity: 0%;
+  position: absolute;
+  bottom: -1.5vw;
+  left: 1.5vw;
+  display: flex;
+  gap: 1vw;
+  transition: 0.1s ease-out;
+
+  &.show {
+    opacity: 100%;
+    bottom: 1.5vw;
+  }
+
+  button {
+    opacity: 25%;
+    padding: 0.4vw;
+    border: 1px solid var(--slide-text);
+    border-radius: 100%;
+    background-color: transparent;
+    transition: 0.1s opacity ease-out;
+
+    img {
+      position: relative;
+      padding: 0.4vw;
+      cursor: pointer;
+    }
+
+    &:hover {
+      opacity: 45%;
+    }
+
+    &:nth-child(1) img {
+      right: 0.1vw;
+      rotate: 90deg;
+    }
+    &:nth-child(2) img {
+      left: 0.1vw;
+      rotate: -90deg;
+    }
   }
 }

@@ -31,6 +31,7 @@
   &:hover {
     background-color: var(--elements-hover);
     border-color: var(--elements-hover);
+    filter: brightness(0.9);
 
     @media (min-width: 768px) {
       width: 85%;
@@ -42,6 +43,10 @@
     left: 1.2rem;
     margin-left: auto;
   }
+
+  p {
+    opacity: 90%;
+  }
 }
 
 .container {
@@ -49,17 +54,6 @@
   display: flex;
   justify-content: center;
   gap: 1.5rem;
-
-  hr::after {
-    content: "";
-    width: 1.5px;
-    height: 106%;
-    position: relative;
-    bottom: 3%;
-    display: block;
-    background-color: var(--lines);
-    border-radius: 100%;
-  }
 }
 
 .hymnBooks {
@@ -122,16 +116,12 @@
 }
 
 .options {
+  margin-top: 1rem;
   width: min(12rem, 20%);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-
-  h2 {
-    margin: 10px 0 6px 10px;
-    font-size: 110%;
-  }
 
   button {
     opacity: 75%;
@@ -179,10 +169,10 @@
   }
 
   .options {
-    position: relative;
-    right: 5px;
     margin-top: 1.5rem;
     width: auto;
+    position: relative;
+    right: 5px;
     gap: max(1.5vw);
 
     h2,
@@ -203,6 +193,7 @@
 
 @media (max-width: 768px) {
   .mobileTitle {
+    margin-top: min(4vw, 0.6rem);
     display: block;
   }
 
@@ -267,7 +258,7 @@
 
 @media (max-width: 425px) {
   .mobileTitle {
-    margin-top: 2vw;
+    margin-top: 4vw;
     font-size: 3.8vw;
 
     button {

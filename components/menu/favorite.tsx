@@ -1,10 +1,8 @@
-import { useRouter } from "next/router";
-
 import styles from "@/styles/components/menu.module.scss";
 
-export default function FavoriteMenu() {
-  const router = useRouter();
+import { replaceLink } from "@/scripts/buttons";
 
+export default function FavoriteMenu() {
   return (
     <>
       <div className={styles.favTitle}>
@@ -24,7 +22,9 @@ export default function FavoriteMenu() {
             const prompt = confirm(
               "Czy na pewno chcesz wyczyścić listę ulubionych?"
             );
-            if (prompt == true) {
+            if (prompt) {
+              //
+              //
               //
             }
           }}
@@ -33,7 +33,7 @@ export default function FavoriteMenu() {
         </button>
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze"
-          onClick={() => router.back()}
+          onClick={() => replaceLink(undefined)}
         >
           Zamknij
         </button>

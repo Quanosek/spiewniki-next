@@ -10,8 +10,8 @@
 
 // text selection behavior
 ::selection {
-  color: #f3f3f3;
-  background: var(--accent-color-2);
+  color: var(--elements);
+  background: var(--accent-color);
 }
 
 // input placeholder visibility
@@ -36,6 +36,12 @@
   font-display: swap;
 }
 
+// printing mode
+@page {
+  size: A4;
+  margin: 1.5cm 1cm !important;
+}
+
 // html basic tags
 html,
 body {
@@ -44,6 +50,11 @@ body {
   background-color: var(--background);
   -webkit-tap-highlight-color: transparent;
   transition: 0.15s background-color ease-out;
+
+  @media print {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
 }
 
 .container {
@@ -66,16 +77,18 @@ footer {
     display: flex;
   }
 
+  @media print {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     display: none;
   }
 
   a {
-    opacity: 75%;
     transition: 0.1s opacity ease-out;
 
     &:hover {
-      opacity: 100%;
       text-decoration: underline;
     }
   }
@@ -88,12 +101,20 @@ header {
   position: sticky;
   top: 0;
   height: $headerHeight;
-  box-shadow: 0 0px 16px -8px var(--text);
+  box-shadow: 0 -12px 12px 4px var(--text);
 
   .container {
     position: relative;
 
+    h1 {
+      color: var(--accent-color);
+      letter-spacing: 1px;
+      user-select: none;
+      text-shadow: 0 1px 2px rgba(#474747, 0.5);
+    }
+
     a {
+      opacity: 75%;
       padding: 0.5rem 1rem;
       position: absolute;
       right: 0;
@@ -105,6 +126,10 @@ header {
       img {
         position: relative;
         top: 1px;
+      }
+
+      &:hover {
+        opacity: 100%;
       }
     }
   }
@@ -118,26 +143,34 @@ footer {
     justify-content: space-between;
     align-items: center;
   }
+
+  p {
+    opacity: 85%;
+  }
 }
 
 .backArrow {
-  $topPosition: 6.8rem;
+  $topPosition: 7rem;
+
   z-index: 20;
+  margin-left: 1rem;
   position: sticky;
   top: $topPosition;
-  display: flex;
-  align-items: center;
 
   button {
     position: absolute;
     bottom: calc($topPosition / 2);
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.1rem;
     gap: 8px;
     background-color: transparent;
 
     img {
       rotate: 90deg;
     }
+  }
+
+  @media print {
+    display: none;
   }
 
   @media (max-width: 768px) {
@@ -148,12 +181,17 @@ footer {
 main {
   padding: 2rem 3% 4rem;
   width: 100%;
-  min-height: calc(100vh - $headerHeight);
+  min-height: calc(100svh - $headerHeight);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+
+  @media print {
+    padding: 0 !important;
+    min-height: unset;
+  }
 
   @media (max-width: 768px) {
     padding: 3% 2%;
@@ -242,4 +280,11 @@ button {
   40% {
     box-shadow: 0 2.5em 0 0;
   }
+}
+
+.disabledTemporary {
+  pointer-events: none !important;
+  opacity: 40% !important;
+  transform: none !important;
+  background-color: transparent !important;
 }

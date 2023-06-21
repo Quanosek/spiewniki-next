@@ -14,11 +14,15 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "prisma/migrate.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "prisma/migrate.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

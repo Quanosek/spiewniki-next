@@ -6,6 +6,7 @@ export default function Document() {
   return (
     <Html lang="pl">
       <Head>
+        {/* default setup */}
         <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
         <meta name="theme-color" content="#000000" />
 
@@ -57,7 +58,7 @@ export default function Document() {
         <footer>
           <div className="container">
             <p>
-              Stworzone z 💙 przez{" "}
+              Stworzone z ❤️ przez{" "}
               <Link href="https://github.com/Quanosek">Jakuba Kłało</Link>
               {" i "}
               <Link href="https://github.com/Krist0f0l0s">

@@ -1,49 +1,19 @@
 :root {
-  color-scheme: light only;
-  --lines: #474747;
-}
-
-:root.black,
-:root.dark {
-  color-scheme: dark only;
-
-  --accent-color-1: #acc2ee;
-  --accent-color-2: #cbe3ff;
-
-  .icon {
-    filter: invert(1);
-  }
+  --accent-color: #ee866d;
 }
 
 :root.light,
 :root.reading {
-  --accent-color-1: #7699df;
-  --accent-color-2: #3e6ece;
-}
-
-:root.black {
-  --text: #edebe5;
-  --background: #000000;
-  --elements: #161514;
-  --elements-hover: #1e1d1c;
-
-  --menu-background: #171717;
-  --menu-elements: #212121;
-}
-
-:root.dark {
-  --text: #ffffff;
-  --background: #202020;
-  --elements: #303030;
-  --elements-hover: #373635;
-
-  --menu-background: #232323;
-  --menu-elements: #383838;
+  color-scheme: light only;
+  --slide-background: #ffffff;
+  --slide-text: #000000;
 }
 
 :root.light {
   --text: #3d3d3f;
   --background: #f3f3f3;
+  $background: #f3f3f3;
+
   --elements: #ffffff;
   --elements-hover: #f8f8f8;
 
@@ -54,9 +24,43 @@
 :root.reading {
   --text: #14120d;
   --background: #f6efe2;
+
   --elements: #f9f5ee;
   --elements-hover: #efebe5;
 
   --menu-background: #efebe5;
   --menu-elements: #e6e2dc;
+}
+
+:root.black,
+:root.dark {
+  color-scheme: dark only;
+  --slide-background: #000000;
+  --slide-text: #ffffff;
+
+  .icon {
+    filter: invert(1);
+  }
+}
+
+:root.black {
+  --text: #edebe5;
+  --background: #000000;
+
+  --elements: #161514;
+  --elements-hover: #1e1d1c;
+
+  --menu-background: #171717;
+  --menu-elements: #212121;
+}
+
+:root.dark {
+  --text: #ffffff;
+  --background: #202020;
+
+  --elements: #303030;
+  --elements-hover: #373635;
+
+  --menu-background: #232323;
+  --menu-elements: #383838;
 }

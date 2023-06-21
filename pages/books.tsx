@@ -54,14 +54,14 @@ export default function BooksPage() {
           <Link
             className={styles.all}
             href={{
-              pathname: `/search`,
-              query: { book: "all" },
+              pathname: "/search",
             }}
           >
             <p>{bookNames("all")}</p>
           </Link>
 
-          {/* {Books(["PBT", "UP", "N", "E", "S", "R"])} */}
+          <hr />
+
           {Books(["PBT", "UP", "N"])}
         </div>
       </main>
@@ -78,7 +78,7 @@ function Books(names: string[]) {
       <div key={index}>
         <Link
           href={{
-            pathname: `/search`,
+            pathname: "/search",
             query: { book: name },
           }}
         >

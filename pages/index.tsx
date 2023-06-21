@@ -2,12 +2,12 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, ReactElement } from "react";
+import { useEffect, ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
 import bookNames from "@/scripts/bookNames";
-import { menuLink, shareButton, randomButton } from "@/scripts/buttons";
+import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 import Menu from "@/components/menu";
 import Navbar from "@/components/navbar";
@@ -15,29 +15,29 @@ import Navbar from "@/components/navbar";
 export default function IndexPage() {
   const router = useRouter();
 
-  const handleKeyPress = useCallback(
-    (e: { key: string }) => {
-      const key = e.key.toUpperCase();
+  useEffect(() => {
+    if (!router.isReady) return;
 
-      // shortcuts
-      switch (key) {
+    // handle keyboard shortcuts
+    const handleKeyPress = (event: KeyboardEvent) => {
+      switch (event.key.toUpperCase()) {
         case "/":
           router.push("/search");
           localStorage.setItem("focusSearchBox", "true");
           break;
+        case "R":
+          if (!router.query.menu) randomHymn(undefined);
+          break;
         case "I":
-          !router.query.menu && menuLink("info");
+          if (!router.query.menu) replaceLink("info");
           break;
       }
-    },
-    [router]
-  );
+    };
 
-  useEffect(() => {
-    // keyboard shortcuts handler
-    document.addEventListener("keydown", handleKeyPress);
-    return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [handleKeyPress]);
+    // keyboard events
+    document.addEventListener("keyup", handleKeyPress);
+    return () => document.removeEventListener("keyup", handleKeyPress);
+  }, [router]);
 
   return (
     <>
@@ -66,24 +66,17 @@ export default function IndexPage() {
             height={25}
             draggable="false"
           />
-          <p>Rozpocznij wyszukiwanie...</p>
+          <p>Rozpocznij wyszukiwanie</p>
         </Link>
 
         <div className={styles.container}>
-          <div className={styles.hymnBooks}>
-            {Books(["PBT", "UP", "N"])}
-
-            {/* <Link href={"/books"} className={styles.all}>
-              <p>Lista wszystkich śpiewników</p>
-            </Link> */}
-          </div>
-
-          <hr />
+          <div className={styles.hymnBooks}>{Books(["PBT", "UP", "N"])}</div>
 
           <div className={styles.options}>
-            <h2>Dostępne opcje:</h2>
-
-            <button title="Otwórz losową pieśń [R]" onClick={randomButton}>
+            <button
+              title="Otwórz losową pieśń [R]"
+              onClick={() => randomHymn(undefined)}
+            >
               <Image
                 className="icon"
                 alt="kostka"
@@ -95,8 +88,9 @@ export default function IndexPage() {
             </button>
 
             <button
+              className="disabledTemporary"
               title="Przejdź do listy ulubionych pieśni [F]"
-              onClick={() => menuLink("favorite")}
+              onClick={() => replaceLink("favorite")}
             >
               <Image
                 className="icon"
@@ -105,12 +99,12 @@ export default function IndexPage() {
                 width={20}
                 height={20}
               />
-              <p>Zakładki</p>
+              <p>Lista ulubionych</p>
             </button>
 
             <button
               title="Przejdź do ustawień aplikacji [S]"
-              onClick={() => menuLink("settings")}
+              onClick={() => replaceLink("settings")}
             >
               <Image
                 className="icon"
@@ -135,7 +129,7 @@ export default function IndexPage() {
 
             <button
               title="Informacje od twórców strony [I]"
-              onClick={() => menuLink("info")}
+              onClick={() => replaceLink("info")}
             >
               <Image
                 className="icon"
@@ -150,7 +144,7 @@ export default function IndexPage() {
         </div>
       </main>
 
-      <Navbar more={false} />
+      <Navbar setup={"home"} />
     </>
   );
 }
@@ -163,7 +157,7 @@ function Books(names: string[]) {
     books.push(
       <Link
         href={{
-          pathname: `/search`,
+          pathname: "/search",
           query: { book: name },
         }}
         key={name}

@@ -1,46 +1,96 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ReactElement, useEffect } from "react";
+import { useState, useEffect, ReactElement } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
+
+import { replaceLink } from "@/scripts/buttons";
 
 export default function SettingsMenu() {
   const router = useRouter();
 
+  // default values
+  const fontSizeValue = localStorage.getItem("fontSize")
+    ? (localStorage.getItem("fontSize") as string)
+    : "21";
+  const [fontSize, setFontSize] = useState<string>(fontSizeValue);
+
+  // default behavior
   useEffect(() => {
-    // check current theme
+    // colorTheme
     const themeSelector = document.getElementById(
       document.documentElement.className
     ) as HTMLInputElement;
 
     themeSelector.checked = true;
-  }, []);
+
+    // fontSize
+    const fontSlider = document.getElementById(
+      "fontSlider"
+    ) as HTMLInputElement;
+    const fontPreview = document.getElementById(
+      "fontPreview"
+    ) as HTMLDivElement;
+    fontSlider.value = fontSize as string;
+    fontPreview.style.fontSize = fontSize + "px";
+
+    // showChords
+    const chordsToggle = document.getElementById(
+      "chordsToggle"
+    ) as HTMLInputElement;
+    localStorage.getItem("showChords") ? (chordsToggle.checked = true) : "";
+  }, [fontSize]);
 
   return (
     <>
       <h2>Ustawienia aplikacji</h2>
 
+      {/* COLOR THEME */}
       <div className={styles.element}>
         <h3>Motyw kolorów:</h3>
 
-        {Themes(["black", "dark", "light", "reading"])}
+        {Themes(["light", "reading", "black", "dark"])}
       </div>
 
+      {/* FONT SIZE */}
       <div className={styles.element}>
-        <h3>Wielkość tekstu:</h3>
+        <h3>Wielkość tekstu pieśni:</h3>
 
-        <div className={styles.fontSize}>
+        <div id="fontPreview" className={styles.fontPreview}>
+          <p style={{ fontSize: fontSize }}>Przykładowy tekst.</p>
+        </div>
+
+        <div className={styles.fontSlider}>
           <div className={styles.smaller}>A</div>
-          <input type="range" min="14" max="28" step="0.5" />
+          <input
+            type="range"
+            min="14"
+            max="28"
+            step="0.5"
+            id="fontSlider"
+            onChange={(e) => {
+              setFontSize(e.target.value);
+              localStorage.setItem("fontSize", e.target.value);
+            }}
+          />
           <div className={styles.bigger}>A</div>
         </div>
       </div>
 
+      {/* SHOW CHORDS */}
       <div className={styles.element}>
         <h3>Wyświetlanie akordów:</h3>
 
         <label className={styles.chordsToggle}>
-          <input type="checkbox" />
+          <input
+            id="chordsToggle"
+            type="checkbox"
+            onChange={(e) => {
+              e.target.checked
+                ? localStorage.setItem("showChords", "true")
+                : localStorage.removeItem("showChords");
+            }}
+          />
           <span />
         </label>
       </div>
@@ -51,18 +101,23 @@ export default function SettingsMenu() {
             const prompt = confirm(
               "Czy na pewno chcesz przywrócić domyślne ustawienia?"
             );
-            if (prompt == true) {
-              //
+            if (prompt) {
+              localStorage.removeItem("colorTheme");
+              localStorage.removeItem("fontSize");
+              localStorage.removeItem("showChords");
+
+              return router.reload();
             }
           }}
         >
           Resetuj
         </button>
+
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze"
-          onClick={() => router.back()}
+          onClick={() => replaceLink(undefined)}
         >
-          Zamknij
+          Zapisz
         </button>
       </div>
     </>
@@ -85,12 +140,10 @@ function Themes(names: string[]) {
         <input
           type="radio"
           id={name}
-          name="theme"
+          name="colorTheme"
           onChange={() => {
-            document.documentElement.className = name; // dynamically change theme
-
-            // set local storage
-            localStorage.setItem("theme", name);
+            document.documentElement.className = name;
+            localStorage.setItem("colorTheme", name);
           }}
         />
       </label>

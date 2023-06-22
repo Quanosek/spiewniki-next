@@ -63,7 +63,13 @@ export default function Presentation(params: { data: any }) {
       clearTimeout(idleTimer);
       setShowCursor(true);
 
-      idleTimer = setTimeout(() => setShowCursor(false), 1500);
+      const navigation = document.getElementById(
+        "navigation"
+      ) as HTMLDivElement;
+
+      if (!navigation.contains(e.target as Node)) {
+        idleTimer = setTimeout(() => setShowCursor(false), 1500);
+      }
     };
 
     // handle fullscreen navigation

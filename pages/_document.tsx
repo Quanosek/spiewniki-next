@@ -1,5 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Document() {
   return (
@@ -38,7 +39,18 @@ export default function Document() {
       <body>
         <header>
           <div className="container">
-            <h1>Śpiewniki</h1>
+            <Link href="/">
+              <Image
+                alt="logotype"
+                src="./logo/bpsw.svg"
+                className="icon"
+                width={40}
+                height={40}
+                draggable={false}
+              />
+
+              <h1>Śpiewniki</h1>
+            </Link>
           </div>
         </header>
 

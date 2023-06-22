@@ -151,14 +151,14 @@ export default function SearchPage() {
             width={20}
             height={20}
           />
-          <p>Powrót na stronę główną</p>
+          <p>Powrót</p>
         </button>
       </div>
 
       <main>
         <div className={styles.mobileTitle}>
           <button
-            title="Powrót do strony głównej"
+            title="Powrót"
             className={styles.backArrow}
             onClick={() => router.push("/")}
           >

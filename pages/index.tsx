@@ -85,7 +85,7 @@ export default function IndexPage() {
             >
               <Image
                 className="icon"
-                alt="kostka"
+                alt="random"
                 src="/icons/dice.svg"
                 width={20}
                 height={20}
@@ -94,14 +94,13 @@ export default function IndexPage() {
             </button>
 
             <button
-              className="disabledTemporary"
-              title="Przejdź do listy ulubionych pieśni [F]"
+              title="Pokaż listę ulubionych pieśni [F]"
               onClick={() => replaceLink("favorite")}
             >
               <Image
                 className="icon"
-                alt="gwiazdka"
-                src="/icons/bookmark.svg"
+                alt="list"
+                src="/icons/list.svg"
                 width={20}
                 height={20}
               />
@@ -109,12 +108,12 @@ export default function IndexPage() {
             </button>
 
             <button
-              title="Przejdź do ustawień aplikacji [S]"
+              title="Pokaż ustawienia aplikacji [S]"
               onClick={() => replaceLink("settings")}
             >
               <Image
                 className="icon"
-                alt="trybik"
+                alt="settings"
                 src="/icons/settings.svg"
                 width={20}
                 height={20}
@@ -125,7 +124,7 @@ export default function IndexPage() {
             <button title="Skopiuj link do aplikacji" onClick={shareButton}>
               <Image
                 className="icon"
-                alt="link"
+                alt="share"
                 src="/icons/link.svg"
                 width={20}
                 height={20}

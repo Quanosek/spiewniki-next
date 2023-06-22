@@ -1,31 +1,105 @@
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+
 import styles from "@/styles/components/menu.module.scss";
 
 import { replaceLink } from "@/scripts/buttons";
 
 export default function FavoriteMenu() {
+  const router = useRouter();
+
+  const [hoverElement, setHoverElement] = useState(
+    undefined as number | undefined
+  );
+
+  const favoritesData = localStorage.getItem("favorites") as string;
+  let favorites = favoritesData ? JSON.parse(favoritesData) : [];
+
+  const collator = new Intl.Collator(undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+
+  favorites = favorites.sort((a: { title: string }, b: { title: string }) => {
+    return collator.compare(a.title, b.title);
+  });
+
+  const FavLength = () => {
+    if (!favorites.length) return;
+    if (favorites.length === 1) return <>dodano 1 pieśń</>;
+    else return <>dodano {favorites.length} pieśni</>;
+  };
+
   return (
     <>
       <div className={styles.favTitle}>
         <h2>Lista ulubionych</h2>
-        <p>brak pieśni na liście</p>
+        {favorites && <p>{FavLength()}</p>}
       </div>
 
-      <div className={styles.element}>
-        <div className={styles.favList}>
+      <div className={`${styles.element} ${styles.favList}`}>
+        {favorites.length ? (
+          favorites.map((fav: any, index: number) => {
+            return (
+              <div
+                key={index}
+                className={styles.favElement}
+                onMouseEnter={() => setHoverElement(index)}
+                onMouseLeave={() => setHoverElement(undefined)}
+              >
+                <Link
+                  href={{
+                    pathname: "/hymn",
+                    query: { book: fav.book, title: fav.title },
+                  }}
+                >
+                  {fav.title}
+                </Link>
+
+                {hoverElement === index && (
+                  <button
+                    className={styles.removeButton}
+                    onClick={() => {
+                      favorites = favorites.filter(
+                        (fav: any) => fav !== favorites[index]
+                      );
+
+                      localStorage.setItem(
+                        "favorites",
+                        JSON.stringify(favorites)
+                      );
+                    }}
+                  >
+                    <Image
+                      alt="usuń"
+                      src="/icons/close.svg"
+                      width={16}
+                      height={16}
+                      className="icon"
+                    />
+                  </button>
+                )}
+              </div>
+            );
+          })
+        ) : (
           <p className={styles.placeholder}>Dodaj pierwszą ulubioną pieśń</p>
-        </div>
+        )}
       </div>
 
       <div className={styles.buttons}>
         <button
           onClick={() => {
+            if (!favorites.length) return alert("Brak ulubionych pieśni!");
+
             const prompt = confirm(
               "Czy na pewno chcesz wyczyścić listę ulubionych?"
             );
             if (prompt) {
-              //
-              //
-              //
+              localStorage.removeItem("favorites");
+              return router.reload();
             }
           }}
         >

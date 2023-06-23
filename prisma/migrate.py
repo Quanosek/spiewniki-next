@@ -11,7 +11,7 @@ bookNames = ['PBT', "UP", "N"]
 
 
 class Hymn:
-    def __init__(self, id, title, book, lyrics, presentation, verse, author):
+    def __init__(self, title, book, lyrics, presentation, verse, author):
         self.id = 0
         self.title = title
         self.book = book
@@ -33,7 +33,7 @@ for i, folderPath in enumerate(folderPaths):
                 data = dict(xmltodict.parse(xmlStr, encoding='utf-8'))
                 data = data['song']
                 book = bookNames[i]
-                hymn = Hymn(j+1, data['title'], book, data['lyrics'],
+                hymn = Hymn(data['title'], book, data['lyrics'],
                             data['presentation'], data['copyright'], data['author'])
                 hymns[i].append(hymn)
 

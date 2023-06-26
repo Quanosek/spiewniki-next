@@ -22,16 +22,16 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Informacje</p>
           </button>
 
-          <button onClick={() => replaceLink("settings")}>
+          <button onClick={() => replaceLink("favorite")}>
             <Image
               className="icon"
-              alt="settings"
-              src="/icons/settings.svg"
+              alt="list"
+              src="/icons/list.svg"
               width={16}
               height={16}
               draggable={false}
             />
-            <p>Ustawienia</p>
+            <p>Ulubione</p>
           </button>
 
           <button onClick={() => randomHymn(undefined)}>
@@ -46,16 +46,16 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Wylosuj</p>
           </button>
 
-          <button onClick={() => replaceLink("favorite")}>
+          <button onClick={() => replaceLink("settings")}>
             <Image
               className="icon"
-              alt="list"
-              src="/icons/list.svg"
+              alt="settings"
+              src="/icons/settings.svg"
               width={16}
               height={16}
               draggable={false}
             />
-            <p>Ulubione</p>
+            <p>Ustawienia</p>
           </button>
 
           <button onClick={shareButton}>
@@ -74,16 +74,16 @@ export default function bottomNavbar(param: { setup: string }) {
 
       {param.setup === "hymn" && (
         <>
-          <button onClick={() => replaceLink("settings")}>
+          <button onClick={() => router.push("/books")}>
             <Image
               className="icon"
-              alt="settings"
-              src="/icons/settings.svg"
+              alt="books"
+              src="/icons/book.svg"
               width={16}
               height={16}
               draggable={false}
             />
-            <p>Ustawienia</p>
+            <p>Śpiewniki</p>
           </button>
 
           <button onClick={() => replaceLink("favorite")}>
@@ -116,16 +116,16 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Wylosuj</p>
           </button>
 
-          <button onClick={() => router.push("/books")}>
+          <button onClick={() => replaceLink("settings")}>
             <Image
               className="icon"
-              alt="books"
-              src="/icons/book.svg"
+              alt="settings"
+              src="/icons/settings.svg"
               width={16}
               height={16}
               draggable={false}
             />
-            <p>Śpiewniki</p>
+            <p>Ustawienia</p>
           </button>
 
           <button

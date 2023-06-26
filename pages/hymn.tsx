@@ -162,9 +162,9 @@ export default function HymnPage() {
       if (!(presentation || router.query.menu)) {
         switch (event.key.toUpperCase()) {
           case "R":
-            return randomButtonHandler();
+            return hymn && randomButtonHandler();
           case "P":
-            return presentationButton();
+            return hymn && presentationButton();
           case "ARROWLEFT":
             return changeHymn(hymn.id[0], "prev");
           case "ARROWRIGHT":
@@ -302,6 +302,7 @@ export default function HymnPage() {
 
           <button
             onClick={() => {
+              if (!hymn) return;
               return favoriteButon({
                 title: router.query.title as string,
                 book: router.query.book as string,
@@ -340,7 +341,10 @@ export default function HymnPage() {
           <div className={`${styles.options} ${styles.leftSide}`}>
             <button
               title="Włącz prezentację pieśni na pełen ekran [P]"
-              onClick={presentationButton}
+              onClick={() => {
+                if (!hymn) return;
+                presentationButton();
+              }}
             >
               <Image
                 className="icon"
@@ -354,6 +358,7 @@ export default function HymnPage() {
 
             <button
               onClick={() => {
+                if (!hymn) return;
                 return favoriteButon({
                   title: router.query.title as string,
                   book: router.query.book as string,

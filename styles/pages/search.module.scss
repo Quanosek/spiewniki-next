@@ -160,8 +160,8 @@
 }
 
 .noResults {
-  opacity: 65%;
-  margin: 4px;
+  opacity: 60%;
+  margin-left: 0.6rem;
   padding: 1rem 0.8rem;
   font-size: 115%;
   cursor: default;
@@ -234,6 +234,10 @@
     a {
       margin: 2px;
     }
+  }
+
+  .noResults {
+    margin: 2px 0 2px 0.8rem;
   }
 
   .scrollButton {
@@ -320,7 +324,7 @@
   }
 
   .noResults {
-    padding: 4vw 3vw;
+    padding: 4vw 3.5vw;
     font-size: 4.7vw;
   }
 }

@@ -10,6 +10,7 @@ import bookNames from "@/scripts/bookNames";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 import Menu from "@/components/menu";
+import MobileHeader from "@/components/mobileHeader";
 import Navbar from "@/components/navbar";
 
 export default function IndexPage() {
@@ -48,9 +49,7 @@ export default function IndexPage() {
       <Menu />
 
       <main>
-        <div className={styles.mobileTitle}>
-          <h1>Śpiewniki</h1>
-        </div>
+        <MobileHeader />
 
         <Link
           href={"/search"}
@@ -60,11 +59,11 @@ export default function IndexPage() {
         >
           <Image
             className="icon"
-            alt="search"
+            alt="search icon"
             src="/icons/search.svg"
             width={25}
             height={25}
-            draggable="false"
+            draggable={false}
           />
           <p>Rozpocznij wyszukiwanie</p>
         </Link>
@@ -168,7 +167,7 @@ function Books(names: string[]) {
         key={name}
       >
         <Image
-          alt="okładka"
+          alt="cover"
           src={`/covers/${name}.webp`}
           width={850}
           height={1200}

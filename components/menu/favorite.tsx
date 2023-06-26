@@ -73,11 +73,12 @@ export default function FavoriteMenu() {
                     }}
                   >
                     <Image
-                      alt="usuń"
+                      className="icon"
+                      alt="delete"
                       src="/icons/close.svg"
                       width={16}
                       height={16}
-                      className="icon"
+                      draggable={false}
                     />
                   </button>
                 )}

@@ -41,9 +41,9 @@ export default function Document() {
           <div className="container">
             <Link href="/">
               <Image
+                className="icon"
                 alt="logotype"
                 src="./logo/bpsw.svg"
-                className="icon"
                 width={40}
                 height={40}
                 draggable={false}

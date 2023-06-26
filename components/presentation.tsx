@@ -148,6 +148,7 @@ export default function Presentation(params: { data: any }) {
         <div className={styles.verse}>
           {slide.current >= 0 &&
             slide.current < slide.order.length &&
+            hymn.lyrics[slide.order[slide.current]] &&
             hymn.lyrics[slide.order[slide.current]].map(
               (verse: string, index: number) => {
                 return !verse.startsWith(".") && <p key={index}>{verse}</p>;
@@ -175,10 +176,11 @@ export default function Presentation(params: { data: any }) {
           >
             <Image
               className="icon"
-              alt="poprzedni"
+              alt="arrow left"
               src="/icons/arrow.svg"
-              width={30}
-              height={30}
+              width={25}
+              height={25}
+              draggable={false}
             />
           </button>
 
@@ -188,10 +190,11 @@ export default function Presentation(params: { data: any }) {
           >
             <Image
               className="icon"
-              alt="następny"
+              alt="arrow next"
               src="/icons/arrow.svg"
-              width={30}
-              height={30}
+              width={25}
+              height={25}
+              draggable={false}
             />
           </button>
         </div>

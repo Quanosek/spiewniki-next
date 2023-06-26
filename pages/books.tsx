@@ -21,7 +21,7 @@ export default function BooksPage() {
         <button onClick={() => router.back()}>
           <Image
             className="icon"
-            alt="strzałka"
+            alt="arrow"
             src="/icons/arrow.svg"
             width={20}
             height={20}
@@ -43,7 +43,7 @@ export default function BooksPage() {
               src="/icons/arrow.svg"
               width={25}
               height={25}
-              draggable="false"
+              draggable={false}
             />
           </button>
 

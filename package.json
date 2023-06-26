@@ -1,5 +1,5 @@
 {
-  "version": "0.2.4",
+  "version": "0.2.5",
   "name": "spiewniki-klalo",
   "description": "Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@types/node": "20.3.1",
-    "@types/react": "18.2.13",
+    "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "@vercel/analytics": "^1.0.1",
     "axios": "^1.4.0",

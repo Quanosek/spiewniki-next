@@ -38,52 +38,44 @@ function HymnList(book: string | string[]) {
   return results;
 }
 
-// read and save result of defined hymnbook
+// return all results of defined hymnbook folder
 function hymnBook(results: any[], book: string | string[]) {
   const dirname = path.join(process.cwd(), `/public/database/${book}/xml/`);
 
   fs.readdirSync(dirname)
+    // properly sort hymn files
     .sort((a, b) => {
       return a.localeCompare(b, "pl", { numeric: true });
     })
+    // define results
+    .map((title: string) => {
+      parseString(fs.readFileSync(dirname + title, "utf-8"), (err, result) => {
+        if (!result) return;
 
-    .map((filename: string) => {
-      // read every hymn
-      parseString(
-        fs.readFileSync(dirname + filename, "utf-8"),
-        (err, result) => {
-          if (!result) return;
+        let lyrics = LyricsFormat(result.song.lyrics[0]);
+        lyrics = lyrics.map((verses: any) => {
+          return (verses = verses.filter(
+            (verse: string) => !verse.startsWith(".")
+          ));
+        });
 
-          let lyrics = LyricsFormat(result.song.lyrics[0]);
-
-          lyrics = lyrics.map((verses: any) => {
-            return (verses = verses.filter(
-              (verse: string) => !verse.startsWith(".")
-            ));
-          });
-
-          results.push({
-            book: book,
-            title: filename,
-            lyrics: lyrics,
-          });
-        }
-      );
+        results.push({ book, title, lyrics });
+      });
     });
 
   return results;
 }
 
-// return hymn params json
+// return specific hymn file
 function HymnData(book: string | string[], title: string | string[]) {
   let results = new Array();
 
-  // read hymn file
+  // read specific hymn file
   const data = fs.readFileSync(
     path.join(process.cwd(), `/public/database/${book}/xml/${title}`)
   );
 
-  // define result
+  // define results
   parseString(data, (err, result) => {
     const song = result.song;
 
@@ -97,7 +89,7 @@ function HymnData(book: string | string[], title: string | string[]) {
   return results;
 }
 
-// reformat xml verses
+// reformat xml lyrics to arrays
 function LyricsFormat(lyrics: string) {
   const regex = /\s*\[\w*\]\s*/;
   const verses = lyrics.split(regex).slice(1);

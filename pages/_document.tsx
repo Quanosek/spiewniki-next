@@ -12,7 +12,7 @@ export default function Document() {
 
         <meta
           name="description"
-          content="Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami. | Wszelkie prawa zastrzeżone &#169; 2023"
+          content="Zebrane w jednym miejscu śpiewniki i pieśni religijne. | Wszelkie prawa zastrzeżone &#169; 2023"
         />
 
         {/* prevent indexing */}

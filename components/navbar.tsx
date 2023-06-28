@@ -128,10 +128,7 @@ export default function bottomNavbar(param: { setup: string }) {
             <p>Ustawienia</p>
           </button>
 
-          <button
-            className="disabledTemporary"
-            onClick={() => replaceLink("favorite")}
-          >
+          <button className="disabled" onClick={() => replaceLink("favorite")}>
             <Image
               className="icon"
               alt="document"

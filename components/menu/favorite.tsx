@@ -17,13 +17,11 @@ export default function FavoriteMenu() {
   const favoritesData = localStorage.getItem("favorites") as string;
   let favorites = favoritesData ? JSON.parse(favoritesData) : [];
 
-  const collator = new Intl.Collator(undefined, {
-    numeric: true,
-    sensitivity: "base",
-  });
-
   favorites = favorites.sort((a: { title: string }, b: { title: string }) => {
-    return collator.compare(a.title, b.title);
+    return new Intl.Collator(undefined, {
+      numeric: true,
+      sensitivity: "base",
+    }).compare(a.title, b.title);
   });
 
   const FavLength = () => {
@@ -58,30 +56,31 @@ export default function FavoriteMenu() {
                   {fav.title}
                 </Link>
 
-                {hoverElement === index && (
-                  <button
-                    className={styles.removeButton}
-                    onClick={() => {
-                      favorites = favorites.filter(
-                        (fav: any) => fav !== favorites[index]
-                      );
+                <button
+                  className={styles.removeButton}
+                  style={{
+                    display: hoverElement === index ? "block" : "",
+                  }}
+                  onClick={() => {
+                    favorites = favorites.filter(
+                      (fav: any) => fav !== favorites[index]
+                    );
 
-                      localStorage.setItem(
-                        "favorites",
-                        JSON.stringify(favorites)
-                      );
-                    }}
-                  >
-                    <Image
-                      className="icon"
-                      alt="delete"
-                      src="/icons/close.svg"
-                      width={16}
-                      height={16}
-                      draggable={false}
-                    />
-                  </button>
-                )}
+                    localStorage.setItem(
+                      "favorites",
+                      JSON.stringify(favorites)
+                    );
+                  }}
+                >
+                  <Image
+                    className="icon"
+                    alt="delete"
+                    src="/icons/close.svg"
+                    width={16}
+                    height={16}
+                    draggable={false}
+                  />
+                </button>
               </div>
             );
           })

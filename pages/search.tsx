@@ -109,6 +109,10 @@ export default function SearchPage() {
         .then(({ data }) => {
           setHymns(data);
           setData(search(data, ""));
+        })
+        .catch((err) => {
+          console.error(err);
+          router.push("/search");
         });
     })();
 

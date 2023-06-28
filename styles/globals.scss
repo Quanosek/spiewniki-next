@@ -122,7 +122,7 @@ header {
     }
 
     h1 {
-      letter-spacing: 0.25px;
+      letter-spacing: 0.35px;
       user-select: none;
       opacity: 95%;
       font-size: 180%;
@@ -289,9 +289,10 @@ button {
   }
 }
 
-.disabledTemporary {
+.disabled {
   pointer-events: none !important;
   opacity: 40% !important;
   transform: none !important;
   background-color: transparent !important;
+  user-select: none !important;
 }

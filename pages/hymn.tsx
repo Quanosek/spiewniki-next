@@ -283,7 +283,7 @@ export default function HymnPage() {
           </button>
 
           <button
-            className="disabledTemporary"
+            className="disabled"
             onClick={() => {
               //
               //
@@ -357,6 +357,20 @@ export default function HymnPage() {
             </button>
 
             <button
+              title="Otwórz listę wszystkich dostępnych śpiewników"
+              onClick={() => router.push("/books")}
+            >
+              <Image
+                className="icon"
+                alt="book"
+                src="/icons/book.svg"
+                width={20}
+                height={20}
+              />
+              <p>Wybierz śpiewnik</p>
+            </button>
+
+            <button
               onClick={() => {
                 if (!hymn) return;
                 return favoriteButon({
@@ -374,44 +388,6 @@ export default function HymnPage() {
                 height={20}
               />
               <p>{inFavorites ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
-            </button>
-
-            <button
-              className="disabledTemporary"
-              title="Odtwórz ścieżkę audio pieśni"
-              onClick={() => {
-                //
-                //
-                //
-              }}
-            >
-              <Image
-                className="icon"
-                alt="music"
-                src="/icons/note.svg"
-                width={20}
-                height={20}
-              />
-              <p>Odtwórz audio</p>
-            </button>
-
-            <button
-              className="disabledTemporary"
-              title="Pokaż nuty pieśni w formacie PDF"
-              onClick={() => {
-                //
-                //
-                //
-              }}
-            >
-              <Image
-                className="icon"
-                alt="document"
-                src="/icons/document.svg"
-                width={20}
-                height={20}
-              />
-              <p>Pokaż nuty</p>
             </button>
           </div>
 
@@ -518,20 +494,6 @@ export default function HymnPage() {
           {/* right side buttons */}
           <div className={styles.options}>
             <button
-              title="Otwórz listę wszystkich dostępnych śpiewników"
-              onClick={() => router.push("/books")}
-            >
-              <Image
-                className="icon"
-                alt="book"
-                src="/icons/book.svg"
-                width={20}
-                height={20}
-              />
-              <p>Wybierz śpiewnik</p>
-            </button>
-
-            <button
               title="Pokaż listę ulubionych pieśni [F]"
               onClick={() => replaceLink("favorite")}
             >
@@ -557,6 +519,44 @@ export default function HymnPage() {
                 height={20}
               />
               <p>Ustawienia</p>
+            </button>
+
+            <button
+              className="disabled"
+              title="Pokaż nuty pieśni w formacie PDF"
+              onClick={() => {
+                //
+                //
+                //
+              }}
+            >
+              <Image
+                className="icon"
+                alt="document"
+                src="/icons/document.svg"
+                width={20}
+                height={20}
+              />
+              <p>Pokaż nuty</p>
+            </button>
+
+            <button
+              className="disabled"
+              title="Odtwórz ścieżkę audio pieśni"
+              onClick={() => {
+                //
+                //
+                //
+              }}
+            >
+              <Image
+                className="icon"
+                alt="music"
+                src="/icons/note.svg"
+                width={20}
+                height={20}
+              />
+              <p>Odtwórz audio</p>
             </button>
 
             <button title="Skopiuj link do pieśni" onClick={shareButton}>

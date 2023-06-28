@@ -169,8 +169,8 @@ function Books(names: string[]) {
         <Image
           alt="cover"
           src={`/covers/${name}.webp`}
-          width={850}
-          height={1200}
+          width={340}
+          height={480}
           priority={true}
         />
         <p>{bookNames(name)}</p>

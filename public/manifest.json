@@ -1,6 +1,8 @@
 {
   "name": "Śpiewniki",
+  "description": "Zebrane w jednym miejscu śpiewniki i pieśni religijne",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",

@@ -126,7 +126,10 @@
   a {
     padding: 0.5rem 0;
     width: 100%;
-    display: flex;
+    text-align: start;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   &:hover {
@@ -138,12 +141,17 @@
   opacity: 55%;
   padding: 8px;
   height: 100%;
+  display: none;
   aspect-ratio: 1/1;
   background-color: transparent !important;
   transition: 0.15s opacity ease-in-out;
 
   &:hover {
     opacity: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    display: block;
   }
 }
 

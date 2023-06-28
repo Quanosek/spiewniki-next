@@ -10,7 +10,13 @@ export default function InfoMenu() {
       <h2>Informacje</h2>
 
       <div className={`${styles.element} ${styles.info}`}>
-        <Image alt="spiewniki" src="/logo/icon.svg" width={80} height={80} />
+        <Image
+          alt="spiewniki"
+          src="/logo/icon.svg"
+          width={80}
+          height={80}
+          priority={true}
+        />
 
         {textFormat(
           `Przedstawiamy zupełnie nową, najbardziej zaawansowaną aplikację do wyświetlania pieśni.

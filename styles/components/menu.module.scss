@@ -98,14 +98,60 @@
 // FAVORITE MENU
 
 .favTitle {
+  margin-bottom: 0.5rem;
+
   p {
-    margin: -0.2rem 0 0.8rem;
+    margin: -0.4rem 0 0.4rem;
   }
 }
 
 .favList {
+  padding: 0;
+  gap: 0;
+
   .placeholder {
-    opacity: 85%;
+    padding: 1rem 0;
+    opacity: 75%;
+  }
+}
+
+.favElement {
+  width: 100%;
+  padding: 0.2rem 0.2rem 0.2rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.4rem;
+
+  a {
+    padding: 0.5rem 0;
+    width: 100%;
+    text-align: start;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    background-color: var(--menu-elements-hover);
+  }
+}
+
+.removeButton {
+  opacity: 55%;
+  padding: 8px;
+  height: 100%;
+  display: none;
+  aspect-ratio: 1/1;
+  background-color: transparent !important;
+  transition: 0.15s opacity ease-in-out;
+
+  &:hover {
+    opacity: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    display: block;
   }
 }
 

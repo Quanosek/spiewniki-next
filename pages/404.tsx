@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/error.module.scss";
 
+import MobileHeader from "@/components/mobileHeader";
+
 export default function ErrorPage() {
   const router = useRouter();
 
@@ -26,9 +28,7 @@ export default function ErrorPage() {
       </Head>
 
       <main>
-        <div className={styles.mobileTitle}>
-          <h1>Śpiewniki</h1>
-        </div>
+        <MobileHeader />
 
         <div className={styles.container}>
           <h1>Strona napotkała problem</h1>

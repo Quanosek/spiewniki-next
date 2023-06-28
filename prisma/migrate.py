@@ -5,10 +5,10 @@ import json
 import re
 
 folderPaths = ['C:/Users/kbols/Documents/piesni.klalo.pl-next/public/database/PBT/xml',
-               'C:/Users/kbols/Documents/piesni.klalo.pl-next/public/database/UP/xml', 'C:/Users/kbols/Documents/piesni.klalo.pl-next/public/database/N/xml']
+               'C:/Users/kbols/Documents/piesni.klalo.pl-next/public/database/UP/xml',
+               'C:/Users/kbols/Documents/piesni.klalo.pl-next/public/database/N/xml']
 
 bookNames = ['PBT', "UP", "N"]
-
 
 class Hymn:
     def __init__(self, title, book, lyrics, presentation, verse, author):
@@ -19,7 +19,6 @@ class Hymn:
         self.presentation = presentation
         self.verse = verse
         self.author = author
-
 
 hymns = [[], [], []]
 

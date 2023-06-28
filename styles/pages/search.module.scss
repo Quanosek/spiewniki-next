@@ -124,8 +124,7 @@
   background-color: var(--elements);
 
   a {
-    margin: 4px;
-    padding: 0.85rem 1rem;
+    padding: 1rem 1.1rem;
     display: block;
     border-radius: 0.4rem;
     transition: 0.1s background-color ease-out;
@@ -161,8 +160,8 @@
 }
 
 .noResults {
-  opacity: 65%;
-  margin: 4px;
+  opacity: 60%;
+  margin-left: 0.6rem;
   padding: 1rem 0.8rem;
   font-size: 115%;
   cursor: default;
@@ -192,6 +191,8 @@
   img {
     transform: rotate(180deg);
     filter: invert(1);
+    width: auto;
+    height: auto;
   }
 }
 
@@ -233,6 +234,10 @@
     a {
       margin: 2px;
     }
+  }
+
+  .noResults {
+    margin: 2px 0 2px 0.8rem;
   }
 
   .scrollButton {
@@ -319,7 +324,7 @@
   }
 
   .noResults {
-    padding: 4vw 3vw;
+    padding: 4vw 3.5vw;
     font-size: 4.7vw;
   }
 }

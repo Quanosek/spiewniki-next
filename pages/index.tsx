@@ -10,6 +10,7 @@ import bookNames from "@/scripts/bookNames";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 import Menu from "@/components/menu";
+import MobileHeader from "@/components/mobileHeader";
 import Navbar from "@/components/navbar";
 
 export default function IndexPage() {
@@ -48,9 +49,7 @@ export default function IndexPage() {
       <Menu />
 
       <main>
-        <div className={styles.mobileTitle}>
-          <h1>Śpiewniki</h1>
-        </div>
+        <MobileHeader />
 
         <Link
           href={"/search"}
@@ -60,11 +59,11 @@ export default function IndexPage() {
         >
           <Image
             className="icon"
-            alt="search"
+            alt="search icon"
             src="/icons/search.svg"
             width={25}
             height={25}
-            draggable="false"
+            draggable={false}
           />
           <p>Rozpocznij wyszukiwanie</p>
         </Link>
@@ -79,7 +78,7 @@ export default function IndexPage() {
             >
               <Image
                 className="icon"
-                alt="kostka"
+                alt="random"
                 src="/icons/dice.svg"
                 width={20}
                 height={20}
@@ -88,14 +87,13 @@ export default function IndexPage() {
             </button>
 
             <button
-              className="disabledTemporary"
-              title="Przejdź do listy ulubionych pieśni [F]"
+              title="Pokaż listę ulubionych pieśni [F]"
               onClick={() => replaceLink("favorite")}
             >
               <Image
                 className="icon"
-                alt="gwiazdka"
-                src="/icons/bookmark.svg"
+                alt="list"
+                src="/icons/list.svg"
                 width={20}
                 height={20}
               />
@@ -103,12 +101,12 @@ export default function IndexPage() {
             </button>
 
             <button
-              title="Przejdź do ustawień aplikacji [S]"
+              title="Pokaż ustawienia aplikacji [S]"
               onClick={() => replaceLink("settings")}
             >
               <Image
                 className="icon"
-                alt="trybik"
+                alt="settings"
                 src="/icons/settings.svg"
                 width={20}
                 height={20}
@@ -119,7 +117,7 @@ export default function IndexPage() {
             <button title="Skopiuj link do aplikacji" onClick={shareButton}>
               <Image
                 className="icon"
-                alt="link"
+                alt="share"
                 src="/icons/link.svg"
                 width={20}
                 height={20}
@@ -163,10 +161,10 @@ function Books(names: string[]) {
         key={name}
       >
         <Image
-          alt="okładka"
+          alt="cover"
           src={`/covers/${name}.webp`}
-          width={850}
-          height={1200}
+          width={340}
+          height={480}
           priority={true}
         />
         <p>{bookNames(name)}</p>

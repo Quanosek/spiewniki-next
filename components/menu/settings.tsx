@@ -132,10 +132,12 @@ function Themes(names: string[]) {
     themes.push(
       <label htmlFor={name} key={name}>
         <Image
-          alt="przykładowy tekst"
+          alt="text"
           src="/icons/text.svg"
           width={50}
           height={50}
+          draggable={false}
+          priority={true}
         />
         <input
           type="radio"

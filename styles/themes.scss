@@ -11,25 +11,26 @@
 
 :root.light {
   --text: #3d3d3f;
-  --background: #f3f3f3;
-  $background: #f3f3f3;
 
+  --background: #f3f3f3;
   --elements: #ffffff;
   --elements-hover: #f8f8f8;
 
   --menu-background: #f8f8f8;
   --menu-elements: #e4e4e4;
+  --menu-elements-hover: #efefef;
 }
 
 :root.reading {
   --text: #14120d;
-  --background: #f6efe2;
 
-  --elements: #f9f5ee;
-  --elements-hover: #efebe5;
+  --background: #f2ece2;
+  --elements: #f9f3ea;
+  --elements-hover: #efe7df;
 
   --menu-background: #efebe5;
-  --menu-elements: #e6e2dc;
+  --menu-elements: #e6e0d9;
+  --menu-elements-hover: #d3cbc2;
 }
 
 :root.black,
@@ -45,22 +46,24 @@
 
 :root.black {
   --text: #edebe5;
-  --background: #000000;
 
+  --background: #000000;
   --elements: #161514;
   --elements-hover: #1e1d1c;
 
   --menu-background: #171717;
   --menu-elements: #212121;
+  --menu-elements-hover: #2a2929;
 }
 
 :root.dark {
   --text: #ffffff;
-  --background: #202020;
 
+  --background: #262525;
   --elements: #303030;
   --elements-hover: #373635;
 
   --menu-background: #232323;
   --menu-elements: #383838;
+  --menu-elements-hover: #464343;
 }

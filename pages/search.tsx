@@ -146,19 +146,19 @@ export default function SearchPage() {
         <button onClick={() => router.push("/")}>
           <Image
             className="icon"
-            alt="strzałka"
+            alt="arrow"
             src="/icons/arrow.svg"
             width={20}
             height={20}
           />
-          <p>Powrót na stronę główną</p>
+          <p>Powrót</p>
         </button>
       </div>
 
       <main>
         <div className={styles.mobileTitle}>
           <button
-            title="Powrót do strony głównej"
+            title="Powrót"
             className={styles.backArrow}
             onClick={() => router.push("/")}
           >
@@ -168,7 +168,7 @@ export default function SearchPage() {
               src="/icons/arrow.svg"
               width={25}
               height={25}
-              draggable="false"
+              draggable={false}
             />
           </button>
 
@@ -184,20 +184,20 @@ export default function SearchPage() {
             title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie"
             onFocus={(e) => e.target.select()}
             onInput={(e) => {
-              const input = e.target as HTMLInputElement;
-              input.value ? setShowClear(true) : setShowClear(false);
-              setData(search(hymns, input.value));
+              setTimeout(() => {
+                const input = e.target as HTMLInputElement;
+                input.value ? setShowClear(true) : setShowClear(false);
+                return setData(search(hymns, input.value));
+              }, 250);
             }}
             onKeyUp={(e) => {
               if (e.key === "Enter") {
                 const firstResults = document.getElementById("results")
                   ?.firstChild?.firstChild as HTMLLinkElement;
 
-                if (firstResults.href) {
-                  router.push(firstResults.href);
-                } else {
+                if (firstResults.href) router.push(firstResults.href);
+                else {
                   const input = e.target as HTMLInputElement;
-
                   input.value = "";
                   setData(search(hymns, input.value));
                 }
@@ -208,11 +208,11 @@ export default function SearchPage() {
           <div id="searchIcon" className={styles.searchIcon}>
             <Image
               className="icon"
-              alt="Ikonka wyszukiwania"
+              alt="search icon"
               src="/icons/search.svg"
               width={25}
               height={25}
-              draggable="false"
+              draggable={false}
             />
           </div>
 
@@ -234,11 +234,11 @@ export default function SearchPage() {
           >
             <Image
               className="icon"
-              alt="Wyczyść wyszukiwanie"
+              alt="clear"
               src="/icons/close.svg"
               width={25}
               height={25}
-              draggable="false"
+              draggable={false}
             />
           </div>
         </div>
@@ -303,7 +303,13 @@ export default function SearchPage() {
           }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <Image alt="up" src="/icons/arrow.svg" width={25} height={25} />
+          <Image
+            alt="arrow up"
+            src="/icons/arrow.svg"
+            width={25}
+            height={25}
+            draggable={false}
+          />
         </button>
       </main>
     </>

@@ -162,9 +162,9 @@ export default function HymnPage() {
       if (!(presentation || router.query.menu)) {
         switch (event.key.toUpperCase()) {
           case "R":
-            return randomButtonHandler();
+            return hymn && randomButtonHandler();
           case "P":
-            return presentationButton();
+            return hymn && presentationButton();
           case "ARROWLEFT":
             return changeHymn(hymn.id[0], "prev");
           case "ARROWRIGHT":
@@ -262,10 +262,11 @@ export default function HymnPage() {
         <button onClick={backButton}>
           <Image
             className={`${styles.back} icon`}
-            alt="wstecz"
+            alt="back"
             src="/icons/arrow.svg"
             width={25}
             height={25}
+            draggable={false}
           />
         </button>
 
@@ -273,16 +274,35 @@ export default function HymnPage() {
           <button onClick={shareButton}>
             <Image
               className="icon"
-              alt="ulubione"
+              alt="share"
               src="/icons/link.svg"
               width={25}
               height={25}
+              draggable={false}
             />
           </button>
 
           <button
-            className="disabledTemporary"
+            className="disabled"
             onClick={() => {
+              //
+              //
+              //
+            }}
+          >
+            <Image
+              className="icon"
+              alt="music"
+              src="/icons/note.svg"
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </button>
+
+          <button
+            onClick={() => {
+              if (!hymn) return;
               return favoriteButon({
                 title: router.query.title as string,
                 book: router.query.book as string,
@@ -292,10 +312,11 @@ export default function HymnPage() {
           >
             <Image
               className="icon"
-              alt="ulubione"
+              alt="favorite"
               src={`/icons/${inFavorites ? "star_filled" : "star_empty"}.svg`}
               width={25}
               height={25}
+              draggable={false}
             />
           </button>
         </div>
@@ -305,12 +326,12 @@ export default function HymnPage() {
         <button onClick={backButton}>
           <Image
             className="icon"
-            alt="strzałka"
+            alt="arrow"
             src="/icons/arrow.svg"
             width={20}
             height={20}
           />
-          <p>Powrót do wyszukiwania</p>
+          <p>Powrót</p>
         </button>
       </div>
 
@@ -318,21 +339,30 @@ export default function HymnPage() {
         <div className={styles.container}>
           {/* left side buttons */}
           <div className={`${styles.options} ${styles.leftSide}`}>
-            <button onClick={() => router.push("/")}>
+            <button
+              title="Włącz prezentację pieśni na pełen ekran [P]"
+              onClick={() => {
+                if (!hymn) return;
+                presentationButton();
+              }}
+            >
               <Image
                 className="icon"
-                alt="dom"
-                src="/icons/home.svg"
+                alt="presentation"
+                src="/icons/presentation.svg"
                 width={20}
                 height={20}
               />
-              <p>Strona główna</p>
+              <p>Pokaz slajdów</p>
             </button>
 
-            <button onClick={() => router.push("/books")}>
+            <button
+              onClick={() => router.push("/books")}
+              title="Otwórz listę wszystkich dostępnych śpiewników"
+            >
               <Image
                 className="icon"
-                alt="śpiewnik"
+                alt="book"
                 src="/icons/book.svg"
                 width={20}
                 height={20}
@@ -341,8 +371,8 @@ export default function HymnPage() {
             </button>
 
             <button
-              className="disabledTemporary"
               onClick={() => {
+                if (!hymn) return;
                 return favoriteButon({
                   title: router.query.title as string,
                   book: router.query.book as string,
@@ -352,7 +382,7 @@ export default function HymnPage() {
             >
               <Image
                 className="icon"
-                alt="dom"
+                alt="favorite"
                 src={`/icons/${inFavorites ? "star_filled" : "star_empty"}.svg`}
                 width={20}
                 height={20}
@@ -370,7 +400,6 @@ export default function HymnPage() {
               }}
             >
               {!hymn && <div className="loader" />}
-
               {hymn && (
                 <>
                   <div className={styles.title}>
@@ -425,10 +454,11 @@ export default function HymnPage() {
               >
                 <Image
                   className={`${styles.previous} icon`}
-                  alt="strzałka w lewo"
+                  alt="arrow left"
                   src="/icons/arrow.svg"
                   width={30}
                   height={30}
+                  draggable={false}
                 />
 
                 <p>Poprzednia</p>
@@ -451,10 +481,11 @@ export default function HymnPage() {
 
                 <Image
                   className={`${styles.next} icon`}
-                  alt="strzałka w prawo"
+                  alt="arrow right"
                   src="/icons/arrow.svg"
                   width={30}
                   height={30}
+                  draggable={false}
                 />
               </button>
             </div>
@@ -463,28 +494,13 @@ export default function HymnPage() {
           {/* right side buttons */}
           <div className={styles.options}>
             <button
-              title="Włącz prezentację pieśni na pełen ekran [P]"
-              onClick={presentationButton}
-            >
-              <Image
-                className="icon"
-                alt="presentation"
-                src="/icons/monitor.svg"
-                width={20}
-                height={20}
-              />
-              <p>Pokaz slajdów</p>
-            </button>
-
-            <button
-              className="disabledTemporary"
-              title="Przejdź do listy ulubionych pieśni [F]"
+              title="Pokaż listę ulubionych pieśni [F]"
               onClick={() => replaceLink("favorite")}
             >
               <Image
                 className="icon"
-                alt="favorite"
-                src="/icons/bookmark.svg"
+                alt="list"
+                src="/icons/list.svg"
                 width={20}
                 height={20}
               />
@@ -492,7 +508,7 @@ export default function HymnPage() {
             </button>
 
             <button
-              title="Przejdź do ustawień aplikacji [S]"
+              title="Pokaż ustawienia aplikacji [S]"
               onClick={() => replaceLink("settings")}
             >
               <Image
@@ -506,34 +522,41 @@ export default function HymnPage() {
             </button>
 
             <button
-              className="disabledTemporary"
-              title="Pobierz oryginalną stronę ze śpiewnika"
-              onClick={() => {}}
-            >
-              <Image
-                className="icon"
-                alt="pdf"
-                src="/icons/document.svg"
-                width={20}
-                height={20}
-              />
-              <p>Pobierz PDF</p>
-            </button>
-
-            <button
-              title="Wydrukuj tekst pieśni"
+              className="disabled"
+              title="Pokaż nuty pieśni w formacie PDF"
               onClick={() => {
-                return hymn && window.print();
+                //
+                //
+                //
               }}
             >
               <Image
                 className="icon"
-                alt="print"
-                src="/icons/printer.svg"
+                alt="document"
+                src="/icons/document.svg"
                 width={20}
                 height={20}
               />
-              <p>Wydrukuj</p>
+              <p>Pokaż nuty</p>
+            </button>
+
+            <button
+              className="disabled"
+              title="Odtwórz ścieżkę audio pieśni"
+              onClick={() => {
+                //
+                //
+                //
+              }}
+            >
+              <Image
+                className="icon"
+                alt="music"
+                src="/icons/note.svg"
+                width={20}
+                height={20}
+              />
+              <p>Odtwórz audio</p>
             </button>
 
             <button title="Skopiuj link do pieśni" onClick={shareButton}>
@@ -545,6 +568,20 @@ export default function HymnPage() {
                 height={20}
               />
               <p>Udostępnij</p>
+            </button>
+
+            <button
+              title="Wydrukuj tekst pieśni"
+              onClick={() => hymn && window.print()}
+            >
+              <Image
+                className="icon"
+                alt="print"
+                src="/icons/printer.svg"
+                width={20}
+                height={20}
+              />
+              <p>Wydrukuj</p>
             </button>
           </div>
         </div>

@@ -33,9 +33,9 @@ export default function Menu() {
     // handle keyboard shortcuts
     const handleKeyPress = (event: KeyboardEvent) => {
       switch (event.key.toUpperCase()) {
-        // case "F":
-        //   if (!menu) replaceLink("favorite");
-        //   break;
+        case "F":
+          if (!menu) replaceLink("favorite");
+          break;
         case "S":
           if (!menu) replaceLink("settings");
           break;

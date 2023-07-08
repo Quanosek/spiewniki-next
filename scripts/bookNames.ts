@@ -14,21 +14,6 @@ export default function bookNames(shortName: string | string[]) {
     case "N":
       fullName = "Śpiewajcie Panu Pieśń Nową";
       break;
-    case "K":
-      fullName = "Śpiewnik Koziański";
-      break;
-    case "P":
-      fullName = "Śpiewnik Poznański";
-      break;
-    case "E":
-      fullName = "Śpiewniczek Młodzieżowy";
-      break;
-    case "S":
-      fullName = "Pieśni Chóru Syloe";
-      break;
-    case "R":
-      fullName = "Różne pieśni";
-      break;
   }
 
   return fullName;

@@ -17,53 +17,55 @@ export default function bottomNavbar(param: { setup: string }) {
               src="/icons/info.svg"
               width={16}
               height={16}
+              draggable={false}
             />
             <p>Informacje</p>
           </button>
 
-          <button onClick={() => replaceLink("settings")}>
+          <button onClick={() => replaceLink("favorite")}>
             <Image
               className="icon"
-              alt="trybik"
-              src="/icons/settings.svg"
+              alt="list"
+              src="/icons/list.svg"
               width={16}
               height={16}
+              draggable={false}
             />
-            <p>Ustawienia</p>
+            <p>Ulubione</p>
           </button>
 
           <button onClick={() => randomHymn(undefined)}>
             <Image
               className="icon"
-              alt="kostka"
+              alt="random"
               src="/icons/dice.svg"
               width={16}
               height={16}
+              draggable={false}
             />
             <p>Wylosuj</p>
           </button>
 
-          <button
-            className="disabledTemporary"
-            onClick={() => replaceLink("favorite")}
-          >
+          <button onClick={() => replaceLink("settings")}>
             <Image
               className="icon"
-              alt="gwiazdka"
-              src="/icons/bookmark.svg"
+              alt="settings"
+              src="/icons/settings.svg"
               width={16}
               height={16}
+              draggable={false}
             />
-            <p>Ulubione</p>
+            <p>Ustawienia</p>
           </button>
 
           <button onClick={shareButton}>
             <Image
               className="icon"
-              alt="link"
+              alt="share"
               src="/icons/link.svg"
               width={16}
               height={16}
+              draggable={false}
             />
             <p>Udostępnij</p>
           </button>
@@ -72,27 +74,26 @@ export default function bottomNavbar(param: { setup: string }) {
 
       {param.setup === "hymn" && (
         <>
-          <button onClick={() => replaceLink("settings")}>
+          <button onClick={() => router.push("/books")}>
             <Image
               className="icon"
-              alt="trybik"
-              src="/icons/settings.svg"
+              alt="books"
+              src="/icons/book.svg"
               width={16}
               height={16}
+              draggable={false}
             />
-            <p>Ustawienia</p>
+            <p>Śpiewniki</p>
           </button>
 
-          <button
-            className="disabledTemporary"
-            onClick={() => replaceLink("favorite")}
-          >
+          <button onClick={() => replaceLink("favorite")}>
             <Image
               className="icon"
-              alt="gwiazdka"
-              src="/icons/bookmark.svg"
+              alt="list"
+              src="/icons/list.svg"
               width={16}
               height={16}
+              draggable={false}
             />
             <p>Ulubione</p>
           </button>
@@ -106,37 +107,37 @@ export default function bottomNavbar(param: { setup: string }) {
           >
             <Image
               className="icon"
-              alt="kostka"
+              alt="random"
               src="/icons/dice.svg"
               width={16}
               height={16}
+              draggable={false}
             />
             <p>Wylosuj</p>
           </button>
 
-          <button onClick={() => router.push("/books")}>
+          <button onClick={() => replaceLink("settings")}>
             <Image
               className="icon"
-              alt="drukarka"
-              src="/icons/book.svg"
+              alt="settings"
+              src="/icons/settings.svg"
               width={16}
               height={16}
+              draggable={false}
             />
-            <p>Śpiewniki</p>
+            <p>Ustawienia</p>
           </button>
 
-          <button
-            className="disabledTemporary"
-            onClick={() => replaceLink("favorite")}
-          >
+          <button className="disabled" onClick={() => replaceLink("favorite")}>
             <Image
               className="icon"
-              alt="gwiazdka"
+              alt="document"
               src="/icons/document.svg"
               width={16}
               height={16}
+              draggable={false}
             />
-            <p>Pokaż PDF</p>
+            <p>Pokaż nuty</p>
           </button>
         </>
       )}

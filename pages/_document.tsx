@@ -1,6 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Document() {
   return (
@@ -12,7 +12,7 @@ export default function Document() {
 
         <meta
           name="description"
-          content="Oficjalna strona z zebranymi w jednym miejscu wszystkimi pieśniami. | Wszelkie prawa zastrzeżone &#169; 2023"
+          content="Zebrane w jednym miejscu śpiewniki i pieśni religijne. | Wszelkie prawa zastrzeżone &#169; 2023"
         />
 
         {/* apple */}
@@ -36,16 +36,33 @@ export default function Document() {
       <body>
         <header>
           <div className="container">
-            <h1>Śpiewniki</h1>
+            <Link href="/">
+              <Image
+                className="icon"
+                alt="logotype"
+                src="./logo/bpsw.svg"
+                width={40}
+                height={40}
+                draggable={false}
+              />
 
-            <Link href="https://www.nastrazy.org/" target="_blank">
-              Na Straży.org
+              <h1>Śpiewniki</h1>
+            </Link>
+
+            <Link
+              className="externalLink"
+              href="https://www.nastrazy.org/"
+              target="_blank"
+            >
+              <p>Na straży.org</p>
+
               <Image
                 className="icon"
                 alt="link"
                 src="/icons/external_link.svg"
                 width={16}
                 height={16}
+                draggable={false}
               />
             </Link>
           </div>

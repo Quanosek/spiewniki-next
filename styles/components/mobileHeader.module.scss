@@ -1,0 +1,36 @@
+.container {
+  margin: 1vw 0 -1%;
+  width: 100%;
+  position: relative;
+  right: 5px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  user-select: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+
+  @media (max-width: 425px) {
+    gap: min(2vw, 0.5rem);
+    font-size: 3.8vw;
+  }
+}
+
+.name {
+  font-size: 175%;
+  letter-spacing: 0.3px;
+}
+
+.logotype {
+  position: relative;
+  bottom: 0.5px;
+
+  @media (max-width: 425px) {
+    height: 13vw;
+    width: auto;
+  }
+}

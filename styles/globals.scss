@@ -5,7 +5,7 @@
 
 // tab navigation focus
 *:focus-visible {
-  box-shadow: 0px 0px 15px 3px rgba(#f3f3f3, 0.65);
+  box-shadow: 0px 0px 12px 1px var(--text);
 }
 
 // text selection behavior
@@ -106,31 +106,43 @@ header {
   .container {
     position: relative;
 
-    h1 {
-      color: var(--accent-color);
-      letter-spacing: 1px;
-      user-select: none;
-      text-shadow: 0 1px 2px rgba(#474747, 0.5);
+    a {
+      padding: 3px 7px;
+      position: relative;
+      right: 12px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.6vw;
+      border-radius: 0.4rem;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
 
-    a {
-      opacity: 75%;
+    h1 {
+      letter-spacing: 0.35px;
+      user-select: none;
+      opacity: 95%;
+      font-size: 180%;
+      text-shadow: 0 1px 2px rgba(#474747, 0.3);
+    }
+
+    @media (max-width: 1024px) {
+      a {
+        gap: 0.5rem;
+      }
+
+      h1 {
+        font-size: 160%;
+      }
+    }
+
+    .externalLink {
       padding: 0.5rem 1rem;
       position: absolute;
       right: 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-radius: 0.4rem;
-
-      img {
-        position: relative;
-        top: 1px;
-      }
-
-      &:hover {
-        opacity: 100%;
-      }
     }
   }
 }
@@ -212,6 +224,7 @@ h2 {
 }
 
 // default behavior
+
 img {
   user-select: none;
 }
@@ -282,9 +295,10 @@ button {
   }
 }
 
-.disabledTemporary {
+.disabled {
   pointer-events: none !important;
   opacity: 40% !important;
   transform: none !important;
   background-color: transparent !important;
+  user-select: none !important;
 }

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,12 +8,12 @@ datasource db {
 }
 
 model Hymn {
-  id  Int @id 
-  hymnbook String @db.Char(1)
-  number String @db.VarChar(4)
-  title String @db.VarChar(100)
-  lyrics String
+  id           Int    @id
+  hymnbook     String @db.Char(1)
+  number       String @db.VarChar(4)
+  title        String @db.VarChar(100)
+  lyrics       String
   presentation String
-  verse String
-  author String
+  verse        String
+  author       String
 }

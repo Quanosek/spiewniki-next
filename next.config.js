@@ -6,7 +6,6 @@ export default withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
-  sw: "service-worker.js",
 })({
   // Next.js settings
   reactStrictMode: true,

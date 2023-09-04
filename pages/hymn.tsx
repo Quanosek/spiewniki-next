@@ -357,7 +357,7 @@ export default function HymnPage() {
             </button>
 
             <button
-              onClick={() => router.push("/books")}
+              onClick={() => router.push("/")}
               title="Otwórz listę wszystkich dostępnych śpiewników"
             >
               <Image

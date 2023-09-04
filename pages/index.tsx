@@ -44,6 +44,7 @@ export default function IndexPage() {
     <>
       <Head>
         <title>Śpiewniki</title>
+        <style dangerouslySetInnerHTML={{ __html: `.externalLink { right: none; left: 0 }` }} />
       </Head>
 
       <Menu />

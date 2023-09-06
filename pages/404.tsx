@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/error.module.scss";
 
-import MobileHeader from "@/components/mobileHeader";
+import { MobileHeader } from "@/components/elements";
 
 export default function ErrorPage() {
   const router = useRouter();

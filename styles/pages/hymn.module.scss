@@ -64,6 +64,11 @@
 
     button {
       opacity: 90%;
+
+      img {
+        position: relative;
+        bottom: 1px;
+      }
     }
   }
 
@@ -101,7 +106,7 @@
   min-height: 35rem;
   display: flex;
   flex-direction: column;
-  gap: 1.2em;
+  gap: 1em;
   background-color: var(--elements);
   border-radius: 0.4rem;
 
@@ -114,14 +119,14 @@
 
 .title {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 0.3em;
 
   h1 {
     font-size: 150%;
   }
 
-  h2 {
+  p {
     font-size: 90%;
     color: var(--accent-color);
   }
@@ -249,10 +254,23 @@
   }
 
   .text {
-    padding: 4rem 1rem calc(var(--navbarHeight) + 4rem);
+    padding: 4rem 1rem calc(var(--navbarHeight) + 2rem);
     color: var(--text);
     background-color: transparent;
     min-height: unset;
+    gap: 1rem;
+  }
+
+  .title {
+    font-size: 90%;
+
+    h1 {
+      font-size: 135%;
+    }
+  }
+
+  .lyrics {
+    font-size: 95%;
   }
 
   .credits {

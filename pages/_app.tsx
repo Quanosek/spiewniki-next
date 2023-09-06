@@ -1,12 +1,13 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import React, { useEffect } from "react";
+
+import { useEffect } from "react";
 
 import { Analytics } from "@vercel/analytics/react";
 
 import "the-new-css-reset/css/reset.css";
-import "@/styles/themes.scss";
 import "@/styles/globals.scss";
+import "@/styles/themes.scss";
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {

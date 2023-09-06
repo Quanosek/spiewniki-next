@@ -5,8 +5,7 @@ import styles from "@/styles/components/menu.module.scss";
 
 import { replaceLink } from "@/scripts/buttons";
 
-import Favorite from "./menu/favorite";
-import Info from "./menu/info";
+import Favorites from "./menu/favorites";
 import Settings from "./menu/settings";
 
 export default function Menu() {
@@ -30,11 +29,15 @@ export default function Menu() {
       setShowMenu(false);
     }
 
-    // handle keyboard shortcuts
-    const handleKeyPress = (event: KeyboardEvent) => {
+    // keyboard shortcuts
+    const KeyupEvent = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        return;
+      }
+
       switch (event.key.toUpperCase()) {
         case "F":
-          if (!menu) replaceLink("favorite");
+          if (!menu) replaceLink("favorites");
           break;
         case "S":
           if (!menu) replaceLink("settings");
@@ -45,9 +48,8 @@ export default function Menu() {
       }
     };
 
-    // keyboard events
-    document.addEventListener("keyup", handleKeyPress);
-    return () => document.removeEventListener("keyup", handleKeyPress);
+    document.addEventListener("keyup", KeyupEvent);
+    return () => document.removeEventListener("keyup", KeyupEvent);
   }, [router, menu, params]);
 
   return (
@@ -63,8 +65,7 @@ export default function Menu() {
       <div className={styles.menu}>
         <div className={styles.content}>
           {/* select menu window */}
-          {menu === "favorite" && <Favorite />}
-          {menu === "info" && <Info />}
+          {menu === "favorites" && <Favorites />}
           {menu === "settings" && <Settings />}
         </div>
       </div>

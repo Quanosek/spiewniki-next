@@ -53,7 +53,11 @@
     grid-template-columns: repeat(3, 1fr);
     gap: $gridGap;
 
-    a {
+    div {
+      position: relative;
+    }
+
+    .toSearch {
       max-width: 18rem;
       padding: 1rem 1.5rem;
       display: flex;
@@ -67,20 +71,41 @@
       &:hover {
         background-color: var(--elements-hover);
       }
+
+      img {
+        width: auto;
+        height: auto;
+        border-radius: 0.2rem;
+        box-shadow: rgba(#000000, 0.2) 0px 10px 20px,
+          rgba(#000000, 0.22) 0px 6px 6px;
+      }
+
+      p {
+        width: 100%;
+        padding: 0 min(3rem, 3vw);
+        text-align: center;
+      }
     }
 
-    img {
-      width: auto;
-      height: auto;
-      border-radius: 0.2rem;
-      box-shadow: rgba(#000000, 0.2) 0px 10px 20px,
-        rgba(#000000, 0.22) 0px 6px 6px;
-    }
+    .toFile {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.8rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.1s transform ease-out;
+      filter: drop-shadow(rgba(#000000, 1) 1px -2px 20px);
 
-    p {
-      width: 100%;
-      padding: 0 min(3rem, 2.5vw);
-      text-align: center;
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      @media (min-width: 768px) {
+        img {
+          filter: invert(1) drop-shadow(#000000 -1px 4px 8px);
+        }
+      }
     }
   }
 
@@ -121,6 +146,26 @@
       opacity: 100%;
       transform: translateY(-1px);
     }
+  }
+}
+
+.footer {
+  opacity: 45%;
+  padding: 0.5rem 0 calc(var(--navbarHeight) + 1rem);
+  display: none;
+  text-align: center;
+  font-size: min(2.2vw, 80%);
+  user-select: none;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  a:hover {
+    text-decoration: underline;
   }
 }
 
@@ -188,7 +233,8 @@
   }
 
   .container {
-    margin-bottom: calc(var(--navbarHeight) + 2rem);
+    margin-bottom: 2.5rem;
+
     hr {
       display: none;
     }
@@ -207,20 +253,30 @@
       flex-direction: column;
       gap: $gridGap;
 
-      a {
+      .toSearch {
         padding: 2.5vw;
         max-width: unset;
         flex-direction: row;
         gap: calc($gridGap * 2.5);
+
+        img {
+          height: min(10rem, 30vw);
+        }
+
+        p {
+          text-align: left;
+          font-size: 110%;
+        }
       }
 
-      img {
-        height: min(10rem, 30vw);
-      }
+      .toFile {
+        opacity: 55%;
+        top: 1.1rem;
+        right: 0.9rem;
 
-      p {
-        text-align: left;
-        font-size: 110%;
+        img {
+          width: 1.8rem;
+        }
       }
     }
 
@@ -232,6 +288,10 @@
 
   .options {
     display: none;
+  }
+
+  .footer {
+    display: flex;
   }
 }
 
@@ -245,6 +305,15 @@
       width: 6vw;
       height: auto;
       left: 4.2vw;
+    }
+  }
+
+  .hymnBooks .books .toFile {
+    top: 2vw;
+    right: 2.5vw;
+
+    img {
+      width: 5vw;
     }
   }
 }

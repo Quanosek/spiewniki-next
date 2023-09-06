@@ -114,7 +114,7 @@ export default function SettingsMenu() {
         </button>
 
         <button
-          title="Kliknij, lub użyj [Esc] na klawiaturze"
+          title="Kliknij, lub użyj [Esc] na klawiaturze."
           onClick={() => replaceLink(undefined)}
         >
           Zapisz
@@ -125,7 +125,7 @@ export default function SettingsMenu() {
 }
 
 // quick books selection
-function Themes(names: string[]) {
+const Themes = (names: string[]) => {
   const themes: ReactElement[] = [];
 
   names.forEach((name) => {
@@ -136,8 +136,8 @@ function Themes(names: string[]) {
           src="/icons/text.svg"
           width={50}
           height={50}
-          draggable={false}
           priority={true}
+          draggable={false}
         />
         <input
           type="radio"
@@ -153,4 +153,4 @@ function Themes(names: string[]) {
   });
 
   return <form className={styles.colorTheme}>{themes}</form>;
-}
+};

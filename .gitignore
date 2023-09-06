@@ -32,11 +32,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# generated PWA
-**/public/fallback-*.js
+# PWA
 **/public/sw.js
 **/public/workbox-*.js
-
-#.env
-.env
-.env.test
+**/public/fallback-*.js

@@ -34,16 +34,17 @@
     .title {
       position: relative;
       bottom: 2vw;
-      gap: 1vw;
+      gap: 1.5vw;
 
       h1 {
         opacity: 100%;
-        font-size: 4.6vw;
+        font-size: 5vw;
       }
 
       h2 {
-        opacity: 80%;
-        font-size: 2.5vw;
+        opacity: 65%;
+        font-size: 3vw;
+        font-weight: normal;
       }
     }
 
@@ -78,18 +79,19 @@
 .title {
   display: flex;
   flex-direction: column;
-  gap: 0.2vw;
+  gap: 0.4vw;
   transition: none;
 
   h1 {
-    opacity: 80%;
+    opacity: 65%;
     font-size: 2.4vw;
     font-weight: normal;
   }
 
   h2 {
-    opacity: 60%;
-    font-size: 1.4vw;
+    opacity: 50%;
+    font-size: 1.35vw;
+    font-weight: bold;
   }
 }
 
@@ -134,7 +136,7 @@
 
   button {
     opacity: 25%;
-    padding: 1.2vw;
+    padding: 1vw;
     border: 1px solid var(--slide-text);
     border-radius: 100%;
     background-color: transparent;

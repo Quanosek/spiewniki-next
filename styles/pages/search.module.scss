@@ -90,7 +90,7 @@
   gap: 0.6rem;
   flex-wrap: wrap;
 
-  .filtersTitle {
+  h3 {
     font-weight: bold;
     font-size: 105%;
   }
@@ -143,13 +143,48 @@
     h2 {
       height: 100%;
       width: 100%;
-      font-size: 115%;
+      font-size: 120%;
     }
 
-    p {
-      opacity: 75%;
-      margin: 8px 6px 0;
-      font-size: 90%;
+    .lyrics {
+      opacity: 65%;
+      display: flex;
+      position: relative;
+      margin: 6px 6px 0;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 95%;
+      letter-spacing: 0.35px;
+      transition: 0.2s ease-out;
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        background: linear-gradient(
+          180deg,
+          var(--elements) -20%,
+          rgba(#ffffff, 0) 25%,
+          rgb(#ffffff, 0) 55%,
+          var(--elements) 125%
+        );
+      }
+    }
+
+    &:hover .lyrics {
+      opacity: 70%;
+
+      &::after {
+        background: linear-gradient(
+          180deg,
+          var(--elements-hover) -18%,
+          rgba(#ffffff, 0) 30%,
+          rgb(#ffffff, 0) 50%,
+          var(--elements-hover) 120%
+        );
+      }
     }
   }
 
@@ -228,11 +263,13 @@
   }
 
   .results {
+    margin-bottom: 0.5rem;
     width: 100%;
-    font-size: 90%;
+    font-size: 85%;
 
     a {
       margin: 2px;
+      padding: 0.85rem 1rem;
     }
   }
 
@@ -285,9 +322,18 @@
     }
   }
 
+  .filters {
+    font-size: 90%;
+
+    button p {
+      padding: 2.2vw 5.5vw;
+      font-size: 95%;
+    }
+  }
+
   .scrollButton {
     width: 14vw;
-    padding: 3.5vw;
+    padding: 4vw;
     bottom: 5vw;
   }
 }
@@ -296,26 +342,23 @@
   .filters {
     margin: -4.5vw 0 -3vw;
     gap: 2.5vw;
+    font-size: 4vw;
 
     button {
       padding: 1.5vw;
 
       p {
-        padding: 2.4vw 6vw;
+        padding: 2vw 5.2vw;
       }
     }
   }
 
-  .filtersTitle {
-    font-size: 4.5vw;
-  }
-
   .results {
-    margin-bottom: 8vw;
-    font-size: 4.2vw;
+    margin-bottom: 4vw;
+    font-size: 4vw;
 
     a {
-      padding: 4vw 3.5vw;
+      padding: 4vw 4vw;
 
       p {
         margin: 2vw 1vw 0;

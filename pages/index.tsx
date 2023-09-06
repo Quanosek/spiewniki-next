@@ -20,7 +20,13 @@ export default function IndexPage() {
     if (!router.isReady) return;
 
     const KeyupEvent = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+      if (
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        event.metaKey ||
+        router.query.menu
+      ) {
         return;
       }
 

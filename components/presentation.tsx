@@ -34,9 +34,7 @@ export default function Presentation(params: { data: any }) {
 
       if (content) {
         content = content
-          .filter((line: string) => {
-            return !line.startsWith(".");
-          })
+          .filter((line: string) => line.startsWith(" "))
           .map((line: string) => line.slice(1));
       }
 

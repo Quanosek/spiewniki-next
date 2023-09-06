@@ -75,9 +75,6 @@ export default function SearchPage() {
     }
   }, [router, book]);
 
-  // clear search bar button
-  const [showClearBtn, setShowClearBtn] = useState(false);
-
   // searching algorithm
   const Search = (data: [], input: string) => {
     if (!data) return;
@@ -145,6 +142,9 @@ export default function SearchPage() {
     setLoading(false);
     return;
   };
+
+  // clear search bar button
+  const [showClearBtn, setShowClearBtn] = useState(false);
 
   // scroll to top button
   const [showTopBtn, setShowTopBtn] = useState(false);

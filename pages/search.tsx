@@ -2,63 +2,89 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
 
-import BookNames from "@/scripts/bookNames";
+import bookShortcut, { bookList } from "@/scripts/bookShortcut";
 
 export default function SearchPage() {
   const router = useRouter();
   const book = router.query.book as string;
 
-  const [hymns, setHymns] = useState<any>(); // all hymns in book
-  const [data, setData] = useState<any>(); // filtered hymns
+  const [isLoading, setLoading] = useState(true);
+  const [rawData, setRawData] = useState<any>();
+  const [data, setData] = useState<any>();
 
-  const [showTopBtn, setShowTopBtn] = useState(false); // show/hide scroll-to-top button
-  const [showClear, setShowClear] = useState(false); // show/hide clear button
+  // fetch all data on startup
+  useEffect(() => {
+    if (!router.isReady) return;
 
-  // searching main script
-  const search = useCallback((hymns: [], input: string) => {
-    if (!hymns) return;
+    // url errors handling
+    if (book && !bookShortcut(book)) router.push("/404");
+    const params = Object.keys(router.query);
+    if (params.length && !params.includes("book")) router.push("/search");
 
-    // create results
-    let titlesCollector = new Array();
-    let lyricsCollector = new Array();
+    // intelligent focus on search box
+    const input = document.getElementById("input") as HTMLInputElement;
+    localStorage.getItem("focusSearchBox") === "true" && input.focus();
 
-    hymns.map((hymn: { book: string; title: string; lyrics: string[] }) => {
-      if (textFormat(hymn.title).includes(textFormat(input))) {
-        // title found
-        titlesCollector.push({
-          book: hymn.book,
-          title: hymn.title,
-        });
-      } else {
-        // lyrics found
-        hymn.lyrics.map((verses: any) => {
-          verses.map((lines: string, index: number) => {
-            if (textFormat(lines).includes(textFormat(input))) {
-              lyricsCollector.push({
-                book: hymn.book,
-                title: hymn.title,
-                lyrics: `
-                ${verses[index - 2] ? "..." : ""}
-                ${verses[index - 1] ? `${verses[index - 1]}` : ""}
-                ${verses[index]}
-                ${verses[index + 1] ? `${verses[index + 1]}` : ""}
-                ${verses[index + 2] ? "..." : ""}
-                `,
-              });
-            }
-          });
-        });
-      }
+    // remove temporary localStorage files
+    ["prevSearch", "focusSearchBox"].forEach((item) => {
+      localStorage.removeItem(item);
     });
 
-    // change text to searching-friendly format
-    function textFormat(text: string) {
+    // get all hymns from all books
+    if (!book) {
+      const all = bookList();
+      const Collector = new Array();
+
+      all.forEach(async (book) => {
+        Collector.push(
+          await axios
+            .get(`database/${bookShortcut(book)}.json`)
+            .catch((err) => console.error(err))
+        );
+
+        if (Collector.length === all.length) {
+          let hymns = new Array();
+
+          Collector.map(({ data }) => hymns.push(...data));
+          hymns = hymns.sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { numeric: true })
+          );
+
+          setRawData(hymns);
+          setData(hymns);
+          setLoading(false);
+        }
+      });
+
+      // get all hymns from selected book
+    } else {
+      axios
+        .get(`database/${bookShortcut(book)}.json`)
+        .then(({ data }) => {
+          setRawData(data);
+          setData(data);
+          setLoading(false);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [router, book]);
+
+  // searching algorithm
+  const Search = (data: [], input: string) => {
+    if (!data) return;
+    setLoading(true);
+
+    let NamesCollector = new Array();
+    let LyricsCollector = new Array();
+
+    // simplify text
+    const textFormat = (text: string) => {
       return text
         .toLowerCase()
         .replaceAll("ą", "a")
@@ -71,70 +97,88 @@ export default function SearchPage() {
         .replaceAll("ż", "z")
         .replaceAll("ź", "z")
         .replace(/[^\w\s]/gi, "");
-    }
-
-    // merge Collectors
-    let Collector = [...titlesCollector, ...lyricsCollector];
-    Collector = Collector.filter((value, index, self) => {
-      return index === self.findIndex((x) => x.title === value.title);
-    });
-
-    const titles = Collector.map((i) => i.title);
-    Collector = Collector.filter(
-      ({ id }, index) => !titles.includes(id, index + 1)
-    );
-
-    // return all results
-    return Collector;
-  }, []);
-
-  useEffect(() => {
-    if (!router.isReady) return;
-
-    // special focus
-    const input = document.getElementById("input") as HTMLInputElement;
-    localStorage.getItem("focusSearchBox") === "true" && input.focus();
-
-    // remove temporary localStorage files
-    ["searchPage", "focusSearchBox"].forEach((item) => {
-      localStorage.removeItem(item);
-    });
-
-    // show all hymns in book on load
-    (() => {
-      axios
-        .get("/api/xml", {
-          params: { book: router.query.book },
-        })
-        .then(({ data }) => {
-          setHymns(data);
-          setData(search(data, ""));
-        })
-        .catch((err) => {
-          console.error(err);
-          router.push("/search");
-        });
-    })();
-
-    // show/hide scroll-to-top button
-    window.onscroll = () => {
-      window.scrollY > 300 ? setShowTopBtn(true) : setShowTopBtn(false);
     };
 
-    // handle keyboard shortcuts
-    const handleKeyPress = (event: KeyboardEvent) => {
+    data.map((hymn: { book: string; name: string; song: any }) => {
+      const { book, name, song } = hymn;
+
+      if (textFormat(hymn.name).includes(textFormat(input))) {
+        // title found
+        NamesCollector.push({ book, name });
+      } else {
+        // lyrics found
+        const lyrics: string[] = (Object.values(song.lyrics).flat() as string[])
+          .filter((verse: string) => verse.startsWith(" "))
+          .map((verse) => verse.slice(1));
+
+        lyrics.map((verse: string, index: number) => {
+          if (textFormat(verse).includes(textFormat(input))) {
+            LyricsCollector.push({
+              book: hymn.book,
+              name: hymn.name,
+              lyrics: [
+                lyrics[index - 1]
+                  ? `${lyrics[index - 2] ? "..." : ""} ${lyrics[index - 1]}`
+                  : "",
+                verse,
+                lyrics[index + 1] ? lyrics[index + 1] : "",
+                lyrics[index + 2]
+                  ? `${lyrics[index + 2]} ${lyrics[index + 3] ? "..." : ""}`
+                  : "",
+              ],
+            });
+          }
+        });
+      }
+    });
+
+    // merge Collectors
+    let Collector = [...NamesCollector, ...LyricsCollector];
+    Collector = Collector.filter((value, index, self) => {
+      return index === self.findIndex((x) => x.name === value.name);
+    });
+
+    setData(Collector);
+    setLoading(false);
+    return;
+  };
+
+  // clear search bar button
+  const [showClearBtn, setShowClearBtn] = useState(false);
+
+  // scroll to top button
+  const [showTopBtn, setShowTopBtn] = useState(false);
+
+  useEffect(() => {
+    const scrollEvent = () => {
+      if (window.scrollY > 400) setShowTopBtn(true);
+      else setShowTopBtn(false);
+    };
+
+    // keyboard shortcuts
+    const KeyupEvent = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        return;
+      }
+
+      const input = document.getElementById("input") as HTMLInputElement;
+      if (document.activeElement == input) return;
+
       switch (event.key.toUpperCase()) {
         case "/":
-          const input = document.getElementById("input") as HTMLInputElement;
           input.focus();
           break;
       }
     };
 
-    // keyboard events
-    document.addEventListener("keyup", handleKeyPress);
-    return () => document.removeEventListener("keyup", handleKeyPress);
-  }, [router, search]);
+    window.addEventListener("scroll", scrollEvent);
+    document.addEventListener("keyup", KeyupEvent);
+
+    return () => {
+      window.removeEventListener("scroll", scrollEvent);
+      document.removeEventListener("keyup", KeyupEvent);
+    };
+  }, [router]);
 
   return (
     <>
@@ -151,20 +195,16 @@ export default function SearchPage() {
             width={20}
             height={20}
           />
-          <p>Powrót</p>
+          <p>Powrót do śpiewników</p>
         </button>
       </div>
 
       <main>
         <div className={styles.mobileTitle}>
-          <button
-            title="Powrót"
-            className={styles.backArrow}
-            onClick={() => router.push("/")}
-          >
+          <button className={styles.backArrow} onClick={() => router.push("/")}>
             <Image
               className="icon"
-              alt="info"
+              alt="back"
               src="/icons/arrow.svg"
               width={25}
               height={25}
@@ -181,26 +221,32 @@ export default function SearchPage() {
             type="text"
             id="input"
             placeholder="Rozpocznij wyszukiwanie"
-            title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie"
+            title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
             onFocus={(e) => e.target.select()}
             onInput={(e) => {
-              setTimeout(() => {
-                const input = e.target as HTMLInputElement;
-                input.value ? setShowClear(true) : setShowClear(false);
-                return setData(search(hymns, input.value));
-              }, 250);
+              const input = e.target as HTMLInputElement;
+              input.value ? setShowClearBtn(true) : setShowClearBtn(false);
+              setTimeout(() => Search(rawData, input.value), 200);
             }}
             onKeyUp={(e) => {
-              if (e.key === "Enter") {
-                const firstResults = document.getElementById("results")
-                  ?.firstChild?.firstChild as HTMLLinkElement;
+              if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+              const input = e.target as HTMLInputElement;
 
-                if (firstResults.href) router.push(firstResults.href);
-                else {
-                  const input = e.target as HTMLInputElement;
-                  input.value = "";
-                  setData(search(hymns, input.value));
-                }
+              switch (e.key) {
+                case "Escape":
+                  input.blur();
+                  break;
+                case "Enter":
+                  const firstResults = document.getElementById("results")
+                    ?.firstChild?.firstChild as HTMLLinkElement;
+
+                  if (firstResults.href) {
+                    router.push(firstResults.href);
+                  } else {
+                    input.value = "";
+                    Search(rawData, input.value);
+                  }
+                  break;
               }
             }}
           />
@@ -219,7 +265,7 @@ export default function SearchPage() {
           <div
             id="clearButton"
             className={styles.clearButton}
-            style={{ display: showClear ? "flex" : "none" }}
+            style={{ display: showClearBtn ? "flex" : "none" }}
             onClick={() => {
               const input = document.getElementById(
                 "input"
@@ -228,8 +274,8 @@ export default function SearchPage() {
               input.value = "";
               input.focus();
 
-              setData(search(hymns, input.value));
-              return setShowClear(false);
+              setData(rawData);
+              return setShowClearBtn(false);
             }}
           >
             <Image
@@ -244,49 +290,53 @@ export default function SearchPage() {
         </div>
 
         <div id="filters" className={styles.filters}>
-          <p className={styles.filtersTitle}>Szukaj&nbsp;w:</p>
+          <h3>Szukaj&nbsp;w:</h3>
 
-          <button
-            onClick={() => router.push("/books")}
-            title="Kliknij, aby przejść to listy wszystkich śpiewników"
-          >
-            <p>{BookNames(book ? book : "all")}</p>
+          <button>
+            <p>{bookShortcut(book ? book : "all")}</p>
           </button>
         </div>
 
-        {/* dynamically show results */}
         <div id="results" className={styles.results}>
-          {(!data && <div className="loader" />) ||
-            (!data[0] && (
+          {(isLoading && <div className="loader" />) ||
+            (!data.length && (
               <p className={styles.noResults}>Brak wyników wyszukiwania</p>
             )) ||
             data.map(
               (
-                hymn: { book: string; title: string; lyrics: string[] },
+                hymn: {
+                  book: string;
+                  name: string;
+                  lyrics: string[];
+                },
                 index: number,
-                row: { length: number }
+                row: string
               ) => {
                 return (
                   <div key={index}>
                     <Link
                       onClick={() => {
-                        return localStorage.setItem(
-                          "searchPage",
-                          book ? book : "all"
-                        );
+                        if (book) localStorage.setItem("prevSearch", book);
                       }}
                       href={{
                         pathname: "/hymn",
-                        query: { book: hymn.book, title: hymn.title },
+                        query: {
+                          book: bookShortcut(hymn.book),
+                          title: hymn.name,
+                        },
                       }}
                     >
-                      <h2>{hymn.title}</h2>
-                      {hymn.lyrics && <p>{hymn.lyrics}</p>}
+                      <h2>{hymn.name}</h2>
+                      {hymn.lyrics && (
+                        <div className={styles.lyrics}>
+                          {hymn.lyrics.map((verse: string, index: number) => {
+                            return <p key={index}>{verse}</p>;
+                          })}
+                        </div>
+                      )}
                     </Link>
 
-                    {
-                      index + 1 !== row.length && <hr /> // separate results
-                    }
+                    {index + 1 !== row.length && <hr />}
                   </div>
                 );
               }
@@ -294,10 +344,9 @@ export default function SearchPage() {
         </div>
 
         <button
-          title="Wróć na samą górę."
+          title="Powrót na górę strony"
           className={styles.scrollButton}
           style={{
-            // show/hide button
             visibility: showTopBtn ? "visible" : "hidden",
             opacity: showTopBtn ? 0.8 : 0,
           }}

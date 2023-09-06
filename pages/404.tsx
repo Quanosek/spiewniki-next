@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/error.module.scss";
 
-import MobileHeader from "@/components/mobileHeader";
+import { MobileHeader } from "@/components/elements";
 
 export default function ErrorPage() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function ErrorPage() {
         <div className={styles.container}>
           <h1>Strona napotkała problem</h1>
           <p>
-            Przejdź do <Link href={"/"}>strony głównej</Link>.{" "}
+            Przejdź do <Link href={"/"}>śpiewników</Link>.{" "}
             <span className={styles.counter}>[{seconds}]</span>
           </p>
         </div>

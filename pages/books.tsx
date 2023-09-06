@@ -6,7 +6,7 @@ import { ReactElement } from "react";
 
 import styles from "@/styles/pages/books.module.scss";
 
-import bookNames from "@/scripts/bookNames";
+import bookShortcut, { bookList, pdfBooks } from "@/scripts/bookShortcut";
 
 export default function BooksPage() {
   const router = useRouter();
@@ -14,14 +14,14 @@ export default function BooksPage() {
   return (
     <>
       <Head>
-        <title>Wszystkie śpiewniki / Śpiewniki</title>
+        <title>Lista śpiewników / Śpiewniki</title>
       </Head>
 
       <div className="backArrow">
         <button onClick={() => router.back()}>
           <Image
             className="icon"
-            alt="strzałka"
+            alt="arrow"
             src="/icons/arrow.svg"
             width={20}
             height={20}
@@ -32,37 +32,33 @@ export default function BooksPage() {
 
       <main>
         <div className={styles.title}>
-          <button
-            title="Powrót do strony głównej"
-            className={styles.backArrow}
-            onClick={() => router.back()}
-          >
+          <button className={styles.backArrow} onClick={() => router.back()}>
             <Image
               className="icon"
-              alt="info"
+              alt="back"
               src="/icons/arrow.svg"
               width={25}
               height={25}
-              draggable="false"
+              draggable={false}
             />
           </button>
 
           <h2>Lista wszystkich śpiewników:</h2>
         </div>
 
-        <div className={styles.books}>
+        <div className={styles.list}>
           <Link
             className={styles.all}
             href={{
               pathname: "/search",
             }}
           >
-            <p>{bookNames("all")}</p>
+            <p>{bookShortcut("all")}</p>
           </Link>
 
           <hr />
 
-          {Books(["PBT", "UP", "N"])}
+          {Books(bookList())}
         </div>
       </main>
     </>
@@ -70,27 +66,46 @@ export default function BooksPage() {
 }
 
 // show all books
-function Books(names: string[]) {
+const Books = (names: string[]) => {
   const books: ReactElement[] = [];
 
   names.forEach((name, index) => {
     books.push(
       <div key={index}>
-        <Link
-          href={{
-            pathname: "/search",
-            query: { book: name },
-          }}
-        >
-          <p>{bookNames(name)}</p>
-        </Link>
+        <div className={styles.book}>
+          <Link
+            className={styles.toSearch}
+            href={{
+              pathname: "/search",
+              query: { book: name },
+            }}
+          >
+            <p>{bookShortcut(name)}</p>
+          </Link>
 
-        {
-          index + 1 !== names.length && <hr /> // separate results
-        }
+          {pdfBooks().includes(name) && (
+            <Link
+              className={styles.toFile}
+              href={`/pdf/${bookShortcut(name)}.pdf`}
+              target="_blank"
+            >
+              <p>Otwórz PDF</p>
+              <Image
+                className="icon"
+                alt="pdf file"
+                src="/icons/document.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+            </Link>
+          )}
+        </div>
+
+        {index + 1 !== names.length && <hr />}
       </div>
     );
   });
 
-  return <div className={styles.list}>{books}</div>;
-}
+  return <div className={styles.books}>{books}</div>;
+};

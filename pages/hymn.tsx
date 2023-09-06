@@ -7,63 +7,50 @@ import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
 
+import bookShortcut from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
-import Presentation from "@/components/presentation";
+import { Navbar } from "@/components/elements";
 import Menu from "@/components/menu";
-import Navbar from "@/components/navbar";
+import Presentation from "@/components/presentation";
 
 export default function HymnPage() {
   const router = useRouter();
+  const { book, title } = router.query as { book: string; title: string };
 
-  // operators
-  const [hymn, setHymn] = useState<any>(); // all hymn data
+  const [isLoading, setLoading] = useState(true);
+  const [hymn, setHymn] = useState<any>();
 
-  const [fontSize, setFontSize] = useState("21"); // displayed font size
-  const [hideNavigators, setHideNavigators] = useState(false); // navigator elements style on scroll
-  const [presentation, setPresentation] = useState(false); // navigator elements style on scroll
-  const [inFavorites, setInFavorites] = useState(false); // current hymn is n favorites array
+  // fetch data on startup
+  useEffect(() => {
+    if (!router.isReady) return;
 
-  // show placeholder element
-  const clearHymn = useCallback(() => {
-    setHymn(null);
-    window.scrollTo(0, 0);
-  }, []);
-
-  // handling random buttons
-  const randomButtonHandler = useCallback(() => {
-    clearHymn();
-    randomHymn(router.query.book);
-    localStorage.setItem("searchPage", router.query.book as string);
-  }, [clearHymn, router]);
-
-  // showing presentation layout
-  const presentationButton = useCallback(() => {
-    setPresentation(true);
-    const elem = document.documentElement;
-    elem.requestFullscreen && elem.requestFullscreen();
-  }, []);
-
-  // back to specific book search page
-  const backButton = useCallback(() => {
-    localStorage.setItem("focusSearchBox", "true");
-    const book = localStorage.getItem("searchPage");
-
-    if (!book || book == "all") {
-      router.push("/search");
-    } else {
-      router.push({
-        pathname: "/search",
-        query: { book },
-      });
+    // url errors handling
+    if (book && !bookShortcut(book)) router.push("/404");
+    const params = Object.keys(router.query);
+    if (!(params.includes("book") && params.includes("title"))) {
+      router.push("/404");
     }
-  }, [router]);
 
-  // previous & next hymn button
+    // get all hymn data
+    axios
+      .get(`database/${bookShortcut(book)}.json`)
+      .then(({ data }) => {
+        const hymn = data.find((elem: any) => elem.name === title);
+        hymn.lyrics = Object.values(hymn.song.lyrics);
+
+        setHymn(hymn);
+        setLoading(false);
+      })
+      .catch((err) => console.error(err));
+  }, [router, book, title]);
+
+  // previous & next hymn buttons
   const changeHymn = useCallback(
     (id: number, operator: string) => {
-      let position = 0;
+      setLoading(true);
 
+      let position = 0;
       switch (operator) {
         case "prev":
           position = id - 1;
@@ -73,191 +60,202 @@ export default function HymnPage() {
           break;
       }
 
-      axios
-        .get("/api/xml", {
-          params: { book: router.query.book },
-        })
-        .then(({ data }) => {
-          if (position < 0 || position >= data.length) return;
+      if (position < 0) {
+        setLoading(false);
+        alert("To jest pierwsza pieśń w tym śpiewniku!");
+        return;
+      }
 
-          clearHymn();
+      axios
+        .get(`database/${hymn.book}.json`)
+        .then(({ data }) => {
+          if (position >= data.length) {
+            setLoading(false);
+            alert("To jest ostatnia pieśń w tym śpiewniku!");
+            return;
+          }
+
+          const hymn = data.find((elem: any) => elem.id === position);
 
           router.push({
             pathname: "/hymn",
             query: {
-              book: router.query.book,
-              title: data[position].title,
+              book: bookShortcut(hymn.book),
+              title: hymn.name,
             },
           });
         })
         .catch((err) => {
           console.error(err);
           router.back();
+          setLoading(false);
         });
     },
-    [router, clearHymn]
+    [hymn, router]
   );
 
-  const favoriteButon = useCallback(
-    (params: { title: string; book: string; id: number }) => {
-      let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+  const randomBtn = (book: string) => {
+    setLoading(true);
+    randomHymn(book);
+  };
 
-      if (
-        favorites.some(
-          (element: { title: string; book: string; id: number }) =>
-            element.title === params.title &&
-            element.book === params.book &&
-            element.id === params.id
-        )
-      ) {
-        setInFavorites(false);
+  // hide bottom navbar on mobile
+  const [hideNavbar, setHideNavbar] = useState(false);
 
-        favorites = favorites.filter(
-          (element: { title: string; book: string; id: number }) =>
-            element.title !== params.title ||
-            element.book !== params.book ||
-            element.id !== params.id
-        );
-      } else {
-        setInFavorites(true);
-        favorites.push(params);
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const navigation = () => {
+      if (window.scrollY > lastScrollY) setHideNavbar(true);
+      else setHideNavbar(false);
+      lastScrollY = window.scrollY;
+    };
+
+    // handle presentation layout on fullscreen mode
+    const presentation = () => {
+      if (document.fullscreenElement)
+        document.documentElement.style.overflow = "hidden";
+      else {
+        setSlideshowMode(false);
+        document.documentElement.style.overflow = "";
       }
+    };
 
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-    },
-    []
-  );
+    document.addEventListener("scroll", navigation);
+    document.addEventListener("fullscreenchange", presentation);
+    return () => {
+      document.removeEventListener("scroll", navigation);
+      document.removeEventListener("fullscreenchange", presentation);
+    };
+  }, []);
+
+  // show presentation layout
+  const [slideshowMode, setSlideshowMode] = useState(false);
+
+  const slideshowBtn = () => {
+    setSlideshowMode(true);
+    const elem = document.documentElement;
+    elem.requestFullscreen && elem.requestFullscreen();
+  };
+
+  const [fontSize, setFontSize] = useState("21"); // set page font size
+  const [favHymn, setFavHymn] = useState(false); // check if hymn is in favorites
 
   useEffect(() => {
     if (!hymn) return;
 
-    // setting displayed font size
     setFontSize(
       localStorage.getItem("fontSize")
         ? (localStorage.getItem("fontSize") as string)
         : "21"
     );
 
-    // mobile random button fix
-    const randomButton = document.getElementById(
-      "randomButton"
-    ) as HTMLButtonElement;
-    randomButton.addEventListener("click", clearHymn);
-
-    // handle favorites
     let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
     if (
-      favorites.some(
-        (element: { title: string; book: string; id: number }) =>
-          element.title === router.query.title &&
-          element.book === router.query.book &&
-          element.id === hymn.id[0]
-      )
+      favorites.some((element: { book: string; id: number }) => {
+        return element.book === router.query.book && element.id === hymn.id;
+      })
     ) {
-      setInFavorites(true);
-    } else setInFavorites(false);
+      setFavHymn(true);
+    } else setFavHymn(false);
 
-    // handle keyboard shortcuts
-    function handleKeyPress(event: KeyboardEvent) {
-      if (!(presentation || router.query.menu)) {
-        switch (event.key.toUpperCase()) {
-          case "R":
-            return hymn && randomButtonHandler();
-          case "P":
-            return hymn && presentationButton();
-          case "ARROWLEFT":
-            return changeHymn(hymn.id[0], "prev");
-          case "ARROWRIGHT":
-            return changeHymn(hymn.id[0], "next");
-        }
+    // keyboard shortcuts
+    const KeyupEvent = (event: KeyboardEvent) => {
+      if (
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        event.metaKey ||
+        slideshowMode ||
+        router.query.menu
+      ) {
+        return;
       }
+
+      switch (event.key.toUpperCase()) {
+        case "/":
+          localStorage.setItem("focusSearchBox", "true");
+          router.push("/search");
+          break;
+        case "R":
+          randomBtn(hymn.book);
+          break;
+        case "P":
+          slideshowBtn();
+          break;
+        case "ARROWLEFT":
+          changeHymn(hymn.id, "prev");
+          break;
+        case "ARROWRIGHT":
+          changeHymn(hymn.id, "next");
+          break;
+      }
+    };
+
+    document.addEventListener("keyup", KeyupEvent);
+    return () => document.removeEventListener("keyup", KeyupEvent);
+  }, [hymn, router, slideshowMode, changeHymn]);
+
+  // add/remove hymn to/from local favorites list
+  const favoriteButton = () => {
+    const book = bookShortcut(hymn.book);
+    let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+    // remove from favorites list
+    if (
+      favorites.some((elem: { book: string; id: number }) => {
+        return elem.book === book && elem.id === hymn.id;
+      })
+    ) {
+      setFavHymn(false);
+      favorites = favorites.filter((elem: { book: string; id: number }) => {
+        return elem.book !== book || elem.id !== hymn.id;
+      });
+
+      // add to favorites list
+    } else {
+      setFavHymn(true);
+      favorites = [
+        {
+          book,
+          id: hymn.id,
+          title: hymn.name,
+        },
+      ].concat(favorites);
     }
 
-    document.addEventListener("keyup", handleKeyPress);
-    return () => document.removeEventListener("keyup", handleKeyPress);
-  }, [
-    hymn,
-    router,
-    changeHymn,
-    clearHymn,
-    presentation,
-    presentationButton,
-    randomButtonHandler,
-  ]);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  };
 
-  useEffect(() => {
-    if (!router.isReady) return;
-    const { book, title } = router.query;
+  // back to search page with specific book
+  const backButton = () => {
+    localStorage.setItem("focusSearchBox", "true");
+    const prevSearch = localStorage.getItem("prevSearch");
 
-    // redirect on invalid url
-    if (!title)
+    if (!prevSearch) {
+      router.push("/search");
+    } else {
       router.push({
         pathname: "/search",
-        query: { book },
+        query: { book: prevSearch },
       });
-    if (!book) router.push("/search");
-
-    // get hymn data
-    (() => {
-      axios
-        .get("/api/xml", {
-          params: { book, title },
-        })
-        .then(({ data }) => setHymn(data[0]))
-        .catch((err) => {
-          console.error(err);
-
-          if (book) {
-            router.push({
-              pathname: "/search",
-              query: { book },
-            });
-          } else router.push("/search");
-        });
-    })();
-
-    // hide navigation on scroll
-    let lastScrollY = window.scrollY;
-    function hideNavigators() {
-      if (window.scrollY > lastScrollY) setHideNavigators(true);
-      else setHideNavigators(false);
-      lastScrollY = window.scrollY;
     }
-
-    // fullscreen overflow fix for presentation layout
-    function fullscreenHandler() {
-      if (document.fullscreenElement)
-        document.documentElement.style.overflow = "hidden";
-      else {
-        setPresentation(false);
-        document.documentElement.style.overflow = "";
-      }
-    }
-
-    // events handlers
-    document.addEventListener("scroll", hideNavigators);
-    document.addEventListener("fullscreenchange", fullscreenHandler);
-    return () => {
-      document.removeEventListener("scroll", hideNavigators);
-      document.removeEventListener("fullscreenchange", fullscreenHandler);
-    };
-  }, [router]);
+  };
 
   return (
     <>
       <Head>
         <title>
-          {hymn ? `${router.query.title} / Śpiewniki` : "Śpiewniki"}
+          {hymn ? `${title} / Śpiewniki` : "Ładowanie... / Śpiewniki"}
         </title>
       </Head>
 
-      {hymn && presentation && <Presentation data={hymn} />}
+      {slideshowMode && <Presentation data={hymn} />}
       <Menu />
 
-      {/* top navbar */}
       <div
         id="topNavbar"
-        className={`${styles.topNavbar} ${hideNavigators ? styles.hide : ""}`}
+        className={`${styles.topNavbar} ${hideNavbar ? styles.hide : ""}`}
       >
         <button onClick={backButton}>
           <Image
@@ -270,56 +268,16 @@ export default function HymnPage() {
           />
         </button>
 
-        <div>
-          <button onClick={shareButton}>
-            <Image
-              className="icon"
-              alt="share"
-              src="/icons/link.svg"
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </button>
-
-          <button
-            className="disabled"
-            onClick={() => {
-              //
-              //
-              //
-            }}
-          >
-            <Image
-              className="icon"
-              alt="music"
-              src="/icons/note.svg"
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </button>
-
-          <button
-            onClick={() => {
-              if (!hymn) return;
-              return favoriteButon({
-                title: router.query.title as string,
-                book: router.query.book as string,
-                id: hymn.id[0],
-              });
-            }}
-          >
-            <Image
-              className="icon"
-              alt="favorite"
-              src={`/icons/${inFavorites ? "star_filled" : "star_empty"}.svg`}
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </button>
-        </div>
+        <button onClick={favoriteButton}>
+          <Image
+            className="icon"
+            alt="favorite"
+            src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
+            width={25}
+            height={25}
+            draggable={false}
+          />
+        </button>
       </div>
 
       <div className="backArrow">
@@ -331,7 +289,7 @@ export default function HymnPage() {
             width={20}
             height={20}
           />
-          <p>Powrót</p>
+          <p>Powrót do wyszukiwania</p>
         </button>
       </div>
 
@@ -339,27 +297,7 @@ export default function HymnPage() {
         <div className={styles.container}>
           {/* left side buttons */}
           <div className={`${styles.options} ${styles.leftSide}`}>
-            <button
-              title="Włącz prezentację pieśni na pełen ekran [P]"
-              onClick={() => {
-                if (!hymn) return;
-                presentationButton();
-              }}
-            >
-              <Image
-                className="icon"
-                alt="presentation"
-                src="/icons/presentation.svg"
-                width={20}
-                height={20}
-              />
-              <p>Pokaz slajdów</p>
-            </button>
-
-            <button
-              onClick={() => router.push("/")}
-              title="Otwórz listę wszystkich dostępnych śpiewników"
-            >
+            <button onClick={() => router.push("/")}>
               <Image
                 className="icon"
                 alt="book"
@@ -370,24 +308,15 @@ export default function HymnPage() {
               <p>Wybierz śpiewnik</p>
             </button>
 
-            <button
-              onClick={() => {
-                if (!hymn) return;
-                return favoriteButon({
-                  title: router.query.title as string,
-                  book: router.query.book as string,
-                  id: hymn.id[0],
-                });
-              }}
-            >
+            <button onClick={favoriteButton}>
               <Image
                 className="icon"
                 alt="favorite"
-                src={`/icons/${inFavorites ? "star_filled" : "star_empty"}.svg`}
+                src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
                 width={20}
                 height={20}
               />
-              <p>{inFavorites ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
+              <p>{favHymn ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
             </button>
           </div>
 
@@ -399,58 +328,58 @@ export default function HymnPage() {
                 fontSize: `${fontSize}px`,
               }}
             >
-              {!hymn && <div className="loader" />}
-              {hymn && (
-                <>
-                  <div className={styles.title}>
-                    <h1>{hymn.title}</h1>
-                    <h2>{hymn.book}</h2>
-                  </div>
+              {(isLoading && <div className="loader" />) ||
+                (hymn && (
+                  <>
+                    <div className={styles.title}>
+                      <p>{hymn.book}</p>
+                      <h1>{hymn.song.title}</h1>
+                    </div>
 
-                  <hr className={styles.printLine} />
+                    <hr className={styles.printLine} />
 
-                  <div className={styles.lyrics}>
-                    {hymn.lyrics.map((verses: string[], index: number) => {
-                      return (
-                        <div className={styles.verse} key={index}>
-                          {verses.map((verse: string, index: number) => {
-                            if (
-                              verse.startsWith(".") &&
-                              !localStorage.getItem("showChords")
-                            ) {
-                              return;
-                            }
+                    <div className={styles.lyrics}>
+                      {hymn.lyrics.map((verses: string[], index: number) => {
+                        return (
+                          <div className={styles.verse} key={index}>
+                            {verses.map((verse: string, index: number) => {
+                              if (
+                                verse.startsWith(".") &&
+                                !localStorage.getItem("showChords")
+                              ) {
+                                return;
+                              }
 
-                            return (
-                              <p
-                                key={index}
-                                className={
-                                  verse.startsWith(".") ? styles.chord : ""
-                                }
-                              >
-                                {verse.replace(/^[\s.]/, "")}
-                              </p>
-                            );
-                          })}
-                        </div>
-                      );
-                    })}
-                  </div>
+                              return (
+                                <p
+                                  key={index}
+                                  className={
+                                    verse.startsWith(".") ? styles.chord : ""
+                                  }
+                                >
+                                  {verse.replace(/^[\s.]/, "")}
+                                </p>
+                              );
+                            })}
+                          </div>
+                        );
+                      })}
+                    </div>
 
-                  <div className={styles.credits}>
-                    <h3>{hymn.copyright}</h3>
-                    <p>{hymn.author}</p>
-                  </div>
-                </>
-              )}
+                    <div className={styles.credits}>
+                      <h3>{hymn.song.copyright}</h3>
+                      <p>{hymn.song.author}</p>
+                    </div>
+                  </>
+                ))}
             </div>
 
             {/* bottom buttons */}
             <div id="controls" className={styles.controls}>
               <button
                 title="Przejdź do poprzedniej pieśni [←]"
-                onClick={() => changeHymn(hymn.id[0], "prev")}
-                className={hideNavigators ? styles.hide : ""}
+                onClick={() => changeHymn(hymn.id, "prev")}
+                className={hideNavbar ? styles.hide : ""}
               >
                 <Image
                   className={`${styles.previous} icon`}
@@ -467,15 +396,15 @@ export default function HymnPage() {
               <button
                 title="Otwórz losową pieśń [R]"
                 className={styles.randomButton}
-                onClick={randomButtonHandler}
+                onClick={() => randomBtn(hymn.book)}
               >
                 <p>Wylosuj pieśń</p>
               </button>
 
               <button
                 title="Przejdź do następnej pieśni [→]"
-                onClick={() => changeHymn(hymn.id[0], "next")}
-                className={hideNavigators ? styles.hide : ""}
+                onClick={() => changeHymn(hymn.id, "next")}
+                className={hideNavbar ? styles.hide : ""}
               >
                 <p>Następna</p>
 
@@ -494,8 +423,22 @@ export default function HymnPage() {
           {/* right side buttons */}
           <div className={styles.options}>
             <button
+              title="Włącz prezentację pieśni na pełen ekran [P]"
+              onClick={slideshowBtn}
+            >
+              <Image
+                className="icon"
+                alt="presentation"
+                src="/icons/presentation.svg"
+                width={20}
+                height={20}
+              />
+              <p>Pokaz slajdów</p>
+            </button>
+
+            <button
               title="Pokaż listę ulubionych pieśni [F]"
-              onClick={() => replaceLink("favorite")}
+              onClick={() => replaceLink("favorites")}
             >
               <Image
                 className="icon"
@@ -519,44 +462,6 @@ export default function HymnPage() {
                 height={20}
               />
               <p>Ustawienia</p>
-            </button>
-
-            <button
-              className="disabled"
-              title="Pokaż nuty pieśni w formacie PDF"
-              onClick={() => {
-                //
-                //
-                //
-              }}
-            >
-              <Image
-                className="icon"
-                alt="document"
-                src="/icons/document.svg"
-                width={20}
-                height={20}
-              />
-              <p>Pokaż nuty</p>
-            </button>
-
-            <button
-              className="disabled"
-              title="Odtwórz ścieżkę audio pieśni"
-              onClick={() => {
-                //
-                //
-                //
-              }}
-            >
-              <Image
-                className="icon"
-                alt="music"
-                src="/icons/note.svg"
-                width={20}
-                height={20}
-              />
-              <p>Odtwórz audio</p>
             </button>
 
             <button title="Skopiuj link do pieśni" onClick={shareButton}>
@@ -587,8 +492,7 @@ export default function HymnPage() {
         </div>
       </main>
 
-      {/* bottom navbar */}
-      <Navbar setup={"hymn"} />
+      <Navbar />
     </>
   );
 }

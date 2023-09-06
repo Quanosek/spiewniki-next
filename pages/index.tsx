@@ -6,45 +6,54 @@ import { useEffect, ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
-import bookNames from "@/scripts/bookNames";
+import bookShortcut, { pdfBooks } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
+import { Navbar, Footer, MobileHeader } from "@/components/elements";
 import Menu from "@/components/menu";
-import MobileHeader from "@/components/mobileHeader";
-import Navbar from "@/components/navbar";
 
 export default function IndexPage() {
   const router = useRouter();
 
+  // keyboard shortcuts
   useEffect(() => {
     if (!router.isReady) return;
 
-    // handle keyboard shortcuts
-    const handleKeyPress = (event: KeyboardEvent) => {
+    const KeyupEvent = (event: KeyboardEvent) => {
+      if (
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        event.metaKey ||
+        router.query.menu
+      ) {
+        return;
+      }
+
       switch (event.key.toUpperCase()) {
         case "/":
-          router.push("/search");
           localStorage.setItem("focusSearchBox", "true");
+          router.push("/search");
           break;
         case "R":
           if (!router.query.menu) randomHymn(undefined);
           break;
-        case "I":
-          if (!router.query.menu) replaceLink("info");
-          break;
       }
     };
 
-    // keyboard events
-    document.addEventListener("keyup", handleKeyPress);
-    return () => document.removeEventListener("keyup", handleKeyPress);
+    document.addEventListener("keyup", KeyupEvent);
+    return () => document.removeEventListener("keyup", KeyupEvent);
   }, [router]);
 
   return (
     <>
       <Head>
         <title>Śpiewniki</title>
-        <style dangerouslySetInnerHTML={{ __html: `.externalLink { right: none; left: 0 }` }} />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `.externalLink { right: none; left: 0 }`,
+          }}
+        />
       </Head>
 
       <Menu />
@@ -54,7 +63,7 @@ export default function IndexPage() {
 
         <Link
           href={"/search"}
-          title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie"
+          title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
           className={styles.searchBox}
           onClick={() => localStorage.setItem("focusSearchBox", "true")}
         >
@@ -70,7 +79,7 @@ export default function IndexPage() {
         </Link>
 
         <div className={styles.container}>
-          <div className={styles.hymnBooks}>{Books(["PBT", "UP", "N"])}</div>
+          <div className={styles.hymnBooks}>{Books(["B", "C", "N"])}</div>
 
           <div className={styles.options}>
             <button
@@ -89,7 +98,7 @@ export default function IndexPage() {
 
             <button
               title="Pokaż listę ulubionych pieśni [F]"
-              onClick={() => replaceLink("favorite")}
+              onClick={() => replaceLink("favorites")}
             >
               <Image
                 className="icon"
@@ -125,53 +134,64 @@ export default function IndexPage() {
               />
               <p>Udostępnij</p>
             </button>
-
-            <button
-              title="Informacje od twórców strony [I]"
-              onClick={() => replaceLink("info")}
-            >
-              <Image
-                className="icon"
-                alt="info"
-                src="/icons/info.svg"
-                width={20}
-                height={20}
-              />
-              <p>Informacje</p>
-            </button>
           </div>
         </div>
       </main>
 
-      <Navbar setup={"home"} />
+      <div className={styles.footer}>
+        <Footer />
+      </div>
+
+      <Navbar />
     </>
   );
 }
 
 // quick books selection
-function Books(names: string[]) {
+const Books = (names: string[]) => {
   const books: ReactElement[] = [];
 
-  names.forEach((name) => {
+  names.forEach((name, index) => {
     books.push(
-      <Link
-        href={{
-          pathname: "/search",
-          query: { book: name },
-        }}
-        key={name}
-      >
-        <Image
-          alt="cover"
-          src={`/covers/${name}.webp`}
-          width={340}
-          height={480}
-          priority={true}
-        />
-        <p>{bookNames(name)}</p>
-      </Link>
+      <div key={index}>
+        <Link
+          className={styles.toSearch}
+          href={{
+            pathname: "/search",
+            query: { book: name },
+          }}
+        >
+          <Image
+            alt="cover"
+            src={`/covers/${name}.webp`}
+            width={340}
+            height={480}
+            priority={true}
+            draggable={false}
+          />
+          <p>{bookShortcut(name)}</p>
+        </Link>
+
+        {pdfBooks().includes(name) && (
+          <Link
+            title="Otwórz plik PDF śpiewnika"
+            className={styles.toFile}
+            href={`/pdf/${bookShortcut(name)}.pdf`}
+            target="_blank"
+          >
+            <Image
+              className="icon"
+              alt="pdf file"
+              src="/icons/document.svg"
+              width={30}
+              height={30}
+              draggable={false}
+            />
+          </Link>
+        )}
+      </div>
     );
   });
 
   return <div className={styles.books}>{books}</div>;
-}
+};

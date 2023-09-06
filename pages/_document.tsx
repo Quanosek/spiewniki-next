@@ -2,6 +2,8 @@ import { Html, Head, Main, NextScript } from "next/document";
 import Link from "next/link";
 import Image from "next/image";
 
+import { Footer } from "@/components/elements";
+
 export default function Document() {
   return (
     <Html lang="pl">
@@ -14,6 +16,9 @@ export default function Document() {
           name="description"
           content="Zebrane w jednym miejscu śpiewniki i pieśni religijne. | Wszelkie prawa zastrzeżone &#169; 2023"
         />
+
+        {/* prevent indexing */}
+        <meta name="robots" content="none" />
 
         {/* apple */}
         <meta name="mobile-wep-app-capable" content="yes" />
@@ -30,13 +35,16 @@ export default function Document() {
         <link rel="apple-touch-icon" href="/logo/apple-180x180.png" />
 
         {/* working PWA */}
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.webmanifest" />
       </Head>
 
       <body>
         <header>
           <div className="container">
-            <Link href="/">
+            <Link
+              href="/"
+              title="Zebrane w jednym miejscu śpiewniki i pieśni religijne."
+            >
               <Image
                 className="icon"
                 alt="logotype"
@@ -73,19 +81,7 @@ export default function Document() {
         </div>
 
         <footer>
-          <div className="container">
-            <p>
-              Stworzone z ❤️ przez{" "}
-              <Link href="https://github.com/Quanosek">Jakuba Kłało</Link>
-              {" i "}
-              <Link href="https://github.com/Krist0f0l0s">
-                Krzysztofa Olszewskiego
-              </Link>
-              .
-            </p>
-
-            <p>Wszelkie prawa zastrzeżone &#169; 2023</p>
-          </div>
+          <Footer />
         </footer>
 
         <NextScript />

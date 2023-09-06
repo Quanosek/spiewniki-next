@@ -1,55 +1,65 @@
 import Image from "next/image";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 
 import styles from "@/styles/components/presentation.module.scss";
 
 export default function Presentation(params: { data: any }) {
-  const hymn = params.data; // hymn API data
+  const hymn = params.data; // all data from "/hymn" page
 
-  // presentation slides order
-  const presentationOrder = useCallback(() => {
-    const presentation = hymn.presentation[0];
-    const seenParams: { [param: string]: number } = {};
-    const uniqueNumbers: number[] = [];
+  const count = useRef(-1);
+  const [slide, setSlide] = useState<any>();
 
-    if (presentation) {
-      // respecting the presentation default order
-      presentation.split(" ").forEach((param: string) => {
-        if (!(param in seenParams)) {
-          const uniqueNumber = Object.keys(seenParams).length;
-          seenParams[param] = uniqueNumber;
-          uniqueNumbers.push(uniqueNumber);
-        } else uniqueNumbers.push(seenParams[param]);
-      });
-    } else {
-      // all slides in sequence
-      for (let i = 0; i < hymn.lyrics.length; i++) uniqueNumbers.push(i);
-    }
+  // define order and type of presentation
+  let order: string[] | number[];
+  let presentation: boolean;
 
-    return uniqueNumbers;
-  }, [hymn]);
+  if (hymn.song.presentation) {
+    presentation = true;
+    order = hymn.song.presentation.split(" ");
+  } else {
+    presentation = false;
+    order = hymn.lyrics.map((verse: string, index: number) => index);
+  }
 
-  // slide numbers parameters
-  const [slide, setSlide] = useState({
-    current: -1,
-    order: presentationOrder(),
-  });
+  // format lyrics to display
+  const lyricsFormat = useCallback(
+    (data: any) => {
+      let content;
 
-  // navigation main functions
+      if (presentation) {
+        content = data.song.lyrics[order[count.current]];
+      } else {
+        content = data.lyrics[order[count.current]];
+      }
+
+      if (content) {
+        content = content
+          .filter((line: string) => line.startsWith(" "))
+          .map((line: string) => line.slice(1));
+      }
+
+      return content;
+    },
+    [presentation, order]
+  );
+
+  // slideshow navigation
   const prevSlide = useCallback(() => {
-    if (slide.current >= 0) {
-      setSlide({ ...slide, current: slide.current - 1 }); // change param
+    if (count.current >= 0) {
+      count.current--;
+      setSlide(lyricsFormat(hymn));
     }
-  }, [slide]);
+  }, [lyricsFormat, hymn]);
 
   const nextSlide = useCallback(() => {
-    if (slide.current <= slide.order.length) {
-      setSlide({ ...slide, current: slide.current + 1 }); // change param
+    if (count.current <= order.length) {
+      count.current++;
+      setSlide(lyricsFormat(hymn));
     }
-    if (slide.current == slide.order.length) {
-      document.exitFullscreen(); // exit fullscreen/end presentation/hide component
+    if (count.current > order.length) {
+      document.exitFullscreen();
     }
-  }, [slide]);
+  }, [order, lyricsFormat, hymn]);
 
   // mouse behavior parameters
   const [showCursor, setShowCursor] = useState(false);
@@ -74,7 +84,7 @@ export default function Presentation(params: { data: any }) {
 
     // handle fullscreen navigation
     let startPosition: number, endPosition: number;
-    function handleEvent(e: Event) {
+    const handleEvent = (e: Event) => {
       // custom event types
       const KeyboardEvent = e as KeyboardEvent;
       const WheelEvent = e as WheelEvent;
@@ -103,7 +113,7 @@ export default function Presentation(params: { data: any }) {
       ) {
         nextSlide();
       }
-    }
+    };
 
     // events handlers
     const eventTypes: Array<string> = [
@@ -124,7 +134,7 @@ export default function Presentation(params: { data: any }) {
         document.removeEventListener(eventType, handleEvent);
       });
     };
-  }, [prevSlide, nextSlide]);
+  }, [nextSlide, prevSlide]);
 
   return (
     <div
@@ -133,27 +143,23 @@ export default function Presentation(params: { data: any }) {
       style={{ cursor: showCursor ? "default" : "none" }}
     >
       <div
-        // dynamic class names
+        // dynamic classes
         className={`${styles.presentation}
-          ${slide.current < 0 ? styles.first : ""}
-          ${slide.current >= slide.order.length ? styles.last : ""}`}
+          ${count.current < 0 ? styles.first : ""}
+          ${count.current >= order.length ? styles.last : ""}`}
       >
         {/* title section */}
         <div className={styles.title}>
-          <h1>{hymn.title}</h1>
+          <h1>{hymn.name}</h1>
           <h2>{hymn.book}</h2>
         </div>
 
         {/* lyrics section */}
         <div className={styles.verse}>
-          {slide.current >= 0 &&
-            slide.current < slide.order.length &&
-            hymn.lyrics[slide.order[slide.current]] &&
-            hymn.lyrics[slide.order[slide.current]].map(
-              (verse: string, index: number) => {
-                return !verse.startsWith(".") && <p key={index}>{verse}</p>;
-              }
-            )}
+          {slide &&
+            slide.map((line: string, index: number) => {
+              return <p key={index}>{line}</p>;
+            })}
         </div>
 
         {/* progress bar section */}
@@ -161,7 +167,7 @@ export default function Presentation(params: { data: any }) {
           <div
             className={styles.fulfill}
             style={{
-              width: `${(100 / slide.order.length) * (slide.current + 1)}%`,
+              width: `${(100 / order.length) * (count.current + 1)}%`,
             }}
           />
         </div>
@@ -178,8 +184,8 @@ export default function Presentation(params: { data: any }) {
               className="icon"
               alt="arrow left"
               src="/icons/arrow.svg"
-              width={25}
-              height={25}
+              width={20}
+              height={20}
               draggable={false}
             />
           </button>
@@ -192,8 +198,8 @@ export default function Presentation(params: { data: any }) {
               className="icon"
               alt="arrow next"
               src="/icons/arrow.svg"
-              width={25}
-              height={25}
+              width={20}
+              height={20}
               draggable={false}
             />
           </button>

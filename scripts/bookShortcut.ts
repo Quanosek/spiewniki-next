@@ -28,11 +28,11 @@ export default function bookShortcut(input: string) {
 }
 
 export function bookList() {
-  // define all added books
+  // all included books databases
   return ["B", "C", "N", "K", "P", "E", "S", "R"];
 }
 
 export function pdfBooks() {
-  // define all added books
+  // all includes pdf files
   return ["B", "C", "N", "E"];
 }

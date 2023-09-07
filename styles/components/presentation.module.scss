@@ -142,13 +142,13 @@
     background-color: transparent;
     transition: 0.1s opacity ease-out;
 
+    &:hover {
+      opacity: 45%;
+    }
+
     img {
       position: relative;
       cursor: pointer;
-    }
-
-    &:hover {
-      opacity: 45%;
     }
 
     &:nth-child(1) img {

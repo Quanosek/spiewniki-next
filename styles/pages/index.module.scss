@@ -38,6 +38,14 @@
   display: flex;
   justify-content: center;
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 3rem;
+  }
+
+  @media (max-width: 320px) {
+    margin-bottom: 12vw;
+  }
 }
 
 .hymnBooks {
@@ -47,6 +55,7 @@
   font-size: 110%;
 
   $gridGap: 1rem;
+  $radius: 0.4rem;
 
   .books {
     display: grid;
@@ -64,7 +73,7 @@
       flex-direction: column;
       align-items: center;
       gap: $gridGap;
-      border-radius: 0.4rem;
+      border-radius: $radius;
       background-color: var(--elements);
       transition: 0.2s background-color ease-out;
 
@@ -88,17 +97,20 @@
     }
 
     .toFile {
+      opacity: 75%;
       position: absolute;
-      top: 1.5rem;
-      right: 1.8rem;
+      top: 0.8rem;
+      right: 1.2rem;
+      padding: 0.8rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: 0.1s transform ease-out;
+      transition: 0.2s opacity ease-in-out, 0.1s transform ease-out;
       filter: drop-shadow(rgba(#000000, 1) 1px -2px 20px);
 
       &:hover {
-        transform: scale(1.1);
+        opacity: 100%;
+        transform: scale(1.05) translateY(-1px);
       }
 
       @media (min-width: 768px) {
@@ -114,7 +126,7 @@
     padding: 1.5rem;
     width: 100%;
     text-align: center;
-    border-radius: 0.4rem;
+    border-radius: $radius;
     background-color: var(--elements);
     transition: 0.2s background-color ease-out;
 
@@ -167,6 +179,10 @@
   a:hover {
     text-decoration: underline;
   }
+
+  @media (max-width: 320px) {
+    padding: 3vw 0 calc(var(--navbarHeight_mobile) + 5vw);
+  }
 }
 
 @media (max-width: 1024px) {
@@ -175,13 +191,6 @@
 
     &:hover {
       width: 100%;
-    }
-  }
-
-  .container {
-    hr::after {
-      bottom: 1%;
-      height: 102%;
     }
   }
 
@@ -232,14 +241,6 @@
     }
   }
 
-  .container {
-    margin-bottom: 2.5rem;
-
-    hr {
-      display: none;
-    }
-  }
-
   .hymnBooks {
     width: 100%;
     font-size: min(1.25rem, 3.5vw);
@@ -270,12 +271,21 @@
       }
 
       .toFile {
-        opacity: 55%;
-        top: 1.1rem;
-        right: 0.9rem;
+        opacity: 40%;
+        padding: min(3vw, 1rem);
+        top: 0.5vw;
+        right: 0.5vw;
+        border-radius: 0.4rem;
+        aspect-ratio: 1/1;
+
+        &:hover {
+          transform: none;
+          background-color: var(--elements-hover);
+          filter: none;
+        }
 
         img {
-          width: 1.8rem;
+          width: min(5.5vw, 1.8rem);
         }
       }
     }
@@ -305,15 +315,6 @@
       width: 6vw;
       height: auto;
       left: 4.2vw;
-    }
-  }
-
-  .hymnBooks .books .toFile {
-    top: 2vw;
-    right: 2.5vw;
-
-    img {
-      width: 5vw;
     }
   }
 }

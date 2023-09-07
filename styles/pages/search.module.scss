@@ -96,15 +96,17 @@
   }
 
   button {
+    $radius: 30px;
+
     padding: 6px;
-    border-radius: 30px;
+    border-radius: $radius;
     color: var(--accent-color);
     transition: 0.15s ease-out;
 
     p {
       padding: 8px 22px;
       border: 1px solid var(--accent-color);
-      border-radius: 30px;
+      border-radius: $radius;
     }
 
     &:hover {
@@ -119,14 +121,16 @@
 }
 
 .results {
+  $radius: 0.6rem;
+
   width: 80%;
-  border-radius: 0.6rem;
+  border-radius: $radius;
   background-color: var(--elements);
 
   a {
     padding: 1rem 1.1rem;
     display: block;
-    border-radius: 0.4rem;
+    border-radius: $radius;
     transition: 0.1s background-color ease-out;
 
     &:hover {

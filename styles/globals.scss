@@ -207,6 +207,10 @@ main {
   @media (max-width: 425px) {
     gap: 6.8vw;
   }
+
+  @media (max-width: 320px) {
+    min-height: calc(100svh - var(--navbarHeight_mobile));
+  }
 }
 
 h1 {
@@ -316,8 +320,10 @@ nav {
 .loader,
 .loader:before,
 .loader:after {
-  width: 2.5em;
-  height: 2.5em;
+  $size: 2.5em;
+
+  width: $size;
+  height: $size;
   border-radius: 100%;
   animation-fill-mode: both;
   animation: loadAnimation 1.8s infinite ease-in-out;

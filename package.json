@@ -1,6 +1,6 @@
 {
-  "version": "0.4.0",
-  "name": "spiewniki-klalo",
+  "version": "0.4.1",
+  "name": "spiewniki",
   "description": "Zebrane w jednym miejscu śpiewniki i pieśni religijne",
   "type": "module",
   "scripts": {
@@ -22,6 +22,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sass": "^1.66.1",
+    "sharp": "^0.32.5",
     "the-new-css-reset": "^1.9.0",
     "typescript": "5.2.2"
   }

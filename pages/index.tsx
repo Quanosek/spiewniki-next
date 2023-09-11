@@ -10,6 +10,7 @@ import bookShortcut, { pdfBooks } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 import { Navbar, Footer, MobileHeader } from "@/components/elements";
+import Header from"@/components/header";
 import Menu from "@/components/menu";
 
 export default function IndexPage() {
@@ -56,10 +57,14 @@ export default function IndexPage() {
         />
       </Head>
 
+      <div className={styles.header}>
+        <Header />
+      </div>
+
       <Menu />
 
       <main>
-        <MobileHeader />
+        <MobileHeader/>
 
         <Link
           href={"/search"}

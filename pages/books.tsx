@@ -8,6 +8,8 @@ import styles from "@/styles/pages/books.module.scss";
 
 import bookShortcut, { bookList, pdfBooks } from "@/scripts/bookShortcut";
 
+import Header from "@/components/header";
+
 export default function BooksPage() {
   const router = useRouter();
 

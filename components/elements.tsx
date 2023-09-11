@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import router from "next/router";
 
+import { useState, useEffect } from "react";
+
 import bookShortcut from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
@@ -95,8 +97,29 @@ export function Footer() {
 }
 
 export function MobileHeader() {
+  const [isPWA, setIsPWA] = useState(false);
+
+    useEffect(() => {
+        setIsPWA(window.matchMedia('(display-mode: standalone)').matches);
+        console.log(isPWA)
+    })
   return (
     <div className="mobileHeader">
+      {!isPWA && <Link
+        className="externalLink"
+        href="https://nastrazy.org/"
+        target="_blank"
+      >
+        <Image
+          className="mobileIcon"
+          alt="bpsw"
+          src="/icons/house.svg"
+          width={40}
+          height={40}
+          draggable={false}
+          priority={true}
+        />
+      </Link>}
       <Image
         className="icon"
         alt="bpsw"

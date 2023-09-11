@@ -13,6 +13,7 @@ import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 import { Navbar } from "@/components/elements";
 import Menu from "@/components/menu";
 import Presentation from "@/components/presentation";
+import Header from "@/components/header";
 
 export default function HymnPage() {
   const router = useRouter();
@@ -249,6 +250,8 @@ export default function HymnPage() {
           {hymn ? `${title} / Śpiewniki` : "Ładowanie... / Śpiewniki"}
         </title>
       </Head>
+
+      <Header/>
 
       {slideshowMode && <Presentation data={hymn} />}
       <Menu />

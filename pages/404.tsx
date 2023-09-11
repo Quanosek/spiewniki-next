@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/error.module.scss";
 
+import Header from "@/components/header";
 import { MobileHeader } from "@/components/elements";
 
 export default function ErrorPage() {
@@ -26,6 +27,8 @@ export default function ErrorPage() {
       <Head>
         <title>Nie znaleziono strony / Śpiewniki</title>
       </Head>
+
+      <Header />
 
       <main>
         <MobileHeader />

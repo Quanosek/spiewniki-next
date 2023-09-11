@@ -8,6 +8,8 @@ import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
 
+import Header from "@/components/header";
+
 import bookShortcut, { bookList } from "@/scripts/bookShortcut";
 
 export default function SearchPage() {
@@ -185,6 +187,10 @@ export default function SearchPage() {
       <Head>
         <title>Wyszukiwanie / Śpiewniki</title>
       </Head>
+
+      <div className={styles.header}>
+        <Header />
+      </div>
 
       <div className="backArrow">
         <button onClick={() => router.push("/")}>

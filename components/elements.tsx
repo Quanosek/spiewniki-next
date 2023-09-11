@@ -101,7 +101,6 @@ export function MobileHeader() {
 
     useEffect(() => {
         setIsPWA(window.matchMedia('(display-mode: standalone)').matches);
-        console.log(isPWA)
     })
   return (
     <div className="mobileHeader">

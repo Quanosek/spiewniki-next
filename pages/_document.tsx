@@ -1,7 +1,4 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import Link from "next/link";
-import Image from "next/image";
-
 import { Footer } from "@/components/elements";
 
 export default function Document() {
@@ -39,29 +36,7 @@ export default function Document() {
       </Head>
 
       <body>
-        <header>
-          <div className="container">
-            <Link
-              href="/"
-              title="Zebrane w jednym miejscu śpiewniki i pieśni religijne."
-            >
-              <Image
-                className="icon"
-                alt="logotype"
-                src="./logo/bpsw.svg"
-                width={40}
-                height={40}
-                draggable={false}
-              />
-
-              <h1>Śpiewniki</h1>
-            </Link>
-          </div>
-        </header>
-
-        <div className="container">
-          <Main />
-        </div>
+        <Main />
 
         <footer>
           <Footer />

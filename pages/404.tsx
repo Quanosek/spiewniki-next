@@ -4,8 +4,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/error.module.scss";
-
-import { MobileHeader } from "@/components/elements";
+import { Header, MobileHeader } from "@/components/elements";
 
 export default function ErrorPage() {
   const router = useRouter();
@@ -27,17 +26,21 @@ export default function ErrorPage() {
         <title>Nie znaleziono strony / Śpiewniki</title>
       </Head>
 
-      <main>
-        <MobileHeader />
+      <Header buttons={undefined} />
 
-        <div className={styles.container}>
-          <h1>Strona napotkała problem</h1>
-          <p>
-            Przejdź do <Link href={"/"}>strony głównej</Link>.{" "}
-            <span className={styles.counter}>[{seconds}]</span>
-          </p>
-        </div>
-      </main>
+      <div className="container">
+        <main>
+          <MobileHeader />
+
+          <div className={styles.container}>
+            <h1>Strona napotkała problem</h1>
+            <p>
+              Przejdź do <Link href={"/"}>strony głównej</Link>.{" "}
+              <span className={styles.counter}>[{seconds}]</span>
+            </p>
+          </div>
+        </main>
+      </div>
     </>
   );
 }

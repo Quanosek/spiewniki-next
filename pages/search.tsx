@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-
 import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
-
 import bookShortcut, { bookList } from "@/scripts/bookShortcut";
+
+import { Header } from "@/components/elements";
 
 export default function SearchPage() {
   const router = useRouter();
@@ -189,195 +189,197 @@ export default function SearchPage() {
         <title>Wyszukiwanie / Śpiewniki</title>
       </Head>
 
-      <div className="backArrow">
-        <button onClick={() => router.push("/")}>
-          <Image
-            className="icon"
-            alt="arrow"
-            src="/icons/arrow.svg"
-            width={20}
-            height={20}
-          />
-          <p>Powrót do strony głównej</p>
-        </button>
-      </div>
+      <Header
+        buttons={{
+          leftSide: {
+            title: "Powrót do strony głównej",
+            icon: "arrow",
+            onclick: () => router.push("/"),
+          },
+        }}
+      />
 
-      <main>
-        <div className={styles.mobileTitle}>
-          <button className={styles.backArrow} onClick={() => router.push("/")}>
+      <div className="container">
+        <main>
+          <div className={styles.mobileTitle}>
+            <button
+              className={styles.backArrow}
+              onClick={() => router.push("/")}
+            >
+              <Image
+                className="icon"
+                alt="back"
+                src="/icons/arrow.svg"
+                width={25}
+                height={25}
+                draggable={false}
+              />
+            </button>
+
+            <h2>Wyszukiwanie</h2>
+          </div>
+
+          <div className={styles.searchBox}>
+            <input
+              autoComplete="off"
+              type="text"
+              id="input"
+              placeholder="Rozpocznij wyszukiwanie"
+              title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
+              onFocus={(e) => e.target.select()}
+              onInput={(e) => {
+                const input = e.target as HTMLInputElement;
+                input.value ? setShowClearBtn(true) : setShowClearBtn(false);
+                setTimeout(() => Search(rawData, input.value), 200);
+
+                // easter egg
+                if (input.value === "2137") {
+                  router.push({
+                    pathname: "/hymn",
+                    query: {
+                      book: "C",
+                      title: "7C. Pan kiedyś stanął nad brzegiem",
+                    },
+                  });
+                }
+              }}
+              onKeyUp={(e) => {
+                if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+                const input = e.target as HTMLInputElement;
+
+                switch (e.key) {
+                  case "Escape":
+                    input.blur();
+                    break;
+                  case "Enter":
+                    const firstResults = document.getElementById("results")
+                      ?.firstChild?.firstChild as HTMLLinkElement;
+
+                    if (firstResults.href) {
+                      router.push(firstResults.href);
+                    } else {
+                      input.value = "";
+                      Search(rawData, input.value);
+                    }
+                    break;
+                }
+              }}
+            />
+
+            <div id="searchIcon" className={styles.searchIcon}>
+              <Image
+                className="icon"
+                alt="search icon"
+                src="/icons/search.svg"
+                width={25}
+                height={25}
+                draggable={false}
+              />
+            </div>
+
+            <div
+              id="clearButton"
+              className={styles.clearButton}
+              style={{ display: showClearBtn ? "flex" : "none" }}
+              onClick={() => {
+                const input = document.getElementById(
+                  "input"
+                ) as HTMLInputElement;
+
+                input.value = "";
+                input.focus();
+
+                setData(rawData);
+                return setShowClearBtn(false);
+              }}
+            >
+              <Image
+                className="icon"
+                alt="clear"
+                src="/icons/close.svg"
+                width={25}
+                height={25}
+                draggable={false}
+              />
+            </div>
+          </div>
+
+          <div id="filters" className={styles.filters}>
+            <h3>Szukaj&nbsp;w:</h3>
+
+            <button
+              onClick={() => router.push("/books")}
+              title="Otwórz listę wszystkich śpiewników [B]"
+            >
+              <p>{bookShortcut(book ? book : "all")}</p>
+            </button>
+          </div>
+
+          <div id="results" className={styles.results}>
+            {(isLoading && <div className="loader" />) ||
+              (!data.length && (
+                <p className={styles.noResults}>Brak wyników wyszukiwania</p>
+              )) ||
+              data.map(
+                (
+                  hymn: {
+                    book: string;
+                    name: string;
+                    lyrics: string[];
+                  },
+                  index: number,
+                  row: string
+                ) => {
+                  return (
+                    <div key={index}>
+                      <Link
+                        onClick={() => {
+                          if (book) localStorage.setItem("prevSearch", book);
+                        }}
+                        href={{
+                          pathname: "/hymn",
+                          query: {
+                            book: bookShortcut(hymn.book),
+                            title: hymn.name,
+                          },
+                        }}
+                      >
+                        <h2>{hymn.name}</h2>
+                        {hymn.lyrics && (
+                          <div className={styles.lyrics}>
+                            {hymn.lyrics.map((verse: string, index: number) => {
+                              return <p key={index}>{verse}</p>;
+                            })}
+                          </div>
+                        )}
+                      </Link>
+
+                      {index + 1 !== row.length && <hr />}
+                    </div>
+                  );
+                }
+              )}
+          </div>
+
+          <button
+            title="Powrót na górę strony"
+            className={styles.scrollButton}
+            style={{
+              visibility: showTopBtn ? "visible" : "hidden",
+              opacity: showTopBtn ? 0.8 : 0,
+            }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
             <Image
-              className="icon"
-              alt="back"
+              alt="arrow up"
               src="/icons/arrow.svg"
               width={25}
               height={25}
               draggable={false}
             />
           </button>
-
-          <h2>Wyszukiwanie</h2>
-        </div>
-
-        <div className={styles.searchBox}>
-          <input
-            autoComplete="off"
-            type="text"
-            id="input"
-            placeholder="Rozpocznij wyszukiwanie"
-            title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
-            onFocus={(e) => e.target.select()}
-            onInput={(e) => {
-              const input = e.target as HTMLInputElement;
-              input.value ? setShowClearBtn(true) : setShowClearBtn(false);
-              setTimeout(() => Search(rawData, input.value), 200);
-
-              // easter egg
-              if (input.value === "2137") {
-                router.push({
-                  pathname: "/hymn",
-                  query: {
-                    book: "C",
-                    title: "7C. Pan kiedyś stanął nad brzegiem",
-                  },
-                });
-              }
-            }}
-            onKeyUp={(e) => {
-              if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
-              const input = e.target as HTMLInputElement;
-
-              switch (e.key) {
-                case "Escape":
-                  input.blur();
-                  break;
-                case "Enter":
-                  const firstResults = document.getElementById("results")
-                    ?.firstChild?.firstChild as HTMLLinkElement;
-
-                  if (firstResults.href) {
-                    router.push(firstResults.href);
-                  } else {
-                    input.value = "";
-                    Search(rawData, input.value);
-                  }
-                  break;
-              }
-            }}
-          />
-
-          <div id="searchIcon" className={styles.searchIcon}>
-            <Image
-              className="icon"
-              alt="search icon"
-              src="/icons/search.svg"
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </div>
-
-          <div
-            id="clearButton"
-            className={styles.clearButton}
-            style={{ display: showClearBtn ? "flex" : "none" }}
-            onClick={() => {
-              const input = document.getElementById(
-                "input"
-              ) as HTMLInputElement;
-
-              input.value = "";
-              input.focus();
-
-              setData(rawData);
-              return setShowClearBtn(false);
-            }}
-          >
-            <Image
-              className="icon"
-              alt="clear"
-              src="/icons/close.svg"
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </div>
-        </div>
-
-        <div id="filters" className={styles.filters}>
-          <h3>Szukaj&nbsp;w:</h3>
-
-          <button
-            onClick={() => router.push("/books")}
-            title="Otwórz listę wszystkich śpiewników [B]"
-          >
-            <p>{bookShortcut(book ? book : "all")}</p>
-          </button>
-        </div>
-
-        <div id="results" className={styles.results}>
-          {(isLoading && <div className="loader" />) ||
-            (!data.length && (
-              <p className={styles.noResults}>Brak wyników wyszukiwania</p>
-            )) ||
-            data.map(
-              (
-                hymn: {
-                  book: string;
-                  name: string;
-                  lyrics: string[];
-                },
-                index: number,
-                row: string
-              ) => {
-                return (
-                  <div key={index}>
-                    <Link
-                      onClick={() => {
-                        if (book) localStorage.setItem("prevSearch", book);
-                      }}
-                      href={{
-                        pathname: "/hymn",
-                        query: {
-                          book: bookShortcut(hymn.book),
-                          title: hymn.name,
-                        },
-                      }}
-                    >
-                      <h2>{hymn.name}</h2>
-                      {hymn.lyrics && (
-                        <div className={styles.lyrics}>
-                          {hymn.lyrics.map((verse: string, index: number) => {
-                            return <p key={index}>{verse}</p>;
-                          })}
-                        </div>
-                      )}
-                    </Link>
-
-                    {index + 1 !== row.length && <hr />}
-                  </div>
-                );
-              }
-            )}
-        </div>
-
-        <button
-          title="Powrót na górę strony"
-          className={styles.scrollButton}
-          style={{
-            visibility: showTopBtn ? "visible" : "hidden",
-            opacity: showTopBtn ? 0.8 : 0,
-          }}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        >
-          <Image
-            alt="arrow up"
-            src="/icons/arrow.svg"
-            width={25}
-            height={25}
-            draggable={false}
-          />
-        </button>
-      </main>
+        </main>
+      </div>
     </>
   );
 }

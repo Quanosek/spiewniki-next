@@ -2,7 +2,6 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useCallback, useState, useEffect } from "react";
-
 import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
@@ -10,9 +9,9 @@ import styles from "@/styles/pages/hymn.module.scss";
 import bookShortcut from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
-import { Navbar } from "@/components/elements";
 import Menu from "@/components/menu";
 import Presentation from "@/components/presentation";
+import { Header, Navbar } from "@/components/elements";
 
 export default function HymnPage() {
   const router = useRouter();
@@ -253,250 +252,246 @@ export default function HymnPage() {
         </title>
       </Head>
 
-      {slideshowMode && <Presentation data={hymn} />}
       <Menu />
+      {slideshowMode && <Presentation data={hymn} />}
 
-      <div
-        id="topNavbar"
-        className={`${styles.topNavbar} ${hideNavbar ? styles.hide : ""}`}
-      >
-        <button onClick={backButton}>
-          <Image
-            className={`${styles.back} icon`}
-            alt="back"
-            src="/icons/arrow.svg"
-            width={25}
-            height={25}
-            draggable={false}
-          />
-        </button>
+      <Header
+        buttons={{
+          leftSide: {
+            title: "Powrót do wyszukiwania",
+            icon: "arrow",
+            onclick: () => backButton(),
+          },
+        }}
+      />
 
-        <button onClick={favoriteButton}>
-          <Image
-            className="icon"
-            alt="favorite"
-            src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
-            width={25}
-            height={25}
-            draggable={false}
-          />
-        </button>
-      </div>
+      <div className="container">
+        <div className={`${styles.topNavbar} ${hideNavbar ? styles.hide : ""}`}>
+          <button onClick={backButton}>
+            <Image
+              className={`${styles.back} icon`}
+              alt="back"
+              src="/icons/arrow.svg"
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </button>
 
-      <div className="backArrow">
-        <button onClick={backButton}>
-          <Image
-            className="icon"
-            alt="arrow"
-            src="/icons/arrow.svg"
-            width={20}
-            height={20}
-          />
-          <p>Powrót do wyszukiwania</p>
-        </button>
-      </div>
-
-      <main>
-        <div className={styles.container}>
-          {/* left side buttons */}
-          <div className={`${styles.options} ${styles.leftSide}`}>
-            <button
-              title="Otwórz listę wszystkich śpiewników [B]"
-              onClick={() => router.push("/books")}
-            >
-              <Image
-                className="icon"
-                alt="book"
-                src="/icons/book.svg"
-                width={20}
-                height={20}
-              />
-              <p>Wybierz śpiewnik</p>
-            </button>
-
-            <button onClick={favoriteButton}>
-              <Image
-                className="icon"
-                alt="favorite"
-                src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
-                width={20}
-                height={20}
-              />
-              <p>{favHymn ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
-            </button>
-          </div>
-
-          {/* show all hymn parameters */}
-          <div className={styles.center}>
-            <div
-              className={styles.text}
-              style={{
-                fontSize: `${fontSize}px`,
-              }}
-            >
-              {(isLoading && <div className="loader" />) ||
-                (hymn && (
-                  <>
-                    <div className={styles.title}>
-                      <p>{hymn.book}</p>
-                      <h1>{hymn.song.title}</h1>
-                    </div>
-
-                    <hr className={styles.printLine} />
-
-                    <div className={styles.lyrics}>
-                      {hymn.lyrics.map((verses: string[], index: number) => {
-                        return (
-                          <div className={styles.verse} key={index}>
-                            {verses.map((verse: string, index: number) => {
-                              if (
-                                verse.startsWith(".") &&
-                                !localStorage.getItem("showChords")
-                              ) {
-                                return;
-                              }
-
-                              return (
-                                <p
-                                  key={index}
-                                  className={
-                                    verse.startsWith(".") ? styles.chord : ""
-                                  }
-                                >
-                                  {verse.replace(/^[\s.]/, "")}
-                                </p>
-                              );
-                            })}
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className={styles.credits}>
-                      <h3>{hymn.song.copyright}</h3>
-                      <p>{hymn.song.author}</p>
-                    </div>
-                  </>
-                ))}
-            </div>
-
-            {/* bottom buttons */}
-            <div id="controls" className={styles.controls}>
-              <button
-                title="Przejdź do poprzedniej pieśni [←]"
-                onClick={() => changeHymn(hymn.id, "prev")}
-                className={hideNavbar ? styles.hide : ""}
-              >
-                <Image
-                  className={`${styles.previous} icon`}
-                  alt="arrow left"
-                  src="/icons/arrow.svg"
-                  width={30}
-                  height={30}
-                  draggable={false}
-                />
-
-                <p>Poprzednia</p>
-              </button>
-
-              <button
-                title="Otwórz losową pieśń [R]"
-                className={styles.randomButton}
-                onClick={() => randomBtn(hymn.book)}
-              >
-                <p>Wylosuj pieśń</p>
-              </button>
-
-              <button
-                title="Przejdź do następnej pieśni [→]"
-                onClick={() => changeHymn(hymn.id, "next")}
-                className={hideNavbar ? styles.hide : ""}
-              >
-                <p>Następna</p>
-
-                <Image
-                  className={`${styles.next} icon`}
-                  alt="arrow right"
-                  src="/icons/arrow.svg"
-                  width={30}
-                  height={30}
-                  draggable={false}
-                />
-              </button>
-            </div>
-          </div>
-
-          {/* right side buttons */}
-          <div className={styles.options}>
-            <button
-              title="Włącz prezentację pieśni na pełen ekran [P]"
-              onClick={slideshowBtn}
-            >
-              <Image
-                className="icon"
-                alt="presentation"
-                src="/icons/presentation.svg"
-                width={20}
-                height={20}
-              />
-              <p>Pokaz slajdów</p>
-            </button>
-
-            <button
-              title="Pokaż listę ulubionych pieśni [F]"
-              onClick={() => replaceLink("favorites")}
-            >
-              <Image
-                className="icon"
-                alt="list"
-                src="/icons/list.svg"
-                width={20}
-                height={20}
-              />
-              <p>Lista ulubionych</p>
-            </button>
-
-            <button
-              title="Pokaż ustawienia aplikacji [S]"
-              onClick={() => replaceLink("settings")}
-            >
-              <Image
-                className="icon"
-                alt="settings"
-                src="/icons/settings.svg"
-                width={20}
-                height={20}
-              />
-              <p>Ustawienia</p>
-            </button>
-
-            <button title="Skopiuj link do pieśni" onClick={shareButton}>
-              <Image
-                className="icon"
-                alt="share"
-                src="/icons/link.svg"
-                width={20}
-                height={20}
-              />
-              <p>Udostępnij</p>
-            </button>
-
-            <button
-              title="Wydrukuj tekst pieśni"
-              onClick={() => hymn && window.print()}
-            >
-              <Image
-                className="icon"
-                alt="print"
-                src="/icons/printer.svg"
-                width={20}
-                height={20}
-              />
-              <p>Wydrukuj</p>
-            </button>
-          </div>
+          <button onClick={favoriteButton}>
+            <Image
+              className="icon"
+              alt="favorite"
+              src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </button>
         </div>
-      </main>
+
+        <main>
+          <div className={styles.container}>
+            {/* left side buttons */}
+            <div className={`${styles.options} ${styles.leftSide}`}>
+              <button
+                title="Otwórz listę wszystkich śpiewników [B]"
+                onClick={() => router.push("/books")}
+              >
+                <Image
+                  className="icon"
+                  alt="book"
+                  src="/icons/book.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Wybierz śpiewnik</p>
+              </button>
+
+              <button onClick={favoriteButton}>
+                <Image
+                  className="icon"
+                  alt="favorite"
+                  src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
+                  width={20}
+                  height={20}
+                />
+                <p>{favHymn ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
+              </button>
+            </div>
+
+            {/* show all hymn parameters */}
+            <div className={styles.center}>
+              <div
+                className={styles.text}
+                style={{
+                  fontSize: `${fontSize}px`,
+                }}
+              >
+                {(isLoading && <div className="loader" />) ||
+                  (hymn && (
+                    <>
+                      <div className={styles.title}>
+                        <p>{hymn.book}</p>
+                        <h1>{hymn.song.title}</h1>
+                      </div>
+
+                      <hr className={styles.printLine} />
+
+                      <div className={styles.lyrics}>
+                        {hymn.lyrics.map((verses: string[], index: number) => {
+                          return (
+                            <div className={styles.verse} key={index}>
+                              {verses.map((verse: string, index: number) => {
+                                if (
+                                  verse.startsWith(".") &&
+                                  !localStorage.getItem("showChords")
+                                ) {
+                                  return;
+                                }
+
+                                return (
+                                  <p
+                                    key={index}
+                                    className={
+                                      verse.startsWith(".") ? styles.chord : ""
+                                    }
+                                  >
+                                    {verse.replace(/^[\s.]/, "")}
+                                  </p>
+                                );
+                              })}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className={styles.credits}>
+                        <h3>{hymn.song.copyright}</h3>
+                        <p>{hymn.song.author}</p>
+                      </div>
+                    </>
+                  ))}
+              </div>
+
+              {/* bottom buttons */}
+              <div id="controls" className={styles.controls}>
+                <button
+                  title="Przejdź do poprzedniej pieśni [←]"
+                  onClick={() => changeHymn(hymn.id, "prev")}
+                  className={hideNavbar ? styles.hide : ""}
+                >
+                  <Image
+                    className={`${styles.previous} icon`}
+                    alt="arrow left"
+                    src="/icons/arrow.svg"
+                    width={30}
+                    height={30}
+                    draggable={false}
+                  />
+
+                  <p>Poprzednia</p>
+                </button>
+
+                <button
+                  title="Otwórz losową pieśń [R]"
+                  className={styles.randomButton}
+                  onClick={() => randomBtn(hymn.book)}
+                >
+                  <p>Wylosuj pieśń</p>
+                </button>
+
+                <button
+                  title="Przejdź do następnej pieśni [→]"
+                  onClick={() => changeHymn(hymn.id, "next")}
+                  className={hideNavbar ? styles.hide : ""}
+                >
+                  <p>Następna</p>
+
+                  <Image
+                    className={`${styles.next} icon`}
+                    alt="arrow right"
+                    src="/icons/arrow.svg"
+                    width={30}
+                    height={30}
+                    draggable={false}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* right side buttons */}
+            <div className={styles.options}>
+              <button
+                title="Włącz prezentację pieśni na pełen ekran [P]"
+                onClick={slideshowBtn}
+              >
+                <Image
+                  className="icon"
+                  alt="presentation"
+                  src="/icons/presentation.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Pokaz slajdów</p>
+              </button>
+
+              <button
+                title="Pokaż listę ulubionych pieśni [F]"
+                onClick={() => replaceLink("favorites")}
+              >
+                <Image
+                  className="icon"
+                  alt="list"
+                  src="/icons/list.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Lista ulubionych</p>
+              </button>
+
+              <button
+                title="Pokaż ustawienia aplikacji [S]"
+                onClick={() => replaceLink("settings")}
+              >
+                <Image
+                  className="icon"
+                  alt="settings"
+                  src="/icons/settings.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Ustawienia</p>
+              </button>
+
+              <button title="Skopiuj link do pieśni" onClick={shareButton}>
+                <Image
+                  className="icon"
+                  alt="share"
+                  src="/icons/link.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Udostępnij</p>
+              </button>
+
+              <button
+                title="Wydrukuj tekst pieśni"
+                onClick={() => hymn && window.print()}
+              >
+                <Image
+                  className="icon"
+                  alt="print"
+                  src="/icons/printer.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Wydrukuj</p>
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
 
       <Navbar />
     </>

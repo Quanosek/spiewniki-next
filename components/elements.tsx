@@ -5,6 +5,85 @@ import router from "next/router";
 import bookShortcut from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
+export function Header(param: {
+  buttons: { leftSide: any | undefined } | undefined;
+}) {
+  if (!param.buttons) {
+    return (
+      <header>
+        <div className="container">
+          <TitleButton />
+        </div>
+      </header>
+    );
+  } else {
+    const leftSide = param.buttons.leftSide;
+
+    return (
+      <header>
+        <div className="container">
+          {leftSide && (
+            <div className="leftSide">
+              <button onClick={leftSide.onclick}>
+                <Image
+                  className="icon"
+                  alt={leftSide.icon}
+                  src={`/icons/${leftSide.icon}.svg`}
+                  width={20}
+                  height={20}
+                />
+
+                <p>{leftSide.title}</p>
+              </button>
+            </div>
+          )}
+
+          <TitleButton />
+        </div>
+      </header>
+    );
+  }
+
+  function TitleButton() {
+    return (
+      <Link
+        href="/"
+        title="Zebrane w jednym miejscu śpiewniki i pieśni religijne."
+      >
+        <Image
+          className="icon"
+          alt="logotype"
+          src="/logo/bpsw.svg"
+          width={45}
+          height={45}
+          priority={true}
+          draggable={false}
+        />
+
+        <h1>Śpiewniki</h1>
+      </Link>
+    );
+  }
+}
+
+export function MobileHeader() {
+  return (
+    <div className="mobileHeader">
+      <Image
+        className="icon"
+        alt="bpsw"
+        src="/logo/bpsw.svg"
+        width={50}
+        height={50}
+        priority={true}
+        draggable={false}
+      />
+
+      <h1>Śpiewniki</h1>
+    </div>
+  );
+}
+
 export function Navbar() {
   return (
     <nav>
@@ -13,8 +92,8 @@ export function Navbar() {
           className="icon"
           alt="books"
           src="/icons/book.svg"
-          width={16}
-          height={16}
+          width={20}
+          height={20}
           draggable={false}
         />
         <p>Śpiewniki</p>
@@ -25,8 +104,8 @@ export function Navbar() {
           className="icon"
           alt="list"
           src="/icons/list.svg"
-          width={16}
-          height={16}
+          width={20}
+          height={20}
           draggable={false}
         />
         <p>Ulubione</p>
@@ -42,8 +121,8 @@ export function Navbar() {
           className="icon"
           alt="random"
           src="/icons/dice.svg"
-          width={16}
-          height={16}
+          width={20}
+          height={20}
           draggable={false}
         />
         <p>Wylosuj</p>
@@ -54,8 +133,8 @@ export function Navbar() {
           className="icon"
           alt="settings"
           src="/icons/settings.svg"
-          width={16}
-          height={16}
+          width={20}
+          height={20}
           draggable={false}
         />
         <p>Ustawienia</p>
@@ -66,8 +145,8 @@ export function Navbar() {
           className="icon"
           alt="share"
           src="/icons/link.svg"
-          width={16}
-          height={16}
+          width={20}
+          height={20}
           draggable={false}
         />
         <p>Udostępnij</p>
@@ -90,24 +169,6 @@ export function Footer() {
       </p>
 
       <p>Wszelkie prawa zastrzeżone &#169; 2023</p>
-    </div>
-  );
-}
-
-export function MobileHeader() {
-  return (
-    <div className="mobileHeader">
-      <Image
-        className="icon"
-        alt="bpsw"
-        src="/logo/bpsw.svg"
-        width={50}
-        height={50}
-        priority={true}
-        draggable={false}
-      />
-
-      <h1>Śpiewniki</h1>
     </div>
   );
 }

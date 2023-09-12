@@ -94,6 +94,10 @@
         padding: 0 min(3rem, 3vw);
         text-align: center;
       }
+
+      @media (min-width: 768px) {
+        gap: min(1.5vw, $gridGap);
+      }
     }
 
     .toFile {
@@ -111,6 +115,11 @@
       &:hover {
         opacity: 100%;
         transform: scale(1.05) translateY(-1px);
+      }
+
+      img {
+        width: min(30px, 3vw);
+        height: auto;
       }
 
       @media (min-width: 768px) {
@@ -262,6 +271,7 @@
 
         img {
           height: min(10rem, 30vw);
+          border-radius: 2%;
         }
 
         p {

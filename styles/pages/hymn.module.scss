@@ -1,5 +1,5 @@
 .topNavbar {
-  $gap: 5px;
+  $gap: 3px;
 
   z-index: 10;
   padding: $gap;
@@ -254,7 +254,7 @@
   }
 
   .text {
-    padding: 4rem 1rem calc(var(--navbarHeight) + 2rem);
+    padding: 4rem 1rem calc(var(--navbarHeight) + 4rem);
     color: var(--text);
     background-color: transparent;
     min-height: unset;
@@ -274,7 +274,7 @@
   }
 
   .credits {
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
   }
 
   .controls {
@@ -326,10 +326,6 @@
 @media (max-width: 320px) {
   .topNavbar {
     height: var(--navbarHeight_mobile);
-
-    div {
-      gap: 1.5vw;
-    }
 
     button {
       height: 100%;

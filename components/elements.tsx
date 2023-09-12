@@ -111,7 +111,7 @@ export function MobileHeader() {
         target="_blank"
       >
         <Image
-          className="mobileIcon"
+          className="mobileIcon icon"
           alt="bpsw"
           src="/icons/house.svg"
           width={40}

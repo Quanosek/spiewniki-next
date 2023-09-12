@@ -251,7 +251,7 @@ export default function HymnPage() {
         </title>
       </Head>
 
-      <Header/>
+      <Header displayBackBtn={true} backTo={"wyszukiwania"}/>
 
       {slideshowMode && <Presentation data={hymn} />}
       <Menu />
@@ -283,20 +283,7 @@ export default function HymnPage() {
         </button>
       </div>
 
-      <div className="backArrow">
-        <button onClick={backButton}>
-          <Image
-            className="icon"
-            alt="arrow"
-            src="/icons/arrow.svg"
-            width={20}
-            height={20}
-          />
-          <p>Powrót do wyszukiwania</p>
-        </button>
-      </div>
-
-      <main>
+      <main className="maxWidth">
         <div className={styles.container}>
           {/* left side buttons */}
           <div className={`${styles.options} ${styles.leftSide}`}>

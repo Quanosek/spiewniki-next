@@ -19,20 +19,9 @@ export default function BooksPage() {
         <title>Lista śpiewników / Śpiewniki</title>
       </Head>
 
-      <div className="backArrow">
-        <button onClick={() => router.back()}>
-          <Image
-            className="icon"
-            alt="arrow"
-            src="/icons/arrow.svg"
-            width={20}
-            height={20}
-          />
-          <p>Powrót</p>
-        </button>
-      </div>
+      <Header displayBackBtn={true}/>
 
-      <main>
+      <main className="maxWidth">
         <div className={styles.title}>
           <button className={styles.backArrow} onClick={() => router.back()}>
             <Image

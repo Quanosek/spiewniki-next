@@ -104,6 +104,7 @@ export function MobileHeader() {
     })
   return (
     <div className="mobileHeader">
+
       {!isPWA && <Link
         className="externalLink"
         href="https://nastrazy.org/"

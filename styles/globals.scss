@@ -104,11 +104,11 @@ header {
 
   .container {
     position: relative;
+    justify-content: space-between;
 
     a {
       padding: 3px 7px;
       position: relative;
-      right: 12px;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -139,9 +139,10 @@ header {
     }
 
     .externalLink {
-      padding: 0.5rem 1rem;
-      position: absolute;
-      right: 0;
+      width: 22vw;
+      padding: 0.6rem 1.1rem;
+      display: flex;
+      justify-content: end;
     }
   }
 }
@@ -161,16 +162,11 @@ footer {
 }
 
 .backArrow {
-  $topPosition: 7rem;
-
   z-index: 20;
-  margin-left: 1rem;
   position: sticky;
-  top: $topPosition;
+  width: 22vw;
 
   button {
-    position: absolute;
-    bottom: calc($topPosition / 2);
     padding: 0.6rem 1.1rem;
     gap: 8px;
     background-color: transparent;
@@ -416,4 +412,9 @@ nav {
     font-size: 175%;
     letter-spacing: 0.3px;
   }
+}
+
+.maxWidth {
+  max-width: calc(1440px + 3%);
+  margin: auto;
 }

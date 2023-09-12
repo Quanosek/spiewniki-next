@@ -188,24 +188,9 @@ export default function SearchPage() {
         <title>Wyszukiwanie / Śpiewniki</title>
       </Head>
 
-      <div className={styles.header}>
-        <Header />
-      </div>
+      <Header displayBackBtn={true} backTo={"śpiewników"}/>
 
-      <div className="backArrow">
-        <button onClick={() => router.push("/")}>
-          <Image
-            className="icon"
-            alt="arrow"
-            src="/icons/arrow.svg"
-            width={20}
-            height={20}
-          />
-          <p>Powrót do śpiewników</p>
-        </button>
-      </div>
-
-      <main>
+      <main className="maxWidth">
         <div className={styles.mobileTitle}>
           <button className={styles.backArrow} onClick={() => router.push("/")}>
             <Image

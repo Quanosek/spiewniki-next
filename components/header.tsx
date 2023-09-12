@@ -1,15 +1,30 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
-import { useState, useEffect } from "react";
+export default function Header(params: any) {
+const router = useRouter()
 
-export default function Header() {
     return (
         <header>
-          <div className="container">
+          <div className="container maxWidth">
+            <div className="backArrow">
+            {params.displayBackBtn && <button onClick={() => router.back()}>
+                <Image
+                  className="icon"
+                  alt="arrow"
+                  src="/icons/arrow.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Powrót {params.backTo && `do ${params.backTo}`}</p>
+              </button>}
+              </div>
+            
             <Link
               href="/"
               title="Zebrane w jednym miejscu śpiewniki i pieśni religijne."
+              className="title"
             >
               <Image
                 className="icon"
@@ -23,8 +38,8 @@ export default function Header() {
               <h1>Śpiewniki</h1>
             </Link>
 
+            <div className="externalLink" id="nastrazy">
             <Link
-              className="externalLink"
               href="https://nastrazy.org/"
               target="_blank"
             >
@@ -34,11 +49,12 @@ export default function Header() {
                 className="icon"
                 alt="link"
                 src="/icons/external_link.svg"
-                width={16}
-                height={16}
+                width={20}
+                height={20}
                 draggable={false}
               />
             </Link>
+            </div>
           </div>
         </header>
     )

@@ -52,18 +52,16 @@ export default function IndexPage() {
         <title>Śpiewniki</title>
         <style
           dangerouslySetInnerHTML={{
-            __html: `.externalLink { right: none; left: 0 }`,
+            __html: `.externalLink {order: 1} #nastrazy {justify-content: start} .title {order: 2} .backArrow {order: 3}`,
           }}
         />
       </Head>
 
-      <div className={styles.header}>
-        <Header />
-      </div>
+      <Header displayBackBtn={false}/>
 
       <Menu />
 
-      <main>
+      <main className="maxWidth">
         <MobileHeader/>
 
         <Link

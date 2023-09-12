@@ -30,7 +30,7 @@ export default function ErrorPage() {
 
       <Header />
 
-      <main>
+      <main className="maxWidth">
         <MobileHeader />
 
         <div className={styles.container}>

@@ -391,7 +391,7 @@ nav {
 
   a {
     opacity: 80%;
-    padding: 0.5rem;
+    padding: 0.8rem;
     position: absolute;
     left: 3%;
     display: flex;
@@ -406,7 +406,7 @@ nav {
     }
 
     @media (max-width: 425px) {
-      padding: 2vw;
+      padding: 3vw;
 
       img {
         height: 6vw;

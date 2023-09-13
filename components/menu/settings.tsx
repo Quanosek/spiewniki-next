@@ -10,36 +10,49 @@ export default function SettingsMenu() {
   const router = useRouter();
 
   // default values
-  const fontSizeValue = localStorage.getItem("fontSize")
-    ? (localStorage.getItem("fontSize") as string)
-    : "21";
-  const [fontSize, setFontSize] = useState<string>(fontSizeValue);
+  const [fontSize, setFontSize] = useState<string>(localStorage.getItem("fontSize") as string || "21");
 
-  // default behavior
+  const [showChords, setShowChords] = useState<boolean>(Boolean(localStorage.getItem("showChords")) || false)
+
+  const [colorTheme, setColorTheme] = useState<string>(document.documentElement.classList[1] || "light");
+
+  // save changes to local storage
   useEffect(() => {
-    // colorTheme
-    const themeSelector = document.getElementById(
-      document.documentElement.classList[1]
-    ) as HTMLInputElement;
+    localStorage.setItem("fontSize", fontSize);
+    showChords ? localStorage.setItem("showChords", "true") : localStorage.removeItem("showChords");
+    localStorage.setItem("colorTheme", colorTheme);
+    document.documentElement.className = `${document.documentElement.classList[0]} ${colorTheme}`;
+  }, [fontSize, showChords, colorTheme])
 
-    themeSelector.checked = true;
+  // quick books selection
+  const Themes = (names: string[]) => {
+    const themes: ReactElement[] = [];
 
-    // fontSize
-    const fontSlider = document.getElementById(
-      "fontSlider"
-    ) as HTMLInputElement;
-    const fontPreview = document.getElementById(
-      "fontPreview"
-    ) as HTMLDivElement;
-    fontSlider.value = fontSize as string;
-    fontPreview.style.fontSize = fontSize + "px";
+    names.forEach((name) => {
+      themes.push(
+        <label htmlFor={name} key={name}>
+          <Image
+            alt="text"
+            src="/icons/text.svg"
+            width={50}
+            height={50}
+            priority={true}
+            draggable={false}
+          />
+          <input
+            type="radio"
+            id={name}
+            value={name}
+            name="colorTheme"
+            checked={colorTheme === name}
+            onChange={() => setColorTheme(name)}
+          />
+        </label>
+      );
+    });
 
-    // showChords
-    const chordsToggle = document.getElementById(
-      "chordsToggle"
-    ) as HTMLInputElement;
-    localStorage.getItem("showChords") ? (chordsToggle.checked = true) : "";
-  }, [fontSize]);
+    return <form className={styles.colorTheme}>{themes}</form>;
+  };
 
   return (
     <>
@@ -58,8 +71,8 @@ export default function SettingsMenu() {
       <div className={styles.element}>
         <h3>Wielkość tekstu pieśni:</h3>
 
-        <div id="fontPreview" className={styles.fontPreview}>
-          <p style={{ fontSize: fontSize }}>Przykładowy tekst.</p>
+        <div className={styles.fontPreview}>
+          <p style={{ fontSize: `${fontSize}px` }}>Przykładowy tekst.</p>
         </div>
 
         <div className={styles.fontSlider}>
@@ -69,11 +82,8 @@ export default function SettingsMenu() {
             min="14"
             max="28"
             step="0.5"
-            id="fontSlider"
-            onChange={(e) => {
-              setFontSize(e.target.value);
-              localStorage.setItem("fontSize", e.target.value);
-            }}
+            value={fontSize}
+            onChange={(e) => setFontSize(e.target.value)}
           />
           <div className={styles.bigger}>A</div>
         </div>
@@ -85,13 +95,9 @@ export default function SettingsMenu() {
 
         <label className={styles.chordsToggle}>
           <input
-            id="chordsToggle"
             type="checkbox"
-            onChange={(e) => {
-              e.target.checked
-                ? localStorage.setItem("showChords", "true")
-                : localStorage.removeItem("showChords");
-            }}
+            checked={showChords}
+            onChange={(e) => setShowChords((oldShowChords) => !oldShowChords)}
           />
           <span />
         </label>
@@ -104,11 +110,9 @@ export default function SettingsMenu() {
               "Czy na pewno chcesz przywrócić domyślne ustawienia?"
             );
             if (prompt) {
-              localStorage.removeItem("colorTheme");
-              localStorage.removeItem("fontSize");
-              localStorage.removeItem("showChords");
-
-              return router.reload();
+              setColorTheme(unlocked ? "black" : "light");
+              setFontSize("21");
+              setShowChords(false);
             }
           }}
         >
@@ -125,34 +129,3 @@ export default function SettingsMenu() {
     </>
   );
 }
-
-// quick books selection
-const Themes = (names: string[]) => {
-  const themes: ReactElement[] = [];
-
-  names.forEach((name) => {
-    themes.push(
-      <label htmlFor={name} key={name}>
-        <Image
-          alt="text"
-          src="/icons/text.svg"
-          width={50}
-          height={50}
-          priority={true}
-          draggable={false}
-        />
-        <input
-          type="radio"
-          id={name}
-          name="colorTheme"
-          onChange={() => {
-            document.documentElement.className = `${document.documentElement.classList[0]} ${name}`;
-            localStorage.setItem("colorTheme", name);
-          }}
-        />
-      </label>
-    );
-  });
-
-  return <form className={styles.colorTheme}>{themes}</form>;
-};

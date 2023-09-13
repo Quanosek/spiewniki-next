@@ -9,13 +9,19 @@ import "@/styles/globals.scss";
 import "@/styles/themes.scss";
 
 export default function App({ Component, pageProps }: AppProps) {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
   useEffect(() => {
     // set global color theme
     const theme = localStorage.getItem("colorTheme")
       ? localStorage.getItem("colorTheme")
-      : "black";
+      : unlocked
+      ? "black"
+      : "light";
 
-    document.documentElement.className = theme as string;
+    document.documentElement.className = `${
+      unlocked ? "accent_blue" : "accent_orange"
+    } ${theme}`;
 
     // prevent screen from sleeping
     let wakeLock: WakeLockSentinel | null = null;
@@ -32,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
     return () => {
       if (wakeLock !== null) wakeLock.release();
     };
-  }, []);
+  }, [unlocked]);
 
   return (
     <>

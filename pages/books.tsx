@@ -46,12 +46,7 @@ export default function BooksPage() {
           </div>
 
           <div className={styles.list}>
-            <Link
-              className={styles.all}
-              href={{
-                pathname: "/search",
-              }}
-            >
+            <Link className={styles.all} href={"/search"}>
               <p>{bookShortcut("all")}</p>
             </Link>
 

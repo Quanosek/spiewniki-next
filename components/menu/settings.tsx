@@ -6,6 +6,7 @@ import styles from "@/styles/components/menu.module.scss";
 import { replaceLink } from "@/scripts/buttons";
 
 export default function SettingsMenu() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
   const router = useRouter();
 
   // default values
@@ -18,7 +19,7 @@ export default function SettingsMenu() {
   useEffect(() => {
     // colorTheme
     const themeSelector = document.getElementById(
-      document.documentElement.className
+      document.documentElement.classList[1]
     ) as HTMLInputElement;
 
     themeSelector.checked = true;
@@ -48,7 +49,9 @@ export default function SettingsMenu() {
       <div className={styles.element}>
         <h3>Motyw kolorów:</h3>
 
-        {Themes(["black", "dark", "light", "reading"])}
+        {unlocked
+          ? Themes(["black", "dark", "light", "reading"])
+          : Themes(["light", "reading", "black", "dark"])}
       </div>
 
       {/* FONT SIZE */}
@@ -143,7 +146,7 @@ const Themes = (names: string[]) => {
           id={name}
           name="colorTheme"
           onChange={() => {
-            document.documentElement.className = name;
+            document.documentElement.className = `${document.documentElement.classList[0]} ${name}`;
             localStorage.setItem("colorTheme", name);
           }}
         />

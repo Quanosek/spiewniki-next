@@ -17,7 +17,7 @@
     border-color: var(--elements-hover);
     filter: brightness(0.9);
 
-    @media (min-width: 768px) {
+    @media (min-width: 769px) {
       width: 85%;
     }
   }
@@ -95,7 +95,7 @@
         text-align: center;
       }
 
-      @media (min-width: 768px) {
+      @media (min-width: 769px) {
         gap: min(1.5vw, $gridGap);
       }
     }
@@ -122,7 +122,7 @@
         height: auto;
       }
 
-      @media (min-width: 768px) {
+      @media (min-width: 769px) {
         img {
           filter: invert(1) drop-shadow(#000000 -1px 4px 8px);
         }

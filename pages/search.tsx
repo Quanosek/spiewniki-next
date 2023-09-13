@@ -11,6 +11,8 @@ import bookShortcut, { bookList } from "@/scripts/bookShortcut";
 import { Header } from "@/components/elements";
 
 export default function SearchPage() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
   const router = useRouter();
   const book = router.query.book as string;
 
@@ -169,7 +171,7 @@ export default function SearchPage() {
           input.focus();
           break;
         case "B":
-          router.push("/books");
+          unlocked ? router.push("/books") : router.push("/");
           break;
       }
     };
@@ -181,7 +183,7 @@ export default function SearchPage() {
       window.removeEventListener("scroll", scrollEvent);
       document.removeEventListener("keyup", KeyupEvent);
     };
-  }, [router]);
+  }, [router, unlocked]);
 
   return (
     <>
@@ -190,13 +192,28 @@ export default function SearchPage() {
       </Head>
 
       <Header
-        buttons={{
-          leftSide: {
-            title: "Powrót do strony głównej",
-            icon: "arrow",
-            onclick: () => router.push("/"),
-          },
-        }}
+        buttons={
+          unlocked
+            ? {
+                leftSide: {
+                  title: "Powrót do strony głównej",
+                  icon: "arrow",
+                  onclick: () => router.push("/"),
+                },
+              }
+            : {
+                leftSide: {
+                  title: "Powrót do śpiewników",
+                  icon: "arrow",
+                  onclick: () => router.push("/"),
+                },
+                rightSide: {
+                  title: "Na Straży.org",
+                  icon: "external_link",
+                  onclick: () => router.push("https://nastrazy.org/"),
+                },
+              }
+        }
       />
 
       <div className="container">
@@ -233,7 +250,7 @@ export default function SearchPage() {
                 setTimeout(() => Search(rawData, input.value), 200);
 
                 // easter egg
-                if (input.value === "2137") {
+                if (unlocked && input.value === "2137") {
                   router.push({
                     pathname: "/hymn",
                     query: {
@@ -266,7 +283,7 @@ export default function SearchPage() {
               }}
             />
 
-            <div id="searchIcon" className={styles.searchIcon}>
+            <div className={styles.searchIcon}>
               <Image
                 className="icon"
                 alt="search icon"
@@ -278,7 +295,6 @@ export default function SearchPage() {
             </div>
 
             <div
-              id="clearButton"
               className={styles.clearButton}
               style={{ display: showClearBtn ? "flex" : "none" }}
               onClick={() => {
@@ -304,16 +320,26 @@ export default function SearchPage() {
             </div>
           </div>
 
-          <div id="filters" className={styles.filters}>
-            <h3>Szukaj&nbsp;w:</h3>
+          {unlocked ? (
+            <div className={styles.filters}>
+              <h3>Szukaj&nbsp;w:</h3>
 
-            <button
-              onClick={() => router.push("/books")}
-              title="Otwórz listę wszystkich śpiewników [B]"
-            >
-              <p>{bookShortcut(book ? book : "all")}</p>
-            </button>
-          </div>
+              <button
+                onClick={() => router.push("/books")}
+                title="Otwórz listę wszystkich śpiewników [B]"
+              >
+                <p>{bookShortcut(book ? book : "all")}</p>
+              </button>
+            </div>
+          ) : (
+            <div className={styles.filters}>
+              <h3>Wybrano:</h3>
+
+              <button className={styles.disabled} tabIndex={-1}>
+                <p>{bookShortcut(book ? book : "all")}</p>
+              </button>
+            </div>
+          )}
 
           <div id="results" className={styles.results}>
             {(isLoading && <div className="loader" />) ||

@@ -5,9 +5,7 @@ import router from "next/router";
 import bookShortcut from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
-export function Header(param: {
-  buttons: { leftSide: any | undefined } | undefined;
-}) {
+export function Header(param: any) {
   if (!param.buttons) {
     return (
       <header>
@@ -17,7 +15,7 @@ export function Header(param: {
       </header>
     );
   } else {
-    const leftSide = param.buttons.leftSide;
+    const { leftSide, rightSide } = param.buttons;
 
     return (
       <header>
@@ -26,7 +24,7 @@ export function Header(param: {
             <div className="leftSide">
               <button onClick={leftSide.onclick}>
                 <Image
-                  className="icon"
+                  className={`icon ${leftSide.icon == "arrow" ? "arrow" : ""}`}
                   alt={leftSide.icon}
                   src={`/icons/${leftSide.icon}.svg`}
                   width={20}
@@ -39,6 +37,22 @@ export function Header(param: {
           )}
 
           <TitleButton />
+
+          {rightSide && (
+            <div className="rightSide">
+              <button onClick={rightSide.onclick}>
+                <p>{rightSide.title}</p>
+
+                <Image
+                  className={`icon ${rightSide.icon == "arrow" ? "arrow" : ""}`}
+                  alt={rightSide.icon}
+                  src={`/icons/${rightSide.icon}.svg`}
+                  width={18}
+                  height={18}
+                />
+              </button>
+            </div>
+          )}
         </div>
       </header>
     );
@@ -64,24 +78,6 @@ export function Header(param: {
       </Link>
     );
   }
-}
-
-export function MobileHeader() {
-  return (
-    <div className="mobileHeader">
-      <Image
-        className="icon"
-        alt="bpsw"
-        src="/logo/bpsw.svg"
-        width={50}
-        height={50}
-        priority={true}
-        draggable={false}
-      />
-
-      <h1>Śpiewniki</h1>
-    </div>
-  );
 }
 
 export function Navbar() {
@@ -112,7 +108,6 @@ export function Navbar() {
       </button>
 
       <button
-        id="randomButton"
         onClick={() => {
           return randomHymn(bookShortcut(router.query.book as string));
         }}
@@ -156,19 +151,31 @@ export function Navbar() {
 }
 
 export function Footer() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
   return (
     <div className="container">
       <p>
-        Stworzone z 💙 przez{" "}
-        <Link href="https://github.com/Quanosek">Jakuba Kłało</Link>
+        Stworzone z {unlocked ? "💙" : "❤️"} przez{" "}
+        <Link href="https://github.com/Quanosek/">Jakuba Kłało</Link>
         {" i "}
-        <Link href="https://github.com/Krist0f0l0s">
+        <Link href="https://github.com/Krist0f0l0s/">
           Krzysztofa Olszewskiego
         </Link>
         .
       </p>
 
-      <p>Wszelkie prawa zastrzeżone &#169; 2023</p>
+      <p>
+        Wszelkie prawa zastrzeżone &#169; 2023
+        {unlocked ? (
+          <>
+            {" │ "}
+            domena&nbsp;<Link href="https://www.klalo.pl/">klalo.pl</Link>
+          </>
+        ) : (
+          ""
+        )}
+      </p>
     </div>
   );
 }

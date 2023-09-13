@@ -10,9 +10,10 @@ import bookShortcut, { pdfBooks } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 import Menu from "@/components/menu";
-import { Header, MobileHeader, Navbar, Footer } from "@/components/elements";
+import { Header, Navbar, Footer } from "@/components/elements";
 
 export default function IndexPage() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
   const router = useRouter();
 
   // keyboard shortcuts
@@ -38,12 +39,15 @@ export default function IndexPage() {
         case "R":
           if (!router.query.menu) randomHymn(undefined);
           break;
+        case "B":
+          unlocked && router.push("/books");
+          break;
       }
     };
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [router]);
+  }, [router, unlocked]);
 
   return (
     <>
@@ -53,14 +57,52 @@ export default function IndexPage() {
 
       <Menu />
 
-      <Header buttons={undefined} />
+      <Header
+        buttons={
+          unlocked
+            ? undefined
+            : {
+                leftSide: {
+                  title: "Na Straży.org",
+                  icon: "home",
+                  onclick: () => router.push("https://nastrazy.org/"),
+                },
+              }
+        }
+      />
 
       <div className="container">
         <main>
-          <MobileHeader />
+          <div className="mobileHeader">
+            {!unlocked && (
+              <Link href="https://nastrazy.org/">
+                <Image
+                  className="icon"
+                  alt="home"
+                  src="/icons/home.svg"
+                  width={25}
+                  height={25}
+                />
+              </Link>
+            )}
+
+            <div className="logo">
+              <Image
+                className="icon"
+                alt="bpsw"
+                src="/logo/bpsw.svg"
+                width={50}
+                height={50}
+                priority={true}
+                draggable={false}
+              />
+
+              <h1>Śpiewniki</h1>
+            </div>
+          </div>
 
           <Link
-            href={"/search"}
+            href="/search"
             title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
             className={styles.searchBox}
             onClick={() => localStorage.setItem("focusSearchBox", "true")}
@@ -80,9 +122,11 @@ export default function IndexPage() {
             <div className={styles.hymnBooks}>
               {Books(["B", "C", "N"])}
 
-              <Link href={"/books"} className={styles.all}>
-                <p>Lista wszystkich śpiewników</p>
-              </Link>
+              {unlocked && (
+                <Link href="/books" className={styles.all}>
+                  <p>Lista wszystkich śpiewników</p>
+                </Link>
+              )}
             </div>
 
             <div className={styles.options}>

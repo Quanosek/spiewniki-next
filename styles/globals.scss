@@ -1,4 +1,5 @@
 :root {
+  color-scheme: dark;
   --navbarHeight: 3.5rem;
   --navbarHeight_mobile: 17.5vw;
 }
@@ -129,17 +130,27 @@ header {
   .leftSide {
     position: absolute;
     left: -1rem;
+    font-size: 125%;
 
     @media (max-width: 1024px) {
       left: -1vw;
     }
 
-    button {
-      font-size: 125%;
+    img.arrow {
+      rotate: 90deg;
+    }
+  }
 
-      img {
-        rotate: 90deg;
-      }
+  .rightSide {
+    position: absolute;
+    right: 0.5rem;
+
+    @media (max-width: 1024px) {
+      right: 0.5vw;
+    }
+
+    img.arrow {
+      rotate: -90deg;
     }
   }
 
@@ -366,38 +377,65 @@ nav {
 
 // header component in mobile
 .mobileHeader {
-  margin: 1vw 0 -1%;
-  width: 100%;
+  margin: min(3vw, 8px) 0 -1%;
   position: relative;
-  right: 5px;
-  display: none;
+  width: 100%;
+  display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  text-align: center;
   user-select: none;
 
-  @media (max-width: 768px) {
+  @media (min-width: 769px) {
+    display: none;
+  }
+
+  a {
+    opacity: 80%;
+    padding: 0.5rem;
+    position: absolute;
+    left: 3%;
     display: flex;
-  }
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.4rem;
+    transition: 0.1s ease-out;
 
-  @media (max-width: 425px) {
-    gap: min(2vw, 0.5rem);
-    font-size: 3.8vw;
-  }
-
-  img {
-    position: relative;
-    bottom: 0.5px;
+    &:hover {
+      opacity: 100%;
+      background-color: var(--elements);
+    }
 
     @media (max-width: 425px) {
-      height: 13vw;
-      width: auto;
+      padding: 2vw;
+
+      img {
+        height: 6vw;
+        width: auto;
+      }
     }
   }
 
-  h1 {
-    font-size: 175%;
-    letter-spacing: 0.3px;
+  div {
+    position: relative;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @media (max-width: 425px) {
+      right: 0.25vw;
+      gap: min(2vw, 1rem);
+      font-size: 3.8vw;
+
+      img {
+        height: 12.5vw;
+        width: auto;
+      }
+    }
+
+    h1 {
+      font-size: 175%;
+      letter-spacing: 0.3px;
+    }
   }
 }

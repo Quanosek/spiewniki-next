@@ -14,6 +14,8 @@ import Presentation from "@/components/presentation";
 import { Header, Navbar } from "@/components/elements";
 
 export default function HymnPage() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
   const router = useRouter();
   const { book, title } = router.query as { book: string; title: string };
 
@@ -177,7 +179,7 @@ export default function HymnPage() {
           router.push("/search");
           break;
         case "B":
-          router.push("/books");
+          unlocked ? router.push("/books") : router.push("/");
           break;
         case "R":
           randomBtn(hymn.book);
@@ -196,7 +198,7 @@ export default function HymnPage() {
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [hymn, router, slideshowMode, changeHymn]);
+  }, [hymn, router, unlocked, slideshowMode, changeHymn]);
 
   // add/remove hymn to/from local favorites list
   const favoriteButton = () => {
@@ -256,13 +258,28 @@ export default function HymnPage() {
       {slideshowMode && <Presentation data={hymn} />}
 
       <Header
-        buttons={{
-          leftSide: {
-            title: "Powrót do wyszukiwania",
-            icon: "arrow",
-            onclick: () => backButton(),
-          },
-        }}
+        buttons={
+          unlocked
+            ? {
+                leftSide: {
+                  title: "Powrót do wyszukiwania",
+                  icon: "arrow",
+                  onclick: () => backButton(),
+                },
+              }
+            : {
+                leftSide: {
+                  title: "Powrót do wyszukiwania",
+                  icon: "arrow",
+                  onclick: () => backButton(),
+                },
+                rightSide: {
+                  title: "Na Straży.org",
+                  icon: "external_link",
+                  onclick: () => router.push("https://nastrazy.org/"),
+                },
+              }
+        }
       />
 
       <div className="container">
@@ -295,8 +312,14 @@ export default function HymnPage() {
             {/* left side buttons */}
             <div className={`${styles.options} ${styles.leftSide}`}>
               <button
-                title="Otwórz listę wszystkich śpiewników [B]"
-                onClick={() => router.push("/books")}
+                title={
+                  unlocked
+                    ? "Otwórz listę wszystkich śpiewników [B]"
+                    : "Przejdź do wyboru śpiewników"
+                }
+                onClick={() => {
+                  return unlocked ? router.push("/books") : router.push("/");
+                }}
               >
                 <Image
                   className="icon"
@@ -375,7 +398,7 @@ export default function HymnPage() {
               </div>
 
               {/* bottom buttons */}
-              <div id="controls" className={styles.controls}>
+              <div className={styles.controls}>
                 <button
                   title="Przejdź do poprzedniej pieśni [←]"
                   onClick={() => changeHymn(hymn.id, "prev")}

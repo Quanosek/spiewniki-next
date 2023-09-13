@@ -1,14 +1,14 @@
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/error.module.scss";
-
-import Header from "@/components/header";
-import { MobileHeader } from "@/components/elements";
+import { Header } from "@/components/elements";
 
 export default function ErrorPage() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
   const router = useRouter();
 
   const [seconds, setSeconds] = useState(10); // 10 seconds
@@ -28,19 +28,44 @@ export default function ErrorPage() {
         <title>Nie znaleziono strony / Śpiewniki</title>
       </Head>
 
-      <Header />
+      <Header buttons={undefined} />
 
-      <main className="maxWidth">
-        <MobileHeader />
+      <div className="container">
+        <main>
+          <div className="mobileHeader">
+            <div className="logo">
+              <Image
+                className="icon"
+                alt="bpsw"
+                src="/logo/bpsw.svg"
+                width={50}
+                height={50}
+                priority={true}
+                draggable={false}
+              />
 
-        <div className={styles.container}>
-          <h1>Strona napotkała problem</h1>
-          <p>
-            Przejdź do <Link href={"/"}>śpiewników</Link>.{" "}
-            <span className={styles.counter}>[{seconds}]</span>
-          </p>
-        </div>
-      </main>
+              <h1>Śpiewniki</h1>
+            </div>
+          </div>
+
+          <div className={styles.container}>
+            <h1>Strona napotkała problem</h1>
+
+            <p>
+              {unlocked ? (
+                <>
+                  Przejdź do <Link href="/">strony głównej</Link>.
+                </>
+              ) : (
+                <>
+                  <Link href="/">Kliknij tutaj</Link>, aby powrócić.
+                </>
+              )}{" "}
+              <span className={styles.counter}>[{seconds}]</span>
+            </p>
+          </div>
+        </main>
+      </div>
     </>
   );
 }

@@ -101,13 +101,27 @@
     padding: 6px;
     border-radius: $radius;
     color: var(--accent-color);
-    cursor: default;
+    transition: 0.15s ease-out;
 
     p {
       padding: 8px 22px;
       border: 1px solid var(--accent-color);
       border-radius: $radius;
     }
+
+    &:not(.disabled):hover {
+      color: #ffffff;
+      background-color: var(--accent-color);
+
+      p {
+        border-color: #ffffff;
+      }
+    }
+  }
+
+  .disabled {
+    cursor: default;
+    background-color: var(--elements);
   }
 }
 
@@ -212,7 +226,7 @@
   transition: 0.15s ease-in-out;
   border-radius: 100%;
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     &:hover {
       filter: contrast(1.2);
     }

@@ -5,10 +5,9 @@ import { useRouter } from "next/router";
 import { ReactElement } from "react";
 
 import styles from "@/styles/pages/books.module.scss";
-
 import bookShortcut, { bookList, pdfBooks } from "@/scripts/bookShortcut";
 
-import Header from "@/components/header";
+import { Header } from "@/components/elements";
 
 export default function BooksPage() {
   const router = useRouter();
@@ -19,39 +18,44 @@ export default function BooksPage() {
         <title>Lista śpiewników / Śpiewniki</title>
       </Head>
 
-      <Header displayBackBtn={true}/>
+      <Header
+        buttons={{
+          leftSide: {
+            title: "Powrót",
+            icon: "arrow",
+            onclick: () => router.back(),
+          },
+        }}
+      />
 
-      <main className="maxWidth">
-        <div className={styles.title}>
-          <button className={styles.backArrow} onClick={() => router.back()}>
-            <Image
-              className="icon"
-              alt="back"
-              src="/icons/arrow.svg"
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </button>
+      <div className="container">
+        <main>
+          <div className={styles.title}>
+            <button className={styles.backArrow} onClick={() => router.back()}>
+              <Image
+                className="icon"
+                alt="back"
+                src="/icons/arrow.svg"
+                width={25}
+                height={25}
+                draggable={false}
+              />
+            </button>
 
-          <h2>Lista wszystkich śpiewników:</h2>
-        </div>
+            <h2>Lista wszystkich śpiewników:</h2>
+          </div>
 
-        <div className={styles.list}>
-          <Link
-            className={styles.all}
-            href={{
-              pathname: "/search",
-            }}
-          >
-            <p>{bookShortcut("all")}</p>
-          </Link>
+          <div className={styles.list}>
+            <Link className={styles.all} href={"/search"}>
+              <p>{bookShortcut("all")}</p>
+            </Link>
 
-          <hr />
+            <hr />
 
-          {Books(bookList())}
-        </div>
-      </main>
+            {Books(bookList())}
+          </div>
+        </main>
+      </div>
     </>
   );
 }

@@ -1,3 +1,3 @@
-# [spiewniki.klalo.pl](https://spiewniki.klalo.pl)
+# Śpiewniki
 
-Zebrane w jednym miejscu śpiewniki i pieśni religijne | Wszelkie prawa zastrzeżone &#169; 2023
+Zebrane w jednym miejscu śpiewniki i pieśni religijne. | Wszelkie prawa zastrzeżone &#169; 2023

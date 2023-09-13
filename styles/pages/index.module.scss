@@ -17,7 +17,7 @@
     border-color: var(--elements-hover);
     filter: brightness(0.9);
 
-    @media (min-width: 768px) {
+    @media (min-width: 769px) {
       width: 85%;
     }
   }
@@ -30,6 +30,7 @@
 
   p {
     opacity: 90%;
+    user-select: none;
   }
 }
 
@@ -94,6 +95,10 @@
         padding: 0 min(3rem, 3vw);
         text-align: center;
       }
+
+      @media (min-width: 769px) {
+        gap: min(1.5vw, $gridGap);
+      }
     }
 
     .toFile {
@@ -113,7 +118,12 @@
         transform: scale(1.05) translateY(-1px);
       }
 
-      @media (min-width: 768px) {
+      img {
+        width: min(30px, 3vw);
+        height: auto;
+      }
+
+      @media (min-width: 769px) {
         img {
           filter: invert(1) drop-shadow(#000000 -1px 4px 8px);
         }
@@ -262,6 +272,7 @@
 
         img {
           height: min(10rem, 30vw);
+          border-radius: 2%;
         }
 
         p {

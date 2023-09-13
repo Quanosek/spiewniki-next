@@ -1,5 +1,4 @@
 import router from "next/router";
-
 import axios from "axios";
 
 import bookShortcut, { bookList } from "@/scripts/bookShortcut";

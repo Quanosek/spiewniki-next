@@ -138,7 +138,6 @@ export default function Presentation(params: { data: any }) {
 
   return (
     <div
-      id="presentation"
       className={styles.component}
       style={{ cursor: showCursor ? "default" : "none" }}
     >

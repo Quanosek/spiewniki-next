@@ -9,11 +9,11 @@ import styles from "@/styles/pages/index.module.scss";
 import bookShortcut, { pdfBooks } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
-import { Navbar, Footer, MobileHeader } from "@/components/elements";
-import Header from"@/components/header";
 import Menu from "@/components/menu";
+import { Header, Navbar, Footer } from "@/components/elements";
 
 export default function IndexPage() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
   const router = useRouter();
 
   // keyboard shortcuts
@@ -39,110 +39,156 @@ export default function IndexPage() {
         case "R":
           if (!router.query.menu) randomHymn(undefined);
           break;
+        case "B":
+          unlocked && router.push("/books");
+          break;
       }
     };
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [router]);
+  }, [router, unlocked]);
 
   return (
     <>
       <Head>
         <title>Śpiewniki</title>
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `.externalLink {order: 1} #nastrazy {justify-content: start} .title {order: 2} .backArrow {order: 3}`,
-          }}
-        />
       </Head>
-
-      <Header displayBackBtn={false}/>
 
       <Menu />
 
-      <main className="maxWidth">
-        <MobileHeader/>
+      <Header
+        buttons={
+          unlocked
+            ? undefined
+            : {
+                leftSide: {
+                  title: "Na Straży.org",
+                  icon: "home",
+                  onclick: () => router.push("https://nastrazy.org/"),
+                },
+              }
+        }
+      />
 
-        <Link
-          href={"/search"}
-          title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
-          className={styles.searchBox}
-          onClick={() => localStorage.setItem("focusSearchBox", "true")}
-        >
-          <Image
-            className="icon"
-            alt="search icon"
-            src="/icons/search.svg"
-            width={25}
-            height={25}
-            draggable={false}
-          />
-          <p>Rozpocznij wyszukiwanie</p>
-        </Link>
+      <div className="container">
+        <main>
+          <div className="mobileHeader">
+            {!unlocked && (
+              <Link href="https://nastrazy.org/">
+                <Image
+                  className="icon"
+                  alt="home"
+                  src="/icons/home.svg"
+                  width={25}
+                  height={25}
+                />
+              </Link>
+            )}
 
-        <div className={styles.container}>
-          <div className={styles.hymnBooks}>{Books(["B", "C", "N"])}</div>
-
-          <div className={styles.options}>
-            <button
-              title="Otwórz losową pieśń [R]"
-              onClick={() => randomHymn(undefined)}
-            >
+            <div className="logo">
               <Image
                 className="icon"
-                alt="random"
-                src="/icons/dice.svg"
-                width={20}
-                height={20}
+                alt="bpsw"
+                src="/logo/bpsw.svg"
+                width={50}
+                height={50}
+                priority={true}
+                draggable={false}
               />
-              <p>Wylosuj pieśń</p>
-            </button>
 
-            <button
-              title="Pokaż listę ulubionych pieśni [F]"
-              onClick={() => replaceLink("favorites")}
-            >
-              <Image
-                className="icon"
-                alt="list"
-                src="/icons/list.svg"
-                width={20}
-                height={20}
-              />
-              <p>Lista ulubionych</p>
-            </button>
-
-            <button
-              title="Pokaż ustawienia aplikacji [S]"
-              onClick={() => replaceLink("settings")}
-            >
-              <Image
-                className="icon"
-                alt="settings"
-                src="/icons/settings.svg"
-                width={20}
-                height={20}
-              />
-              <p>Ustawienia</p>
-            </button>
-
-            <button title="Skopiuj link do aplikacji" onClick={shareButton}>
-              <Image
-                className="icon"
-                alt="share"
-                src="/icons/link.svg"
-                width={20}
-                height={20}
-              />
-              <p>Udostępnij</p>
-            </button>
+              <h1>Śpiewniki</h1>
+            </div>
           </div>
-        </div>
-      </main>
 
-      <div className={styles.footer}>
-        <Footer />
+          <Link
+            href="/search"
+            title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
+            className={styles.searchBox}
+            onClick={() => localStorage.setItem("focusSearchBox", "true")}
+          >
+            <Image
+              className="icon"
+              alt="search icon"
+              src="/icons/search.svg"
+              width={25}
+              height={25}
+              draggable={false}
+            />
+            <p>Rozpocznij wyszukiwanie</p>
+          </Link>
+
+          <div className={styles.container}>
+            <div className={styles.hymnBooks}>
+              {Books(["B", "C", "N"])}
+
+              {unlocked && (
+                <Link href="/books" className={styles.all}>
+                  <p>Lista wszystkich śpiewników</p>
+                </Link>
+              )}
+            </div>
+
+            <div className={styles.options}>
+              <button
+                title="Otwórz losową pieśń [R]"
+                onClick={() => randomHymn(undefined)}
+              >
+                <Image
+                  className="icon"
+                  alt="random"
+                  src="/icons/dice.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Wylosuj pieśń</p>
+              </button>
+
+              <button
+                title="Pokaż listę ulubionych pieśni [F]"
+                onClick={() => replaceLink("favorites")}
+              >
+                <Image
+                  className="icon"
+                  alt="list"
+                  src="/icons/list.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Lista ulubionych</p>
+              </button>
+
+              <button
+                title="Pokaż ustawienia aplikacji [S]"
+                onClick={() => replaceLink("settings")}
+              >
+                <Image
+                  className="icon"
+                  alt="settings"
+                  src="/icons/settings.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Ustawienia</p>
+              </button>
+
+              <button title="Skopiuj link do aplikacji" onClick={shareButton}>
+                <Image
+                  className="icon"
+                  alt="share"
+                  src="/icons/link.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Udostępnij</p>
+              </button>
+            </div>
+          </div>
+        </main>
+
+        <div className={styles.footer}>
+          <Footer />
+        </div>
       </div>
 
       <Navbar />

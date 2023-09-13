@@ -1,9 +1,16 @@
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
 export default function bookShortcut(input: string) {
   const booksMap: Record<string, string> = {
     all: "Wszystkie śpiewniki",
     B: "Pieśni Brzasku Tysiąclecia",
     C: "Uwielbiajmy Pana (Cegiełki)",
     N: "Śpiewajcie Panu Pieśń Nową",
+    K: "Śpiewnik Koziański",
+    P: "Śpiewnik Poznański",
+    E: "Śpiewniczek Młodzieżowy",
+    S: "Pieśni Chóru Syloe",
+    R: "Różne pieśni",
   };
 
   if (booksMap[input]) {
@@ -22,12 +29,18 @@ export default function bookShortcut(input: string) {
   }
 }
 
+// all included books databases
 export function bookList() {
-  // all included books databases
-  return ["B", "C", "N"];
+  const list = unlocked
+    ? ["B", "C", "N", "K", "P", "E", "S", "R"]
+    : ["B", "C", "N"];
+
+  return list;
 }
 
+// all includes pdf files
 export function pdfBooks() {
-  // all includes pdf files
-  return ["B", "C", "N"];
+  const list = unlocked ? ["B", "C", "N", "E"] : ["B", "C", "N"];
+
+  return list;
 }

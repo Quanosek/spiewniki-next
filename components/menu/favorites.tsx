@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
-
 import { replaceLink } from "@/scripts/buttons";
 
 export default function FavoritesMenu() {

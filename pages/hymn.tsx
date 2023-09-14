@@ -145,11 +145,7 @@ export default function HymnPage() {
   useEffect(() => {
     if (!hymn) return;
 
-    setFontSize(
-      localStorage.getItem("fontSize")
-        ? (localStorage.getItem("fontSize") as string)
-        : "21"
-    );
+    setFontSize(localStorage.getItem("fontSize") || "21");
 
     let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
     if (

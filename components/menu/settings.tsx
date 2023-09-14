@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useState, useEffect, ReactElement } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
@@ -7,22 +6,29 @@ import { replaceLink } from "@/scripts/buttons";
 
 export default function SettingsMenu() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
-  const router = useRouter();
 
   // default values
-  const [fontSize, setFontSize] = useState<string>(localStorage.getItem("fontSize") as string || "21");
-
-  const [showChords, setShowChords] = useState<boolean>(Boolean(localStorage.getItem("showChords")) || false)
-
-  const [colorTheme, setColorTheme] = useState<string>(document.documentElement.classList[1] || "light");
+  const [fontSize, setFontSize] = useState(
+    localStorage.getItem("fontSize") || "21"
+  );
+  const [showChords, setShowChords] = useState(
+    Boolean(localStorage.getItem("showChords")) || false
+  );
+  const [colorTheme, setColorTheme] = useState(
+    document.documentElement.classList[1]
+  );
 
   // save changes to local storage
   useEffect(() => {
     localStorage.setItem("fontSize", fontSize);
-    showChords ? localStorage.setItem("showChords", "true") : localStorage.removeItem("showChords");
+
+    showChords
+      ? localStorage.setItem("showChords", "true")
+      : localStorage.removeItem("showChords");
+
     localStorage.setItem("colorTheme", colorTheme);
     document.documentElement.className = `${document.documentElement.classList[0]} ${colorTheme}`;
-  }, [fontSize, showChords, colorTheme])
+  }, [fontSize, showChords, colorTheme]);
 
   // quick books selection
   const Themes = (names: string[]) => {
@@ -39,6 +45,7 @@ export default function SettingsMenu() {
             priority={true}
             draggable={false}
           />
+
           <input
             type="radio"
             id={name}
@@ -97,7 +104,7 @@ export default function SettingsMenu() {
           <input
             type="checkbox"
             checked={showChords}
-            onChange={(e) => setShowChords((oldShowChords) => !oldShowChords)}
+            onChange={() => setShowChords((prev) => !prev)}
           />
           <span />
         </label>

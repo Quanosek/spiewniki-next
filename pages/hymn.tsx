@@ -145,7 +145,7 @@ export default function HymnPage() {
   useEffect(() => {
     if (!hymn) return;
 
-    setFontSize(localStorage.getItem("fontSize") as string || "21");
+    setFontSize(localStorage.getItem("fontSize") || "21");
 
     let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
     if (
@@ -257,24 +257,24 @@ export default function HymnPage() {
         buttons={
           unlocked
             ? {
-              leftSide: {
-                title: "Powrót do wyszukiwania",
-                icon: "arrow",
-                onclick: () => backButton(),
-              },
-            }
+                leftSide: {
+                  title: "Powrót do wyszukiwania",
+                  icon: "arrow",
+                  onclick: () => backButton(),
+                },
+              }
             : {
-              leftSide: {
-                title: "Powrót do wyszukiwania",
-                icon: "arrow",
-                onclick: () => backButton(),
-              },
-              rightSide: {
-                title: "Na Straży.org",
-                icon: "external_link",
-                onclick: () => router.push("https://nastrazy.org/"),
-              },
-            }
+                leftSide: {
+                  title: "Powrót do wyszukiwania",
+                  icon: "arrow",
+                  onclick: () => backButton(),
+                },
+                rightSide: {
+                  title: "Na Straży.org",
+                  icon: "external_link",
+                  onclick: () => router.push("https://nastrazy.org/"),
+                },
+              }
         }
       />
 

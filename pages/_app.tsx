@@ -13,10 +13,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     // set global color theme
-    const theme = localStorage.getItem("colorTheme") || unlocked ? "black" : "light";
+    const theme =
+      localStorage.getItem("colorTheme") || (unlocked ? "black" : "light");
 
-    document.documentElement.className = `${unlocked ? "accent_blue" : "accent_orange"
-      } ${theme}`;
+    document.documentElement.className = `${
+      unlocked ? "accent_blue" : "accent_orange"
+    } ${theme}`;
 
     // prevent screen from sleeping
     let wakeLock: WakeLockSentinel | null = null;

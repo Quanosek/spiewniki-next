@@ -31,7 +31,7 @@ export default function BooksPage() {
       <div className="container">
         <main>
           <div className={styles.title}>
-            <button className={styles.backArrow} onClick={() => router.back()}>
+            <button onClick={() => router.back()}>
               <Image
                 className="icon"
                 alt="back"
@@ -102,5 +102,5 @@ const Books = (names: string[]) => {
     );
   });
 
-  return <div className={styles.books}>{books}</div>;
+  return <div>{books}</div>;
 };

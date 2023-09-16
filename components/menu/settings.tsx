@@ -84,6 +84,7 @@ export default function SettingsMenu() {
 
         <div className={styles.fontSlider}>
           <div className={styles.smaller}>A</div>
+
           <input
             type="range"
             min="14"
@@ -92,6 +93,7 @@ export default function SettingsMenu() {
             value={fontSize}
             onChange={(e) => setFontSize(e.target.value)}
           />
+
           <div className={styles.bigger}>A</div>
         </div>
       </div>
@@ -106,6 +108,7 @@ export default function SettingsMenu() {
             checked={showChords}
             onChange={() => setShowChords((prev) => !prev)}
           />
+
           <span />
         </label>
       </div>

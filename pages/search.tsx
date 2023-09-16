@@ -219,10 +219,7 @@ export default function SearchPage() {
       <div className="container">
         <main>
           <div className={styles.mobileTitle}>
-            <button
-              className={styles.backArrow}
-              onClick={() => router.push("/")}
-            >
+            <button onClick={() => router.push("/")}>
               <Image
                 className="icon"
                 alt="back"

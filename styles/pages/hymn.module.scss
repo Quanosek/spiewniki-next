@@ -4,7 +4,7 @@
   z-index: 10;
   padding: $gap;
   width: 100%;
-  height: var(--navbarHeight);
+  height: var(--navbar-height);
   position: fixed;
   top: 0;
   display: none;
@@ -13,9 +13,8 @@
   user-select: none;
   transition: 0.15s top ease-out;
 
-  div {
-    display: flex;
-    gap: $gap;
+  @media print {
+    display: none !important;
   }
 
   button {
@@ -26,20 +25,16 @@
     &:hover {
       background-color: var(--elements-hover);
     }
-  }
 
-  .back {
-    position: relative;
-    right: 1px;
-    rotate: 90deg;
+    .back {
+      position: relative;
+      right: 1px;
+      rotate: 90deg;
+    }
   }
 
   &.hide {
-    top: calc(var(--navbarHeight) * -1);
-  }
-
-  @media print {
-    display: none !important;
+    top: calc(var(--navbar-height) * -1);
   }
 }
 
@@ -50,7 +45,7 @@
 }
 
 .options {
-  width: 20%; // grid
+  width: 20%; // grid (both sides)
 
   margin-top: 6rem;
   display: flex;
@@ -122,13 +117,13 @@
   flex-direction: column;
   gap: 0.3em;
 
-  h1 {
-    font-size: 150%;
-  }
-
   p {
     font-size: 90%;
     color: var(--accent-color);
+  }
+
+  h1 {
+    font-size: 150%;
   }
 }
 
@@ -215,7 +210,7 @@
   }
 
   .next {
-    transform: rotate(-90deg);
+    rotate: -90deg;
   }
 }
 
@@ -254,7 +249,7 @@
   }
 
   .text {
-    padding: 4rem 1rem calc(var(--navbarHeight) + 4rem);
+    padding: 4rem 1rem calc(var(--navbar-height) + 4rem);
     color: var(--text);
     background-color: transparent;
     min-height: unset;
@@ -281,7 +276,7 @@
     padding: 0 3%;
     width: 100%;
     position: fixed;
-    bottom: calc(var(--navbarHeight) * 1.4);
+    bottom: calc(var(--navbar-height) * 1.4);
     left: 0;
 
     button {
@@ -318,14 +313,14 @@
     .hide {
       opacity: 0;
       scale: 0;
-      top: calc(var(--navbarHeight) / 2);
+      top: calc(var(--navbar-height) / 2);
     }
   }
 }
 
 @media (max-width: 320px) {
   .topNavbar {
-    height: var(--navbarHeight_mobile);
+    height: var(--navbar-height-mobile);
 
     button {
       height: 100%;
@@ -343,6 +338,6 @@
   }
 
   .controls {
-    bottom: calc(var(--navbarHeight_mobile) * 1.4);
+    bottom: calc(var(--navbar-height-mobile) * 1.4);
   }
 }

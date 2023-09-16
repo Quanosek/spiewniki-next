@@ -173,7 +173,7 @@
 
 .footer {
   opacity: 45%;
-  padding: 0.5rem 0 calc(var(--navbarHeight) + 1rem);
+  padding: 0.5rem 0 calc(var(--navbar-height) + 1rem);
   display: none;
   text-align: center;
   font-size: min(2.2vw, 80%);
@@ -191,7 +191,7 @@
   }
 
   @media (max-width: 320px) {
-    padding: 3vw 0 calc(var(--navbarHeight_mobile) + 5vw);
+    padding: 3vw 0 calc(var(--navbar-height-mobile) + 5vw);
   }
 }
 

@@ -1,7 +1,6 @@
 :root {
-  color-scheme: dark;
-  --navbarHeight: 3.5rem;
-  --navbarHeight_mobile: 17.5vw;
+  --navbar-height: 3.5rem;
+  --navbar-height-mobile: 17.5vw;
 }
 
 // tab navigation focus
@@ -221,7 +220,7 @@ main {
 
   @media (max-width: 768px) {
     padding: 3% 2%;
-    min-height: calc(100svh - var(--navbarHeight));
+    min-height: calc(100svh - var(--navbar-height));
   }
 
   @media (max-width: 425px) {
@@ -229,7 +228,7 @@ main {
   }
 
   @media (max-width: 320px) {
-    min-height: calc(100svh - var(--navbarHeight_mobile));
+    min-height: calc(100svh - var(--navbar-height-mobile));
   }
 }
 
@@ -266,7 +265,7 @@ nav {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: var(--navbarHeight);
+  height: var(--navbar-height);
   display: none;
   justify-content: center;
   align-items: center;
@@ -307,7 +306,7 @@ nav {
   }
 
   @media (max-width: 320px) {
-    height: var(--navbarHeight_mobile);
+    height: var(--navbar-height-mobile);
     gap: 1vw;
 
     button {

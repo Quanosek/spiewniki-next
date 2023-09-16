@@ -179,6 +179,10 @@
   gap: 1.2rem;
   overflow-x: auto;
 
+  @media (max-width: 768px) {
+    gap: 2.5vw;
+  }
+
   label {
     padding: min(2vw, 6px) min(1.6vw, 5px) min(2.5vw, 8px);
     width: min(12vw, 3.2rem);
@@ -191,12 +195,11 @@
     border-radius: 0.4rem;
     cursor: pointer;
 
-    &[for="light"] {
-      background-color: #f3f3f3;
+    &[for="black"] > *,
+    &[for="dark"] > * {
+      filter: invert(1);
     }
-    &[for="reading"] {
-      background-color: #f6efe2;
-    }
+
     &[for="black"] {
       background-color: #000000;
     }
@@ -204,9 +207,11 @@
       background-color: #303030;
     }
 
-    &[for="black"] > *,
-    &[for="dark"] > * {
-      filter: invert(1);
+    &[for="light"] {
+      background-color: #f3f3f3;
+    }
+    &[for="reading"] {
+      background-color: #f6efe2;
     }
 
     img {
@@ -223,10 +228,6 @@
         background: url("/icons/check.svg") no-repeat center/60%;
       }
     }
-  }
-
-  @media (max-width: 768px) {
-    gap: 2.5vw;
   }
 }
 
@@ -245,6 +246,7 @@
 
   @media (max-width: 768px) {
     width: min(90%, 22rem);
+
     p {
       font-size: 95%;
     }
@@ -304,6 +306,18 @@
   width: $buttonWidth;
   height: calc($buttonHeight + ($dotMargin * 2.5));
 
+  input:checked {
+    & + span {
+      background-color: var(--accent-color);
+    }
+
+    & + span:before {
+      transform: translateX(
+        calc($buttonWidth - $buttonHeight - ($dotMargin * 2))
+      );
+    }
+  }
+
   span {
     position: absolute;
     top: 0;
@@ -328,18 +342,6 @@
     }
   }
 
-  input:checked {
-    & + span {
-      background-color: var(--accent-color);
-    }
-
-    & + span:before {
-      transform: translateX(
-        calc($buttonWidth - $buttonHeight - ($dotMargin * 2))
-      );
-    }
-  }
-
   @media (max-width: 425px) {
     $buttonWidth: min(18vw, 4rem);
     $buttonHeight: min(8vw, 1.5rem);
@@ -348,16 +350,16 @@
     width: $buttonWidth;
     height: calc($buttonHeight + ($dotMargin * 2.5));
 
-    span:before {
-      margin: $dotMargin;
-      height: $buttonHeight;
-      width: $buttonHeight;
-    }
-
     input:checked + span:before {
       transform: translateX(
         calc($buttonWidth - $buttonHeight - ($dotMargin * 2))
       );
+    }
+
+    span:before {
+      margin: $dotMargin;
+      height: $buttonHeight;
+      width: $buttonHeight;
     }
   }
 }

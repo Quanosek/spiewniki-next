@@ -10,7 +10,7 @@
 
 :root.black,
 :root.dark {
-  color-scheme: dark only;
+  color-scheme: dark;
   --slide-background: #000000;
   --slide-text: #ffffff;
 
@@ -45,7 +45,7 @@
 
 :root.light,
 :root.reading {
-  color-scheme: light only;
+  color-scheme: light;
   --slide-background: #ffffff;
   --slide-text: #000000;
 }

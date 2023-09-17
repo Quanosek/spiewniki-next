@@ -62,23 +62,24 @@ export default function Presentation(params: { data: any }) {
   }, [order, lyricsFormat, hymn]);
 
   // mouse behavior parameters
+  const [alwaysShowCursor, setAlwaysShowCursor] = useState(false);
   const [showCursor, setShowCursor] = useState(false);
+
+  const cursorHideTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     // hide mouse cursor on idle
-    let idleTimer: NodeJS.Timeout;
     const mouseMoveEvent = (e: MouseEvent) => {
       if ((e.movementX && e.movementY) == 0) return;
 
-      clearTimeout(idleTimer);
       setShowCursor(true);
+      clearTimeout(cursorHideTimeout.current);
 
-      const navigation = document.getElementById(
-        "navigation"
-      ) as HTMLDivElement;
-
-      if (!navigation.contains(e.target as Node)) {
-        idleTimer = setTimeout(() => setShowCursor(false), 1500);
+      if (!alwaysShowCursor) {
+        cursorHideTimeout.current = setTimeout(
+          () => setShowCursor(false),
+          1500
+        );
       }
     };
 
@@ -86,9 +87,9 @@ export default function Presentation(params: { data: any }) {
     let startPosition: number, endPosition: number;
     const handleEvent = (e: Event) => {
       // custom event types
+      const TouchEvent = e as TouchEvent;
       const KeyboardEvent = e as KeyboardEvent;
       const WheelEvent = e as WheelEvent;
-      const TouchEvent = e as TouchEvent;
 
       // touch screen navigation
       if (e.type == "touchstart") {
@@ -96,6 +97,15 @@ export default function Presentation(params: { data: any }) {
       }
       if (e.type == "touchend") {
         endPosition = TouchEvent.changedTouches[0].clientX - startPosition;
+      }
+
+      if (
+        KeyboardEvent.ctrlKey ||
+        KeyboardEvent.shiftKey ||
+        KeyboardEvent.altKey ||
+        KeyboardEvent.metaKey
+      ) {
+        return;
       }
 
       // navigation handlers
@@ -134,7 +144,7 @@ export default function Presentation(params: { data: any }) {
         document.removeEventListener(eventType, handleEvent);
       });
     };
-  }, [nextSlide, prevSlide]);
+  }, [alwaysShowCursor, prevSlide, nextSlide]);
 
   return (
     <div
@@ -174,9 +184,11 @@ export default function Presentation(params: { data: any }) {
         <div
           id="navigation"
           className={`${styles.navigation} ${showCursor ? styles.show : ""}`}
+          onMouseEnter={() => setAlwaysShowCursor(true)}
+          onMouseLeave={() => setAlwaysShowCursor(false)}
         >
           <button
-            title="Poprzedni slajd. Użyj [←], [↑] lub kółka myszy."
+            title="Poprzedni slajd. Użyj [←], [↑] lub kółka myszy w górę."
             onClick={prevSlide}
           >
             <Image
@@ -190,7 +202,7 @@ export default function Presentation(params: { data: any }) {
           </button>
 
           <button
-            title="Następny slajd. Użyj [→], [↓] lub kółka myszy."
+            title="Następny slajd. Użyj [→], [↓] lub kółka myszy w dół."
             onClick={nextSlide}
           >
             <Image

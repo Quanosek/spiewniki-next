@@ -12,6 +12,7 @@ import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 import Menu from "@/components/menu";
 import Presentation from "@/components/presentation";
 import { Header, Navbar } from "@/components/elements";
+import Link from "next/link";
 
 export default function HymnPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -39,6 +40,19 @@ export default function HymnPage() {
       .then(({ data }) => {
         const hymn = data.find((elem: any) => elem.name === title);
         hymn.lyrics = Object.values(hymn.song.lyrics);
+
+        if (hymn.song.linked_songs) {
+          hymn.song.linked_songs = Object.values(hymn.song.linked_songs).map(
+            (song: any) => {
+              const splitSong = song.split("\\");
+
+              return {
+                book: bookShortcut(splitSong[0]),
+                title: splitSong[1],
+              };
+            }
+          );
+        }
 
         setHymn(hymn);
         setLoading(false);
@@ -342,7 +356,7 @@ export default function HymnPage() {
             {/* show all hymn parameters */}
             <div className={styles.center}>
               <div
-                className={styles.text}
+                className={styles.content}
                 style={{
                   fontSize: `${fontSize}px`,
                 }}
@@ -350,45 +364,85 @@ export default function HymnPage() {
                 {(isLoading && <div className="loader" />) ||
                   (hymn && (
                     <>
-                      <div className={styles.title}>
-                        <p>{hymn.book}</p>
-                        <h1>{hymn.song.title}</h1>
-                      </div>
+                      <div className={styles.text}>
+                        <div className={styles.title}>
+                          <p>{hymn.book}</p>
+                          <h1>{hymn.song.title}</h1>
+                        </div>
 
-                      <hr className={styles.printLine} />
+                        <hr className={styles.printLine} />
 
-                      <div className={styles.lyrics}>
-                        {hymn.lyrics.map((verses: string[], index: number) => {
-                          return (
-                            <div className={styles.verse} key={index}>
-                              {verses.map((verse: string, index: number) => {
-                                if (
-                                  verse.startsWith(".") &&
-                                  !localStorage.getItem("showChords")
-                                ) {
-                                  return;
-                                }
+                        <div className={styles.lyrics}>
+                          {hymn.lyrics.map(
+                            (verses: string[], index: number) => {
+                              return (
+                                <div className={styles.verse} key={index}>
+                                  {verses.map(
+                                    (verse: string, index: number) => {
+                                      if (
+                                        verse.startsWith(".") &&
+                                        !localStorage.getItem("showChords")
+                                      ) {
+                                        return;
+                                      }
 
-                                return (
-                                  <p
-                                    key={index}
-                                    className={
-                                      verse.startsWith(".") ? styles.chord : ""
+                                      return (
+                                        <p
+                                          key={index}
+                                          className={
+                                            verse.startsWith(".")
+                                              ? styles.chord
+                                              : ""
+                                          }
+                                        >
+                                          {verse.replace(/^[\s.]/, "")}
+                                        </p>
+                                      );
                                     }
-                                  >
-                                    {verse.replace(/^[\s.]/, "")}
-                                  </p>
-                                );
-                              })}
-                            </div>
-                          );
-                        })}
+                                  )}
+                                </div>
+                              );
+                            }
+                          )}
+                        </div>
+
+                        {(hymn.song.copyright || hymn.song.author) && (
+                          <div className={styles.credits}>
+                            <h3>{hymn.song.copyright}</h3>
+                            <p>{hymn.song.author}</p>
+                          </div>
+                        )}
                       </div>
 
-                      <div className={styles.credits}>
-                        <h3>{hymn.song.copyright}</h3>
-                        <p>{hymn.song.author}</p>
-                      </div>
+                      {hymn.song.linked_songs && (
+                        <div className={styles.linked}>
+                          <h4>Powiązane pieśni:</h4>
+
+                          {hymn.song.linked_songs.map(
+                            (
+                              linked: { book: string; title: string },
+                              index: number
+                            ) => {
+                              return (
+                                <Link
+                                  key={index}
+                                  title="Kliknij, aby przejść do wybranej pieśni."
+                                  onClick={() => setLoading(true)}
+                                  href={{
+                                    pathname: "/hymn",
+                                    query: {
+                                      book: linked.book,
+                                      title: linked.title,
+                                    },
+                                  }}
+                                >
+                                  {linked.title}
+                                </Link>
+                              );
+                            }
+                          )}
+                        </div>
+                      )}
                     </>
                   ))}
               </div>

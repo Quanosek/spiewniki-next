@@ -15,7 +15,9 @@ export default function Presentation(params: { data: any }) {
 
   if (hymn.song.presentation) {
     presentation = true;
-    order = hymn.song.presentation.split(" ");
+    order = hymn.song.presentation
+      .split(" ")
+      .filter((item: string) => item !== "");
   } else {
     presentation = false;
     order = hymn.lyrics.map((verse: string, index: number) => index);

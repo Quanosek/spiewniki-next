@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
@@ -23,6 +23,8 @@ export default function HymnPage() {
   const [isLoading, setLoading] = useState(true);
   const [hymn, setHymn] = useState<any>();
 
+  const noChords = useRef(false);
+
   // fetch data on startup
   useEffect(() => {
     if (!router.isReady) return;
@@ -41,6 +43,16 @@ export default function HymnPage() {
         const hymn = data.find((elem: any) => elem.name === title);
         hymn.lyrics = Object.values(hymn.song.lyrics);
 
+        // check if hymn has chords
+        if (localStorage.getItem("showChords")) {
+          const includesChords = hymn.lyrics.some((array: string[]) => {
+            return array.some((verse: string) => verse.startsWith("."));
+          });
+
+          if (!includesChords) noChords.current = true;
+        } else noChords.current = false;
+
+        // linked songs format
         if (hymn.song.linked_songs) {
           hymn.song.linked_songs = Object.values(hymn.song.linked_songs).map(
             (song: any) => {
@@ -361,6 +373,15 @@ export default function HymnPage() {
                   fontSize: `${fontSize}px`,
                 }}
               >
+                {noChords.current && (
+                  <span
+                    className={styles.noChords}
+                    onClick={() => replaceLink("settings")}
+                  >
+                    Brak akordów do wyświetlenia.
+                  </span>
+                )}
+
                 {(isLoading && <div className="loader" />) ||
                   (hymn && (
                     <>
@@ -373,37 +394,35 @@ export default function HymnPage() {
                         <hr className={styles.printLine} />
 
                         <div className={styles.lyrics}>
-                          {hymn.lyrics.map(
-                            (verses: string[], index: number) => {
-                              return (
-                                <div className={styles.verse} key={index}>
-                                  {verses.map(
-                                    (verse: string, index: number) => {
-                                      if (
-                                        verse.startsWith(".") &&
-                                        !localStorage.getItem("showChords")
-                                      ) {
-                                        return;
-                                      }
+                          {hymn.lyrics.map((array: string[], index: number) => {
+                            return (
+                              <div className={styles.verse} key={index}>
+                                {array.map((verse: string, index: number) => {
+                                  // skip chords line if user don't want to see them
+                                  if (
+                                    verse.startsWith(".") &&
+                                    !localStorage.getItem("showChords")
+                                  ) {
+                                    return;
+                                  }
 
-                                      return (
-                                        <p
-                                          key={index}
-                                          className={
-                                            verse.startsWith(".")
-                                              ? styles.chord
-                                              : ""
-                                          }
-                                        >
-                                          {verse.replace(/^[\s.]/, "")}
-                                        </p>
-                                      );
-                                    }
-                                  )}
-                                </div>
-                              );
-                            }
-                          )}
+                                  // display lyrics line
+                                  return (
+                                    <p
+                                      key={index}
+                                      className={
+                                        verse.startsWith(".")
+                                          ? styles.chord
+                                          : ""
+                                      }
+                                    >
+                                      {verse.replace(/^[\s.]/, "")}
+                                    </p>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })}
                         </div>
 
                         {(hymn.song.copyright || hymn.song.author) && (
@@ -415,8 +434,8 @@ export default function HymnPage() {
                       </div>
 
                       {hymn.song.linked_songs && (
-                        <div className={styles.linked}>
-                          <h4>Powiązane pieśni:</h4>
+                        <span className={styles.linked}>
+                          <p>Powiązane pieśni:</p>
 
                           {hymn.song.linked_songs.map(
                             (
@@ -441,7 +460,7 @@ export default function HymnPage() {
                               );
                             }
                           )}
-                        </div>
+                        </span>
                       )}
                     </>
                   ))}

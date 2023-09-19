@@ -295,7 +295,7 @@
   }
 
   .content {
-    padding: var(--navbar-height) 0 var(--navbar-height);
+    padding: var(--navbar-height) 0 calc(var(--navbar-height) + 2rem);
     background-color: transparent;
 
     span {

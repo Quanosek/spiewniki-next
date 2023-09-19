@@ -51,7 +51,7 @@ export default function HymnPage() {
 
           if (!includesChords) noChords.current = true;
           else noChords.current = false;
-        }
+        } else noChords.current = false;
 
         // linked songs format
         if (hymn.song.linked_songs) {

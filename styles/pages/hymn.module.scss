@@ -98,6 +98,7 @@
 
 .content {
   padding: 1rem;
+  min-height: 30rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -296,6 +297,7 @@
 
   .content {
     padding: var(--navbar-height) 0 calc(var(--navbar-height) + 2rem);
+    min-height: unset;
     background-color: transparent;
 
     span {

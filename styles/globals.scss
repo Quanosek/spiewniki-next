@@ -1,4 +1,5 @@
 :root {
+  --header-height: 4.5rem;
   --navbar-height: 3.5rem;
   --navbar-height-mobile: 17.5vw;
 }
@@ -96,13 +97,11 @@ footer {
   }
 }
 
-$headerHeight: 4.5rem;
-
 header {
   padding: 1rem 3%;
   position: sticky;
   top: 0;
-  height: $headerHeight;
+  height: var(--header-height);
   box-shadow: 0 -12px 12px 4px var(--text);
 
   .container {
@@ -196,6 +195,11 @@ footer {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
   }
 
   p {
@@ -206,7 +210,7 @@ footer {
 main {
   padding: 2rem 3% 4rem;
   width: 100%;
-  min-height: calc(100svh - $headerHeight);
+  min-height: calc(100svh - var(--header-height));
   position: relative;
   display: flex;
   flex-direction: column;

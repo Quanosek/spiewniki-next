@@ -6,9 +6,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
-import bookShortcut, { bookList } from "@/scripts/bookShortcut";
-
 import { Header } from "@/components/elements";
+import bookShortcut, { bookList } from "@/scripts/bookShortcut";
+import textFormat from "@/scripts/textFormat";
 
 export default function SearchPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -84,22 +84,6 @@ export default function SearchPage() {
 
     let NamesCollector = new Array();
     let LyricsCollector = new Array();
-
-    // simplify text
-    const textFormat = (text: string) => {
-      return text
-        .toLowerCase()
-        .replaceAll("ą", "a")
-        .replaceAll("ć", "c")
-        .replaceAll("ę", "e")
-        .replaceAll("ł", "l")
-        .replaceAll("ń", "n")
-        .replaceAll("ó", "o")
-        .replaceAll("ś", "s")
-        .replaceAll("ż", "z")
-        .replaceAll("ź", "z")
-        .replace(/[^\w\s]/gi, "");
-    };
 
     data.map((hymn: { book: string; name: string; song: any }) => {
       const { book, name, song } = hymn;

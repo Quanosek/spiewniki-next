@@ -5,9 +5,8 @@ import { useRouter } from "next/router";
 import { ReactElement } from "react";
 
 import styles from "@/styles/pages/books.module.scss";
-import bookShortcut, { bookList, pdfBooks } from "@/scripts/bookShortcut";
-
 import { Header } from "@/components/elements";
+import bookShortcut, { bookList, pdfBooks } from "@/scripts/bookShortcut";
 
 export default function BooksPage() {
   const router = useRouter();
@@ -81,8 +80,10 @@ const Books = (names: string[]) => {
           {pdfBooks().includes(name) && (
             <Link
               className={styles.toFile}
-              href={`/pdf/${bookShortcut(name)}.pdf`}
-              target="_blank"
+              href={{
+                pathname: "/document",
+                query: { d: bookShortcut(name) },
+              }}
             >
               <p>Otwórz PDF</p>
               <Image

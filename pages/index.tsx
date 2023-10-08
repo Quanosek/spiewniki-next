@@ -5,12 +5,10 @@ import { useRouter } from "next/router";
 import { useEffect, ReactElement } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
-
+import { Header, Navbar, Footer } from "@/components/elements";
+import Menu from "@/components/menu";
 import bookShortcut, { pdfBooks } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
-
-import Menu from "@/components/menu";
-import { Header, Navbar, Footer } from "@/components/elements";
 
 export default function IndexPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -225,8 +223,10 @@ const Books = (names: string[]) => {
           <Link
             title="Otwórz plik PDF śpiewnika"
             className={styles.toFile}
-            href={`/pdf/${bookShortcut(name)}.pdf`}
-            target="_blank"
+            href={{
+              pathname: "/document",
+              query: { d: bookShortcut(name) },
+            }}
           >
             <Image
               className="icon"

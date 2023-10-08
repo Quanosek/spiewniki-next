@@ -1,18 +1,16 @@
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
-
-import bookShortcut from "@/scripts/bookShortcut";
-import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
-
+import { Header, Navbar } from "@/components/elements";
 import Menu from "@/components/menu";
 import Presentation from "@/components/presentation";
-import { Header, Navbar } from "@/components/elements";
-import Link from "next/link";
+import bookShortcut from "@/scripts/bookShortcut";
+import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function HymnPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";

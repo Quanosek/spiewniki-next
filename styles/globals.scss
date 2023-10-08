@@ -1,4 +1,5 @@
 :root {
+  --header-height: 4.5rem;
   --navbar-height: 3.5rem;
   --navbar-height-mobile: 17.5vw;
 }
@@ -23,14 +24,14 @@
 // used fonts
 @font-face {
   font-family: "Gill Sans MT";
-  src: url("/fonts/Gill Sans MT.woff2") format("woff2");
+  src: url("/fonts/gill_sans_mt.woff2") format("woff2");
   size-adjust: 110%;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Brutal Type Medium";
-  src: url("/fonts/Brutal Type Medium.woff2") format("woff2");
+  src: url("/fonts/brutal_type_medium.woff2") format("woff2");
   unicode-range: U+30-39;
   size-adjust: 105%;
   font-display: swap;
@@ -96,13 +97,11 @@ footer {
   }
 }
 
-$headerHeight: 4.5rem;
-
 header {
   padding: 1rem 3%;
   position: sticky;
   top: 0;
-  height: $headerHeight;
+  height: var(--header-height);
   box-shadow: 0 -12px 12px 4px var(--text);
 
   .container {
@@ -192,10 +191,19 @@ header {
 footer {
   padding: 1.25rem 3rem;
 
+  @media (max-width: 1024px) {
+    padding: 0.95rem 3rem;
+  }
+
   .container {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
   }
 
   p {
@@ -206,7 +214,7 @@ footer {
 main {
   padding: 2rem 3% 4rem;
   width: 100%;
-  min-height: calc(100svh - $headerHeight);
+  min-height: calc(100svh - var(--header-height));
   position: relative;
   display: flex;
   flex-direction: column;

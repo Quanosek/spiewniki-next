@@ -3,12 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+
 import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
-import bookShortcut, { bookList } from "@/scripts/bookShortcut";
 
 import { Header } from "@/components/elements";
+
+import bookShortcut, { booksList } from "@/scripts/bookShortcut";
+import textFormat from "@/scripts/textFormat";
 
 export default function SearchPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -40,17 +43,16 @@ export default function SearchPage() {
 
     // get all hymns from all books
     if (!book) {
-      const all = bookList();
       const Collector = new Array();
 
-      all.forEach(async (book) => {
+      booksList().forEach(async (book) => {
         Collector.push(
           await axios
             .get(`database/${bookShortcut(book)}.json`)
             .catch((err) => console.error(err))
         );
 
-        if (Collector.length === all.length) {
+        if (Collector.length === booksList().length) {
           let hymns = new Array();
 
           Collector.map(({ data }) => hymns.push(...data));
@@ -84,22 +86,6 @@ export default function SearchPage() {
 
     let NamesCollector = new Array();
     let LyricsCollector = new Array();
-
-    // simplify text
-    const textFormat = (text: string) => {
-      return text
-        .toLowerCase()
-        .replaceAll("ą", "a")
-        .replaceAll("ć", "c")
-        .replaceAll("ę", "e")
-        .replaceAll("ł", "l")
-        .replaceAll("ń", "n")
-        .replaceAll("ó", "o")
-        .replaceAll("ś", "s")
-        .replaceAll("ż", "z")
-        .replaceAll("ź", "z")
-        .replace(/[^\w\s]/gi, "");
-    };
 
     data.map((hymn: { book: string; name: string; song: any }) => {
       const { book, name, song } = hymn;

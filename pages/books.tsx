@@ -2,15 +2,23 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/books.module.scss";
-import bookShortcut, { bookList, pdfBooks } from "@/scripts/bookShortcut";
 
 import { Header } from "@/components/elements";
 
 export default function BooksPage() {
   const router = useRouter();
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/fetchData")
+      .then((res) => res.json())
+      .then((data) => setData(data))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <>
@@ -47,60 +55,53 @@ export default function BooksPage() {
 
           <div className={styles.list}>
             <Link className={styles.all} href={"/search"}>
-              <p>{bookShortcut("all")}</p>
+              <p>Pokaż wszystkie</p>
             </Link>
 
             <hr />
 
-            {Books(bookList())}
+            {data.map((book: any, index: number) => {
+              return (
+                <div key={index}>
+                  <div className={styles.book}>
+                    <Link
+                      className={styles.toSearch}
+                      href={{
+                        pathname: "/search",
+                        query: { book: book.shortcut },
+                      }}
+                    >
+                      <p>{book.name}</p>
+                    </Link>
+
+                    {book.pdf && (
+                      <Link
+                        className={styles.toFile}
+                        href={{
+                          pathname: "/document",
+                          query: { d: book.name },
+                        }}
+                      >
+                        <p>Otwórz PDF</p>
+                        <Image
+                          className="icon"
+                          alt="pdf file"
+                          src="/icons/document.svg"
+                          width={20}
+                          height={20}
+                          draggable={false}
+                        />
+                      </Link>
+                    )}
+                  </div>
+
+                  {index + 1 !== data.length && <hr />}
+                </div>
+              );
+            })}
           </div>
         </main>
       </div>
     </>
   );
 }
-
-// show all books
-const Books = (names: string[]) => {
-  const books: ReactElement[] = [];
-
-  names.forEach((name, index) => {
-    books.push(
-      <div key={index}>
-        <div className={styles.book}>
-          <Link
-            className={styles.toSearch}
-            href={{
-              pathname: "/search",
-              query: { book: name },
-            }}
-          >
-            <p>{bookShortcut(name)}</p>
-          </Link>
-
-          {pdfBooks().includes(name) && (
-            <Link
-              className={styles.toFile}
-              href={`/pdf/${bookShortcut(name)}.pdf`}
-              target="_blank"
-            >
-              <p>Otwórz PDF</p>
-              <Image
-                className="icon"
-                alt="pdf file"
-                src="/icons/document.svg"
-                width={20}
-                height={20}
-                draggable={false}
-              />
-            </Link>
-          )}
-        </div>
-
-        {index + 1 !== names.length && <hr />}
-      </div>
-    );
-  });
-
-  return <div>{books}</div>;
-};

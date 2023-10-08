@@ -1,5 +1,3 @@
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
-
 export default function bookShortcut(input: string) {
   const booksMap: Record<string, string> = {
     all: "Wszystkie śpiewniki",
@@ -30,17 +28,12 @@ export default function bookShortcut(input: string) {
 }
 
 // all included books databases
-export function bookList() {
+export function booksList() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
   const list = unlocked
     ? ["B", "C", "N", "K", "P", "E", "S", "R"]
     : ["B", "C", "N"];
-
-  return list;
-}
-
-// all includes pdf files
-export function pdfBooks() {
-  const list = unlocked ? ["B", "C", "N", "E"] : ["B", "C", "N"];
 
   return list;
 }

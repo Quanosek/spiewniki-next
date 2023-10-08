@@ -1,7 +1,8 @@
 import router from "next/router";
+
 import axios from "axios";
 
-import bookShortcut, { bookList } from "@/scripts/bookShortcut";
+import bookShortcut, { booksList } from "@/scripts/bookShortcut";
 
 export function replaceLink(name: string | undefined) {
   const { menu, ...params } = router.query;
@@ -22,7 +23,7 @@ export function replaceLink(name: string | undefined) {
 export function randomHymn(book: string | undefined) {
   // get all hymns from all books
   if (!book) {
-    const all = bookList();
+    const all = booksList();
     const Collector = new Array();
 
     all.forEach(async (book) => {
@@ -73,10 +74,11 @@ export function randomHymn(book: string | undefined) {
 
 export function shareButton() {
   if (navigator.share) {
-    // default share screen
+    // share content
     navigator.share({
-      title: "Śpiewniki",
-      text: "Udostępnij śpiewniki!",
+      text: router.query.title
+        ? `${router.query.title} / ${bookShortcut(router.query.book as string)}`
+        : "Śpiewniki",
       url: router.asPath,
     });
   } else if (navigator.clipboard) {

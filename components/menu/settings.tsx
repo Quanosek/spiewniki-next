@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useState, useEffect, ReactElement } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
+
 import { replaceLink } from "@/scripts/buttons";
 
 export default function SettingsMenu() {

@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/error.module.scss";
+
 import { Header } from "@/components/elements";
 
 export default function ErrorPage() {

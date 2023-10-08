@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 
 import styles from "@/styles/pages/document.module.scss";
+
 import { Header } from "@/components/elements";
+
 import textFormat from "@/scripts/textFormat";
 
 export default function DocumentPage() {

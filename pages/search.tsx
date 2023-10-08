@@ -3,10 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+
 import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
+
 import { Header } from "@/components/elements";
+
 import bookShortcut, { booksList } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 

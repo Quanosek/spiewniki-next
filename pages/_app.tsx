@@ -9,33 +9,20 @@ import "@/styles/globals.scss";
 import "@/styles/themes.scss";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
-
   useEffect(() => {
-    // set global color theme
-    const theme =
-      localStorage.getItem("colorTheme") || (unlocked ? "black" : "light");
+    const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
+    // set global coloring
     document.documentElement.className = `${
-      unlocked ? "accent_blue" : "accent_orange"
-    } ${theme}`;
+      unlocked ? "accent_blue" : "accent_orange" // version color accent
+    } ${localStorage.getItem("colorTheme") || (unlocked ? "black" : "light")}`; // default user theme
 
     // prevent screen from sleeping
-    let wakeLock: WakeLockSentinel | null = null;
-    const requestWakeLock = async () => {
-      try {
-        wakeLock = await navigator.wakeLock.request("screen");
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    if ("wakeLock" in navigator) requestWakeLock();
-
-    return () => {
-      if (wakeLock !== null) wakeLock.release();
-    };
-  }, [unlocked]);
+    navigator.wakeLock
+      .request("screen")
+      .then(() => console.log("Screen Wake-Lock is active."))
+      .catch((err) => console.log(err.name, err.message));
+  }, []);
 
   return (
     <>
@@ -46,7 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
         />
       </Head>
 
-      {!(process.env.NODE_ENV === "development") && (
+      {process.env.NODE_ENV !== "development" && (
         <GoogleAnalytics trackPageViews />
       )}
 

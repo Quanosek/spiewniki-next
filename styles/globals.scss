@@ -191,6 +191,10 @@ header {
 footer {
   padding: 1.25rem 3rem;
 
+  @media (max-width: 1024px) {
+    padding: 0.95rem 3rem;
+  }
+
   .container {
     flex-direction: row;
     justify-content: space-between;

@@ -3,12 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useState, useEffect, useRef } from "react";
+
 import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
+
 import { Header, Navbar } from "@/components/elements";
 import Menu from "@/components/menu";
 import Presentation from "@/components/presentation";
+
 import bookShortcut from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 

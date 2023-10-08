@@ -30,17 +30,10 @@ export default function bookShortcut(input: string) {
 }
 
 // all included books databases
-export function bookList() {
+export function booksList() {
   const list = unlocked
     ? ["B", "C", "N", "K", "P", "E", "S", "R"]
     : ["B", "C", "N"];
-
-  return list;
-}
-
-// all includes pdf files
-export function pdfBooks() {
-  const list = unlocked ? ["B", "C", "N", "E"] : ["B", "C", "N"];
 
   return list;
 }

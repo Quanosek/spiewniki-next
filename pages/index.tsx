@@ -2,17 +2,26 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, ReactElement } from "react";
+import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 import { Header, Navbar, Footer } from "@/components/elements";
 import Menu from "@/components/menu";
-import bookShortcut, { pdfBooks } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function IndexPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
   const router = useRouter();
+
+  const [data, setData] = useState([]);
+  const shortcutsBooks = ["B", "C", "N"];
+
+  useEffect(() => {
+    fetch("/api/fetchData")
+      .then((res) => res.json())
+      .then((data) => setData(data))
+      .catch((err) => console.error(err));
+  }, []);
 
   // keyboard shortcuts
   useEffect(() => {
@@ -118,7 +127,59 @@ export default function IndexPage() {
 
           <div className={styles.container}>
             <div className={styles.hymnBooks}>
-              {Books(["B", "C", "N"])}
+              <div className={styles.books}>
+                {data
+                  .filter((book: { shortcut: string }) => {
+                    return shortcutsBooks.includes(book.shortcut);
+                  })
+                  .map((book: any, index: number) => {
+                    return (
+                      <div key={index}>
+                        <Link
+                          className={styles.toSearch}
+                          href={{
+                            pathname: "/search",
+                            query: { book: book.shortcut },
+                          }}
+                        >
+                          <Image
+                            alt="cover"
+                            src={
+                              book.cover
+                                ? `/covers/${book.shortcut}.webp`
+                                : "/covers/default.webp"
+                            }
+                            width={340}
+                            height={480}
+                            priority={true}
+                            draggable={false}
+                          />
+                          <p>{book.name}</p>
+                        </Link>
+
+                        {book.pdf && (
+                          <Link
+                            title="Otwórz plik PDF śpiewnika"
+                            className={styles.toFile}
+                            href={{
+                              pathname: "/document",
+                              query: { d: book.name },
+                            }}
+                          >
+                            <Image
+                              className="icon"
+                              alt="pdf file"
+                              src="/icons/document.svg"
+                              width={30}
+                              height={30}
+                              draggable={false}
+                            />
+                          </Link>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
 
               {unlocked && (
                 <Link href="/books" className={styles.all}>
@@ -193,54 +254,3 @@ export default function IndexPage() {
     </>
   );
 }
-
-// quick books selection
-const Books = (names: string[]) => {
-  const books: ReactElement[] = [];
-
-  names.forEach((name, index) => {
-    books.push(
-      <div key={index}>
-        <Link
-          className={styles.toSearch}
-          href={{
-            pathname: "/search",
-            query: { book: name },
-          }}
-        >
-          <Image
-            alt="cover"
-            src={`/covers/${name}.webp`}
-            width={340}
-            height={480}
-            priority={true}
-            draggable={false}
-          />
-          <p>{bookShortcut(name)}</p>
-        </Link>
-
-        {pdfBooks().includes(name) && (
-          <Link
-            title="Otwórz plik PDF śpiewnika"
-            className={styles.toFile}
-            href={{
-              pathname: "/document",
-              query: { d: bookShortcut(name) },
-            }}
-          >
-            <Image
-              className="icon"
-              alt="pdf file"
-              src="/icons/document.svg"
-              width={30}
-              height={30}
-              draggable={false}
-            />
-          </Link>
-        )}
-      </div>
-    );
-  });
-
-  return <div className={styles.books}>{books}</div>;
-};

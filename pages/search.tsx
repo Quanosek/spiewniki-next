@@ -7,7 +7,7 @@ import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
 import { Header } from "@/components/elements";
-import bookShortcut, { bookList } from "@/scripts/bookShortcut";
+import bookShortcut, { booksList } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 
 export default function SearchPage() {
@@ -40,17 +40,16 @@ export default function SearchPage() {
 
     // get all hymns from all books
     if (!book) {
-      const all = bookList();
       const Collector = new Array();
 
-      all.forEach(async (book) => {
+      booksList().forEach(async (book) => {
         Collector.push(
           await axios
             .get(`database/${bookShortcut(book)}.json`)
             .catch((err) => console.error(err))
         );
 
-        if (Collector.length === all.length) {
+        if (Collector.length === booksList().length) {
           let hymns = new Array();
 
           Collector.map(({ data }) => hymns.push(...data));

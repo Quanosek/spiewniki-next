@@ -25,10 +25,7 @@ export default function DocumentPage() {
 
       <div className="container">
         <div className={styles.document}>
-          <iframe
-            className={styles.document}
-            src={`/pdf/${textFormat(document)}.pdf`}
-          />
+          <iframe className={styles.document} src={`/pdf/${document}.pdf`} />
         </div>
       </div>
     </>

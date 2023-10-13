@@ -18,10 +18,12 @@ export default function App({ Component, pageProps }: AppProps) {
     } ${localStorage.getItem("colorTheme") || (unlocked ? "black" : "light")}`; // default user theme
 
     // prevent screen from sleeping
-    navigator.wakeLock
-      .request("screen")
-      .then(() => console.log("Screen Wake-Lock is active."))
-      .catch((err) => console.log(err.name, err.message));
+    if (navigator.wakeLock) {
+      navigator.wakeLock
+        .request("screen")
+        .then(() => console.log("Screen Wake-Lock is active."))
+        .catch((err) => console.log(err.name, err.message));
+    }
   }, []);
 
   return (

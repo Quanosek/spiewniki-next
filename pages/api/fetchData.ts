@@ -11,7 +11,7 @@ export default async function readFiles(
   res: NextApiResponse
 ) {
   try {
-    const covers = fs.readdirSync(path.join(process.cwd(), "public", "covers"));
+    // const covers = fs.readdirSync(path.join(process.cwd(), "public", "covers"));
     const pdfFiles = fs.readdirSync(path.join(process.cwd(), "public", "pdf"));
 
     const booksWithPdf = booksList().map((book) => {
@@ -20,7 +20,7 @@ export default async function readFiles(
       return {
         shortcut: book,
         name: bookShortcut(book),
-        cover: covers.includes(`${book}.webp`),
+        // cover: covers.includes(`${book}.webp`),
         pdf: pdfFiles.includes(`${pdfName}.pdf`),
       };
     });

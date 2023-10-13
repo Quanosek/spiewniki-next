@@ -60,6 +60,8 @@ export default function BooksPage() {
 
             <hr />
 
+            {!data.length && <div className="loader" />}
+
             {data.map((book: any, index: number) => {
               return (
                 <div key={index}>

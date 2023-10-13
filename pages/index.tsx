@@ -156,6 +156,7 @@ export default function IndexPage() {
                           src="/icons/document.svg"
                           width={30}
                           height={30}
+                          priority={true}
                           draggable={false}
                         />
                       </Link>

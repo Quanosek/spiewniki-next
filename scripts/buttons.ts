@@ -76,9 +76,7 @@ export function shareButton() {
   if (navigator.share) {
     // share content
     navigator.share({
-      text: router.query.title
-        ? `${router.query.title} / ${bookShortcut(router.query.book as string)}`
-        : "Śpiewniki",
+      text: router.query.title ? `${router.query.title}` : "Śpiewniki",
       url: router.asPath,
     });
   } else if (navigator.clipboard) {

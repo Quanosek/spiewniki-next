@@ -119,7 +119,7 @@ export default function Presentation(params: { data: any }) {
         prevSlide();
       }
       if (
-        ["ArrowRight", "ArrowDown"].includes(KeyboardEvent.key) ||
+        [" ", "ArrowRight", "ArrowDown"].includes(KeyboardEvent.key) ||
         WheelEvent.deltaY > 100 ||
         endPosition >= 0
       ) {
@@ -190,7 +190,7 @@ export default function Presentation(params: { data: any }) {
           onMouseLeave={() => setAlwaysShowCursor(false)}
         >
           <button
-            title="Poprzedni slajd. Użyj [←], [↑] lub kółka myszy w górę."
+            title="Poprzedni slajd. Użyj klawiszy [←] [↑] lub kółka myszy w górę."
             onClick={prevSlide}
           >
             <Image
@@ -204,7 +204,7 @@ export default function Presentation(params: { data: any }) {
           </button>
 
           <button
-            title="Następny slajd. Użyj [→], [↓] lub kółka myszy w dół."
+            title="Następny slajd. Użyj Spacji, klawiszy [→] [↓] lub kółka myszy w dół."
             onClick={nextSlide}
           >
             <Image

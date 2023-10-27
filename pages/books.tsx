@@ -14,7 +14,7 @@ export default function BooksPage() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("/api/fetchData")
+    fetch("/api/booksData")
       .then((res) => res.json())
       .then((data) => setData(data))
       .catch((err) => console.error(err));
@@ -37,19 +37,29 @@ export default function BooksPage() {
       />
 
       <div className="container">
+        <div className="mobile-header">
+          <button
+            className="left-button"
+            style={{ rotate: "90deg" }}
+            onClick={() => router.back()}
+          >
+            <Image
+              className="icon"
+              alt="back"
+              src="/icons/arrow.svg"
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </button>
+
+          <div className="center">
+            <h2>Lista wszystkich śpiewników:</h2>
+          </div>
+        </div>
+
         <main>
           <div className={styles.title}>
-            <button onClick={() => router.back()}>
-              <Image
-                className="icon"
-                alt="back"
-                src="/icons/arrow.svg"
-                width={25}
-                height={25}
-                draggable={false}
-              />
-            </button>
-
             <h2>Lista wszystkich śpiewników:</h2>
           </div>
 
@@ -87,7 +97,7 @@ export default function BooksPage() {
                         <p>Otwórz PDF</p>
                         <Image
                           className="icon"
-                          alt="pdf file"
+                          alt="pdf_file"
                           src="/icons/document.svg"
                           width={20}
                           height={20}

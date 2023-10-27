@@ -1,24 +1,3 @@
-.mobileTitle {
-  margin: 0.5rem 0 -0.5rem;
-  width: 100%;
-  position: relative;
-  display: none;
-  justify-content: center;
-  align-items: center;
-
-  button {
-    width: 3rem;
-    aspect-ratio: 1/1;
-    position: absolute;
-    left: 1%;
-    background-color: transparent;
-
-    img {
-      rotate: 90deg;
-    }
-  }
-}
-
 .searchBox {
   width: 85%;
   position: relative;
@@ -255,10 +234,6 @@
 }
 
 @media (max-width: 768px) {
-  .mobileTitle {
-    display: flex;
-  }
-
   .searchBox {
     input {
       height: 3.5rem;
@@ -297,16 +272,6 @@
 }
 
 @media (max-width: 425px) {
-  .mobileTitle {
-    margin: 2vw 0 -1.6vw;
-    font-size: 3.65vw;
-
-    button {
-      width: 12vw;
-      padding: 3vw;
-    }
-  }
-
   .searchBox {
     input {
       $fontSize: 3.6vw;

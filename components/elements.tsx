@@ -23,13 +23,17 @@ export function Header(param: any) {
           {leftSide && (
             <div className="leftSide">
               <button onClick={leftSide.onclick}>
-                <Image
-                  className={`icon ${leftSide.icon == "arrow" ? "arrow" : ""}`}
-                  alt={leftSide.icon}
-                  src={`/icons/${leftSide.icon}.svg`}
-                  width={20}
-                  height={20}
-                />
+                {leftSide.icon && (
+                  <Image
+                    className={`icon ${
+                      leftSide.icon == "arrow" ? "arrow" : ""
+                    }`}
+                    alt={leftSide.icon}
+                    src={`/icons/${leftSide.icon}.svg`}
+                    width={20}
+                    height={20}
+                  />
+                )}
 
                 <p>{leftSide.title}</p>
               </button>
@@ -43,13 +47,17 @@ export function Header(param: any) {
               <button onClick={rightSide.onclick}>
                 <p>{rightSide.title}</p>
 
-                <Image
-                  className={`icon ${rightSide.icon == "arrow" ? "arrow" : ""}`}
-                  alt={rightSide.icon}
-                  src={`/icons/${rightSide.icon}.svg`}
-                  width={18}
-                  height={18}
-                />
+                {rightSide.icon && (
+                  <Image
+                    className={`icon ${
+                      rightSide.icon == "arrow" ? "arrow" : ""
+                    }`}
+                    alt={rightSide.icon}
+                    src={`/icons/${rightSide.icon}.svg`}
+                    width={18}
+                    height={18}
+                  />
+                )}
               </button>
             </div>
           )}

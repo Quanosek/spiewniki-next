@@ -6,10 +6,7 @@ import path from "path";
 import bookShortcut, { booksList } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 
-export default async function readFiles(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default function booksData(req: NextApiRequest, res: NextApiResponse) {
   try {
     // const covers = fs.readdirSync(path.join(process.cwd(), "public", "covers"));
     const pdfFiles = fs.readdirSync(path.join(process.cwd(), "public", "pdf"));

@@ -1,5 +1,5 @@
 {
-  "version": "0.5.1",
+  "version": "0.6.0",
   "name": "spiewniki",
   "description": "Zebrane w jednym miejscu śpiewniki i pieśni religijne",
   "type": "module",
@@ -10,20 +10,20 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/node": "20.8.7",
-    "@types/react": "18.2.31",
+    "@types/node": "20.8.9",
+    "@types/react": "18.2.33",
     "@types/react-dom": "18.2.14",
-    "axios": "^1.5.1",
+    "axios": "^1.6.0",
     "eslint": "8.52.0",
-    "eslint-config-next": "13.5.6",
-    "next": "13.5.6",
+    "eslint-config-next": "14.0.0",
+    "next": "14.0.0",
     "next-pwa": "^5.6.0",
     "nextjs-google-analytics": "^2.3.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "sass": "^1.69.4",
+    "sass": "^1.69.5",
     "sharp": "^0.32.6",
-    "the-new-css-reset": "^1.11.0",
+    "the-new-css-reset": "^1.11.1",
     "typescript": "5.2.2"
   }
 }

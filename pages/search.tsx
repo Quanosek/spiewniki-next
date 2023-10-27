@@ -194,8 +194,7 @@ export default function SearchPage() {
                   onclick: () => router.push("/"),
                 },
                 rightSide: {
-                  title: "Na Straży.org",
-                  icon: "external_link",
+                  title: "Nastraży.org",
                   onclick: () => router.push("https://nastrazy.org/"),
                 },
               }
@@ -203,22 +202,24 @@ export default function SearchPage() {
       />
 
       <div className="container">
-        <main>
-          <div className={styles.mobileTitle}>
-            <button onClick={() => router.push("/")}>
-              <Image
-                className="icon"
-                alt="back"
-                src="/icons/arrow.svg"
-                width={25}
-                height={25}
-                draggable={false}
-              />
-            </button>
+        <div className="mobile-header">
+          <Link className="left-button" style={{ rotate: "90deg" }} href={"/"}>
+            <Image
+              className="icon"
+              alt="back"
+              src="/icons/arrow.svg"
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </Link>
 
+          <div className="center">
             <h2>Wyszukiwanie</h2>
           </div>
+        </div>
 
+        <main>
           <div className={styles.searchBox}>
             <input
               autoComplete="off"

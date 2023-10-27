@@ -7,6 +7,7 @@ import { replaceLink } from "@/scripts/buttons";
 
 import Favorites from "./menu/favorites";
 import Settings from "./menu/settings";
+import Shortcuts from "./menu/shortcuts";
 
 export default function Menu() {
   const router = useRouter();
@@ -67,6 +68,7 @@ export default function Menu() {
           {/* select menu window */}
           {menu === "favorites" && <Favorites />}
           {menu === "settings" && <Settings />}
+          {menu === "shortcuts" && <Shortcuts />}
         </div>
       </div>
     </div>

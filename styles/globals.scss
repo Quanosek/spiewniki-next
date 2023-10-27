@@ -142,6 +142,7 @@ header {
   .rightSide {
     position: absolute;
     right: 0.5rem;
+    font-size: 115%;
 
     @media (max-width: 1024px) {
       right: 0.5vw;
@@ -155,7 +156,7 @@ header {
   a {
     padding: 3px 7px;
     position: relative;
-    right: 15px;
+    right: 5px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -172,7 +173,6 @@ header {
     user-select: none;
     opacity: 95%;
     font-size: 180%;
-    text-shadow: 0 1px 2px rgba(#474747, 0.3);
   }
 
   @media (max-width: 1024px) {
@@ -227,8 +227,8 @@ main {
   }
 
   @media (max-width: 768px) {
-    padding: 3% 2%;
-    min-height: calc(100svh - var(--navbar-height));
+    padding: min(5%, 1rem) 2% 5%;
+    min-height: calc(100svh - min(18vw, 6rem) - var(--navbar-height));
   }
 
   @media (max-width: 425px) {
@@ -236,7 +236,7 @@ main {
   }
 
   @media (max-width: 320px) {
-    min-height: calc(100svh - var(--navbar-height-mobile));
+    min-height: calc(100svh - min(18vw, 6rem) - var(--navbar-height-mobile));
   }
 }
 
@@ -333,6 +333,95 @@ nav {
   }
 }
 
+// header component on mobile devices
+.mobile-header {
+  position: relative;
+  width: 100%;
+  height: min(18vw, 6rem);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+
+  &:not(.home) {
+    height: calc(var(--navbar-height) * 1.05);
+    background-color: var(--elements);
+    box-shadow: 0 -12px 12px 4px var(--text);
+
+    @media (max-width: 320px) {
+      height: calc(var(--navbar-height-mobile) * 1.05);
+    }
+  }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+
+  a,
+  button {
+    transition: 0.2s background-color ease-out;
+
+    @media (max-width: 320px) {
+      img {
+        height: 8vw;
+        width: auto;
+      }
+    }
+  }
+
+  &.home {
+    margin: min(4vw, 8px) 0 -1%;
+    letter-spacing: 0.4px;
+    font-size: 90%;
+
+    .center {
+      position: relative;
+      right: 4px;
+      gap: 1.2vw;
+    }
+
+    img {
+      height: min(55px, 13vw);
+      width: auto;
+    }
+  }
+
+  .left-button {
+    z-index: 1;
+    position: absolute;
+    left: 1vw;
+    padding: 1%;
+    height: 85%;
+    aspect-ratio: 1/1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.6rem;
+
+    &:hover {
+      background-color: var(--elements-hover);
+    }
+  }
+
+  .center {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+
+    font-weight: bold;
+    text-align: center;
+
+    @media (max-width: 425px) {
+      font-size: min(3.5vw, 90%);
+    }
+  }
+}
+
 // loading dots animation
 .loader,
 .loader:before,
@@ -382,67 +471,19 @@ nav {
   }
 }
 
-// header component in mobile
-.mobileHeader {
-  margin: min(3vw, 8px) 0 -1%;
-  position: relative;
-  width: 100%;
+// desktop-only elements
+.desktop-only {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
 
-  @media (min-width: 769px) {
+  @media (max-width: 1024px) {
     display: none;
   }
+}
 
-  a {
-    opacity: 80%;
-    padding: 0.8rem;
-    position: absolute;
-    left: 3%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0.4rem;
-    transition: 0.1s ease-out;
-
-    &:hover {
-      opacity: 100%;
-      background-color: var(--elements);
-    }
-
-    @media (max-width: 425px) {
-      padding: 3vw;
-
-      img {
-        height: 6vw;
-        width: auto;
-      }
-    }
-  }
-
-  div {
-    position: relative;
-    right: 5px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    @media (max-width: 425px) {
-      right: 0.25vw;
-      gap: min(2vw, 1rem);
-      font-size: 3.8vw;
-
-      img {
-        height: 12.5vw;
-        width: auto;
-      }
-    }
-
-    h1 {
-      font-size: 175%;
-      letter-spacing: 0.3px;
-    }
-  }
+// disabled buttons
+.disabled {
+  opacity: 30% !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  cursor: default !important;
 }

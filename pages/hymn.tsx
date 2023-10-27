@@ -167,6 +167,27 @@ export default function HymnPage() {
     elem.requestFullscreen && elem.requestFullscreen();
   };
 
+  // connected files
+  const [hymnFiles, setHymnFiles] = useState<any>({});
+
+  const openDocument = useCallback(() => {
+    const { book, id } = hymnFiles.pdf;
+
+    router.push({
+      pathname: "/document",
+      query: { book, id },
+    });
+  }, [hymnFiles, router]);
+
+  useEffect(() => {
+    if (!hymn) return;
+
+    fetch(`/api/hymnFiles?book=${hymn.book}&title=${hymn.song.title}`)
+      .then((res) => res.json())
+      .then((data) => setHymnFiles(data))
+      .catch((err) => console.error(err));
+  }, [hymn]);
+
   const [fontSize, setFontSize] = useState("21"); // set page font size
   const [favHymn, setFavHymn] = useState(false); // check if hymn is in favorites
 
@@ -211,6 +232,9 @@ export default function HymnPage() {
         case "P":
           slideshowBtn();
           break;
+        case "N":
+          hymnFiles.pdf && openDocument();
+          break;
         case "ARROWLEFT":
           changeHymn(hymn.id, "prev");
           break;
@@ -222,7 +246,15 @@ export default function HymnPage() {
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [hymn, router, unlocked, slideshowMode, changeHymn]);
+  }, [
+    hymn,
+    router,
+    slideshowMode,
+    unlocked,
+    hymnFiles,
+    openDocument,
+    changeHymn,
+  ]);
 
   // add/remove hymn to/from local favorites list
   const favoriteButton = () => {
@@ -298,8 +330,7 @@ export default function HymnPage() {
                   onclick: () => backButton(),
                 },
                 rightSide: {
-                  title: "Na Straży.org",
-                  icon: "external_link",
+                  title: "Nastraży.org",
                   onclick: () => router.push("https://nastrazy.org/"),
                 },
               }
@@ -307,8 +338,16 @@ export default function HymnPage() {
       />
 
       <div className="container">
-        <div className={`${styles.topNavbar} ${hideNavbar ? styles.hide : ""}`}>
-          <button onClick={backButton}>
+        <div
+          className={`mobile-header ${styles.navigation} ${
+            hideNavbar ? styles.hide : ""
+          }`}
+        >
+          <button
+            className="left-button"
+            style={{ rotate: "90deg" }}
+            onClick={backButton}
+          >
             <Image
               className={`${styles.back} icon`}
               alt="back"
@@ -319,16 +358,31 @@ export default function HymnPage() {
             />
           </button>
 
-          <button onClick={favoriteButton}>
-            <Image
-              className="icon"
-              alt="favorite"
-              src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </button>
+          <div>
+            {hymnFiles.pdf && (
+              <button onClick={openDocument}>
+                <Image
+                  className="icon"
+                  alt="pdf_file"
+                  src="/icons/document.svg"
+                  width={25}
+                  height={25}
+                  draggable={false}
+                />
+              </button>
+            )}
+
+            <button onClick={favoriteButton}>
+              <Image
+                className="icon"
+                alt="favorite"
+                src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
+                width={25}
+                height={25}
+                draggable={false}
+              />
+            </button>
+          </div>
         </div>
 
         <main>
@@ -355,15 +409,47 @@ export default function HymnPage() {
                 <p>Wybierz śpiewnik</p>
               </button>
 
-              <button onClick={favoriteButton}>
+              <button
+                title="Pokaż listę ulubionych pieśni [F]"
+                onClick={() => replaceLink("favorites")}
+              >
                 <Image
                   className="icon"
-                  alt="favorite"
-                  src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
+                  alt="list"
+                  src="/icons/list.svg"
                   width={20}
                   height={20}
                 />
-                <p>{favHymn ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
+                <p>Lista ulubionych</p>
+              </button>
+
+              <button
+                title="Pokaż ustawienia aplikacji [S]"
+                onClick={() => replaceLink("settings")}
+              >
+                <Image
+                  className="icon"
+                  alt="settings"
+                  src="/icons/settings.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Ustawienia</p>
+              </button>
+
+              <button
+                className="desktop-only disabled"
+                title="Pokaż listę skrótów klawiszowych"
+                onClick={() => replaceLink("shortcuts")}
+              >
+                <Image
+                  className="icon"
+                  alt="shortcuts"
+                  src="/icons/keyboard.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Skróty klawiszowe</p>
               </button>
             </div>
 
@@ -380,7 +466,7 @@ export default function HymnPage() {
                     className={styles.noChords}
                     onClick={() => replaceLink("settings")}
                   >
-                    Brak akordów do wyświetlenia.
+                    Brak akordów do wyświetlenia
                   </span>
                 )}
 
@@ -531,34 +617,40 @@ export default function HymnPage() {
               </button>
 
               <button
-                title="Pokaż listę ulubionych pieśni [F]"
-                onClick={() => replaceLink("favorites")}
+                title={
+                  favHymn
+                    ? "Kliknij, aby usunąć pieśń z listy ulubionych"
+                    : "Kliknij, aby dodać pieśń do listy ulubionych"
+                }
+                onClick={favoriteButton}
               >
                 <Image
                   className="icon"
-                  alt="list"
-                  src="/icons/list.svg"
+                  alt="favorite"
+                  src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
                   width={20}
                   height={20}
                 />
-                <p>Lista ulubionych</p>
+                <p>{favHymn ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
               </button>
 
               <button
-                title="Pokaż ustawienia aplikacji [S]"
-                onClick={() => replaceLink("settings")}
+                className={`${hymnFiles.pdf ? "" : "disabled"}`}
+                tabIndex={hymnFiles.pdf ? 0 : -1}
+                title="Otwórz plik PDF pieśni [N]"
+                onClick={openDocument}
               >
                 <Image
                   className="icon"
-                  alt="settings"
-                  src="/icons/settings.svg"
+                  alt="pdf_file"
+                  src="/icons/document.svg"
                   width={20}
                   height={20}
                 />
-                <p>Ustawienia</p>
+                <p>Otwórz PDF</p>
               </button>
 
-              <button title="Skopiuj link do pieśni" onClick={shareButton}>
+              <button title="Skopiuj link pieśni" onClick={shareButton}>
                 <Image
                   className="icon"
                   alt="share"
@@ -571,7 +663,7 @@ export default function HymnPage() {
 
               <button
                 title="Wydrukuj tekst pieśni"
-                onClick={() => hymn && window.print()}
+                onClick={() => !isLoading && window.print()}
               >
                 <Image
                   className="icon"

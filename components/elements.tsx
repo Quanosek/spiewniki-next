@@ -70,7 +70,7 @@ export function Header(param: any) {
     return (
       <Link
         href="/"
-        title="Zebrane w jednym miejscu śpiewniki i pieśni religijne."
+        title="Zebrane w jednym miejscu śpiewniki i pieśni religijne"
       >
         <Image
           className="icon"

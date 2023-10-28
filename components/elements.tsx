@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import router from "next/router";
 
-import bookShortcut from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 export function Header(param: any) {

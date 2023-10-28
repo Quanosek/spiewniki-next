@@ -2,7 +2,7 @@ import router from "next/router";
 
 import axios from "axios";
 
-import bookShortcut, { booksList } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 
 export function replaceLink(name: string | undefined) {
   const { menu, ...params } = router.query;

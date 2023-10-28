@@ -10,7 +10,7 @@ import styles from "@/styles/pages/search.module.scss";
 
 import { Header } from "@/components/elements";
 
-import bookShortcut, { booksList } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 
 export default function SearchPage() {

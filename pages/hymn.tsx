@@ -12,7 +12,7 @@ import { Header, Navbar } from "@/components/elements";
 import Menu from "@/components/menu";
 import Presentation from "@/components/presentation";
 
-import bookShortcut from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function HymnPage() {
@@ -372,7 +372,10 @@ export default function HymnPage() {
               </button>
             )}
 
-            <button onClick={favoriteButton}>
+            <button
+              style={{ backgroundColor: "transparent" }}
+              onClick={favoriteButton}
+            >
               <Image
                 className="icon"
                 alt="favorite"

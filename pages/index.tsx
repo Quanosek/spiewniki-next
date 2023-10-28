@@ -9,7 +9,7 @@ import styles from "@/styles/pages/index.module.scss";
 import { Header, Navbar, Footer } from "@/components/elements";
 import Menu from "@/components/menu";
 
-import bookShortcut from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function IndexPage() {
@@ -119,51 +119,8 @@ export default function IndexPage() {
           </Link>
 
           <div className={styles.container}>
-            {/* left side buttons */}
-            <div className={`${styles.options} ${styles.leftSide}`}>
-              <button
-                title="Pokaż listę ulubionych pieśni [F]"
-                onClick={() => replaceLink("favorites")}
-              >
-                <Image
-                  className="icon"
-                  alt="list"
-                  src="/icons/list.svg"
-                  width={20}
-                  height={20}
-                />
-                <p>Lista ulubionych</p>
-              </button>
-
-              <button
-                title="Pokaż ustawienia aplikacji [S]"
-                onClick={() => replaceLink("settings")}
-              >
-                <Image
-                  className="icon"
-                  alt="settings"
-                  src="/icons/settings.svg"
-                  width={20}
-                  height={20}
-                />
-                <p>Ustawienia</p>
-              </button>
-
-              <button
-                className="desktop-only disabled"
-                title="Pokaż listę skrótów klawiszowych"
-                onClick={() => replaceLink("shortcuts")}
-              >
-                <Image
-                  className="icon"
-                  alt="shortcuts"
-                  src="/icons/keyboard.svg"
-                  width={20}
-                  height={20}
-                />
-                <p>Skróty klawiszowe</p>
-              </button>
-            </div>
+            {/* right side buttons */}
+            <div className={styles.leftSpace} />
 
             {/* show main book covers */}
             <div className={styles.center}>
@@ -233,6 +190,49 @@ export default function IndexPage() {
                   height={20}
                 />
                 <p>Wylosuj pieśń</p>
+              </button>
+
+              <button
+                title="Pokaż listę ulubionych pieśni [F]"
+                onClick={() => replaceLink("favorites")}
+              >
+                <Image
+                  className="icon"
+                  alt="list"
+                  src="/icons/list.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Lista ulubionych</p>
+              </button>
+
+              <button
+                title="Pokaż ustawienia aplikacji [S]"
+                onClick={() => replaceLink("settings")}
+              >
+                <Image
+                  className="icon"
+                  alt="settings"
+                  src="/icons/settings.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Ustawienia</p>
+              </button>
+
+              <button
+                className="desktop-only disabled"
+                title="Pokaż listę skrótów klawiszowych"
+                onClick={() => replaceLink("shortcuts")}
+              >
+                <Image
+                  className="icon"
+                  alt="shortcuts"
+                  src="/icons/keyboard.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Skróty klawiszowe</p>
               </button>
 
               <button title="Skopiuj link do aplikacji" onClick={shareButton}>

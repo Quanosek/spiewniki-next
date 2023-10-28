@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
 
-import bookShortcut, { booksList } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 
 export default function booksData(req: NextApiRequest, res: NextApiResponse) {

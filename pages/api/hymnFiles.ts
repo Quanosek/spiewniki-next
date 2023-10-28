@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
 
-import bookShortcut from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 
 export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {

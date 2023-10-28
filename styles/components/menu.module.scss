@@ -1,6 +1,7 @@
 .component {
   z-index: 999;
   position: relative;
+  display: flex;
   justify-content: center;
 }
 
@@ -16,7 +17,7 @@
 .menu {
   $menuMargin: 5%;
 
-  padding: 1.25rem 2rem;
+  padding: 1.25rem 1.5rem;
   position: fixed;
   top: $menuMargin;
   width: 98%;
@@ -28,6 +29,7 @@
   align-items: center;
   background-color: var(--menu-background);
   border-radius: 0.6rem;
+  box-shadow: rgba(#000000, 0.2) 0px 10px 20px, rgba(#000000, 0.22) 0px 6px 6px;
 }
 
 .content {
@@ -43,6 +45,7 @@
     margin: calc($gap / 2) 0 calc($gap * 1.5);
     font-size: min(5vw, 150%);
     font-weight: bold;
+    letter-spacing: 0.35px;
   }
 }
 

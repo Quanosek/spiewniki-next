@@ -45,7 +45,7 @@ export default function SearchPage() {
     if (!book) {
       const Collector = new Array();
 
-      booksList().forEach(async (book) => {
+      booksList().map(async (book) => {
         Collector.push(
           await axios
             .get(`database/${bookShortcut(book)}.json`)
@@ -121,10 +121,11 @@ export default function SearchPage() {
     });
 
     // merge Collectors
-    let Collector = [...NamesCollector, ...LyricsCollector];
-    Collector = Collector.filter((value, index, self) => {
-      return index === self.findIndex((x) => x.name === value.name);
-    });
+    const Collector = [...NamesCollector, ...LyricsCollector].filter(
+      (value, index, self) => {
+        return index === self.findIndex((x) => x.name === value.name);
+      }
+    );
 
     setData(Collector);
     setLoading(false);

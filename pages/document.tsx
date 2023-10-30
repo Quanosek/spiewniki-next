@@ -11,6 +11,7 @@ import textFormat from "@/scripts/textFormat";
 export default function DocumentPage() {
   const router = useRouter();
 
+  const libraryPath = "/libraries/pdfjs-3.11.174-legacy-dist/web/viewer.html";
   const [documentPath, setDocumentPath] = useState<string>("");
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function DocumentPage() {
           {documentPath && (
             <iframe
               id="pdf-js-viewer"
-              src={`/libraries/pdfjs-3.11.174-legacy-dist/web/viewer.html?file=${documentPath}`}
+              src={`${libraryPath}?file=${documentPath}`}
               title="webviewer"
             />
           )}

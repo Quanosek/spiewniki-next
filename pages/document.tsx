@@ -50,7 +50,11 @@ export default function DocumentPage() {
       <div className="container">
         <div className={styles.document}>
           {documentPath && (
-            <iframe className={styles.document} src={documentPath} />
+            <iframe
+              id="pdf-js-viewer"
+              src={`/libraries/pdfjs-3.11.174-legacy-dist/web/viewer.html?file=${documentPath}`}
+              title="webviewer"
+            />
           )}
         </div>
       </div>

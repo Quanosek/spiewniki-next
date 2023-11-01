@@ -331,6 +331,7 @@ export default function HymnPage() {
                 },
                 rightSide: {
                   title: "Nastraży.org",
+                  icon: "external_link",
                   onclick: () => router.push("https://nastrazy.org/"),
                 },
               }
@@ -441,7 +442,7 @@ export default function HymnPage() {
               </button>
 
               <button
-                className="desktop-only disabled"
+                className="desktop-only"
                 title="Pokaż listę skrótów klawiszowych"
                 onClick={() => replaceLink("shortcuts")}
               >

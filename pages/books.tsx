@@ -8,6 +8,8 @@ import styles from "@/styles/pages/books.module.scss";
 
 import { Header } from "@/components/elements";
 
+import { bookShortcut, booksList } from "@/scripts/bookShortcut";
+
 export default function BooksPage() {
   const router = useRouter();
 
@@ -70,9 +72,7 @@ export default function BooksPage() {
 
             <hr />
 
-            {!data.length && <div className="loader" />}
-
-            {data.map((book: any, index: number) => {
+            {booksList().map((book: any, index: number) => {
               return (
                 <div key={index}>
                   <div className={styles.book}>
@@ -80,18 +80,20 @@ export default function BooksPage() {
                       className={styles.toSearch}
                       href={{
                         pathname: "/search",
-                        query: { book: book.shortcut },
+                        query: { book },
                       }}
                     >
-                      <p>{book.name}</p>
+                      <p>{bookShortcut(book)}</p>
                     </Link>
 
-                    {book.pdf && (
+                    {data.some((file: any) => {
+                      return file.name === book && file.pdf;
+                    }) && (
                       <Link
                         className={styles.toFile}
                         href={{
                           pathname: "/document",
-                          query: { d: book.name },
+                          query: { d: bookShortcut(book) },
                         }}
                       >
                         <p>Otwórz PDF</p>

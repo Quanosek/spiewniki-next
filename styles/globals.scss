@@ -142,7 +142,7 @@ header {
   .rightSide {
     position: absolute;
     right: 0.5rem;
-    font-size: 115%;
+    font-size: 120%;
 
     @media (max-width: 1024px) {
       right: 0.5vw;
@@ -375,15 +375,20 @@ nav {
     letter-spacing: 0.4px;
     font-size: 90%;
 
+    .left-button {
+      left: min(3vw, 1rem);
+      height: min(65%, 5rem);
+    }
+
     .center {
       position: relative;
       right: 4px;
       gap: 1.2vw;
-    }
 
-    img {
-      height: min(55px, 13vw);
-      width: auto;
+      img {
+        height: min(55px, 13vw);
+        width: auto;
+      }
     }
   }
 

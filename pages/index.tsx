@@ -221,7 +221,7 @@ export default function IndexPage() {
               </button>
 
               <button
-                className="desktop-only disabled"
+                className="desktop-only"
                 title="Pokaż listę skrótów klawiszowych"
                 onClick={() => replaceLink("shortcuts")}
               >

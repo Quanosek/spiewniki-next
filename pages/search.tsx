@@ -196,6 +196,7 @@ export default function SearchPage() {
                 },
                 rightSide: {
                   title: "Nastraży.org",
+                  icon: "external_link",
                   onclick: () => router.push("https://nastrazy.org/"),
                 },
               }

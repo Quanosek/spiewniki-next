@@ -11,18 +11,17 @@ export default function booksData(req: NextApiRequest, res: NextApiResponse) {
     // const covers = fs.readdirSync(path.join(process.cwd(), "public", "covers"));
     const pdfFiles = fs.readdirSync(path.join(process.cwd(), "public", "pdf"));
 
-    const booksWithPdf = booksList().map((book) => {
+    const result = booksList().map((book) => {
       const pdfName = textFormat(bookShortcut(book)).replaceAll(" ", "_");
 
       return {
-        shortcut: book,
-        name: bookShortcut(book),
-        // cover: covers.includes(`${book}.webp`),
-        pdf: pdfFiles.includes(`${pdfName}.pdf`),
+        name: book,
+        // cover: covers.includes(`${book}.webp`) ? book : null,
+        pdf: pdfFiles.includes(`${pdfName}.pdf`) ? pdfName : null,
       };
     });
 
-    return res.status(200).json(booksWithPdf);
+    return res.status(200).json(result);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Internal Server Error" });

@@ -5,6 +5,8 @@ import router from "next/router";
 import { bookShortcut } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
 export function Header(param: any) {
   if (!param.buttons) {
     return (
@@ -91,7 +93,11 @@ export function Header(param: any) {
 export function Navbar() {
   return (
     <nav>
-      <button onClick={() => router.push("/books")}>
+      <button
+        onClick={() => {
+          return unlocked ? router.push("/books") : router.push("/");
+        }}
+      >
         <Image
           className="icon"
           alt="books"

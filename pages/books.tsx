@@ -8,13 +8,15 @@ import styles from "@/styles/pages/books.module.scss";
 
 import { Header } from "@/components/elements";
 
+import { bookShortcut, booksList } from "@/scripts/bookShortcut";
+
 export default function BooksPage() {
   const router = useRouter();
 
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("/api/fetchData")
+    fetch("/api/booksData")
       .then((res) => res.json())
       .then((data) => setData(data))
       .catch((err) => console.error(err));
@@ -37,19 +39,29 @@ export default function BooksPage() {
       />
 
       <div className="container">
+        <div className="mobile-header">
+          <button
+            className="left-button"
+            style={{ rotate: "90deg" }}
+            onClick={() => router.back()}
+          >
+            <Image
+              className="icon"
+              alt="back"
+              src="/icons/arrow.svg"
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </button>
+
+          <div className="center">
+            <h2>Lista wszystkich śpiewników:</h2>
+          </div>
+        </div>
+
         <main>
           <div className={styles.title}>
-            <button onClick={() => router.back()}>
-              <Image
-                className="icon"
-                alt="back"
-                src="/icons/arrow.svg"
-                width={25}
-                height={25}
-                draggable={false}
-              />
-            </button>
-
             <h2>Lista wszystkich śpiewników:</h2>
           </div>
 
@@ -60,9 +72,7 @@ export default function BooksPage() {
 
             <hr />
 
-            {!data.length && <div className="loader" />}
-
-            {data.map((book: any, index: number) => {
+            {booksList().map((book: any, index: number) => {
               return (
                 <div key={index}>
                   <div className={styles.book}>
@@ -70,24 +80,26 @@ export default function BooksPage() {
                       className={styles.toSearch}
                       href={{
                         pathname: "/search",
-                        query: { book: book.shortcut },
+                        query: { book },
                       }}
                     >
-                      <p>{book.name}</p>
+                      <p>{bookShortcut(book)}</p>
                     </Link>
 
-                    {book.pdf && (
+                    {data.some((file: any) => {
+                      return file.name === book && file.pdf;
+                    }) && (
                       <Link
                         className={styles.toFile}
                         href={{
                           pathname: "/document",
-                          query: { d: book.name },
+                          query: { d: bookShortcut(book) },
                         }}
                       >
                         <p>Otwórz PDF</p>
                         <Image
                           className="icon"
-                          alt="pdf file"
+                          alt="pdf_file"
                           src="/icons/document.svg"
                           width={20}
                           height={20}

@@ -1,4 +1,6 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/document.module.scss";
 
@@ -8,13 +10,34 @@ import textFormat from "@/scripts/textFormat";
 
 export default function DocumentPage() {
   const router = useRouter();
-  let document = router.query.d as string;
-  if (!document) return null;
 
-  document = textFormat(document).replaceAll(" ", "_");
+  const libraryPath = "/libraries/pdfjs-3.11.174-legacy-dist/web/viewer.html";
+  const [documentPath, setDocumentPath] = useState<string>("");
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { d, book, id } = router.query;
+
+    if (d) {
+      // all hymns in book pdf
+      let document = router.query.d as string;
+      document = textFormat(document).replaceAll(" ", "_");
+      setDocumentPath(`/pdf/${document}.pdf`);
+    } else if (book && id) {
+      // specific hymn pdf
+      setDocumentPath(`/pdf/${book}/${id}.pdf`);
+    } else {
+      // back to previous page on invalid query
+      router.back();
+    }
+  }, [router]);
 
   return (
     <>
+      <Head>
+        <title>Śpiewniki</title>
+      </Head>
+
       <Header
         buttons={{
           leftSide: {
@@ -27,7 +50,13 @@ export default function DocumentPage() {
 
       <div className="container">
         <div className={styles.document}>
-          <iframe className={styles.document} src={`/pdf/${document}.pdf`} />
+          {documentPath && (
+            <iframe
+              id="pdf-js-viewer"
+              src={`${libraryPath}?file=${documentPath}`}
+              title="webviewer"
+            />
+          )}
         </div>
       </div>
     </>

@@ -10,7 +10,7 @@ import styles from "@/styles/pages/search.module.scss";
 
 import { Header } from "@/components/elements";
 
-import bookShortcut, { booksList } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 
 export default function SearchPage() {
@@ -45,7 +45,7 @@ export default function SearchPage() {
     if (!book) {
       const Collector = new Array();
 
-      booksList().forEach(async (book) => {
+      booksList().map(async (book) => {
         Collector.push(
           await axios
             .get(`database/${bookShortcut(book)}.json`)
@@ -121,10 +121,11 @@ export default function SearchPage() {
     });
 
     // merge Collectors
-    let Collector = [...NamesCollector, ...LyricsCollector];
-    Collector = Collector.filter((value, index, self) => {
-      return index === self.findIndex((x) => x.name === value.name);
-    });
+    const Collector = [...NamesCollector, ...LyricsCollector].filter(
+      (value, index, self) => {
+        return index === self.findIndex((x) => x.name === value.name);
+      }
+    );
 
     setData(Collector);
     setLoading(false);
@@ -194,7 +195,7 @@ export default function SearchPage() {
                   onclick: () => router.push("/"),
                 },
                 rightSide: {
-                  title: "Na Straży.org",
+                  title: "Nastraży.org",
                   icon: "external_link",
                   onclick: () => router.push("https://nastrazy.org/"),
                 },
@@ -203,22 +204,24 @@ export default function SearchPage() {
       />
 
       <div className="container">
-        <main>
-          <div className={styles.mobileTitle}>
-            <button onClick={() => router.push("/")}>
-              <Image
-                className="icon"
-                alt="back"
-                src="/icons/arrow.svg"
-                width={25}
-                height={25}
-                draggable={false}
-              />
-            </button>
+        <div className="mobile-header">
+          <Link className="left-button" style={{ rotate: "90deg" }} href={"/"}>
+            <Image
+              className="icon"
+              alt="back"
+              src="/icons/arrow.svg"
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </Link>
 
+          <div className="center">
             <h2>Wyszukiwanie</h2>
           </div>
+        </div>
 
+        <main>
           <div className={styles.searchBox}>
             <input
               autoComplete="off"

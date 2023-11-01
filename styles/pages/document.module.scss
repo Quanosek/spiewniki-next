@@ -1,13 +1,15 @@
 .document {
   width: 100%;
-  min-height: calc(100svh - var(--header-height));
+  height: 100%;
 
   iframe {
+    width: 100%;
+    min-height: calc(100svh - var(--header-height));
     border: none;
-  }
 
-  @media (max-width: 768px) {
-    min-height: unset;
-    height: calc(100svh);
+    @media (max-width: 768px) {
+      min-height: unset;
+      height: calc(100svh);
+    }
   }
 }

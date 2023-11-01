@@ -1,73 +1,55 @@
-.topNavbar {
-  $gap: 3px;
-
-  z-index: 10;
-  padding: $gap;
-  width: 100%;
-  height: var(--navbar-height);
+.navigation {
+  z-index: 1;
   position: fixed;
   top: 0;
-  display: none;
+  width: 100%;
+
   justify-content: space-between;
-  background-color: var(--elements);
-  user-select: none;
   transition: 0.15s top ease-out;
 
   @media print {
-    display: none !important;
-  }
-
-  button {
-    height: 100%;
-    aspect-ratio: 1/1;
-    background-color: transparent;
-
-    &:hover {
-      background-color: var(--elements-hover);
-    }
-
-    .back {
-      position: relative;
-      right: 1px;
-      rotate: 90deg;
-    }
+    display: none;
   }
 
   &.hide {
-    top: calc(var(--navbar-height) * -1);
+    top: calc((var(--navbar-height) * 1.05) * -1);
+  }
+
+  button {
+    padding: 1%;
+    height: 80%;
+    aspect-ratio: 1/1;
+  }
+
+  div {
+    position: absolute;
+    right: 1vw;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 }
 
 .container {
   width: 100%;
   display: flex;
-  gap: 2rem;
 }
 
 .options {
   width: 20%; // grid (both sides)
 
   margin-top: 6rem;
+  position: relative;
+  left: 1vw;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
 
-  &.leftSide {
-    font-size: 110%;
-    gap: 1.2rem;
-
-    button {
-      opacity: 90%;
-
-      img {
-        position: relative;
-        bottom: 1px;
-      }
-    }
-  }
-
   button {
+    max-width: 100%;
+    overflow: hidden;
+
     opacity: 75%;
     padding: 12px 16px;
     justify-content: flex-start;
@@ -75,11 +57,35 @@
 
     background-color: transparent;
     transition: 0.2s ease-out;
-    white-space: nowrap;
 
     &:hover {
       opacity: 100%;
       transform: translateY(-1px);
+    }
+
+    p {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &.leftSide {
+    font-size: 105%;
+    gap: 1.2rem;
+
+    button {
+      opacity: 90%;
+
+      &:hover {
+        color: var(--accent-color);
+        color: filter(contrast(65%));
+      }
+
+      img {
+        position: relative;
+        bottom: 1px;
+      }
     }
   }
 }
@@ -87,12 +93,14 @@
 .center {
   width: 60%; // grid
 
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 
   @media print {
     width: 100%;
+    padding: 0 1rem !important;
   }
 }
 
@@ -113,8 +121,13 @@
     background-color: var(--elements-hover);
     overflow: hidden;
     user-select: none;
+  }
 
-    @media print {
+  @media print {
+    padding: 0;
+    font-size: 15px !important;
+
+    span {
       display: none;
     }
   }
@@ -175,6 +188,7 @@
 }
 
 .printLine {
+  margin-bottom: 1rem;
   display: none;
   width: 100%;
   border-top: solid 0.05cm #000000;
@@ -194,7 +208,7 @@
     padding: 0 10px;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -263,9 +277,9 @@
 
 @media (max-width: 1024px) {
   .options {
-    margin-top: 2rem;
     width: auto;
-    height: 100%;
+    margin-top: 2rem;
+    position: static;
 
     p {
       display: none;
@@ -287,16 +301,18 @@
 }
 
 @media (max-width: 768px) {
-  .topNavbar {
-    display: flex;
-  }
-
   .options {
     display: none;
   }
 
+  .center {
+    padding: 0;
+  }
+
   .content {
-    padding: var(--navbar-height) 0 calc(var(--navbar-height) + 2rem);
+    padding: calc(var(--navbar-height) * 1.05) 0
+      calc(var(--navbar-height) + 2rem);
+
     min-height: unset;
     background-color: transparent;
 
@@ -398,20 +414,6 @@
 }
 
 @media (max-width: 320px) {
-  .topNavbar {
-    height: var(--navbar-height-mobile);
-
-    button {
-      height: 100%;
-      aspect-ratio: 1/1;
-
-      img {
-        width: 8vw;
-        height: auto;
-      }
-    }
-  }
-
   .content {
     padding-top: 20vw;
 

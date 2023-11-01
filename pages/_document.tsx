@@ -25,6 +25,8 @@ export default function Document() {
 
         {unlocked ? (
           <>
+            {/* https://spiewniki.klalo.pl/ */}
+
             <meta name="robots" content="none" />
 
             <link rel="icon" href="/logo/blue/favicon.ico" sizes="any" />
@@ -35,6 +37,8 @@ export default function Document() {
           </>
         ) : (
           <>
+            {/* https://spiewniki.nastrazy.org/ */}
+
             <link rel="icon" href="/logo/orange/favicon.ico" sizes="any" />
             <link
               rel="icon"

@@ -1,6 +1,7 @@
 .component {
   z-index: 999;
   position: relative;
+  display: flex;
   justify-content: center;
 }
 
@@ -16,7 +17,7 @@
 .menu {
   $menuMargin: 5%;
 
-  padding: 1.25rem 2rem;
+  padding: 1.25rem 1.5rem;
   position: fixed;
   top: $menuMargin;
   width: 98%;
@@ -28,6 +29,7 @@
   align-items: center;
   background-color: var(--menu-background);
   border-radius: 0.6rem;
+  box-shadow: rgba(#000000, 0.2) 0px 10px 20px, rgba(#000000, 0.22) 0px 6px 6px;
 }
 
 .content {
@@ -43,6 +45,7 @@
     margin: calc($gap / 2) 0 calc($gap * 1.5);
     font-size: min(5vw, 150%);
     font-weight: bold;
+    letter-spacing: 0.35px;
   }
 }
 
@@ -69,6 +72,11 @@
   button {
     padding: min(2vw, 0.6rem) min(5vw, 1.5rem);
     background-color: var(--menu-elements);
+    transition: 0.2s background-color ease-out;
+
+    &:hover {
+      background-color: var(--menu-elements-hover);
+    }
   }
 }
 
@@ -361,5 +369,68 @@
       height: $buttonHeight;
       width: $buttonHeight;
     }
+  }
+}
+
+// SHORTCUTS MENU
+
+.shortcutList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: 0.4rem;
+  overflow: hidden;
+}
+
+.shortcut {
+  padding: 0.65rem;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background-color: var(--menu-elements);
+  overflow: hidden;
+
+  .keyup {
+    padding: 10px 22px;
+    height: 100%;
+    width: 3rem;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #ffffff;
+    border-radius: 0.7rem;
+    background: linear-gradient(180deg, #212121, #1a1a1a);
+    overflow: hidden;
+    user-select: none;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 2px;
+      bottom: 4px;
+      right: 3px;
+
+      background: linear-gradient(90deg, #252525, #292929);
+      border-radius: 0.6rem;
+      box-shadow: -10px -10px 10px rgba(#ffffff, 0.1);
+    }
+
+    p {
+      position: relative;
+      bottom: 1px;
+    }
+  }
+
+  .action {
+    font-size: 105%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }

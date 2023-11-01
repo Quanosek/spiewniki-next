@@ -1,4 +1,4 @@
-export default function bookShortcut(input: string) {
+export function bookShortcut(input: string) {
   const booksMap: Record<string, string> = {
     all: "Wszystkie śpiewniki",
     B: "Pieśni Brzasku Tysiąclecia",

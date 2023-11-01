@@ -32,23 +32,23 @@ export default function ErrorPage() {
       <Header buttons={undefined} />
 
       <div className="container">
-        <main>
-          <div className="mobileHeader">
-            <div className="logo">
-              <Image
-                className="icon"
-                alt="bpsw"
-                src="/logo/bpsw.svg"
-                width={50}
-                height={50}
-                priority={true}
-                draggable={false}
-              />
+        <div className="mobile-header home">
+          <div className="center">
+            <Image
+              className="icon"
+              alt="bpsw"
+              src="/logo/bpsw.svg"
+              width={50}
+              height={50}
+              priority={true}
+              draggable={false}
+            />
 
-              <h1>Śpiewniki</h1>
-            </div>
+            <h1>Śpiewniki</h1>
           </div>
+        </div>
 
+        <main>
           <div className={styles.container}>
             <h1>Strona napotkała problem</h1>
 

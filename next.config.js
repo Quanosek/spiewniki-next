@@ -15,7 +15,9 @@ const lockedFiles = new Array();
   return lockedFiles.push(`!database/${book}.json`);
 });
 
-const excludes = ["!pdf/**/*"].concat(unlocked ? [] : lockedFiles);
+const excludes = ["!pdf/**/*", "!libraries/**/*"].concat(
+  unlocked ? [] : lockedFiles
+);
 
 export default withPWA({
   // PWA settings

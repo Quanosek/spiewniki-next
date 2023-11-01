@@ -9,7 +9,7 @@ import styles from "@/styles/pages/index.module.scss";
 import { Header, Navbar, Footer } from "@/components/elements";
 import Menu from "@/components/menu";
 
-import bookShortcut from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function IndexPage() {
@@ -63,7 +63,7 @@ export default function IndexPage() {
             ? undefined
             : {
                 leftSide: {
-                  title: "Na Straży.org",
+                  title: "Nastraży.org",
                   icon: "home",
                   onclick: () => router.push("https://nastrazy.org/"),
                 },
@@ -72,35 +72,35 @@ export default function IndexPage() {
       />
 
       <div className="container">
-        <main>
-          <div className="mobileHeader">
-            {!unlocked && (
-              <Link href="https://nastrazy.org/">
-                <Image
-                  className="icon"
-                  alt="home"
-                  src="/icons/home.svg"
-                  width={25}
-                  height={25}
-                />
-              </Link>
-            )}
-
-            <div className="logo">
+        <div className="mobile-header home">
+          {!unlocked && (
+            <Link className="left-button" href="https://nastrazy.org/">
               <Image
                 className="icon"
-                alt="bpsw"
-                src="/logo/bpsw.svg"
-                width={50}
-                height={50}
-                priority={true}
-                draggable={false}
+                alt="home"
+                src="/icons/home.svg"
+                width={25}
+                height={25}
               />
+            </Link>
+          )}
 
-              <h1>Śpiewniki</h1>
-            </div>
+          <div className="center">
+            <Image
+              className="icon"
+              alt="bpsw"
+              src="/logo/bpsw.svg"
+              width={50}
+              height={50}
+              priority={true}
+              draggable={false}
+            />
+
+            <h1>Śpiewniki</h1>
           </div>
+        </div>
 
+        <main>
           <Link
             href="/search"
             title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
@@ -119,13 +119,17 @@ export default function IndexPage() {
           </Link>
 
           <div className={styles.container}>
-            <div className={styles.hymnBooks}>
-              <div className={styles.books}>
+            {/* right side buttons */}
+            <div className={styles.leftSpace} />
+
+            {/* show main book covers */}
+            <div className={styles.center}>
+              <div className={styles.grid}>
                 {["B", "C", "N"].map((book: any, index: number) => {
                   return (
                     <div key={index}>
                       <Link
-                        className={styles.toSearch}
+                        className={styles.book}
                         href={{
                           pathname: "/search",
                           query: { book: book },
@@ -144,7 +148,7 @@ export default function IndexPage() {
 
                       <Link
                         title="Otwórz plik PDF śpiewnika"
-                        className={styles.toFile}
+                        className={styles.icon}
                         href={{
                           pathname: "/document",
                           query: { d: bookShortcut(book) },
@@ -152,7 +156,7 @@ export default function IndexPage() {
                       >
                         <Image
                           className="icon"
-                          alt="pdf file"
+                          alt="pdf_file"
                           src="/icons/document.svg"
                           width={30}
                           height={30}
@@ -166,12 +170,13 @@ export default function IndexPage() {
               </div>
 
               {unlocked && (
-                <Link href="/books" className={styles.all}>
+                <Link href="/books" className={styles.books}>
                   <p>Lista wszystkich śpiewników</p>
                 </Link>
               )}
             </div>
 
+            {/* right side buttons */}
             <div className={styles.options}>
               <button
                 title="Otwórz losową pieśń [R]"
@@ -213,6 +218,21 @@ export default function IndexPage() {
                   height={20}
                 />
                 <p>Ustawienia</p>
+              </button>
+
+              <button
+                className="desktop-only"
+                title="Pokaż listę skrótów klawiszowych"
+                onClick={() => replaceLink("shortcuts")}
+              >
+                <Image
+                  className="icon"
+                  alt="shortcuts"
+                  src="/icons/keyboard.svg"
+                  width={20}
+                  height={20}
+                />
+                <p>Skróty klawiszowe</p>
               </button>
 
               <button title="Skopiuj link do aplikacji" onClick={shareButton}>

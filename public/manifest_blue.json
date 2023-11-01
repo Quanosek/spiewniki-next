@@ -1,11 +1,11 @@
 {
   "name": "Śpiewniki",
-  "theme_color": "#000000",
-  "background_color": "#000000",
-  "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "id": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+
   "icons": [
     {
       "src": "/logo/blue/icon.svg",

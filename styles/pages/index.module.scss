@@ -37,137 +37,142 @@
 .container {
   width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 1.5rem;
+}
 
-  @media (max-width: 768px) {
-    margin-bottom: 3rem;
-  }
+.leftSpace {
+  width: 10%; // for grid symmetry
+}
 
-  @media (max-width: 320px) {
-    margin-bottom: 12vw;
+.options {
+  width: 20%; // grid (both sides)
+
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  button {
+    max-width: 100%;
+    overflow: hidden;
+
+    opacity: 75%;
+    padding: 12px 16px;
+    justify-content: flex-start;
+    gap: 12px;
+
+    background-color: transparent;
+    transition: 0.2s ease-out;
+
+    &:hover {
+      opacity: 100%;
+      transform: translateY(-1px);
+    }
+
+    p {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 }
 
-.hymnBooks {
+$grid-gap: 0.6rem;
+
+.center {
+  width: 70%; // grid
+
+  padding: 0 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  font-size: 110%;
+  gap: $grid-gap;
+  font-size: min(1.2vw, 1rem);
+}
 
-  $gridGap: 1rem;
-  $radius: 0.4rem;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $grid-gap;
 
-  .books {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: $gridGap;
-
-    div {
-      position: relative;
-    }
-
-    .toSearch {
-      max-width: 18rem;
-      padding: 1rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: $gridGap;
-      border-radius: $radius;
-      background-color: var(--elements);
-      transition: 0.2s background-color ease-out;
-
-      &:hover {
-        background-color: var(--elements-hover);
-      }
-
-      img {
-        width: auto;
-        height: auto;
-        border-radius: 0.2rem;
-        box-shadow: rgba(#000000, 0.2) 0px 10px 20px,
-          rgba(#000000, 0.22) 0px 6px 6px;
-      }
-
-      p {
-        width: 100%;
-        padding: 0 min(3rem, 3vw);
-        text-align: center;
-      }
-
-      @media (min-width: 769px) {
-        gap: min(1.5vw, $gridGap);
-      }
-    }
-
-    .toFile {
-      opacity: 75%;
-      position: absolute;
-      top: 0.8rem;
-      right: 1.2rem;
-      padding: 0.8rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.2s opacity ease-in-out, 0.1s transform ease-out;
-      filter: drop-shadow(rgba(#000000, 1) 1px -2px 20px);
-
-      &:hover {
-        opacity: 100%;
-        transform: scale(1.05) translateY(-1px);
-      }
-
-      img {
-        width: min(30px, 3vw);
-        height: auto;
-      }
-
-      @media (min-width: 769px) {
-        img {
-          filter: invert(1) drop-shadow(#000000 -1px 4px 8px);
-        }
-      }
-    }
+  div {
+    position: relative;
   }
 
-  .all {
-    margin-top: $gridGap;
-    padding: 1.5rem;
-    width: 100%;
-    text-align: center;
-    border-radius: $radius;
+  .book {
+    padding: 6% 8%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: min(1vw, 1rem);
+    font-size: 110%;
+
+    border-radius: 0.4rem;
     background-color: var(--elements);
     transition: 0.2s background-color ease-out;
 
     &:hover {
       background-color: var(--elements-hover);
     }
+
+    img {
+      width: auto;
+      height: auto;
+      border-radius: 0.2rem;
+      box-shadow: rgba(#000000, 0.2) 0px 10px 20px,
+        rgba(#000000, 0.22) 0px 6px 6px;
+    }
+
+    p {
+      padding: 0 min(2.8vw, 3.5rem);
+      width: 100%;
+      text-align: center;
+    }
   }
-}
 
-.options {
-  margin-top: 1rem;
-  width: min(12rem, 20%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-
-  button {
+  .icon {
     opacity: 75%;
-    padding: 12px 16px;
-    justify-content: flex-start;
-    gap: 12px;
-    font-size: 105%;
-    background-color: transparent;
-    transition: 0.2s ease-out;
-    white-space: nowrap;
+    position: absolute;
+    top: 4.5%;
+    right: 8%;
+
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 0.4rem;
+    transition: 0.2s opacity ease-in-out, 0.1s transform ease-out;
+    filter: drop-shadow(#000000 1px -2px 20px);
 
     &:hover {
       opacity: 100%;
-      transform: translateY(-1px);
+      transform: scale(1.05) translateY(-1px);
     }
+
+    img {
+      width: min(30px, 3vw);
+      height: auto;
+    }
+
+    @media (min-width: 769px) {
+      img {
+        filter: invert(1) drop-shadow(#000000 -1px 4px 8px) !important;
+      }
+    }
+  }
+}
+
+.books {
+  padding: 1.4rem;
+  width: 100%;
+  text-align: center;
+  border-radius: 0.4rem;
+  background-color: var(--elements);
+  transition: 0.2s background-color ease-out;
+  font-size: 115%;
+
+  &:hover {
+    background-color: var(--elements-hover);
   }
 }
 
@@ -204,26 +209,14 @@
     }
   }
 
-  .hymnBooks {
-    font-size: 1.9vw;
-
-    .books p {
-      padding: 0 2vw;
-    }
-
-    .all {
-      font-size: 105%;
-    }
+  .leftSpace {
+    width: auto;
   }
 
   .options {
     margin-top: 1.5rem;
     width: auto;
-    position: relative;
-    right: 5px;
-    gap: max(1.5vw);
 
-    h2,
     p {
       display: none;
     }
@@ -236,6 +229,24 @@
         height: auto;
       }
     }
+  }
+
+  .center {
+    width: 100%;
+    font-size: 1.9vw;
+  }
+
+  .grid .book {
+    gap: 1.5vw;
+    font-size: 100%;
+
+    p {
+      padding: 0 2.5vw;
+    }
+  }
+
+  .books {
+    font-size: 105%;
   }
 }
 
@@ -251,64 +262,64 @@
     }
   }
 
-  .hymnBooks {
-    width: 100%;
+  .options {
+    display: none;
+  }
+
+  $grid-gap: 1.2vw;
+
+  .center {
+    padding: 0;
     font-size: min(1.25rem, 3.5vw);
+    gap: $grid-gap;
+  }
 
-    $gridGap: 1.2vw;
+  .grid {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: $grid-gap;
 
-    .books {
-      margin: 0;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: $gridGap;
+    .book {
+      padding: 2.5vw;
+      max-width: unset;
+      flex-direction: row;
+      gap: calc($grid-gap * 2.5);
 
-      .toSearch {
-        padding: 2.5vw;
-        max-width: unset;
-        flex-direction: row;
-        gap: calc($gridGap * 2.5);
-
-        img {
-          height: min(10rem, 30vw);
-          border-radius: 2%;
-        }
-
-        p {
-          text-align: left;
-          font-size: 110%;
-        }
+      img {
+        height: min(10rem, 30vw);
+        border-radius: 2%;
       }
 
-      .toFile {
-        opacity: 40%;
-        padding: min(3vw, 1rem);
-        top: 0.5vw;
-        right: 0.5vw;
-        border-radius: 0.4rem;
-        aspect-ratio: 1/1;
-
-        &:hover {
-          transform: none;
-          background-color: var(--elements-hover);
-          filter: none;
-        }
-
-        img {
-          width: min(5.5vw, 1.8rem);
-        }
+      p {
+        text-align: left;
+        font-size: 110%;
       }
     }
 
-    .all {
-      margin: $gridGap;
-      padding: min(1.5rem, 5%);
+    .icon {
+      opacity: 40%;
+      padding: min(3vw, 1rem);
+      top: 0.5vw;
+      right: 0.5vw;
+      border-radius: 0.4rem;
+      aspect-ratio: 1/1;
+
+      &:hover {
+        transform: none;
+        background-color: var(--elements-hover);
+        filter: none;
+      }
+
+      img {
+        width: min(5.5vw, 1.8rem);
+      }
     }
   }
 
-  .options {
-    display: none;
+  .books {
+    padding: min(1.5rem, 5%);
   }
 
   .footer {

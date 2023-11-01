@@ -2,8 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import router from "next/router";
 
-import bookShortcut from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/bookShortcut";
 import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
+
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
 export function Header(param: any) {
   if (!param.buttons) {
@@ -23,13 +25,17 @@ export function Header(param: any) {
           {leftSide && (
             <div className="leftSide">
               <button onClick={leftSide.onclick}>
-                <Image
-                  className={`icon ${leftSide.icon == "arrow" ? "arrow" : ""}`}
-                  alt={leftSide.icon}
-                  src={`/icons/${leftSide.icon}.svg`}
-                  width={20}
-                  height={20}
-                />
+                {leftSide.icon && (
+                  <Image
+                    className={`icon ${
+                      leftSide.icon == "arrow" ? "arrow" : ""
+                    }`}
+                    alt={leftSide.icon}
+                    src={`/icons/${leftSide.icon}.svg`}
+                    width={20}
+                    height={20}
+                  />
+                )}
 
                 <p>{leftSide.title}</p>
               </button>
@@ -43,13 +49,17 @@ export function Header(param: any) {
               <button onClick={rightSide.onclick}>
                 <p>{rightSide.title}</p>
 
-                <Image
-                  className={`icon ${rightSide.icon == "arrow" ? "arrow" : ""}`}
-                  alt={rightSide.icon}
-                  src={`/icons/${rightSide.icon}.svg`}
-                  width={18}
-                  height={18}
-                />
+                {rightSide.icon && (
+                  <Image
+                    className={`icon ${
+                      rightSide.icon == "arrow" ? "arrow" : ""
+                    }`}
+                    alt={rightSide.icon}
+                    src={`/icons/${rightSide.icon}.svg`}
+                    width={18}
+                    height={18}
+                  />
+                )}
               </button>
             </div>
           )}
@@ -62,7 +72,7 @@ export function Header(param: any) {
     return (
       <Link
         href="/"
-        title="Zebrane w jednym miejscu śpiewniki i pieśni religijne."
+        title="Zebrane w jednym miejscu śpiewniki i pieśni religijne"
       >
         <Image
           className="icon"
@@ -83,7 +93,11 @@ export function Header(param: any) {
 export function Navbar() {
   return (
     <nav>
-      <button onClick={() => router.push("/books")}>
+      <button
+        onClick={() => {
+          return unlocked ? router.push("/books") : router.push("/");
+        }}
+      >
         <Image
           className="icon"
           alt="books"

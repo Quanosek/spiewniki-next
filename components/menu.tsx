@@ -7,6 +7,7 @@ import { replaceLink } from "@/scripts/buttons";
 
 import Favorites from "./menu/favorites";
 import Settings from "./menu/settings";
+import Shortcuts from "./menu/shortcuts";
 
 export default function Menu() {
   const router = useRouter();
@@ -36,14 +37,14 @@ export default function Menu() {
       }
 
       switch (event.key.toUpperCase()) {
+        case "ESCAPE":
+          if (menu) replaceLink(undefined);
+          break;
         case "F":
           if (!menu) replaceLink("favorites");
           break;
         case "S":
           if (!menu) replaceLink("settings");
-          break;
-        case "ESCAPE":
-          if (menu) replaceLink(undefined);
           break;
       }
     };
@@ -55,20 +56,27 @@ export default function Menu() {
   return (
     <div
       className={styles.component}
-      style={{ display: showMenu ? "flex" : "none" }}
+      style={{
+        visibility: showMenu ? "visible" : "hidden",
+        opacity: showMenu ? 1 : 0,
+        transition: " 0.1s ease-in-out",
+      }}
     >
       <div
         className={styles.background}
         onClick={() => replaceLink(undefined)}
       />
 
-      <div className={styles.menu}>
-        <div className={styles.content}>
-          {/* select menu window */}
-          {menu === "favorites" && <Favorites />}
-          {menu === "settings" && <Settings />}
+      {menu && (
+        <div className={styles.menu}>
+          <div className={styles.content}>
+            {/* select menu window */}
+            {menu === "favorites" && <Favorites />}
+            {menu === "settings" && <Settings />}
+            {menu === "shortcuts" && <Shortcuts />}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

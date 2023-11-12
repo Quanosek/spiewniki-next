@@ -24,7 +24,6 @@
     &:hover {
       background-color: var(--elements-hover);
       border-color: var(--elements-hover);
-      filter: brightness(0.9);
     }
 
     &:focus {
@@ -41,22 +40,20 @@
   }
 
   .searchIcon {
-    left: calc(1.2rem + 1px);
-
-    @media (max-width: 768px) {
-      pointer-events: none;
-    }
+    left: calc(1.2rem + 1.5px);
+    pointer-events: none;
   }
 
   .clearButton {
+    right: 2px;
+
     padding: 1rem;
     height: 90%;
     aspect-ratio: 1/1;
     display: none;
-    right: 2px;
-    cursor: pointer;
     border-radius: 100%;
     transition: 0.2s background-color ease-out;
+    cursor: pointer;
 
     &:hover {
       background-color: var(--menu-elements);
@@ -295,7 +292,7 @@
     }
 
     .clearButton {
-      padding: 3.5vw;
+      padding: 3vw;
     }
   }
 

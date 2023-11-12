@@ -4,7 +4,7 @@ import axios from "axios";
 
 import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 
-export function replaceLink(name: string | undefined) {
+export function openMenu(name: string | undefined) {
   const { menu, ...params } = router.query;
 
   if (name) {
@@ -23,6 +23,9 @@ export function replaceLink(name: string | undefined) {
 export function randomHymn(book: string | undefined) {
   // get all hymns from all books
   if (!book) {
+    // remove previous search
+    localStorage.removeItem("prevSearch");
+
     const all = booksList();
     const Collector = new Array();
 
@@ -55,6 +58,14 @@ export function randomHymn(book: string | undefined) {
 
     // get all hymns from selected book
   } else {
+    // restore book from searching
+    const fromStorage = localStorage.getItem("prevSearch");
+    if (fromStorage) {
+      const json = JSON.parse(fromStorage);
+      json.search = "";
+      localStorage.setItem("prevSearch", JSON.stringify(json));
+    }
+
     axios
       .get(`/database/${book}.json`)
       .then(({ data }) => {

@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/document.module.scss";
 
-import { Header } from "@/components/elements";
-
 import textFormat from "@/scripts/textFormat";
 
 export default function DocumentPage() {
@@ -32,21 +30,25 @@ export default function DocumentPage() {
     }
   }, [router]);
 
+  // keyboard shortcuts
+  useEffect(() => {
+    const KeyupEvent = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        return;
+      }
+
+      if (event.key === "Escape") router.back();
+    };
+
+    document.addEventListener("keyup", KeyupEvent);
+    return () => document.removeEventListener("keyup", KeyupEvent);
+  }, [router]);
+
   return (
     <>
       <Head>
         <title>Śpiewniki</title>
       </Head>
-
-      <Header
-        buttons={{
-          leftSide: {
-            title: "Powrót",
-            icon: "arrow",
-            onclick: () => router.back(),
-          },
-        }}
-      />
 
       <div className="container">
         <div className={styles.document}>

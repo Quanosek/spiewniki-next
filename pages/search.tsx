@@ -8,8 +8,6 @@ import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
 
-import { Header } from "@/components/elements";
-
 import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 
@@ -29,17 +27,27 @@ export default function SearchPage() {
 
     // url errors handling
     if (book && !bookShortcut(book)) router.push("/404");
-    const params = Object.keys(router.query);
-    if (params.length && !params.includes("book")) router.push("/search");
 
     // intelligent focus on search box
     const input = document.getElementById("input") as HTMLInputElement;
     localStorage.getItem("focusSearchBox") === "true" && input.focus();
+    localStorage.removeItem("focusSearchBox");
 
-    // remove temporary localStorage files
-    ["prevSearch", "focusSearchBox"].forEach((item) => {
-      localStorage.removeItem(item);
-    });
+    const dataInterpretation = (data: any) => {
+      setRawData(data);
+      setData(data);
+
+      if (localStorage.getItem("prevSearch")) {
+        const { search } = JSON.parse(
+          localStorage.getItem("prevSearch") as string
+        );
+
+        input.value = search;
+        input.select();
+        Search(data, search);
+      }
+      setLoading(false);
+    };
 
     // get all hymns from all books
     if (!book) {
@@ -60,9 +68,7 @@ export default function SearchPage() {
             a.name.localeCompare(b.name, undefined, { numeric: true })
           );
 
-          setRawData(hymns);
-          setData(hymns);
-          setLoading(false);
+          dataInterpretation(hymns);
         }
       });
 
@@ -71,13 +77,17 @@ export default function SearchPage() {
       axios
         .get(`database/${bookShortcut(book)}.json`)
         .then(({ data }) => {
-          setRawData(data);
-          setData(data);
-          setLoading(false);
+          dataInterpretation(data);
         })
         .catch((err) => console.error(err));
     }
   }, [router, book]);
+
+  // previous search restoration
+  useEffect(() => {
+    const input = document.getElementById("input") as HTMLInputElement;
+    if (input.value) Search(rawData, input.value);
+  }, [rawData]);
 
   // searching algorithm
   const Search = (data: [], input: string) => {
@@ -178,34 +188,9 @@ export default function SearchPage() {
         <title>Wyszukiwanie / Śpiewniki</title>
       </Head>
 
-      <Header
-        buttons={
-          unlocked
-            ? {
-                leftSide: {
-                  title: "Powrót do strony głównej",
-                  icon: "arrow",
-                  onclick: () => router.push("/"),
-                },
-              }
-            : {
-                leftSide: {
-                  title: "Powrót do śpiewników",
-                  icon: "arrow",
-                  onclick: () => router.push("/"),
-                },
-                rightSide: {
-                  title: "Nastraży.org",
-                  icon: "external_link",
-                  onclick: () => router.push("https://nastrazy.org/"),
-                },
-              }
-        }
-      />
-
       <div className="container">
-        <div className="mobile-header">
-          <Link className="left-button" style={{ rotate: "90deg" }} href={"/"}>
+        <div className="mobileHeader">
+          <button style={{ rotate: "90deg" }} onClick={() => router.push("/")}>
             <Image
               className="icon"
               alt="back"
@@ -214,11 +199,9 @@ export default function SearchPage() {
               height={25}
               draggable={false}
             />
-          </Link>
+          </button>
 
-          <div className="center">
-            <h2>Wyszukiwanie</h2>
-          </div>
+          <p className="center">Wyszukiwanie</p>
         </div>
 
         <main>
@@ -228,10 +211,16 @@ export default function SearchPage() {
               type="text"
               id="input"
               placeholder="Rozpocznij wyszukiwanie"
-              title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
+              title="Rozpocznij wyszukiwanie [/]"
               onFocus={(e) => e.target.select()}
               onInput={(e) => {
                 const input = e.target as HTMLInputElement;
+
+                localStorage.setItem(
+                  "prevSearch",
+                  JSON.stringify({ book, search: input.value })
+                );
+
                 input.value ? setShowClearBtn(true) : setShowClearBtn(false);
                 setTimeout(() => Search(rawData, input.value), 200);
 
@@ -346,7 +335,14 @@ export default function SearchPage() {
                     <div key={index}>
                       <Link
                         onClick={() => {
-                          if (book) localStorage.setItem("prevSearch", book);
+                          const input = document.getElementById(
+                            "input"
+                          ) as HTMLInputElement;
+
+                          localStorage.setItem(
+                            "prevSearch",
+                            JSON.stringify({ book, search: input.value })
+                          );
                         }}
                         href={{
                           pathname: "/hymn",
@@ -374,7 +370,7 @@ export default function SearchPage() {
           </div>
 
           <button
-            title="Powrót na górę strony"
+            title="Powrót na górę strony."
             className={styles.scrollButton}
             style={{
               visibility: showTopBtn ? "visible" : "hidden",

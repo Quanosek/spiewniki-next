@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { replaceLink } from "@/scripts/buttons";
+import { openMenu } from "@/scripts/buttons";
 
 import Favorites from "./menu/favorites";
 import Settings from "./menu/settings";
@@ -36,16 +36,8 @@ export default function Menu() {
         return;
       }
 
-      switch (event.key.toUpperCase()) {
-        case "ESCAPE":
-          if (menu) replaceLink(undefined);
-          break;
-        case "F":
-          if (!menu) replaceLink("favorites");
-          break;
-        case "S":
-          if (!menu) replaceLink("settings");
-          break;
+      if (event.key === "Escape") {
+        if (menu) openMenu(undefined);
       }
     };
 
@@ -62,10 +54,7 @@ export default function Menu() {
         transition: " 0.1s ease-in-out",
       }}
     >
-      <div
-        className={styles.background}
-        onClick={() => replaceLink(undefined)}
-      />
+      <div className={styles.background} onClick={() => openMenu(undefined)} />
 
       {menu && (
         <div className={styles.menu}>

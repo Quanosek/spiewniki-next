@@ -6,8 +6,6 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/error.module.scss";
 
-import { Header } from "@/components/elements";
-
 export default function ErrorPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
   const router = useRouter();
@@ -29,10 +27,8 @@ export default function ErrorPage() {
         <title>Nie znaleziono strony / Śpiewniki</title>
       </Head>
 
-      <Header buttons={undefined} />
-
       <div className="container">
-        <div className="mobile-header home">
+        <div className="mobileHeader home">
           <div className="center">
             <Image
               className="icon"
@@ -53,15 +49,9 @@ export default function ErrorPage() {
             <h1>Strona napotkała problem</h1>
 
             <p>
-              {unlocked ? (
-                <>
-                  Przejdź do <Link href="/">strony głównej</Link>.
-                </>
-              ) : (
-                <>
-                  <Link href="/">Kliknij tutaj</Link>, aby powrócić.
-                </>
-              )}{" "}
+              <Link href="/">Kliknij tutaj</Link>, aby powrócić do
+              {unlocked ? "strony głównej" : "śpiewników"}
+              {". "}
               <span className={styles.counter}>[{seconds}]</span>
             </p>
           </div>

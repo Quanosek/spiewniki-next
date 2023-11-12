@@ -1,7 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
-import { Footer } from "@/components/elements";
-
 export default function Document() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
@@ -57,11 +55,6 @@ export default function Document() {
 
       <body>
         <Main />
-
-        <footer>
-          <Footer />
-        </footer>
-
         <NextScript />
       </body>
     </Html>

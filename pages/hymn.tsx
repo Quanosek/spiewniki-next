@@ -8,12 +8,11 @@ import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
 
-import { Header, Navbar } from "@/components/elements";
-import Menu from "@/components/menu";
+import { Navbar } from "@/components/assets";
 import Presentation from "@/components/presentation";
 
 import { bookShortcut } from "@/scripts/bookShortcut";
-import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
+import { openMenu, randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function HymnPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -77,6 +76,14 @@ export default function HymnPage() {
   // previous & next hymn buttons
   const changeHymn = useCallback(
     (id: number, operator: string) => {
+      // remove searching input from storage
+      const fromStorage = localStorage.getItem("prevSearch");
+      if (fromStorage) {
+        const json = JSON.parse(fromStorage);
+        json.search = "";
+        localStorage.setItem("prevSearch", JSON.stringify(json));
+      }
+
       setLoading(true);
 
       let position = 0;
@@ -288,18 +295,20 @@ export default function HymnPage() {
   };
 
   // back to search page with specific book
-  const backButton = () => {
+  const openPrevSearch = () => {
     localStorage.setItem("focusSearchBox", "true");
-    const prevSearch = localStorage.getItem("prevSearch");
 
-    if (!prevSearch) {
-      router.push("/search");
-    } else {
-      router.push({
-        pathname: "/search",
-        query: { book: prevSearch },
-      });
-    }
+    const prevSearch = localStorage.getItem("prevSearch");
+    if (prevSearch) {
+      const { book } = JSON.parse(prevSearch);
+
+      if (book) {
+        router.push({
+          pathname: "/search",
+          query: { book },
+        });
+      } else router.push("/search");
+    } else router.push("/search");
   };
 
   return (
@@ -310,47 +319,17 @@ export default function HymnPage() {
         </title>
       </Head>
 
-      <Menu />
       {slideshowMode && <Presentation data={hymn} />}
-
-      <Header
-        buttons={
-          unlocked
-            ? {
-                leftSide: {
-                  title: "Powrót do wyszukiwania",
-                  icon: "arrow",
-                  onclick: () => backButton(),
-                },
-              }
-            : {
-                leftSide: {
-                  title: "Powrót do wyszukiwania",
-                  icon: "arrow",
-                  onclick: () => backButton(),
-                },
-                rightSide: {
-                  title: "Nastraży.org",
-                  icon: "external_link",
-                  onclick: () => router.push("https://nastrazy.org/"),
-                },
-              }
-        }
-      />
 
       <div className="container">
         <div
-          className={`mobile-header ${styles.navigation} ${
+          className={`mobileHeader ${styles.mobileHeader} ${
             hideNavbar ? styles.hide : ""
           }`}
         >
-          <button
-            className="left-button"
-            style={{ rotate: "90deg" }}
-            onClick={backButton}
-          >
+          <button style={{ rotate: "90deg" }} onClick={openPrevSearch}>
             <Image
-              className={`${styles.back} icon`}
+              className="icon"
               alt="back"
               src="/icons/arrow.svg"
               width={25}
@@ -393,14 +372,27 @@ export default function HymnPage() {
           <div className={styles.container}>
             {/* left side buttons */}
             <div className={`${styles.options} ${styles.leftSide}`}>
+              <button title={""} onClick={openPrevSearch}>
+                <Image
+                  className="icon"
+                  alt="search"
+                  src="/icons/search.svg"
+                  width={20}
+                  height={20}
+                  draggable={false}
+                />
+                <p>Powrót do wyszukiwania</p>
+              </button>
+
               <button
                 title={
                   unlocked
                     ? "Otwórz listę wszystkich śpiewników [B]"
-                    : "Przejdź do wyboru śpiewników"
+                    : "Przejdź do okna wyboru śpiewników."
                 }
                 onClick={() => {
-                  return unlocked ? router.push("/books") : router.push("/");
+                  localStorage.removeItem("prevSearch");
+                  unlocked ? router.push("/books") : router.push("/");
                 }}
               >
                 <Image
@@ -409,55 +401,13 @@ export default function HymnPage() {
                   src="/icons/book.svg"
                   width={20}
                   height={20}
+                  draggable={false}
                 />
-                <p>Wybierz śpiewnik</p>
-              </button>
-
-              <button
-                title="Pokaż listę ulubionych pieśni [F]"
-                onClick={() => replaceLink("favorites")}
-              >
-                <Image
-                  className="icon"
-                  alt="list"
-                  src="/icons/list.svg"
-                  width={20}
-                  height={20}
-                />
-                <p>Lista ulubionych</p>
-              </button>
-
-              <button
-                title="Pokaż ustawienia aplikacji [S]"
-                onClick={() => replaceLink("settings")}
-              >
-                <Image
-                  className="icon"
-                  alt="settings"
-                  src="/icons/settings.svg"
-                  width={20}
-                  height={20}
-                />
-                <p>Ustawienia</p>
-              </button>
-
-              <button
-                className="desktop-only"
-                title="Pokaż listę skrótów klawiszowych"
-                onClick={() => replaceLink("shortcuts")}
-              >
-                <Image
-                  className="icon"
-                  alt="shortcuts"
-                  src="/icons/keyboard.svg"
-                  width={20}
-                  height={20}
-                />
-                <p>Skróty klawiszowe</p>
+                <p>Wybór śpiewników</p>
               </button>
             </div>
 
-            {/* show all hymn parameters */}
+            {/* show hymn content */}
             <div className={styles.center}>
               <div
                 className={styles.content}
@@ -468,7 +418,7 @@ export default function HymnPage() {
                 {noChords.current && (
                   <span
                     className={styles.noChords}
-                    onClick={() => replaceLink("settings")}
+                    onClick={() => openMenu("settings")}
                   >
                     Brak akordów do wyświetlenia
                   </span>
@@ -537,7 +487,7 @@ export default function HymnPage() {
                               return (
                                 <Link
                                   key={index}
-                                  title="Kliknij, aby przejść do wybranej pieśni."
+                                  title="Przejdź do wybranej pieśni."
                                   onClick={() => setLoading(true)}
                                   href={{
                                     pathname: "/hymn",
@@ -578,7 +528,7 @@ export default function HymnPage() {
                 </button>
 
                 <button
-                  title="Otwórz losową pieśń [R]"
+                  title="Wylosuj pieśń ze śpiewnika [R]"
                   className={styles.randomButton}
                   onClick={() => randomBtn(hymn.book)}
                 >
@@ -607,7 +557,7 @@ export default function HymnPage() {
             {/* right side buttons */}
             <div className={styles.options}>
               <button
-                title="Włącz prezentację pieśni na pełen ekran [P]"
+                title="Włącz tryb prezentacji pieśni na pełen ekran [P]"
                 onClick={slideshowBtn}
               >
                 <Image
@@ -616,6 +566,7 @@ export default function HymnPage() {
                   src="/icons/presentation.svg"
                   width={20}
                   height={20}
+                  draggable={false}
                 />
                 <p>Pokaz slajdów</p>
               </button>
@@ -623,8 +574,8 @@ export default function HymnPage() {
               <button
                 title={
                   favHymn
-                    ? "Kliknij, aby usunąć pieśń z listy ulubionych"
-                    : "Kliknij, aby dodać pieśń do listy ulubionych"
+                    ? "Usuń pieśń z listy ulubionych."
+                    : "Dodaj pieśń do listy ulubionych."
                 }
                 onClick={favoriteButton}
               >
@@ -634,6 +585,7 @@ export default function HymnPage() {
                   src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
                   width={20}
                   height={20}
+                  draggable={false}
                 />
                 <p>{favHymn ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
               </button>
@@ -650,17 +602,19 @@ export default function HymnPage() {
                   src="/icons/document.svg"
                   width={20}
                   height={20}
+                  draggable={false}
                 />
                 <p>Otwórz PDF</p>
               </button>
 
-              <button title="Skopiuj link pieśni" onClick={shareButton}>
+              <button title="Skopiuj link pieśni." onClick={shareButton}>
                 <Image
                   className="icon"
                   alt="share"
                   src="/icons/link.svg"
                   width={20}
                   height={20}
+                  draggable={false}
                 />
                 <p>Udostępnij</p>
               </button>
@@ -675,6 +629,7 @@ export default function HymnPage() {
                   src="/icons/printer.svg"
                   width={20}
                   height={20}
+                  draggable={false}
                 />
                 <p>Wydrukuj</p>
               </button>

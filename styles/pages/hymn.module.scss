@@ -1,32 +1,17 @@
-.navigation {
-  z-index: 1;
+.mobileHeader {
   position: fixed;
   top: 0;
   width: 100%;
-
   justify-content: space-between;
-  transition: 0.15s top ease-out;
+  transition: 0.15s ease-out;
+
+  &.hide {
+    top: calc(var(--mobileHeader-height) * -1);
+    box-shadow: unset;
+  }
 
   @media print {
     display: none;
-  }
-
-  &.hide {
-    top: calc((var(--navbar-height) * 1.05) * -1);
-  }
-
-  button {
-    padding: 1%;
-    height: 80%;
-    aspect-ratio: 1/1;
-  }
-
-  div {
-    position: absolute;
-    right: 1vw;
-    height: 100%;
-    display: flex;
-    align-items: center;
   }
 }
 
@@ -310,9 +295,7 @@
   }
 
   .content {
-    padding: calc(var(--navbar-height) * 1.05) 0
-      calc(var(--navbar-height) + 2rem);
-
+    padding: var(--mobileHeader-height) 0 calc(var(--navbar-height) + 2rem);
     min-height: unset;
     background-color: transparent;
 
@@ -427,6 +410,6 @@
   }
 
   .controls {
-    bottom: calc(var(--navbar-height-mobile) * 1.4);
+    bottom: calc(var(--navbar-height) * 1.4);
   }
 }

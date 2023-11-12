@@ -45,7 +45,13 @@ export function Header() {
         {!unlocked && (
           <button>
             <Link href="https://nastrazy.org/">
-              <p style={{ fontWeight: "bold", fontSize: "120%" }}>
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "115%",
+                  letterSpacing: "0.35px",
+                }}
+              >
                 Nastrazy.org
               </p>
             </Link>

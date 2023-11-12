@@ -33,7 +33,7 @@ export default function ShortcutsMenu() {
 
         <Shortcut keyup="R" action="Losowa pieśń (z wybranego śpiewnika)" />
         <Shortcut keyup="Esc" action="Wyjście z trybu menu/prezentacji" />
-        <Shortcut keyup="P" action="Tryb prezentacji" />
+        <Shortcut keyup="P" action="Tryb prezentacji pieśni" />
         <Shortcut
           keyup="N"
           action="Dokument PDF wybranej pieśni (jeśli istnieje)"

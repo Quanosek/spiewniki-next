@@ -529,7 +529,7 @@ export default function HymnPage() {
                 </button>
 
                 <button
-                  title="Wylosuj pieśń ze śpiewnika [R]"
+                  title="Otwórz losową pieśń ze śpiewnika [R]"
                   className={styles.randomButton}
                   onClick={() => randomBtn(hymn.book)}
                 >

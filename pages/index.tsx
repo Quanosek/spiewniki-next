@@ -34,6 +34,7 @@ export default function IndexPage() {
 
       switch (event.key.toUpperCase()) {
         case "/":
+          localStorage.removeItem("prevSearch");
           localStorage.setItem("focusSearchBox", "true");
           router.push("/search");
           break;

@@ -10,11 +10,15 @@
 .list {
   $radius: 0.6rem;
 
-  width: max(65%, 40rem);
+  width: max(65%, 50rem);
   display: flex;
   flex-direction: column;
   border-radius: $radius;
   background-color: var(--elements);
+
+  @media (max-width: 1024px) {
+    width: 95%;
+  }
 
   a {
     padding: 1.05rem 1.25rem;

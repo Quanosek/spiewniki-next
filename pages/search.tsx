@@ -8,8 +8,6 @@ import axios from "axios";
 
 import styles from "@/styles/pages/search.module.scss";
 
-import { Header } from "@/components/elements";
-
 import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 import textFormat from "@/scripts/textFormat";
 
@@ -178,34 +176,9 @@ export default function SearchPage() {
         <title>Wyszukiwanie / Śpiewniki</title>
       </Head>
 
-      <Header
-        buttons={
-          unlocked
-            ? {
-                leftSide: {
-                  title: "Powrót do strony głównej",
-                  icon: "arrow",
-                  onclick: () => router.push("/"),
-                },
-              }
-            : {
-                leftSide: {
-                  title: "Powrót do śpiewników",
-                  icon: "arrow",
-                  onclick: () => router.push("/"),
-                },
-                rightSide: {
-                  title: "Nastraży.org",
-                  icon: "external_link",
-                  onclick: () => router.push("https://nastrazy.org/"),
-                },
-              }
-        }
-      />
-
       <div className="container">
-        <div className="mobile-header">
-          <Link className="left-button" style={{ rotate: "90deg" }} href={"/"}>
+        <div className="mobileHeader">
+          <button style={{ rotate: "90deg" }} onClick={() => router.push("/")}>
             <Image
               className="icon"
               alt="back"
@@ -214,11 +187,9 @@ export default function SearchPage() {
               height={25}
               draggable={false}
             />
-          </Link>
+          </button>
 
-          <div className="center">
-            <h2>Wyszukiwanie</h2>
-          </div>
+          <p className="center">Wyszukiwanie</p>
         </div>
 
         <main>
@@ -228,7 +199,7 @@ export default function SearchPage() {
               type="text"
               id="input"
               placeholder="Rozpocznij wyszukiwanie"
-              title="Możesz również użyć [/] na klawiaturze, aby rozpocząć wyszukiwanie."
+              title="Rozpocznij wyszukiwanie [/]"
               onFocus={(e) => e.target.select()}
               onInput={(e) => {
                 const input = e.target as HTMLInputElement;
@@ -374,7 +345,7 @@ export default function SearchPage() {
           </div>
 
           <button
-            title="Powrót na górę strony"
+            title="Powrót na górę strony."
             className={styles.scrollButton}
             style={{
               visibility: showTopBtn ? "visible" : "hidden",

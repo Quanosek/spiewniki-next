@@ -6,8 +6,6 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/books.module.scss";
 
-import { Header } from "@/components/elements";
-
 import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 
 export default function BooksPage() {
@@ -28,23 +26,9 @@ export default function BooksPage() {
         <title>Lista śpiewników / Śpiewniki</title>
       </Head>
 
-      <Header
-        buttons={{
-          leftSide: {
-            title: "Powrót",
-            icon: "arrow",
-            onclick: () => router.back(),
-          },
-        }}
-      />
-
       <div className="container">
-        <div className="mobile-header">
-          <button
-            className="left-button"
-            style={{ rotate: "90deg" }}
-            onClick={() => router.back()}
-          >
+        <div className="mobileHeader">
+          <button style={{ rotate: "90deg" }} onClick={() => router.back()}>
             <Image
               className="icon"
               alt="back"
@@ -55,9 +39,7 @@ export default function BooksPage() {
             />
           </button>
 
-          <div className="center">
-            <h2>Lista wszystkich śpiewników:</h2>
-          </div>
+          <p className="center">Lista wszystkich śpiewników</p>
         </div>
 
         <main>
@@ -66,8 +48,8 @@ export default function BooksPage() {
           </div>
 
           <div className={styles.list}>
-            <Link className={styles.all} href={"/search"}>
-              <p>Pokaż wszystkie</p>
+            <Link className={styles.all} href="/search">
+              <p>Pokaż wszystko</p>
             </Link>
 
             <hr />

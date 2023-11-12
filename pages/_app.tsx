@@ -2,7 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect } from "react";
 
-import { GoogleAnalytics } from "nextjs-google-analytics";
+import Layout from "@/components/layout";
 
 import "the-new-css-reset/css/reset.css";
 import "@/styles/globals.scss";
@@ -31,15 +31,13 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <meta
           name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover"
+          content="initial-scale=1, width=device-width, user-scalable=no"
         />
       </Head>
 
-      {process.env.NODE_ENV !== "development" && (
-        <GoogleAnalytics trackPageViews />
-      )}
-
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </>
   );
 }

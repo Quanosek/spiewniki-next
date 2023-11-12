@@ -3,77 +3,19 @@ import Link from "next/link";
 import router from "next/router";
 
 import { bookShortcut } from "@/scripts/bookShortcut";
-import { replaceLink, randomHymn, shareButton } from "@/scripts/buttons";
+import { openMenu, randomHymn, shareButton } from "@/scripts/buttons";
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
-export function Header(param: any) {
-  if (!param.buttons) {
-    return (
-      <header>
-        <div className="container">
-          <TitleButton />
-        </div>
-      </header>
-    );
-  } else {
-    const { leftSide, rightSide } = param.buttons;
-
-    return (
-      <header>
-        <div className="container">
-          {leftSide && (
-            <div className="leftSide">
-              <button onClick={leftSide.onclick}>
-                {leftSide.icon && (
-                  <Image
-                    className={`icon ${
-                      leftSide.icon == "arrow" ? "arrow" : ""
-                    }`}
-                    alt={leftSide.icon}
-                    src={`/icons/${leftSide.icon}.svg`}
-                    width={20}
-                    height={20}
-                  />
-                )}
-
-                <p>{leftSide.title}</p>
-              </button>
-            </div>
-          )}
-
-          <TitleButton />
-
-          {rightSide && (
-            <div className="rightSide">
-              <button onClick={rightSide.onclick}>
-                <p>{rightSide.title}</p>
-
-                {rightSide.icon && (
-                  <Image
-                    className={`icon ${
-                      rightSide.icon == "arrow" ? "arrow" : ""
-                    }`}
-                    alt={rightSide.icon}
-                    src={`/icons/${rightSide.icon}.svg`}
-                    width={18}
-                    height={18}
-                  />
-                )}
-              </button>
-            </div>
-          )}
-        </div>
-      </header>
-    );
-  }
-
-  function TitleButton() {
-    return (
-      <Link
-        href="/"
-        title="Zebrane w jednym miejscu śpiewniki i pieśni religijne"
-      >
+export function Header() {
+  return (
+    <div
+      className="container"
+      title={
+        unlocked ? "Zebrane w jednym miejscu śpiewniki i pieśni religijne." : ""
+      }
+    >
+      <Link href="/">
         <Image
           className="icon"
           alt="logotype"
@@ -84,10 +26,34 @@ export function Header(param: any) {
           draggable={false}
         />
 
-        <h1>Śpiewniki</h1>
+        <h2>Śpiewniki</h2>
       </Link>
-    );
-  }
+
+      <div>
+        <button onClick={() => openMenu("favorites")}>
+          <p>Lista ulubionych</p>
+        </button>
+
+        <button onClick={() => openMenu("settings")}>
+          <p>Ustawienia</p>
+        </button>
+
+        <button className="desktopOnly" onClick={() => openMenu("shortcuts")}>
+          <p>Skróty klawiszowe</p>
+        </button>
+
+        {!unlocked && (
+          <button>
+            <Link href="https://nastrazy.org/">
+              <p style={{ fontWeight: "bold", fontSize: "120%" }}>
+                Nastrazy.org
+              </p>
+            </Link>
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export function Navbar() {
@@ -109,7 +75,7 @@ export function Navbar() {
         <p>Śpiewniki</p>
       </button>
 
-      <button onClick={() => replaceLink("favorites")}>
+      <button onClick={() => openMenu("favorites")}>
         <Image
           className="icon"
           alt="list"
@@ -137,7 +103,7 @@ export function Navbar() {
         <p>Wylosuj</p>
       </button>
 
-      <button onClick={() => replaceLink("settings")}>
+      <button onClick={() => openMenu("settings")}>
         <Image
           className="icon"
           alt="settings"

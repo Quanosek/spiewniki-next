@@ -1,6 +1,6 @@
 import styles from "@/styles/components/menu.module.scss";
 
-import { replaceLink } from "@/scripts/buttons";
+import { openMenu } from "@/scripts/buttons";
 
 export default function ShortcutsMenu() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -32,8 +32,6 @@ export default function ShortcutsMenu() {
         )}
 
         <Shortcut keyup="R" action="Losowa pieśń (z wybranego śpiewnika)" />
-        <Shortcut keyup="F" action="Lista ulubionych pieśni" />
-        <Shortcut keyup="S" action="Ustawienia aplikacji" />
         <Shortcut keyup="Esc" action="Wyjście z trybu menu/prezentacji" />
         <Shortcut keyup="P" action="Tryb prezentacji" />
         <Shortcut
@@ -47,7 +45,7 @@ export default function ShortcutsMenu() {
       <div className={styles.buttons}>
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze."
-          onClick={() => replaceLink(undefined)}
+          onClick={() => openMenu(undefined)}
         >
           Zamknij
         </button>

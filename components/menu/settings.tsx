@@ -3,7 +3,7 @@ import { useState, useEffect, ReactElement } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { replaceLink } from "@/scripts/buttons";
+import { openMenu } from "@/scripts/buttons";
 
 export default function SettingsMenu() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -64,7 +64,7 @@ export default function SettingsMenu() {
 
   return (
     <>
-      <h2>Ustawienia aplikacji</h2>
+      <h2>Ustawienia</h2>
 
       {/* COLOR THEME */}
       <div className={styles.element}>
@@ -132,7 +132,7 @@ export default function SettingsMenu() {
 
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze."
-          onClick={() => replaceLink(undefined)}
+          onClick={() => openMenu(undefined)}
         >
           Zapisz
         </button>

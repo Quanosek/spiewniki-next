@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { replaceLink } from "@/scripts/buttons";
+import { openMenu } from "@/scripts/buttons";
 
 export default function FavoritesMenu() {
   const favoritesData = localStorage.getItem("favorites") as string;
@@ -99,7 +99,7 @@ export default function FavoritesMenu() {
 
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze."
-          onClick={() => replaceLink(undefined)}
+          onClick={() => openMenu(undefined)}
         >
           Zamknij
         </button>

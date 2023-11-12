@@ -4,7 +4,7 @@ import axios from "axios";
 
 import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 
-export function replaceLink(name: string | undefined) {
+export function openMenu(name: string | undefined) {
   const { menu, ...params } = router.query;
 
   if (name) {

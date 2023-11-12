@@ -76,6 +76,14 @@ export default function HymnPage() {
   // previous & next hymn buttons
   const changeHymn = useCallback(
     (id: number, operator: string) => {
+      // remove searching input from storage
+      const fromStorage = localStorage.getItem("prevSearch");
+      if (fromStorage) {
+        const json = JSON.parse(fromStorage);
+        json.search = "";
+        localStorage.setItem("prevSearch", JSON.stringify(json));
+      }
+
       setLoading(true);
 
       let position = 0;
@@ -289,16 +297,18 @@ export default function HymnPage() {
   // back to search page with specific book
   const openPrevSearch = () => {
     localStorage.setItem("focusSearchBox", "true");
-    const prevSearch = localStorage.getItem("prevSearch");
 
-    if (!prevSearch) {
-      router.push("/search");
-    } else {
-      router.push({
-        pathname: "/search",
-        query: { book: prevSearch },
-      });
-    }
+    const prevSearch = localStorage.getItem("prevSearch");
+    if (prevSearch) {
+      const { book } = JSON.parse(prevSearch);
+
+      if (book) {
+        router.push({
+          pathname: "/search",
+          query: { book },
+        });
+      } else router.push("/search");
+    } else router.push("/search");
   };
 
   return (
@@ -381,7 +391,8 @@ export default function HymnPage() {
                     : "Przejdź do okna wyboru śpiewników."
                 }
                 onClick={() => {
-                  return unlocked ? router.push("/books") : router.push("/");
+                  localStorage.removeItem("prevSearch");
+                  unlocked ? router.push("/books") : router.push("/");
                 }}
               >
                 <Image

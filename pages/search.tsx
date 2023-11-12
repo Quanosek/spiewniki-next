@@ -27,17 +27,27 @@ export default function SearchPage() {
 
     // url errors handling
     if (book && !bookShortcut(book)) router.push("/404");
-    const params = Object.keys(router.query);
-    if (params.length && !params.includes("book")) router.push("/search");
 
     // intelligent focus on search box
     const input = document.getElementById("input") as HTMLInputElement;
     localStorage.getItem("focusSearchBox") === "true" && input.focus();
+    localStorage.removeItem("focusSearchBox");
 
-    // remove temporary localStorage files
-    ["prevSearch", "focusSearchBox"].forEach((item) => {
-      localStorage.removeItem(item);
-    });
+    const dataInterpretation = (data: any) => {
+      setRawData(data);
+      setData(data);
+
+      if (localStorage.getItem("prevSearch")) {
+        const { search } = JSON.parse(
+          localStorage.getItem("prevSearch") as string
+        );
+
+        input.value = search;
+        input.select();
+        Search(data, search);
+      }
+      setLoading(false);
+    };
 
     // get all hymns from all books
     if (!book) {
@@ -58,9 +68,7 @@ export default function SearchPage() {
             a.name.localeCompare(b.name, undefined, { numeric: true })
           );
 
-          setRawData(hymns);
-          setData(hymns);
-          setLoading(false);
+          dataInterpretation(hymns);
         }
       });
 
@@ -69,13 +77,17 @@ export default function SearchPage() {
       axios
         .get(`database/${bookShortcut(book)}.json`)
         .then(({ data }) => {
-          setRawData(data);
-          setData(data);
-          setLoading(false);
+          dataInterpretation(data);
         })
         .catch((err) => console.error(err));
     }
   }, [router, book]);
+
+  // previous search restoration
+  useEffect(() => {
+    const input = document.getElementById("input") as HTMLInputElement;
+    if (input.value) Search(rawData, input.value);
+  }, [rawData]);
 
   // searching algorithm
   const Search = (data: [], input: string) => {
@@ -203,6 +215,12 @@ export default function SearchPage() {
               onFocus={(e) => e.target.select()}
               onInput={(e) => {
                 const input = e.target as HTMLInputElement;
+
+                localStorage.setItem(
+                  "prevSearch",
+                  JSON.stringify({ book, search: input.value })
+                );
+
                 input.value ? setShowClearBtn(true) : setShowClearBtn(false);
                 setTimeout(() => Search(rawData, input.value), 200);
 
@@ -317,7 +335,14 @@ export default function SearchPage() {
                     <div key={index}>
                       <Link
                         onClick={() => {
-                          if (book) localStorage.setItem("prevSearch", book);
+                          const input = document.getElementById(
+                            "input"
+                          ) as HTMLInputElement;
+
+                          localStorage.setItem(
+                            "prevSearch",
+                            JSON.stringify({ book, search: input.value })
+                          );
                         }}
                         href={{
                           pathname: "/hymn",

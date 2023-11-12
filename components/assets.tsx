@@ -61,7 +61,8 @@ export function Navbar() {
     <nav>
       <button
         onClick={() => {
-          return unlocked ? router.push("/books") : router.push("/");
+          localStorage.removeItem("prevSearch");
+          unlocked ? router.push("/books") : router.push("/");
         }}
       >
         <Image

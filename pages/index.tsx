@@ -19,6 +19,8 @@ export default function IndexPage() {
   useEffect(() => {
     if (!router.isReady) return;
 
+    localStorage.removeItem("prevSearch");
+
     const KeyupEvent = (event: KeyboardEvent) => {
       if (
         event.ctrlKey ||
@@ -68,16 +70,13 @@ export default function IndexPage() {
 
       <div className="container">
         <div
-          className={`${unlocked ? styles.title : "mobileHeader"} ${
-            styles.mobileHeader
-          }`}
-          style={{ boxShadow: hamburgerMenu ? "unset" : "" }}
+          className={`
+          ${unlocked ? styles.title : "mobileHeader"}
+          ${styles.mobileHeader}
+          ${hamburgerMenu && styles.active}
+          `}
         >
-          <Link
-            className={styles.logotype}
-            style={{ opacity: hamburgerMenu ? "0" : "" }}
-            href="/"
-          >
+          <Link className={styles.logotype} href="/">
             <Image
               className="icon"
               alt="bpsw"

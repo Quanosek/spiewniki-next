@@ -25,6 +25,14 @@
 .mobileHeader {
   width: 100%;
 
+  &.active {
+    box-shadow: unset;
+
+    .logotype {
+      opacity: 0;
+    }
+  }
+
   .logotype {
     padding: 0 1%;
     display: flex;

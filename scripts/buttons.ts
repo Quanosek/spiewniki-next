@@ -40,9 +40,6 @@ export function randomHymn(book: string | undefined) {
         let hymns = new Array();
 
         Collector.map(({ data }) => hymns.push(...data));
-        // hymns = hymns.sort((a, b) =>
-        //   a.name.localeCompare(b.name, undefined, { numeric: true })
-        // );
 
         const random = Math.floor(Math.random() * (hymns.length + 1));
 

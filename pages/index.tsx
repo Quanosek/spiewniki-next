@@ -137,7 +137,7 @@ export default function IndexPage() {
 
             <button
               className={styles.randomButton}
-              title="Wylosuj pieśń ze śpiewnika [R]"
+              title="Otwórz losową pieśń [R]"
               onClick={() => randomHymn(undefined)}
             >
               <p>Wylosuj pieśń</p>

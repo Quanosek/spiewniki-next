@@ -47,7 +47,7 @@ export default function DocumentPage() {
   return (
     <>
       <Head>
-        <title>Śpiewniki</title>
+        <title>Podgląd PDF / Śpiewniki</title>
       </Head>
 
       <div className="container">

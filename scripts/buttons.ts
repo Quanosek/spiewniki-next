@@ -40,7 +40,6 @@ export function randomHymn(book: string | undefined) {
         let hymns = new Array();
 
         Collector.map(({ data }) => hymns.push(...data));
-
         const random = Math.floor(Math.random() * (hymns.length + 1));
 
         router.push({

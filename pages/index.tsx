@@ -34,6 +34,7 @@ export default function IndexPage() {
 
       switch (event.key.toUpperCase()) {
         case "/":
+          localStorage.removeItem("prevSearch");
           localStorage.setItem("focusSearchBox", "true");
           router.push("/search");
           break;
@@ -136,7 +137,7 @@ export default function IndexPage() {
 
             <button
               className={styles.randomButton}
-              title="Wylosuj pieśń ze śpiewnika [R]"
+              title="Otwórz losową pieśń [R]"
               onClick={() => randomHymn(undefined)}
             >
               <p>Wylosuj pieśń</p>

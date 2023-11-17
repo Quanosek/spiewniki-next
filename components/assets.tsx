@@ -9,13 +9,15 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
 export function Header() {
   return (
-    <div
-      className="container"
-      title={
-        unlocked ? "Zebrane w jednym miejscu śpiewniki i pieśni religijne." : ""
-      }
-    >
-      <Link href="/">
+    <div className="container">
+      <Link
+        href="/"
+        title={
+          unlocked
+            ? "Zebrane w jednym miejscu śpiewniki i pieśni religijne."
+            : ""
+        }
+      >
         <Image
           className="icon"
           alt="logotype"
@@ -45,7 +47,13 @@ export function Header() {
         {!unlocked && (
           <button>
             <Link href="https://nastrazy.org/">
-              <p style={{ fontWeight: "bold", fontSize: "120%" }}>
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "115%",
+                  letterSpacing: "0.35px",
+                }}
+              >
                 Nastrazy.org
               </p>
             </Link>

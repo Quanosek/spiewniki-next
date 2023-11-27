@@ -30,8 +30,8 @@ export default function SearchPage() {
     const { contextSearch } = JSON.parse(
       localStorage.getItem("settings") as string
     );
-    const { search } = JSON.parse(localStorage.getItem("prevSearch") as string);
-    if (contextSearch && search) setShowClearBtn(true);
+    const prevSearch = JSON.parse(localStorage.getItem("prevSearch") as string);
+    if (contextSearch && prevSearch?.search) setShowClearBtn(true);
 
     // url errors handling
     if (book && !bookShortcut(book)) router.push("/404");
@@ -45,15 +45,12 @@ export default function SearchPage() {
       setRawData(data);
       setData(data);
 
-      if (localStorage.getItem("prevSearch")) {
-        const { search } = JSON.parse(
-          localStorage.getItem("prevSearch") as string
-        );
-
-        input.value = search;
+      if (prevSearch) {
+        input.value = prevSearch?.search;
         input.select();
-        Search(data, search);
+        Search(data, input.value);
       }
+
       setLoading(false);
     };
 

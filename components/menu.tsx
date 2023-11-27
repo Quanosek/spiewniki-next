@@ -47,7 +47,7 @@ export default function Menu() {
 
   return (
     <div
-      className={styles.component}
+      className={styles.handler}
       style={{
         visibility: showMenu ? "visible" : "hidden",
         opacity: showMenu ? 1 : 0,
@@ -58,7 +58,7 @@ export default function Menu() {
 
       {menu && (
         <div className={styles.menu}>
-          <div className={styles.content}>
+          <div className={styles.container}>
             {/* select menu window */}
             {menu === "favorites" && <Favorites />}
             {menu === "settings" && <Settings />}

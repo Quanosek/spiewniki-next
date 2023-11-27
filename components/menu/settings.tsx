@@ -1,37 +1,61 @@
 import Image from "next/image";
-import { useState, useEffect, ReactElement } from "react";
+import { useState, useEffect, ReactElement, useCallback } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
 import { openMenu } from "@/scripts/buttons";
 
+interface Settings {
+  themeColor: string;
+  fontSize: number;
+  showChords: boolean;
+  contextSearch: boolean;
+  quickSearch: boolean;
+}
+
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
+// default settings values
+export const initialState = {
+  themeColor: unlocked ? "black" : "light",
+  fontSize: 21,
+  showChords: false,
+  contextSearch: true,
+  quickSearch: true,
+};
+
 export default function SettingsMenu() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
-
-  // default values
-  const [fontSize, setFontSize] = useState(
-    localStorage.getItem("fontSize") || "21"
-  );
-  const [showChords, setShowChords] = useState(
-    Boolean(localStorage.getItem("showChords")) || false
-  );
-  const [colorTheme, setColorTheme] = useState(
-    document.documentElement.classList[1]
+  const settings: Settings = JSON.parse(
+    localStorage.getItem("settings") as string
   );
 
-  // save changes to local storage
+  // dynamic states
+  const [
+    { fontSize, themeColor, showChords, contextSearch, quickSearch },
+    setState,
+  ] = useState(settings || initialState);
+
+  // save settings to local storage
+  const saveSettings = useCallback(() => {
+    localStorage.setItem(
+      "settings",
+      JSON.stringify({
+        themeColor,
+        fontSize,
+        showChords,
+        contextSearch,
+        quickSearch,
+      })
+    );
+  }, [themeColor, fontSize, showChords, contextSearch, quickSearch]);
+
+  // save settings on change
   useEffect(() => {
-    localStorage.setItem("fontSize", fontSize);
+    saveSettings();
+    document.documentElement.className = `${document.documentElement.classList[0]} ${themeColor}`;
+  }, [saveSettings, themeColor]);
 
-    showChords
-      ? localStorage.setItem("showChords", "true")
-      : localStorage.removeItem("showChords");
-
-    localStorage.setItem("colorTheme", colorTheme);
-    document.documentElement.className = `${document.documentElement.classList[0]} ${colorTheme}`;
-  }, [fontSize, showChords, colorTheme]);
-
-  // quick books selection
+  // theme colors labels
   const Themes = (names: string[]) => {
     const themes: ReactElement[] = [];
 
@@ -51,90 +75,133 @@ export default function SettingsMenu() {
             type="radio"
             id={name}
             value={name}
-            name="colorTheme"
-            checked={colorTheme === name}
-            onChange={() => setColorTheme(name)}
+            name="themeColor"
+            checked={themeColor === name}
+            onChange={() => {
+              setState((prevState) => ({
+                ...prevState,
+                themeColor: name,
+              }));
+            }}
           />
         </label>
       );
     });
 
-    return <form className={styles.colorTheme}>{themes}</form>;
+    return <form className={styles.themeSelection}>{themes}</form>;
+  };
+
+  // quick settings options buttons
+  const ToggleSwitch = (description: string, name: string, value: boolean) => {
+    return (
+      <div className={styles.toggle}>
+        <p>{description}</p>
+
+        <label className={styles.checkbox}>
+          <input
+            type="checkbox"
+            checked={value}
+            onChange={() =>
+              setState((prevState: any) => {
+                return {
+                  ...prevState,
+                  [name]: !prevState[name],
+                };
+              })
+            }
+          />
+
+          <span />
+        </label>
+      </div>
+    );
   };
 
   return (
     <>
       <h2>Ustawienia</h2>
 
-      {/* COLOR THEME */}
-      <div className={styles.element}>
-        <h3>Motyw kolorów:</h3>
+      <div className={styles.content}>
+        {/* THEME COLOR */}
+        <div className={styles.settingsSection}>
+          <h3>Motyw kolorów:</h3>
 
-        {unlocked
-          ? Themes(["black", "dark", "light", "reading"])
-          : Themes(["light", "reading", "black", "dark"])}
-      </div>
-
-      {/* FONT SIZE */}
-      <div className={styles.element}>
-        <h3>Wielkość tekstu pieśni:</h3>
-
-        <div className={styles.fontPreview}>
-          <p style={{ fontSize: `${fontSize}px` }}>Przykładowy tekst.</p>
+          {unlocked
+            ? Themes(["black", "dark", "light", "reading"])
+            : Themes(["light", "reading", "black", "dark"])}
         </div>
 
-        <div className={styles.fontSlider}>
-          <div className={styles.smaller}>A</div>
+        {/* FONT SIZE */}
+        <div className={styles.settingsSection}>
+          <h3>Wielkość tekstu pieśni:</h3>
 
-          <input
-            type="range"
-            min="14"
-            max="28"
-            step="0.5"
-            value={fontSize}
-            onChange={(e) => setFontSize(e.target.value)}
-          />
+          <div className={styles.fontPreview}>
+            <p style={{ fontSize }}>Przykładowy tekst.</p>
+          </div>
 
-          <div className={styles.bigger}>A</div>
+          <div className={styles.fontSlider}>
+            <div className={styles.smaller}>A</div>
+
+            <input
+              type="range"
+              min="14"
+              max="28"
+              step="0.5"
+              value={fontSize}
+              onChange={(e) => {
+                setState((prevState) => ({
+                  ...prevState,
+                  fontSize: Number(e.target.value),
+                }));
+              }}
+            />
+
+            <div className={styles.bigger}>A</div>
+          </div>
+        </div>
+
+        {/* QUICK OPTIONS SWITCHERS */}
+        <div className={styles.settingsSection}>
+          {ToggleSwitch(
+            "Wyświetlanie akordów nad liniami tekstu",
+            "showChords",
+            showChords
+          )}
+
+          {ToggleSwitch(
+            "Wyszukiwanie w treści pieśni",
+            "contextSearch",
+            contextSearch
+          )}
+
+          {ToggleSwitch(
+            "Szybki powrót do ostatniego wyszukiwania ",
+            "quickSearch",
+            quickSearch
+          )}
         </div>
       </div>
 
-      {/* SHOW CHORDS */}
-      <div className={styles.element}>
-        <h3>Wyświetlanie akordów:</h3>
-
-        <label className={styles.chordsToggle}>
-          <input
-            type="checkbox"
-            checked={showChords}
-            onChange={() => setShowChords((prev) => !prev)}
-          />
-
-          <span />
-        </label>
-      </div>
-
+      {/* MENU BUTTONS */}
       <div className={styles.buttons}>
         <button
+          className={styles.alert}
           onClick={() => {
             const prompt = confirm(
-              "Czy na pewno chcesz przywrócić domyślne ustawienia?"
+              "Czy na pewno chcesz przywrócić ustawienia domyślne?"
             );
-            if (prompt) {
-              setColorTheme(unlocked ? "black" : "light");
-              setFontSize("21");
-              setShowChords(false);
-            }
+
+            if (prompt) setState({ ...initialState });
           }}
         >
-          Resetuj
+          Przywróć domyślne
         </button>
 
         <button
-          title="Kliknij, lub użyj [Esc] na klawiaturze."
+          title="Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu."
           onClick={() => openMenu(undefined)}
         >
-          Zapisz
+          Zamknij
         </button>
       </div>
     </>

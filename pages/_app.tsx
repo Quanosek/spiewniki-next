@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect } from "react";
 
+import { initialState } from "@/components/menu/settings";
 import Layout from "@/components/layout";
 
 import "the-new-css-reset/css/reset.css";
@@ -11,11 +12,22 @@ import "@/styles/themes.scss";
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+    const settings = JSON.parse(localStorage.getItem("settings") as string);
 
-    // set global coloring
+    // save default settings to local storage
+    if (!settings) {
+      localStorage.setItem("settings", JSON.stringify(initialState));
+    }
+
+    // remove old settings from local storage
+    ["colorTheme", "fontSize", "showChords"].forEach((key) => {
+      if (localStorage.getItem(key)) localStorage.removeItem(key);
+    });
+
+    // global CSS classes
     document.documentElement.className = `${
       unlocked ? "accent_blue" : "accent_orange" // version color accent
-    } ${localStorage.getItem("colorTheme") || (unlocked ? "black" : "light")}`; // default user theme
+    } ${settings?.themeColor}`; // default user theme
 
     // prevent screen from sleeping
     if (navigator.wakeLock) {

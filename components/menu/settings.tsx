@@ -91,6 +91,7 @@ export default function SettingsMenu() {
     return <form className={styles.themeSelection}>{themes}</form>;
   };
 
+  // quick settings options buttons
   const ToggleSwitch = (description: string, name: string, value: boolean) => {
     return (
       <div className={styles.toggle}>

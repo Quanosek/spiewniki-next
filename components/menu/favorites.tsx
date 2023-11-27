@@ -19,26 +19,48 @@ export default function FavoritesMenu() {
 
   return (
     <>
-      <div className={styles.favTitle}>
-        <h2>Lista ulubionych</h2>
-        <p>
-          {(favorites.length === 1 && "dodano 1 pieśń") ||
-            `dodano ${favorites.length} pieśni`}
-        </p>
-      </div>
+      <h2>Lista ulubionych</h2>
 
       <div className={`${styles.content} ${styles.favorites}`}>
-        {/* <div className={styles.settings}>
-          <p>
+        <div className={styles.settings}>
+          <span>
             {(favorites.length === 1 && "dodano 1 pieśń") ||
               `dodano ${favorites.length} pieśni`}
-          </p>
+          </span>
 
-          <div className="disabled">
-            <button>Filtry</button>
-            <button>Sortuj</button>
-          </div>
-        </div> */}
+          <button className={!favorites.length ? "disabled" : ""}>
+            <select
+              defaultValue="timestamp"
+              onChange={(e) => {
+                const newArray = favorites.sort((a: any, b: any) => {
+                  switch (e.target.value) {
+                    case "timestamp":
+                      return b.timestamp - a.timestamp;
+                    case "alphabetic":
+                      return a.title.localeCompare(b.title, undefined, {
+                        numeric: true,
+                      });
+                  }
+                });
+
+                setFavorites(newArray);
+              }}
+            >
+              <option value="timestamp">Czas dodania</option>
+              <option value="alphabetic">Alfabetycznie</option>
+            </select>
+            <p>Sortuj</p>
+
+            <Image
+              className="icon"
+              alt="arrow"
+              src="/icons/arrow.svg"
+              width={16}
+              height={16}
+              draggable={false}
+            />
+          </button>
+        </div>
 
         {favorites.length ? (
           favorites.map((fav: any, index: number) => {
@@ -57,7 +79,7 @@ export default function FavoritesMenu() {
                 >
                   <p>{fav.title}</p>
 
-                  {/* <span>
+                  <span>
                     <p>
                       {fav.timestamp
                         ? new Date(fav.timestamp).toLocaleString("pl-PL", {
@@ -73,7 +95,7 @@ export default function FavoritesMenu() {
                       {" • "}
                       {bookShortcut(fav.book)}
                     </p>
-                  </span> */}
+                  </span>
                 </Link>
 
                 <button

@@ -21,9 +21,17 @@ export default function SearchPage() {
   const [rawData, setRawData] = useState<any>();
   const [data, setData] = useState<any>();
 
-  // fetch all data on startup
+  // clear search bar button
+  const [showClearBtn, setShowClearBtn] = useState(false);
+
   useEffect(() => {
     if (!router.isReady) return;
+
+    const { contextSearch } = JSON.parse(
+      localStorage.getItem("settings") as string
+    );
+    const { search } = JSON.parse(localStorage.getItem("prevSearch") as string);
+    if (contextSearch && search) setShowClearBtn(true);
 
     // url errors handling
     if (book && !bookShortcut(book)) router.push("/404");
@@ -76,9 +84,7 @@ export default function SearchPage() {
     } else {
       axios
         .get(`database/${bookShortcut(book)}.json`)
-        .then(({ data }) => {
-          dataInterpretation(data);
-        })
+        .then(({ data }) => dataInterpretation(data))
         .catch((err) => console.error(err));
     }
   }, [router, book]);
@@ -97,13 +103,17 @@ export default function SearchPage() {
     let NamesCollector = new Array();
     let LyricsCollector = new Array();
 
+    const { contextSearch } = JSON.parse(
+      localStorage.getItem("settings") as string
+    );
+
     data.map((hymn: { book: string; name: string; song: any }) => {
       const { book, name, song } = hymn;
 
       if (textFormat(hymn.name).includes(textFormat(input))) {
         // title found
         NamesCollector.push({ book, name });
-      } else {
+      } else if (contextSearch) {
         // lyrics found
         const lyrics: string[] = (Object.values(song.lyrics).flat() as string[])
           .filter((verse: string) => verse.startsWith(" "))
@@ -142,12 +152,6 @@ export default function SearchPage() {
     return;
   };
 
-  // clear search bar button
-  const [showClearBtn, setShowClearBtn] = useState(false);
-
-  // scroll to top button
-  const [showTopBtn, setShowTopBtn] = useState(false);
-
   useEffect(() => {
     const scrollEvent = () => {
       if (window.scrollY > 400) setShowTopBtn(true);
@@ -181,6 +185,9 @@ export default function SearchPage() {
       document.removeEventListener("keyup", KeyupEvent);
     };
   }, [router, unlocked]);
+
+  // scroll to top button
+  const [showTopBtn, setShowTopBtn] = useState(false);
 
   return (
     <>
@@ -216,9 +223,16 @@ export default function SearchPage() {
               onInput={(e) => {
                 const input = e.target as HTMLInputElement;
 
+                const { quickSearch } = JSON.parse(
+                  localStorage.getItem("settings") as string
+                );
+
                 localStorage.setItem(
                   "prevSearch",
-                  JSON.stringify({ book, search: input.value })
+                  JSON.stringify({
+                    book,
+                    search: quickSearch ? input.value : "",
+                  })
                 );
 
                 input.value ? setShowClearBtn(true) : setShowClearBtn(false);
@@ -339,9 +353,16 @@ export default function SearchPage() {
                             "input"
                           ) as HTMLInputElement;
 
+                          const { quickSearch } = JSON.parse(
+                            localStorage.getItem("settings") as string
+                          );
+
                           localStorage.setItem(
                             "prevSearch",
-                            JSON.stringify({ book, search: input.value })
+                            JSON.stringify({
+                              book,
+                              search: quickSearch ? input.value : "",
+                            })
                           );
                         }}
                         href={{

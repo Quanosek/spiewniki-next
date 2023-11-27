@@ -1,4 +1,4 @@
-.component {
+.handler {
   z-index: 999; // always on top
   position: relative;
   display: flex;
@@ -30,9 +30,13 @@
   background-color: var(--menu-background);
   border-radius: 0.6rem;
   box-shadow: rgba(#000000, 0.2) 0px 10px 20px, rgba(#000000, 0.22) 0px 6px 6px;
+
+  @media (max-width: 768px) {
+    padding: min(4vw, 1.25rem) 2.5vw;
+  }
 }
 
-.content {
+.container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -49,16 +53,14 @@
   }
 }
 
-.element {
-  padding: 1rem 0.6rem;
+// menu components template
+
+.content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
-  background-color: var(--menu-elements);
+  gap: 2px;
   border-radius: 0.4rem;
+  overflow: hidden;
 }
 
 .buttons {
@@ -77,24 +79,14 @@
     &:hover {
       background-color: var(--menu-elements-hover);
     }
-  }
-}
 
-@media (max-width: 768px) {
-  .menu {
-    padding: min(4vw, 1.25rem) 2.5vw;
-  }
-
-  .element {
-    padding: 3% 2vw;
-    gap: min(3vw, 1rem);
-
-    h3 {
-      font-size: min(3.5vw, 100%);
+    &.alert {
+      color: #ffffff;
+      background-color: #912626;
     }
   }
 
-  .buttons {
+  @media (max-width: 768px) {
     margin: 2% 0 0.5%;
 
     button {
@@ -114,17 +106,39 @@
   }
 }
 
-.favList {
+.favorites {
   position: relative;
-  padding: 0;
-  min-height: min(20rem, 40vh);
-  justify-content: flex-start;
-  gap: 0;
+  min-height: min(25rem, 45svh);
+  align-items: center;
+  border: 1px solid var(--menu-elements);
+
+  .settings {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: min(3.5vw, 100%);
+
+    p {
+      padding-left: min(3vw, 1rem);
+    }
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    button {
+      padding: min(2vw, 0.5rem) min(8vw, 2rem);
+      background-color: var(--menu-elements);
+      border-radius: 0;
+    }
+  }
 
   .placeholder {
     opacity: 25%;
     position: absolute;
-    padding: 1rem 0;
     height: 100%;
     display: flex;
     align-items: center;
@@ -133,63 +147,106 @@
   }
 }
 
-.favElement {
+.favorite {
   position: relative;
   width: 100%;
-  padding: 0.2rem 0.2rem 0.2rem 1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 0.4rem;
+  background-color: var(--menu-elements);
 
-  a {
-    padding: 0.5rem 0;
-    width: 100%;
-    text-align: start;
-    overflow: hidden;
+  p {
     white-space: nowrap;
     text-overflow: ellipsis;
+    overflow: hidden;
   }
 
-  @media (min-width: 769px) {
-    &:hover {
-      background-color: var(--menu-elements-hover);
+  a {
+    padding: min(0.8rem, 3vw) min(1.2rem, 3.5vw);
+    width: 100%;
+    text-align: start;
+    font-size: min(3.5vw, 100%);
+    transition: 0.1s background-color ease-out;
+
+    p {
+      max-width: 90%;
+      font-size: 105%;
     }
+  }
+
+  @media (max-width: 320px) {
+    button {
+      padding: 3.5vw;
+
+      img {
+        height: auto;
+        width: auto;
+      }
+    }
+  }
+
+  a:hover,
+  button:hover {
+    background-color: var(--menu-elements-hover);
+  }
+
+  span {
+    opacity: 60%;
+    font-size: 70%;
   }
 }
 
 .removeButton {
-  opacity: 55%;
-  padding: 8px;
+  position: absolute;
+  right: 0;
   height: 100%;
   display: none;
   aspect-ratio: 1/1;
-  background-color: transparent !important;
-  transition: 0.15s opacity ease-in-out;
+  background-color: transparent;
 
-  @media (min-width: 769px) {
-    &:hover {
+  img {
+    opacity: 75%;
+  }
+
+  @media (min-width: 1025px) {
+    img {
+      opacity: 60%;
+    }
+
+    &:hover img {
       opacity: 100%;
     }
   }
 
   @media (max-width: 1024px) {
-    display: block;
+    display: flex;
+    background-color: transparent !important;
   }
 }
 
 // SETTINGS MENU
 
-.colorTheme {
-  width: 100%;
+.settingsSection {
+  padding: 1.2rem 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 1.2rem;
-  overflow-x: auto;
+  align-items: center;
+  text-align: center;
+  gap: min(3vw, 1rem);
+  background-color: var(--menu-elements);
 
   @media (max-width: 768px) {
-    gap: 2.5vw;
+    padding: min(4vw, 1.2rem) min(5vw, 1.5rem);
   }
+
+  h3 {
+    margin-top: -0.3vw;
+    font-size: min(3.5vw, 100%);
+  }
+}
+
+.themeSelection {
+  display: flex;
+  gap: min(2.5vw, 0.8rem);
 
   label {
     padding: min(2vw, 6px) min(1.6vw, 5px) min(2.5vw, 8px);
@@ -247,6 +304,7 @@
   align-items: center;
   color: #ffffff;
   background-color: #000000;
+  border: 2px outset #909090;
 
   p {
     text-align: center;
@@ -262,19 +320,20 @@
 }
 
 .fontSlider {
-  width: 75%;
+  position: relative;
+  margin: min(4vw, 1rem) 0;
+  width: 70%;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: min(5vw, 1.25rem);
 
   @media (max-width: 768px) {
-    width: min(90%, 28rem);
+    width: min(95%, 28rem);
   }
 
   input {
-    width: 100%;
+    width: 80%;
     height: 0.5rem;
     background: var(--accent-color);
     border-radius: 30px;
@@ -295,16 +354,37 @@
     }
   }
 
+  .smaller,
+  .bigger {
+    position: absolute;
+  }
+
   .smaller {
+    left: 0.5vw;
     font-size: min(4vw, 1rem);
   }
 
   .bigger {
+    right: -0.5vw;
     font-size: min(7.5vw, 2rem);
   }
 }
 
-.chordsToggle {
+.toggle {
+  width: min(95%, 30rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: min(3.5vw, 100%);
+
+  p {
+    width: 80%;
+    padding-right: 1rem;
+    text-align: start;
+  }
+}
+
+.checkbox {
   position: relative;
 
   $buttonWidth: 4rem;
@@ -334,8 +414,8 @@
     bottom: 0;
     display: flex;
     align-items: center;
-    background-color: #cccccc;
-    transition: 0.1s ease-in-out;
+    background-color: #9c9c9c;
+    transition: 0.2s ease-in-out;
     border-radius: 30px;
     cursor: pointer;
 
@@ -373,14 +453,6 @@
 }
 
 // SHORTCUTS MENU
-
-.shortcutList {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  border-radius: 0.4rem;
-  overflow: hidden;
-}
 
 .shortcut {
   padding: 0.65rem;

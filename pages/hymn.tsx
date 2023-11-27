@@ -22,18 +22,13 @@ export default function HymnPage() {
 
   const [isLoading, setLoading] = useState(true);
   const [hymn, setHymn] = useState<any>();
-  const noChords = useRef(false);
+
+  const noChords = useRef(false); // no chords prompt
+  const fontSize = useRef(); // set font size
 
   // fetch data on startup
   useEffect(() => {
     if (!router.isReady) return;
-
-    // url errors handling
-    if (book && !bookShortcut(book)) router.push("/404");
-    const params = Object.keys(router.query);
-    if (!(params.includes("book") && params.includes("title"))) {
-      router.push("/404");
-    }
 
     // get all hymn data
     axios
@@ -42,15 +37,21 @@ export default function HymnPage() {
         const hymn = data.find((elem: any) => elem.name === title);
         hymn.lyrics = Object.values(hymn.song.lyrics);
 
-        // check if hymn has chords
-        if (localStorage.getItem("showChords")) {
-          const includesChords = hymn.lyrics.some((array: string[]) => {
-            return array.some((verse: string) => verse.startsWith("."));
-          });
+        // check if hymn file has chords
+        const { showChords } = JSON.parse(
+          localStorage.getItem("settings") as string
+        );
 
-          if (!includesChords) noChords.current = true;
-          else noChords.current = false;
-        } else noChords.current = false;
+        const includesChords = hymn.lyrics.some((array: string[]) => {
+          return array.some((verse: string) => verse.startsWith("."));
+        });
+
+        if (showChords && !includesChords) noChords.current = true;
+        else noChords.current = false;
+
+        // get font size
+        const settings = JSON.parse(localStorage.getItem("settings") as string);
+        fontSize.current = settings.fontSize;
 
         // linked songs format
         if (hymn.song.linked_songs) {
@@ -69,7 +70,10 @@ export default function HymnPage() {
         setHymn(hymn);
         setLoading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        router.push("/404");
+      });
   }, [router, book, title]);
 
   // hide bottom navbar on mobile
@@ -81,6 +85,7 @@ export default function HymnPage() {
     const navigation = () => {
       if (window.scrollY > lastScrollY) setHideNavbar(true);
       else setHideNavbar(false);
+
       lastScrollY = window.scrollY;
     };
 
@@ -171,8 +176,7 @@ export default function HymnPage() {
   );
 
   const [hymnFiles, setHymnFiles] = useState<any>({}); // connected files
-  const [fontSize, setFontSize] = useState("21"); // set page font size
-  const [favHymn, setFavHymn] = useState(false); // check if hymn is in favorites
+  const [isFavorite, setIsFavorite] = useState(false); // check hymn in favorites list
 
   const openDocument = useCallback(() => {
     const { book, id } = hymnFiles.pdf;
@@ -191,10 +195,8 @@ export default function HymnPage() {
       .then((data) => setHymnFiles(data))
       .catch((err) => console.error(err));
 
-    setFontSize(localStorage.getItem("fontSize") || "21");
-
     const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-    setFavHymn(
+    setIsFavorite(
       favorites.some((element: { book: string; id: number }) => {
         return element.book === router.query.book && element.id === hymn.id;
       })
@@ -212,19 +214,20 @@ export default function HymnPage() {
         return elem.book === book && elem.id === hymn.id;
       })
     ) {
-      setFavHymn(false);
+      setIsFavorite(false);
       favorites = favorites.filter((elem: { book: string; id: number }) => {
         return elem.book !== book || elem.id !== hymn.id;
       });
 
       // add to favorites list
     } else {
-      setFavHymn(true);
+      setIsFavorite(true);
       favorites = [
         {
           book,
           id: hymn.id,
           title: hymn.name,
+          timestamp: Date.now(),
         },
       ].concat(favorites);
     }
@@ -335,7 +338,7 @@ export default function HymnPage() {
               <Image
                 className="icon"
                 alt="favorite"
-                src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
+                src={`/icons/${isFavorite ? "star_filled" : "star_empty"}.svg`}
                 width={25}
                 height={25}
                 draggable={false}
@@ -387,9 +390,7 @@ export default function HymnPage() {
             <div className={styles.center}>
               <div
                 className={styles.content}
-                style={{
-                  fontSize: `${fontSize}px`,
-                }}
+                style={{ fontSize: fontSize.current }}
               >
                 {noChords.current && (
                   <span
@@ -416,10 +417,14 @@ export default function HymnPage() {
                             return (
                               <div className={styles.verse} key={index}>
                                 {array.map((verse: string, index: number) => {
+                                  const settings = JSON.parse(
+                                    localStorage.getItem("settings") as string
+                                  );
+
                                   // skip chords line if user don't want to see them
                                   if (
                                     verse.startsWith(".") &&
-                                    !localStorage.getItem("showChords")
+                                    !settings?.showChords
                                   ) {
                                     return;
                                   }
@@ -463,7 +468,7 @@ export default function HymnPage() {
                               return (
                                 <Link
                                   key={index}
-                                  title="Przejdź do wybranej pieśni."
+                                  title="Przejdź do wybranej pieśni"
                                   href={{
                                     pathname: "/hymn",
                                     query: {
@@ -548,7 +553,7 @@ export default function HymnPage() {
 
               <button
                 title={
-                  favHymn
+                  isFavorite
                     ? "Usuń pieśń z listy ulubionych."
                     : "Dodaj pieśń do listy ulubionych."
                 }
@@ -557,12 +562,16 @@ export default function HymnPage() {
                 <Image
                   className="icon"
                   alt="favorite"
-                  src={`/icons/${favHymn ? "star_filled" : "star_empty"}.svg`}
+                  src={`/icons/${
+                    isFavorite ? "star_filled" : "star_empty"
+                  }.svg`}
                   width={20}
                   height={20}
                   draggable={false}
                 />
-                <p>{favHymn ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
+                <p>
+                  {isFavorite ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
+                </p>
               </button>
 
               <button
@@ -582,7 +591,7 @@ export default function HymnPage() {
                 <p>Otwórz PDF</p>
               </button>
 
-              <button title="Skopiuj link pieśni." onClick={shareButton}>
+              <button title="Skopiuj link pieśni" onClick={shareButton}>
                 <Image
                   className="icon"
                   alt="share"

@@ -24,7 +24,7 @@ export default function ShortcutsMenu() {
     <>
       <h2>Skróty klawiszowe</h2>
 
-      <div className={styles.shortcutList}>
+      <div className={styles.content}>
         <Shortcut keyup="/" action="Wyszukiwanie we wszystkich śpiewnikach" />
 
         {unlocked && (
@@ -44,7 +44,7 @@ export default function ShortcutsMenu() {
 
       <div className={styles.buttons}>
         <button
-          title="Kliknij, lub użyj [Esc] na klawiaturze."
+          title="Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu."
           onClick={() => openMenu(undefined)}
         >
           Zamknij

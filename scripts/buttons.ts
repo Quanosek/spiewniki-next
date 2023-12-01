@@ -83,7 +83,7 @@ export function shareButton() {
   if (navigator.share) {
     // share content
     navigator.share({
-      text: router.query.title ? `${router.query.title}` : "Śpiewniki",
+      text: `${router.query.title || "Śpiewniki"} `,
       url: router.asPath,
     });
   } else if (navigator.clipboard) {

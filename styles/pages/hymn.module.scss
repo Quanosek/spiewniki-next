@@ -60,16 +60,88 @@
     gap: 1.2rem;
 
     button {
-      opacity: 90%;
+      opacity: 85%;
 
       &:hover {
-        color: var(--accent-color);
-        color: filter(contrast(65%));
+        opacity: 100%;
       }
 
       img {
         position: relative;
         bottom: 1px;
+      }
+    }
+  }
+
+  .presentationButton {
+    z-index: 1;
+    position: relative;
+    width: 100%;
+    border-radius: 0.4rem 0.4rem 0 0;
+    transition: 0.15s background-color ease-in-out;
+
+    .defaultView {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      border: 2px solid var(--elements-hover);
+
+      div {
+        width: 100%;
+        display: flex;
+        gap: calc(12px - 2px); // button gap + border width
+      }
+
+      .moreArrow {
+        opacity: 45%;
+        transition: 0.15s opacity ease-in-out;
+      }
+
+      @media (max-width: 1024px) {
+        border: none;
+
+        .moreArrow {
+          display: none;
+        }
+      }
+    }
+
+    @media (min-width: 1025px) {
+      &:hover {
+        background-color: var(--elements);
+
+        .defaultView {
+          border-color: transparent;
+        }
+
+        .moreArrow {
+          opacity: 0;
+        }
+      }
+    }
+
+    .presOptions {
+      z-index: -1;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+
+      padding: 1% 0;
+      width: 100%;
+      background-color: var(--elements);
+      border-radius: 0 0 0.4rem 0.4rem;
+      font-size: 95%;
+      transition: 0.2s ease-in-out, 0.15s opacity ease-in-out;
+
+      p {
+        margin-left: calc(20px + 10px); // image width + button gap
+      }
+
+      @media (min-width: 1025px) {
+        &.active {
+          opacity: 100%;
+          top: 100%;
+        }
       }
     }
   }

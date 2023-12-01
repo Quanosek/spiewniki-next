@@ -59,7 +59,9 @@ export default function Presentation(params: { data: any }) {
       setSlide(lyricsFormat(hymn));
     }
     if (count.current > order.length) {
-      document.exitFullscreen();
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else count.current--;
     }
   }, [order, lyricsFormat, hymn]);
 

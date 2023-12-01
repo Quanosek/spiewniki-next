@@ -37,21 +37,16 @@ export default function HymnPage() {
         const hymn = data.find((elem: any) => elem.name === title);
         hymn.lyrics = Object.values(hymn.song.lyrics);
 
-        // check if hymn file has chords
-        const { showChords } = JSON.parse(
-          localStorage.getItem("settings") as string
-        );
+        const settings = JSON.parse(localStorage.getItem("settings") as string);
+        fontSize.current = settings.fontSize;
 
+        // check if hymn file has chords
         const includesChords = hymn.lyrics.some((array: string[]) => {
           return array.some((verse: string) => verse.startsWith("."));
         });
 
-        if (showChords && !includesChords) noChords.current = true;
+        if (settings.showChords && !includesChords) noChords.current = true;
         else noChords.current = false;
-
-        // get font size
-        const settings = JSON.parse(localStorage.getItem("settings") as string);
-        fontSize.current = settings.fontSize;
 
         // linked songs format
         if (hymn.song.linked_songs) {
@@ -258,7 +253,7 @@ export default function HymnPage() {
           router.push("/search");
           break;
         case "B":
-          unlocked ? router.push("/books") : router.push("/");
+          router.push(unlocked ? "/books" : "/");
           break;
         case "R":
           randomHymn(hymn.book);
@@ -293,9 +288,7 @@ export default function HymnPage() {
   return (
     <>
       <Head>
-        <title>
-          {hymn ? `${title} / Śpiewniki` : "Ładowanie... / Śpiewniki"}
-        </title>
+        <title>{`${hymn ? title : "Ładowanie..."} / Śpiewniki`}</title>
       </Head>
 
       {slideshowMode && <Presentation data={hymn} />}
@@ -371,7 +364,7 @@ export default function HymnPage() {
                 }
                 onClick={() => {
                   localStorage.removeItem("prevSearch");
-                  unlocked ? router.push("/books") : router.push("/");
+                  router.push(unlocked ? "/books" : "/");
                 }}
               >
                 <Image

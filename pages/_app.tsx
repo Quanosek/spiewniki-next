@@ -17,6 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
     // save default settings to local storage
     if (!settings) {
       localStorage.setItem("settings", JSON.stringify(initialState));
+      window.location.reload();
     }
 
     // remove old settings from local storage

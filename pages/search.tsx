@@ -169,7 +169,7 @@ export default function SearchPage() {
           input.focus();
           break;
         case "B":
-          unlocked ? router.push("/books") : router.push("/");
+          router.push(unlocked ? "/books" : "/");
           break;
       }
     };
@@ -232,7 +232,7 @@ export default function SearchPage() {
                   })
                 );
 
-                input.value ? setShowClearBtn(true) : setShowClearBtn(false);
+                setShowClearBtn(input.value ? true : false);
                 setTimeout(() => Search(rawData, input.value), 200);
 
                 // easter egg
@@ -314,7 +314,7 @@ export default function SearchPage() {
                 onClick={() => router.push("/books")}
                 title="Otwórz listę wszystkich śpiewników [B]"
               >
-                <p>{bookShortcut(book ? book : "all")}</p>
+                <p>{bookShortcut(book || "all")}</p>
               </button>
             </div>
           ) : (
@@ -322,7 +322,7 @@ export default function SearchPage() {
               <h3>Wybrano:</h3>
 
               <button className={styles.disabled} tabIndex={-1}>
-                <p>{bookShortcut(book ? book : "all")}</p>
+                <p>{bookShortcut(book || "all")}</p>
               </button>
             </div>
           )}

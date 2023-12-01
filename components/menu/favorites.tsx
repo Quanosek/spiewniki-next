@@ -8,10 +8,8 @@ import { bookShortcut } from "@/scripts/bookShortcut";
 import { openMenu } from "@/scripts/buttons";
 
 export default function FavoritesMenu() {
-  const favoritesData = localStorage.getItem("favorites") as string;
-  const [favorites, setFavorites] = useState(
-    favoritesData ? JSON.parse(favoritesData) : []
-  );
+  const favoritesData = JSON.parse(localStorage.getItem("favorites") as string);
+  const [favorites, setFavorites] = useState(favoritesData || []);
 
   const [hoverElement, setHoverElement] = useState(
     undefined as number | undefined
@@ -138,6 +136,7 @@ export default function FavoritesMenu() {
             const prompt = confirm(
               "Czy na pewno chcesz wyczyścić listę ulubionych?"
             );
+
             if (prompt) {
               setFavorites([]);
               localStorage.removeItem("favorites");

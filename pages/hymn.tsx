@@ -86,31 +86,21 @@ export default function HymnPage() {
         router.push("/404");
       });
 
-    // mobile navbar hide on scroll event
-    let lastScrollY = window.scrollY;
-
-    const mobileNavbarEvent = () => {
-      if (window.scrollY > lastScrollY) setHideNavbar(true);
-      else setHideNavbar(false);
-
-      lastScrollY = window.scrollY;
-    };
+    // hide overflow on presentation mode active
+    if (presentation) document.documentElement.style.overflow = "hidden";
+    else document.documentElement.style.overflow = "";
 
     // fullscreen change event
-    const fullscreenEvent = () => {
-      if (document.fullscreenElement) {
-        document.documentElement.style.overflow = "hidden";
-      } else {
-        router.back();
-        document.documentElement.style.overflow = "";
-      }
+    document.onfullscreenchange = () => {
+      if (!document.fullscreenElement) router.back();
     };
 
-    document.addEventListener("scroll", mobileNavbarEvent);
-    document.addEventListener("fullscreenchange", fullscreenEvent);
-    return () => {
-      document.removeEventListener("scroll", mobileNavbarEvent);
-      document.removeEventListener("fullscreenchange", fullscreenEvent);
+    // mobile navbar hide on scroll event
+    let lastScrollY = window.scrollY;
+    document.onscroll = () => {
+      if (window.scrollY > lastScrollY) setHideNavbar(true);
+      else setHideNavbar(false);
+      lastScrollY = window.scrollY;
     };
   }, [router]);
 
@@ -553,50 +543,55 @@ export default function HymnPage() {
 
             {/* right side buttons */}
             <div className={styles.options}>
-              {/* <div
+              <div
                 className={styles.presentationButton}
-                onMouseEnter={() => {
-                  setShowPresOptions(true);
-                }}
                 onMouseLeave={() => {
                   setShowPresOptions(false);
                 }}
-              > */}
-              <button
-                className={styles.defaultView}
-                title="Włącz tryb prezentacji pieśni na pełen ekran [P]"
-                onClick={showPresentation}
               >
-                {/* <div> */}
-                <Image
-                  className="icon"
-                  alt="presentation"
-                  src="/icons/presentation.svg"
-                  width={20}
-                  height={20}
-                  draggable={false}
-                />
-                <p>Tryb prezentacji</p>
-                {/* </div> */}
+                <button
+                  className={styles.defaultView}
+                  title="Włącz tryb prezentacji pieśni na pełen ekran [P]"
+                  onClick={showPresentation}
+                >
+                  <div>
+                    <Image
+                      className="icon"
+                      alt="presentation"
+                      src="/icons/monitor.svg"
+                      width={20}
+                      height={20}
+                      draggable={false}
+                    />
+                    <p>Pokaz slajdów</p>
+                  </div>
 
-                {/* <Image
+                  <Image
+                    style={{
+                      transform: showPresOptions
+                        ? "rotate(180deg)"
+                        : "rotate(0)",
+                    }}
                     className={`${styles.moreArrow} icon`}
                     alt="arrow down"
                     src="/icons/arrow.svg"
                     width={20}
                     height={20}
                     draggable={false}
-                  /> */}
-              </button>
+                    onMouseEnter={() => {
+                      setShowPresOptions(true);
+                    }}
+                  />
+                </button>
 
-              {/* <div
+                <div
                   className={`${styles.presOptions} ${
                     showPresOptions ? styles.active : ""
                   }`}
                 >
                   <button
                     tabIndex={-1}
-                    title="Otwórz prezentację w mniejszym wyskakującym oknie"
+                    title="Otwórz prezentację w oddzielnym, mniejszym oknie."
                     onClick={() => {
                       window.open(
                         `/hymn?book=${book}&title=${title}&presentation=true`,
@@ -608,13 +603,13 @@ export default function HymnPage() {
                     <p>Otwórz w osobnym oknie</p>
                   </button>
                 </div>
-              </div> */}
+              </div>
 
               <button
                 title={
                   isFavorite
-                    ? "Usuń pieśń z listy ulubionych."
-                    : "Dodaj pieśń do listy ulubionych."
+                    ? "Kliknij, aby usunąć pieśń z listy ulubionych."
+                    : "Kliknij, aby dodać pieśń do listy ulubionych."
                 }
                 onClick={favoriteButton}
               >

@@ -150,6 +150,22 @@ export default function Presentation(params: { data: any }) {
     };
   }, [alwaysShowCursor, prevSlide, nextSlide]);
 
+  // keyboard shortcuts
+  useEffect(() => {
+    const KeyupEvent = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+        return;
+      }
+
+      if (event.key === "Escape") {
+        if (!document.fullscreenElement) window.close();
+      }
+    };
+
+    document.addEventListener("keyup", KeyupEvent);
+    return () => document.removeEventListener("keyup", KeyupEvent);
+  }, []);
+
   return (
     <div
       className={styles.component}

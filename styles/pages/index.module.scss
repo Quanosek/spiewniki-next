@@ -138,7 +138,7 @@
   height: 3.5rem;
   position: relative;
   border-radius: 30px;
-  overflow: hidden;
+  // overflow: hidden;
   cursor: text;
   transition: 0.2s width ease-in-out;
 
@@ -168,6 +168,7 @@
 
   a,
   button {
+    border-radius: 30px !important;
     transition: 0.15s ease-out;
 
     &:hover {
@@ -206,7 +207,6 @@
     align-items: center;
     gap: 0.5rem;
     background-color: transparent;
-    border-radius: 30px;
 
     p {
       opacity: 0;

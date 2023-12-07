@@ -107,8 +107,12 @@ header {
   box-shadow: 0 -12px 12px 4px var(--text);
 
   a {
+    $save-space: 1rem;
+
+    position: relative;
+    right: $save-space;
+    padding: 0 $save-space;
     display: flex;
-    flex-direction: row;
     align-items: center;
     gap: 0.6rem;
     border-radius: 0.4rem;
@@ -137,6 +141,7 @@ header {
   div {
     display: flex;
     align-items: center;
+    gap: 2px;
 
     button {
       padding: 0.6rem 1.1rem;

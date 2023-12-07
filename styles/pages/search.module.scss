@@ -120,6 +120,7 @@
   background-color: var(--elements);
 
   a {
+    z-index: 100;
     padding: 1rem 1.1rem;
     display: block;
     border-radius: $radius;

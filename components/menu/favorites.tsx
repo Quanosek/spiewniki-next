@@ -1,19 +1,34 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
+
+import axios from "axios";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { bookShortcut } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/bookShortcut";
 import { openMenu } from "@/scripts/buttons";
 
 export default function FavoritesMenu() {
+  const router = useRouter();
+
   const favoritesData = JSON.parse(localStorage.getItem("favorites") as string);
   const [favorites, setFavorites] = useState(favoritesData || []);
 
   const [hoverElement, setHoverElement] = useState(
     undefined as number | undefined
   );
+
+  // remove selected hymn from list of favorites
+  const removeFromList = (index: number) => {
+    const newArray = favorites.filter((fav: any) => {
+      return fav !== favorites[index];
+    });
+
+    setFavorites(newArray);
+    localStorage.setItem("favorites", JSON.stringify(newArray));
+  };
 
   return (
     <>
@@ -74,6 +89,34 @@ export default function FavoritesMenu() {
                     pathname: "/hymn",
                     query: { book: fav.book, title: fav.title },
                   }}
+                  onClick={async () => {
+                    try {
+                      // check book
+                      if (!booksList().includes(fav.book)) {
+                        removeFromList(index);
+                        throw new Error();
+
+                        // check title
+                      } else {
+                        const { data } = await axios.get(
+                          `database/${bookShortcut(fav.book)}.json`
+                        );
+
+                        if (
+                          !data.find((elem: any) => elem.name === fav.title)
+                        ) {
+                          removeFromList(index);
+                          throw new Error();
+                        }
+                      }
+                    } catch (err) {
+                      router.back();
+
+                      window.alert(
+                        "Nie znaleziono wybranej pieśni! Pozycja została usunięta z listy ulubionych."
+                      );
+                    }
+                  }}
                 >
                   <p>{fav.title}</p>
 
@@ -101,14 +144,7 @@ export default function FavoritesMenu() {
                   style={{
                     display: hoverElement === index ? "flex" : "",
                   }}
-                  onClick={() => {
-                    const newArray = favorites.filter((fav: any) => {
-                      return fav !== favorites[index];
-                    });
-
-                    setFavorites(newArray);
-                    localStorage.setItem("favorites", JSON.stringify(newArray));
-                  }}
+                  onClick={() => removeFromList(index)}
                 >
                   <Image
                     className="icon"

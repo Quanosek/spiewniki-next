@@ -274,7 +274,7 @@ export default function HymnPage() {
         case "P":
           showPresentation();
           break;
-        case "N":
+        case "D":
           hymnFiles.pdf && openDocument();
           break;
         case "ARROWLEFT":

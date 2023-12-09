@@ -32,10 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
     // prevent screen from sleeping
     if (navigator.wakeLock) {
-      navigator.wakeLock
-        .request("screen")
-        .then(() => console.log("Screen Wake-Lock is active."))
-        .catch((err) => console.log(err.name, err.message));
+      navigator.wakeLock.request("screen").catch((err) => console.error(err));
     }
   }, []);
 

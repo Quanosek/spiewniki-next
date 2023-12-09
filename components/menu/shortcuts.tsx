@@ -23,8 +23,6 @@ export default function ShortcutsMenu() {
     </div>
   );
 
-  // console.log(router.route);
-
   return (
     <>
       <h2>Skróty klawiszowe</h2>

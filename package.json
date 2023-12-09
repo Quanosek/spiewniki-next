@@ -1,5 +1,5 @@
 {
-  "version": "0.6.4",
+  "version": "0.6.5",
   "name": "spiewniki",
   "description": "Zebrane w jednym miejscu śpiewniki i pieśni religijne",
   "type": "module",
@@ -19,7 +19,6 @@
     "next": "14.0.4",
     "next-pwa": "^5.6.0",
     "nextjs-google-analytics": "^2.3.3",
-    "pdfjs-dist": "^4.0.269",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sass": "^1.69.5",

@@ -6,23 +6,30 @@ import styles from "@/styles/pages/document.module.scss";
 
 import textFormat from "@/scripts/textFormat";
 
+interface RouterQuery {
+  [key: string]: string; // all params are strings
+}
+
 export default function DocumentPage() {
   const router = useRouter();
 
-  const libraryPath = "/libraries/pdfjs-3.11.174-legacy-dist/web/viewer.html";
+  const libraryPath = "/libraries/pdfjs-4.0.269-legacy-dist/web/viewer.html";
   const [documentPath, setDocumentPath] = useState<string>("");
+
+  const [pageTitle, setPageTitle] = useState<string>("");
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { d, book, id } = router.query;
+    const { d, book, id } = router.query as RouterQuery;
 
     if (d) {
-      // all hymns in book pdf
-      let document = router.query.d as string;
-      document = textFormat(document).replaceAll(" ", "_");
-      setDocumentPath(`/pdf/${document}.pdf`);
+      // book pdf file
+      setPageTitle(d.toString() + " [PDF]");
+      const file = textFormat(d).replaceAll(" ", "_");
+      setDocumentPath(`/pdf/${file}.pdf`);
     } else if (book && id) {
-      // specific hymn pdf
+      // hymn pdf file
+      setPageTitle("Dokument PDF");
       setDocumentPath(`/pdf/${book}/${id}.pdf`);
     } else {
       // back to previous page on invalid query
@@ -47,18 +54,16 @@ export default function DocumentPage() {
   return (
     <>
       <Head>
-        <title>Podgląd PDF / Śpiewniki</title>
+        <title>{`${pageTitle || "Ładowanie..."} / Śpiewniki`}</title>
       </Head>
 
       <div className="container">
         <div className={styles.document}>
-          {documentPath && (
-            <iframe
-              id="pdf-js-viewer"
-              src={`${libraryPath}?file=${documentPath}`}
-              title="webviewer"
-            />
-          )}
+          <iframe
+            id="pdf-js-viewer"
+            src={`${libraryPath}?file=${documentPath}`}
+            title="webviewer"
+          />
         </div>
       </div>
     </>

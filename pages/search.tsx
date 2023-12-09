@@ -215,7 +215,7 @@ export default function SearchPage() {
               type="text"
               id="input"
               placeholder="Rozpocznij wyszukiwanie"
-              title="Rozpocznij wyszukiwanie [/]"
+              title="Kliknij, lub użyj [/] na klawiaturze, aby powrócić do wyszukiwania."
               onFocus={(e) => e.target.select()}
               onInput={(e) => {
                 const input = e.target as HTMLInputElement;
@@ -283,6 +283,7 @@ export default function SearchPage() {
             <div
               className={styles.clearButton}
               style={{ display: showClearBtn ? "flex" : "none" }}
+              title="Wyczyść wyszukiwanie"
               onClick={() => {
                 const input = document.getElementById(
                   "input"
@@ -388,7 +389,7 @@ export default function SearchPage() {
           </div>
 
           <button
-            title="Powrót na górę strony."
+            title="Powróć na górę strony"
             className={styles.scrollButton}
             style={{
               visibility: showTopBtn ? "visible" : "hidden",

@@ -4,23 +4,27 @@ import fs from "fs";
 import path from "path";
 
 import { bookShortcut } from "@/scripts/bookShortcut";
-import textFormat from "@/scripts/textFormat";
+import SimpleText from "@/scripts/simpleText";
 
+// API to find connected files with specific hymn
 export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const book = bookShortcut(req.query.book as string);
-    const title = req.query.title as string;
+  let { book, title } = req.query as {
+    [key: string]: string;
+  };
 
+  book = bookShortcut(book);
+
+  try {
     let id = "";
     const match = title.match(/^\d+[a-zA-Z]?/);
 
     if (match) id = match[0];
-    else id = textFormat(title).replaceAll(" ", "_");
+    else id = new SimpleText(title).modify();
 
-    const locateFile = (type: string) => {
+    const locateFile = (category: string) => {
       try {
         const file = fs
-          .readdirSync(path.join(process.cwd(), "public", type, book))
+          .readdirSync(path.join(process.cwd(), "public", category, book))
           .find((a) => a.startsWith(id));
 
         if (file) return { book, id };
@@ -30,12 +34,12 @@ export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
       }
     };
 
-    const result = {
+    const results = {
       pdf: locateFile("pdf"),
-      //   mp3: locateFile("mp3"),
+      // params...
     };
 
-    return res.status(200).json(result);
+    return res.status(200).json(results);
 
     // handle error
   } catch (err) {

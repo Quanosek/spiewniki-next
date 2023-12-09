@@ -4,11 +4,7 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/document.module.scss";
 
-import textFormat from "@/scripts/textFormat";
-
-interface RouterQuery {
-  [key: string]: string; // all params are strings
-}
+import SimpleText from "@/scripts/simpleText";
 
 export default function DocumentPage() {
   const router = useRouter();
@@ -20,12 +16,15 @@ export default function DocumentPage() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { d, book, id } = router.query as RouterQuery;
+
+    const { d, book, id } = router.query as {
+      [key: string]: string; // all params are strings
+    };
 
     if (d) {
       // book pdf file
       setPageTitle(d.toString() + " [PDF]");
-      const file = textFormat(d).replaceAll(" ", "_");
+      const file = new SimpleText(d).modify();
       setDocumentPath(`/pdf/${file}.pdf`);
     } else if (book && id) {
       // hymn pdf file

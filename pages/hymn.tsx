@@ -515,7 +515,7 @@ export default function HymnPage() {
                 </button>
 
                 <button
-                  title="Otwórz losową pieśń ze śpiewnika [R]"
+                  title="Otwórz losową pieśń z wybranego śpiewnika [R]"
                   className={styles.randomButton}
                   onClick={() => randomHymn(hymn.book)}
                 >
@@ -551,7 +551,7 @@ export default function HymnPage() {
               >
                 <button
                   className={styles.defaultView}
-                  title="Włącz tryb prezentacji pieśni na pełen ekran [P]"
+                  title="Włącz pokaz slajdów pieśni na pełnym ekranie [P]"
                   onClick={showPresentation}
                 >
                   <div>
@@ -631,7 +631,7 @@ export default function HymnPage() {
               <button
                 className={`${hymnFiles.pdf ? "" : "disabled"}`}
                 tabIndex={hymnFiles.pdf ? 0 : -1}
-                title="Otwórz plik PDF pieśni [N]"
+                title="Otwórz dokument PDF pieśni [D]"
                 onClick={openDocument}
               >
                 <Image

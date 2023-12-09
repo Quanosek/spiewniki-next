@@ -23,8 +23,6 @@ export default function ShortcutsMenu() {
     </div>
   );
 
-  // console.log(router.route);
-
   return (
     <>
       <h2>Skróty klawiszowe</h2>
@@ -60,10 +58,6 @@ export default function ShortcutsMenu() {
               keyup="D"
               action="Dokument PDF wybranej pieśni (jeśli istnieje)"
             />
-            {/* <Shortcut
-              keyup="M"
-              action="Nagranie audio wybranej pieśni (jeśli istnieje)"
-            /> */}
             <Shortcut keyup="→" action="Następna pieśń w śpiewniku" />
             <Shortcut keyup="←" action="Poprzednia pieśń w śpiewniku" />
           </>

@@ -9,7 +9,7 @@ import axios from "axios";
 import styles from "@/styles/pages/search.module.scss";
 
 import { bookShortcut, booksList } from "@/scripts/bookShortcut";
-import textFormat from "@/scripts/textFormat";
+import SimpleText from "@/scripts/simpleText";
 
 export default function SearchPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -107,7 +107,10 @@ export default function SearchPage() {
     data.map((hymn: { book: string; name: string; song: any }) => {
       const { book, name, song } = hymn;
 
-      if (textFormat(hymn.name).includes(textFormat(input))) {
+      const formattedName = new SimpleText(hymn.name).format();
+      const formattedInput = new SimpleText(input).format();
+
+      if (formattedName.includes(formattedInput)) {
         // title found
         NamesCollector.push({ book, name });
       } else if (contextSearch) {
@@ -117,7 +120,9 @@ export default function SearchPage() {
           .map((verse) => verse.slice(1));
 
         lyrics.map((verse: string, index: number) => {
-          if (textFormat(verse).includes(textFormat(input))) {
+          const formattedVerse = new SimpleText(verse).format();
+
+          if (formattedVerse.includes(formattedInput)) {
             LyricsCollector.push({
               book: hymn.book,
               name: hymn.name,
@@ -215,7 +220,7 @@ export default function SearchPage() {
               type="text"
               id="input"
               placeholder="Rozpocznij wyszukiwanie"
-              title="Rozpocznij wyszukiwanie [/]"
+              title="Kliknij, lub użyj [/] na klawiaturze, aby powrócić do wyszukiwania."
               onFocus={(e) => e.target.select()}
               onInput={(e) => {
                 const input = e.target as HTMLInputElement;
@@ -283,6 +288,7 @@ export default function SearchPage() {
             <div
               className={styles.clearButton}
               style={{ display: showClearBtn ? "flex" : "none" }}
+              title="Wyczyść wyszukiwanie"
               onClick={() => {
                 const input = document.getElementById(
                   "input"
@@ -388,7 +394,7 @@ export default function SearchPage() {
           </div>
 
           <button
-            title="Powrót na górę strony."
+            title="Powróć na górę strony"
             className={styles.scrollButton}
             style={{
               visibility: showTopBtn ? "visible" : "hidden",

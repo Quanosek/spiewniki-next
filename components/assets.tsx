@@ -17,6 +17,7 @@ export function Header() {
             ? "Zebrane w jednym miejscu śpiewniki i pieśni religijne."
             : ""
         }
+        className="title"
       >
         <Image
           className="icon"
@@ -45,19 +46,17 @@ export function Header() {
         </button>
 
         {!unlocked && (
-          <button>
-            <Link href="https://nastrazy.org/">
-              <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "115%",
-                  letterSpacing: "0.35px",
-                }}
-              >
-                Nastrazy.org
-              </p>
-            </Link>
-          </button>
+          <Link href="https://nastrazy.org/">
+            <p
+              style={{
+                fontWeight: "bold",
+                fontSize: "115%",
+                letterSpacing: "0.35px",
+              }}
+            >
+              Nastrazy.org
+            </p>
+          </Link>
         )}
       </div>
     </div>
@@ -139,32 +138,36 @@ export function Navbar() {
   );
 }
 
-export function Footer() {
+export function Footer({ children }: any) {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
   return (
     <div className="container">
-      <p>
-        Stworzone z {unlocked ? "💙" : "❤️"} przez{" "}
-        <Link href="https://github.com/Quanosek/">Jakuba Kłało</Link>
-        {" i "}
-        <Link href="https://github.com/Krist0f0l0s/">
-          Krzysztofa Olszewskiego
-        </Link>
-        .
-      </p>
+      <div>
+        <p>
+          Stworzone z {unlocked ? "💙" : "❤️"} przez{" "}
+          <Link href="https://github.com/Quanosek/">Jakuba Kłało</Link>
+          {" i "}
+          <Link href="https://github.com/Krist0f0l0s/">
+            Krzysztofa Olszewskiego
+          </Link>
+          .
+        </p>
 
-      <p>
-        Wszelkie prawa zastrzeżone &#169; 2023
-        {unlocked ? (
-          <>
-            {" │ "}
-            domena&nbsp;<Link href="https://www.klalo.pl/">klalo.pl</Link>
-          </>
-        ) : (
-          ""
-        )}
-      </p>
+        <p>
+          Wszelkie prawa zastrzeżone &#169; 2022-{new Date().getFullYear()}
+          {unlocked ? (
+            <>
+              {" │ "}
+              domena&nbsp;<Link href="https://www.klalo.pl/">klalo.pl</Link>
+            </>
+          ) : (
+            ""
+          )}
+        </p>
+      </div>
+
+      {children}
     </div>
   );
 }

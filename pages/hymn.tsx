@@ -591,7 +591,7 @@ export default function HymnPage() {
                 >
                   <button
                     tabIndex={-1}
-                    title="Otwórz prezentację w oddzielnym, mniejszym oknie."
+                    title="Pokaż pokaz slajdów w oddzielnym oknie."
                     onClick={() => {
                       window.open(
                         `/hymn?book=${book}&title=${title}&presentation=true`,
@@ -600,7 +600,7 @@ export default function HymnPage() {
                       );
                     }}
                   >
-                    <p>Otwórz w osobnym oknie</p>
+                    <p>Otwórz w nowym oknie</p>
                   </button>
                 </div>
               </div>

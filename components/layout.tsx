@@ -21,7 +21,12 @@ export default function Layout({ children }: { children: ReactNode }) {
       {children}
 
       <footer>
-        <Footer />
+        <Footer>
+          <p className="bibleVerse">
+            {`„Śpiewajcie Mu i grajcie, opowiadajcie o wszystkich cudach Jego!”`}
+            <br />1 Kronik 16:9
+          </p>
+        </Footer>
       </footer>
     </>
   );

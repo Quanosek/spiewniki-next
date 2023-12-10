@@ -106,12 +106,15 @@ header {
   height: var(--header-height);
   box-shadow: 0 -12px 12px 4px var(--text);
 
-  a {
+  .title {
     $save-space: 1rem;
 
     position: relative;
     right: $save-space;
     padding: 0 $save-space;
+  }
+
+  a {
     display: flex;
     align-items: center;
     gap: 0.6rem;
@@ -143,6 +146,7 @@ header {
     align-items: center;
     gap: 2px;
 
+    a,
     button {
       padding: 0.6rem 1.1rem;
     }
@@ -154,17 +158,36 @@ header {
 }
 
 footer {
-  padding: 0.35rem 0;
+  padding: 0.25rem 0;
 
-  @media (max-width: 1024px) {
-    .container {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-  }
-
-  p {
+  .container {
     opacity: 85%;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-size: 90%;
+    }
+
+    .bibleVerse {
+      text-align: end;
+    }
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+
+      div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        text-align: center;
+      }
+
+      .bibleVerse {
+        display: none;
+      }
+    }
   }
 }
 

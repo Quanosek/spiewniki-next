@@ -200,7 +200,7 @@ export default function IndexPage() {
 
             {unlocked && (
               <Link href="/books" className={styles.more}>
-                <p>Lista wszystkich śpiewników</p>
+                <p>Pokaż wszystkie śpiewniki</p>
               </Link>
             )}
           </div>

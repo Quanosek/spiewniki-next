@@ -63,25 +63,30 @@ export function Header() {
   );
 }
 
-export function Navbar() {
+export function Navbar({ page }: { page: string }) {
+  let moreButtons = true;
+  if (!unlocked && page == "/") moreButtons = false;
+
   return (
     <nav>
-      <button
-        onClick={() => {
-          localStorage.removeItem("prevSearch");
-          unlocked ? router.push("/books") : router.push("/");
-        }}
-      >
-        <Image
-          className="icon"
-          alt="books"
-          src="/icons/book.svg"
-          width={20}
-          height={20}
-          draggable={false}
-        />
-        <p>Śpiewniki</p>
-      </button>
+      {moreButtons && (
+        <button
+          onClick={() => {
+            localStorage.removeItem("prevSearch");
+            unlocked ? router.push("/books") : router.push("/");
+          }}
+        >
+          <Image
+            className="icon"
+            alt="books"
+            src="/icons/book.svg"
+            width={20}
+            height={20}
+            draggable={false}
+          />
+          <p>Śpiewniki</p>
+        </button>
+      )}
 
       <button onClick={() => openMenu("favorites")}>
         <Image
@@ -123,17 +128,19 @@ export function Navbar() {
         <p>Ustawienia</p>
       </button>
 
-      <button onClick={shareButton}>
-        <Image
-          className="icon"
-          alt="share"
-          src="/icons/link.svg"
-          width={20}
-          height={20}
-          draggable={false}
-        />
-        <p>Udostępnij</p>
-      </button>
+      {moreButtons && (
+        <button onClick={shareButton}>
+          <Image
+            className="icon"
+            alt="share"
+            src="/icons/link.svg"
+            width={20}
+            height={20}
+            draggable={false}
+          />
+          <p>Udostępnij</p>
+        </button>
+      )}
     </nav>
   );
 }

@@ -9,7 +9,7 @@ import styles from "@/styles/pages/index.module.scss";
 import { Navbar, Footer } from "@/components/assets";
 
 import { bookShortcut } from "@/scripts/bookShortcut";
-import { randomHymn } from "@/scripts/buttons";
+import { randomHymn, shareButton } from "@/scripts/buttons";
 
 export default function IndexPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -113,6 +113,7 @@ export default function IndexPage() {
         {hamburgerMenu && (
           <div className={styles.hamburgerMenu}>
             <Link href="https://nastrazy.org/">Nastrazy.org</Link>
+            <button onClick={shareButton}>Udostępnij</button>
           </div>
         )}
 
@@ -211,7 +212,7 @@ export default function IndexPage() {
         </div>
       </div>
 
-      <Navbar />
+      <Navbar page="/" />
     </>
   );
 }

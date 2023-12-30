@@ -676,7 +676,7 @@ export default function HymnPage() {
         </main>
       </div>
 
-      <Navbar />
+      <Navbar page="/hymn" />
     </>
   );
 }

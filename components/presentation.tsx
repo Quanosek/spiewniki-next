@@ -36,8 +36,10 @@ export default function Presentation(params: { data: any }) {
 
       if (content) {
         content = content
-          .filter((line: string) => line.startsWith(" "))
-          .map((line: string) => line.slice(1));
+          .filter((line: string) => line.startsWith(" ")) // show only text lines
+          .map((line: string) => line.slice(1)) // remove first space
+          .map((line: string) => line.replace(/\(.*?\)/g, "")) // remove text in brackets
+          .filter((line: string) => line !== "" && line !== " "); // remove empty lines
       }
 
       return content;
@@ -93,7 +95,6 @@ export default function Presentation(params: { data: any }) {
       // custom event types
       const TouchEvent = e as TouchEvent;
       const KeyboardEvent = e as KeyboardEvent;
-      const WheelEvent = e as WheelEvent;
 
       // touch screen navigation
       if (e.type == "touchstart") {
@@ -115,14 +116,12 @@ export default function Presentation(params: { data: any }) {
       // navigation handlers
       if (
         ["ArrowLeft", "ArrowUp"].includes(KeyboardEvent.key) ||
-        WheelEvent.deltaY < -100 ||
         endPosition < 0
       ) {
         prevSlide();
       }
       if (
         [" ", "ArrowRight", "ArrowDown"].includes(KeyboardEvent.key) ||
-        WheelEvent.deltaY > 100 ||
         endPosition >= 0
       ) {
         nextSlide();
@@ -130,12 +129,7 @@ export default function Presentation(params: { data: any }) {
     };
 
     // events handlers
-    const eventTypes: Array<string> = [
-      "keyup",
-      "wheel",
-      "touchstart",
-      "touchend",
-    ];
+    const eventTypes: Array<string> = ["keyup", "touchstart", "touchend"];
 
     document.addEventListener("mousemove", mouseMoveEvent);
     eventTypes.forEach((eventType) => {

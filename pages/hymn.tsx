@@ -545,16 +545,13 @@ export default function HymnPage() {
             <div className={styles.options}>
               <div
                 className={styles.presentationButton}
-                onMouseLeave={() => {
-                  setShowPresOptions(false);
-                }}
+                onMouseLeave={() => setShowPresOptions(false)}
               >
                 <button
                   className={styles.defaultView}
                   title="Włącz pokaz slajdów pieśni na pełnym ekranie [P]"
-                  onClick={showPresentation}
                 >
-                  <div>
+                  <div className={styles.buttonText} onClick={showPresentation}>
                     <Image
                       className="icon"
                       alt="presentation"
@@ -566,22 +563,24 @@ export default function HymnPage() {
                     <p>Pokaz slajdów</p>
                   </div>
 
-                  <Image
-                    style={{
-                      transform: showPresOptions
-                        ? "rotate(180deg)"
-                        : "rotate(0)",
-                    }}
-                    className={`${styles.moreArrow} icon`}
-                    alt="arrow down"
-                    src="/icons/arrow.svg"
-                    width={20}
-                    height={20}
-                    draggable={false}
-                    onMouseEnter={() => {
-                      setShowPresOptions(true);
-                    }}
-                  />
+                  <div
+                    className={styles.moreArrow}
+                    onClick={() => setShowPresOptions((prev) => !prev)}
+                  >
+                    <Image
+                      className="icon"
+                      style={{
+                        transform: showPresOptions
+                          ? "rotate(180deg)"
+                          : "rotate(0)",
+                      }}
+                      alt="arrow down"
+                      src="/icons/arrow.svg"
+                      width={18}
+                      height={18}
+                      draggable={false}
+                    />
+                  </div>
                 </button>
 
                 <div

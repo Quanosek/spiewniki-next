@@ -84,51 +84,83 @@
     width: 100%;
     border-radius: 0.4rem 0.4rem 0 0;
 
+    @media (min-width: 1025px) {
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0.4rem;
+        border: 2px solid var(--elements-hover);
+        pointer-events: none;
+      }
+    }
+
     button {
-      transition: 0.15s background-color ease-in-out;
+      transform: none !important;
     }
 
     .defaultView {
       $border-width: 2px;
 
+      padding: 0;
       width: 100%;
       display: flex;
       justify-content: space-between;
-      border: $border-width solid var(--elements-hover);
+      transition: 0.15s background-color ease-in-out, 0.2s ease-out;
 
       div {
-        position: relative;
-        right: $border-width;
+        height: 100%;
         display: flex;
         gap: $button-gap;
       }
 
+      .buttonText {
+        padding: 14px 0 14px 16px;
+        width: 100%;
+        right: $border-width;
+      }
+
       .moreArrow {
-        opacity: 45%;
-        transition: 0.1s transform ease-in-out, 0.15s opacity ease-in-out;
+        position: absolute;
+        right: 0;
+        padding: 0 16px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-radius: 0.4rem;
+
+        img {
+          position: relative;
+          bottom: 1px;
+          opacity: 45%;
+          transition: 0.1s transform ease-in-out, 0.15s opacity ease-in-out;
+        }
+      }
+
+      @media (min-width: 1025px) {
+        &:hover {
+          .moreArrow img {
+            opacity: 65%;
+          }
+
+          div:hover {
+            background-color: var(--elements);
+          }
+        }
       }
 
       @media (max-width: 1024px) {
         border: none;
 
+        .buttonText {
+          padding: 1vw;
+        }
+
         .moreArrow {
           display: none;
-        }
-      }
-    }
-
-    @media (min-width: 1025px) {
-      &:hover {
-        button {
-          background-color: var(--elements);
-        }
-
-        .defaultView {
-          border-color: var(--elements);
-        }
-
-        .moreArrow {
-          opacity: 65%;
         }
       }
     }
@@ -143,7 +175,7 @@
       width: 100%;
       background-color: var(--elements);
       border-radius: 0 0 0.4rem 0.4rem;
-      font-size: 95%;
+      font-size: 90%;
       transition: 0.2s ease-in-out, 0.15s opacity ease-in-out;
 
       button {
@@ -151,7 +183,7 @@
         width: 100%;
 
         p {
-          margin-left: calc(20px + $button-gap);
+          margin-left: calc(18px + $button-gap);
         }
       }
 

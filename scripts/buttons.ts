@@ -2,7 +2,7 @@ import router from "next/router";
 
 import axios from "axios";
 
-import { bookShortcut, booksList } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/availableBooks";
 
 export function openMenu(name: string | undefined) {
   const { menu, ...params } = router.query;

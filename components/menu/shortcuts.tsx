@@ -4,14 +4,14 @@ import styles from "@/styles/components/menu.module.scss";
 
 import { openMenu } from "@/scripts/buttons";
 
+interface ShortcutProps {
+  keyup: string;
+  action: string;
+}
+
 export default function ShortcutsMenu() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
-
   const router = useRouter();
-  interface ShortcutProps {
-    keyup: string;
-    action: string;
-  }
 
   const Shortcut = ({ keyup, action }: ShortcutProps) => (
     <div className={styles.shortcut}>
@@ -42,6 +42,7 @@ export default function ShortcutsMenu() {
           <Shortcut keyup="B" action="Lista wszystkich śpiewników" />
         )}
       </div>
+
       <div className={styles.content}>
         {router.route !== "/search" && (
           <Shortcut

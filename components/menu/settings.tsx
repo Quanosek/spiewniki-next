@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState, useEffect, ReactElement, useCallback } from "react";
+import { useState, useEffect, useCallback, ReactElement } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
@@ -13,10 +13,10 @@ interface Settings {
   quickSearch: boolean;
 }
 
+// default settings values
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
-// default settings values
-export const initialState = {
+export const defaultSettings = {
   themeColor: unlocked ? "black" : "light",
   fontSize: 21,
   showChords: false,
@@ -33,7 +33,7 @@ export default function SettingsMenu() {
   const [
     { fontSize, themeColor, showChords, contextSearch, quickSearch },
     setState,
-  ] = useState(settings || initialState);
+  ] = useState(settings || defaultSettings);
 
   // save settings to local storage
   const saveSettings = useCallback(() => {
@@ -92,30 +92,29 @@ export default function SettingsMenu() {
   };
 
   // quick settings options buttons
-  const ToggleSwitch = (description: string, name: string, value: boolean) => {
-    return (
-      <div className={styles.toggle}>
-        <p>{description}</p>
+  const ToggleSwitch = (description: string, name: string, value: boolean) => (
+    <div className={styles.toggle}>
+      <p>{description}</p>
 
-        <label className={styles.checkbox}>
-          <input
-            type="checkbox"
-            checked={value}
-            onChange={() =>
-              setState((prevState: any) => {
-                return {
-                  ...prevState,
-                  [name]: !prevState[name],
-                };
-              })
-            }
-          />
+      <label className={styles.checkbox}>
+        <input
+          type="checkbox"
+          name="toggle-checkbox"
+          checked={value}
+          onChange={() => {
+            setState((prevState: any) => {
+              return {
+                ...prevState,
+                [name]: !prevState[name],
+              };
+            });
+          }}
+        />
 
-          <span />
-        </label>
-      </div>
-    );
-  };
+        <span />
+      </label>
+    </div>
+  );
 
   return (
     <>
@@ -191,7 +190,7 @@ export default function SettingsMenu() {
               "Czy na pewno chcesz przywrócić ustawienia domyślne?"
             );
 
-            if (prompt) setState({ ...initialState });
+            if (prompt) setState({ ...defaultSettings });
           }}
         >
           Przywróć domyślne

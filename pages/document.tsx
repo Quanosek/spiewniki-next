@@ -6,32 +6,26 @@ import styles from "@/styles/pages/document.module.scss";
 
 import SimpleText from "@/scripts/simpleText";
 
+interface RouterQuery {
+  [key: string]: string;
+}
+
 export default function DocumentPage() {
   const router = useRouter();
 
   const libraryPath = "/libraries/pdfjs-4.0.269-legacy-dist/web/viewer.html";
-  const [documentPath, setDocumentPath] = useState<string>("");
-
-  const [pageTitle, setPageTitle] = useState<string>("");
+  const [documentPath, setDocumentPath] = useState("");
 
   useEffect(() => {
     if (!router.isReady) return;
+    const { d, book, id } = router.query as RouterQuery;
 
-    const { d, book, id } = router.query as {
-      [key: string]: string; // all params are strings
-    };
-
+    // get document
     if (d) {
-      // book pdf file
-      setPageTitle(d.toString() + " [PDF]");
-      const file = new SimpleText(d).modify();
-      setDocumentPath(`/pdf/${file}.pdf`);
+      setDocumentPath(`/pdf/${new SimpleText(d).modify()}.pdf`);
     } else if (book && id) {
-      // hymn pdf file
-      setPageTitle("Dokument PDF");
       setDocumentPath(`/pdf/${book}/${id}.pdf`);
     } else {
-      // back to previous page on invalid query
       router.back();
     }
   }, [router]);
@@ -39,7 +33,13 @@ export default function DocumentPage() {
   // keyboard shortcuts
   useEffect(() => {
     const KeyupEvent = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+      if (
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        event.metaKey ||
+        router.query.menu
+      ) {
         return;
       }
 
@@ -53,16 +53,12 @@ export default function DocumentPage() {
   return (
     <>
       <Head>
-        <title>{`${pageTitle || "Ładowanie..."} / Śpiewniki`}</title>
+        <title>Dokument PDF / Śpiewniki</title>
       </Head>
 
       <div className="container">
         <div className={styles.document}>
-          <iframe
-            id="pdf-js-viewer"
-            src={`${libraryPath}?file=${documentPath}`}
-            title="webviewer"
-          />
+          <iframe src={`${libraryPath}?file=${documentPath}`} />
         </div>
       </div>
     </>

@@ -2,33 +2,27 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect } from "react";
 
-import { initialState } from "@/components/menu/settings";
+import { defaultSettings } from "@/components/menu/settings";
 import Layout from "@/components/layout";
 
 import "the-new-css-reset/css/reset.css";
 import "@/styles/globals.scss";
-import "@/styles/themes.scss";
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
     const settings = JSON.parse(localStorage.getItem("settings") as string);
 
-    // save default settings to local storage
+    //  default settings params
     if (!settings) {
-      localStorage.setItem("settings", JSON.stringify(initialState));
+      localStorage.setItem("settings", JSON.stringify(defaultSettings));
       window.location.reload();
     }
 
-    // remove old settings from local storage
-    ["colorTheme", "fontSize", "showChords"].forEach((key) => {
-      if (localStorage.getItem(key)) localStorage.removeItem(key);
-    });
-
-    // global CSS classes
+    // global theme
     document.documentElement.className = `${
-      unlocked ? "accent_blue" : "accent_orange" // version color accent
-    } ${settings?.themeColor}`; // default user theme
+      unlocked ? "accent_blue" : "accent_orange" // default color accent
+    } ${settings?.themeColor}`; // user theme
 
     // prevent screen from sleeping
     if (navigator.wakeLock) {

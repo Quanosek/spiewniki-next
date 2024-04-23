@@ -1,3 +1,4 @@
+// convert book name
 export function bookShortcut(input: string) {
   const booksMap: Record<string, string> = {
     all: "Wszystkie śpiewniki",
@@ -27,7 +28,7 @@ export function bookShortcut(input: string) {
   }
 }
 
-// all included books databases
+// get books list
 export function booksList() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 

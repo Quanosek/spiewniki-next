@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useCallback, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 import styles from "@/styles/components/presentation.module.scss";
 
@@ -27,12 +27,8 @@ export default function Presentation(params: { data: any }) {
   const lyricsFormat = useCallback(
     (data: any) => {
       let content;
-
-      if (presentation) {
-        content = data.song.lyrics[order[count.current]];
-      } else {
-        content = data.lyrics[order[count.current]];
-      }
+      if (presentation) content = data.song.lyrics[order[count.current]];
+      else content = data.lyrics[order[count.current]];
 
       if (content) {
         content = content
@@ -60,10 +56,10 @@ export default function Presentation(params: { data: any }) {
       count.current++;
       setSlide(lyricsFormat(hymn));
     }
+
     if (count.current > order.length) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else count.current--;
+      if (document.fullscreenElement) document.exitFullscreen();
+      else count.current--;
     }
   }, [order, lyricsFormat, hymn]);
 
@@ -75,8 +71,8 @@ export default function Presentation(params: { data: any }) {
 
   useEffect(() => {
     // hide mouse cursor on idle
-    const mouseMoveEvent = (e: MouseEvent) => {
-      if ((e.movementX && e.movementY) == 0) return;
+    const mouseMoveEvent = (event: MouseEvent) => {
+      if ((event.movementX && event.movementY) === 0) return;
 
       setShowCursor(true);
       clearTimeout(cursorHideTimeout.current);
@@ -91,16 +87,16 @@ export default function Presentation(params: { data: any }) {
 
     // handle fullscreen navigation
     let startPosition: number, endPosition: number;
-    const handleEvent = (e: Event) => {
+    const handleEvent = (event: Event) => {
       // custom event types
-      const TouchEvent = e as TouchEvent;
-      const KeyboardEvent = e as KeyboardEvent;
+      const TouchEvent = event as TouchEvent;
+      const KeyboardEvent = event as KeyboardEvent;
 
       // touch screen navigation
-      if (e.type == "touchstart") {
+      if (event.type === "touchstart") {
         startPosition = TouchEvent.touches[0].clientX;
       }
-      if (e.type == "touchend") {
+      if (event.type === "touchend") {
         endPosition = TouchEvent.changedTouches[0].clientX - startPosition;
       }
 
@@ -133,13 +129,13 @@ export default function Presentation(params: { data: any }) {
 
     document.addEventListener("mousemove", mouseMoveEvent);
     eventTypes.forEach((eventType) => {
-      document.addEventListener(eventType, handleEvent);
+      return document.addEventListener(eventType, handleEvent);
     });
 
     return () => {
       document.removeEventListener("mousemove", mouseMoveEvent);
       eventTypes.forEach((eventType) => {
-        document.removeEventListener(eventType, handleEvent);
+        return document.removeEventListener(eventType, handleEvent);
       });
     };
   }, [alwaysShowCursor, prevSlide, nextSlide]);
@@ -151,9 +147,7 @@ export default function Presentation(params: { data: any }) {
         return;
       }
 
-      if (event.key === "Escape") {
-        if (!document.fullscreenElement) window.close();
-      }
+      if (event.key === "Escape" && !document.fullscreenElement) window.close();
     };
 
     document.addEventListener("keyup", KeyupEvent);
@@ -180,23 +174,20 @@ export default function Presentation(params: { data: any }) {
         {/* lyrics section */}
         <div className={styles.verse}>
           {slide &&
-            slide.map((line: string, index: number) => {
-              return <p key={index}>{line}</p>;
-            })}
+            slide.map((line: string, index: number) => (
+              <p key={index}>{line}</p>
+            ))}
         </div>
 
         {/* progress bar section */}
         <div className={styles.progress}>
           <div
             className={styles.fulfill}
-            style={{
-              width: `${(100 / order.length) * (count.current + 1)}%`,
-            }}
+            style={{ width: `${(100 / order.length) * (count.current + 1)}%` }}
           />
         </div>
 
         <div
-          id="navigation"
           className={`${styles.navigation} ${showCursor ? styles.show : ""}`}
           onMouseEnter={() => setAlwaysShowCursor(true)}
           onMouseLeave={() => setAlwaysShowCursor(false)}

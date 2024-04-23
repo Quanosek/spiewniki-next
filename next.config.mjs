@@ -1,4 +1,4 @@
-// @ts-check
+/** @type {import('next').NextConfig} */
 
 import withPWA from "next-pwa";
 

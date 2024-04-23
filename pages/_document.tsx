@@ -10,7 +10,7 @@ export default function Document() {
         <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
         <meta
           name="description"
-          content="Zebrane w jednym miejscu śpiewniki i pieśni religijne. | Wszelkie prawa zastrzeżone &#169; 2023"
+          content="Zebrane w jednym miejscu różne śpiewniki i pieśni religijne. Wszelkie prawa zastrzeżone &#169; 2022-2024"
         />
 
         <meta name="mobile-wep-app-capable" content="yes" />

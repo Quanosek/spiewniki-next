@@ -1,3 +1,5 @@
+@import "./themes.scss";
+
 :root {
   --header-height: 4rem;
   --navbar-height: min(15vw, 3.5rem);
@@ -112,6 +114,7 @@ header {
     position: relative;
     right: $save-space;
     padding: 0 $save-space;
+    background-color: transparent !important;
   }
 
   a {
@@ -127,7 +130,6 @@ header {
 
   h1,
   h2 {
-    letter-spacing: 0.35px;
     user-select: none;
     opacity: 95%;
     font-weight: bold;
@@ -149,6 +151,11 @@ header {
     a,
     button {
       padding: 0.6rem 1.1rem;
+      transition: 0.2s background-color ease-out;
+
+      &:hover {
+        background-color: var(--elements-hover);
+      }
     }
 
     p {

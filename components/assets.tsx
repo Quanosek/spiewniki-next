@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import router from "next/router";
+import { useRouter } from "next/router";
 
-import { bookShortcut } from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/availableBooks";
 import { openMenu, randomHymn, shareButton } from "@/scripts/buttons";
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -32,7 +32,7 @@ export function Header() {
         <h2>Śpiewniki</h2>
       </Link>
 
-      <div>
+      <div className="buttons">
         <button onClick={() => openMenu("favorites")}>
           <p>Lista ulubionych</p>
         </button>
@@ -47,15 +47,7 @@ export function Header() {
 
         {!unlocked && (
           <Link href="https://nastrazy.org/">
-            <p
-              style={{
-                fontWeight: "bold",
-                fontSize: "115%",
-                letterSpacing: "0.35px",
-              }}
-            >
-              Nastrazy.org
-            </p>
+            <p>Nastrazy.org</p>
           </Link>
         )}
       </div>
@@ -63,9 +55,11 @@ export function Header() {
   );
 }
 
-export function Navbar({ page }: { page: string }) {
+export function MobileNavbar() {
+  const router = useRouter();
+
   let moreButtons = true;
-  if (!unlocked && page == "/") moreButtons = false;
+  if (!unlocked && router.pathname === "/") moreButtons = false;
 
   return (
     <nav>
@@ -102,7 +96,8 @@ export function Navbar({ page }: { page: string }) {
 
       <button
         onClick={() => {
-          return randomHymn(bookShortcut(router.query.book as string));
+          const book = router.query.book as string;
+          randomHymn(bookShortcut(book));
         }}
       >
         <Image
@@ -158,7 +153,6 @@ export function Footer({ children }: any) {
           <Link href="https://github.com/Krist0f0l0s/">
             Krzysztofa Olszewskiego
           </Link>
-          .
         </p>
 
         <p>

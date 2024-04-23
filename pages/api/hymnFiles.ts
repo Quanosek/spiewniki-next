@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
 
-import { bookShortcut } from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/availableBooks";
 import SimpleText from "@/scripts/simpleText";
 
 // API to find connected files with specific hymn

@@ -6,19 +6,24 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/books.module.scss";
 
-import { bookShortcut, booksList } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/availableBooks";
 
 export default function BooksPage() {
   const router = useRouter();
-
   const [data, setData] = useState([]);
 
+  // fetch all books data
   useEffect(() => {
+    if (!router.isReady) return;
+
     fetch("/api/booksData")
       .then((res) => res.json())
       .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, []);
+      .catch((err) => {
+        console.error(err);
+        router.push("/404");
+      });
+  }, [router]);
 
   return (
     <>
@@ -54,23 +59,24 @@ export default function BooksPage() {
 
             <hr />
 
-            {booksList().map((book: any, index: number) => {
+            {booksList().map((book, i) => {
+              const findDocument = data.find(
+                (file: { name: string; pdf: boolean }) => {
+                  return file.name === book && file.pdf;
+                }
+              );
+
               return (
-                <div key={index}>
+                <div key={i}>
                   <div className={styles.book}>
                     <Link
                       className={styles.toSearch}
-                      href={{
-                        pathname: "/search",
-                        query: { book },
-                      }}
+                      href={{ pathname: "/search", query: { book } }}
                     >
                       <p>{bookShortcut(book)}</p>
                     </Link>
 
-                    {data.some((file: any) => {
-                      return file.name === book && file.pdf;
-                    }) && (
+                    {findDocument && (
                       <Link
                         className={styles.toFile}
                         href={{
@@ -79,6 +85,7 @@ export default function BooksPage() {
                         }}
                       >
                         <p>Otwórz PDF</p>
+
                         <Image
                           className="icon"
                           alt="pdf_file"
@@ -91,7 +98,7 @@ export default function BooksPage() {
                     )}
                   </div>
 
-                  {index + 1 !== data.length && <hr />}
+                  {i + 1 !== data.length && <hr />}
                 </div>
               );
             })}

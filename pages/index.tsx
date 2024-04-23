@@ -6,21 +6,20 @@ import { useState, useEffect } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
-import { Navbar, Footer } from "@/components/assets";
+import { MobileNavbar, Footer } from "@/components/assets";
 
-import { bookShortcut } from "@/scripts/bookShortcut";
+import { bookShortcut } from "@/scripts/availableBooks";
 import { randomHymn, shareButton } from "@/scripts/buttons";
 
-export default function IndexPage() {
+export default function HomePage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
   const router = useRouter();
 
-  // keyboard shortcuts
   useEffect(() => {
     if (!router.isReady) return;
-
     localStorage.removeItem("prevSearch");
 
+    // keyboard shortcuts
     const KeyupEvent = (event: KeyboardEvent) => {
       if (
         event.ctrlKey ||
@@ -32,26 +31,21 @@ export default function IndexPage() {
         return;
       }
 
-      switch (event.key.toUpperCase()) {
-        case "/":
-          localStorage.removeItem("prevSearch");
-          localStorage.setItem("focusSearchBox", "true");
-          router.push("/search");
-          break;
-        case "R":
-          if (!router.query.menu) randomHymn(undefined);
-          break;
-        case "B":
-          unlocked && router.push("/books");
-          break;
+      const key = event.key.toUpperCase();
+
+      if (key === "/") {
+        localStorage.setItem("focusSearchBox", "true");
+        router.push("/search");
       }
+      if (key === "B") unlocked && router.push("/books");
+      if (key === "R") randomHymn(undefined);
     };
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, [router, unlocked]);
 
-  // hamburger menu background scrolling
+  // prevent scrolling on active hamburger menu
   const [hamburgerMenu, showHamburgerMenu] = useState(false);
 
   useEffect(() => {
@@ -155,48 +149,43 @@ export default function IndexPage() {
 
           <div className={styles.container}>
             <div className={styles.books}>
-              {["B", "C", "N"].map((book: any, index: number) => {
-                return (
-                  <div key={index}>
-                    <Link
-                      className={styles.book}
-                      href={{
-                        pathname: "/search",
-                        query: { book: book },
-                      }}
-                    >
-                      <Image
-                        alt="cover"
-                        src={`/covers/${book}.webp`}
-                        width={340}
-                        height={480}
-                        priority={true}
-                        draggable={false}
-                      />
-                      <p>{bookShortcut(book)}</p>
-                    </Link>
+              {["B", "C", "N"].map((book, i) => (
+                <div key={i}>
+                  <Link
+                    className={styles.book}
+                    href={{ pathname: "/search", query: { book } }}
+                  >
+                    <Image
+                      alt="cover"
+                      src={`/covers/${book}.webp`}
+                      width={340}
+                      height={480}
+                      priority={true}
+                      draggable={false}
+                    />
+                    <p>{bookShortcut(book)}</p>
+                  </Link>
 
-                    <Link
-                      title="Otwórz plik PDF śpiewnika"
-                      className={styles.pdfIcon}
-                      href={{
-                        pathname: "/document",
-                        query: { d: bookShortcut(book) },
-                      }}
-                    >
-                      <Image
-                        className="icon"
-                        alt="pdf_file"
-                        src="/icons/document.svg"
-                        width={30}
-                        height={30}
-                        priority={true}
-                        draggable={false}
-                      />
-                    </Link>
-                  </div>
-                );
-              })}
+                  <Link
+                    title="Otwórz plik PDF śpiewnika"
+                    className={styles.pdfIcon}
+                    href={{
+                      pathname: "/document",
+                      query: { d: bookShortcut(book) },
+                    }}
+                  >
+                    <Image
+                      className="icon"
+                      alt="pdf_file"
+                      src="/icons/document.svg"
+                      width={30}
+                      height={30}
+                      priority={true}
+                      draggable={false}
+                    />
+                  </Link>
+                </div>
+              ))}
             </div>
 
             {unlocked && (
@@ -212,7 +201,7 @@ export default function IndexPage() {
         </div>
       </div>
 
-      <Navbar page="/" />
+      <MobileNavbar />
     </>
   );
 }

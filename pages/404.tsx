@@ -12,6 +12,7 @@ export default function ErrorPage() {
 
   const [seconds, setSeconds] = useState(10); // 10 seconds
 
+  // auto-redirect counter
   useEffect(() => {
     const counter = setInterval(() => {
       setSeconds((prevSeconds: number) => prevSeconds - 1);
@@ -49,9 +50,8 @@ export default function ErrorPage() {
             <h1>Strona napotkała problem</h1>
 
             <p>
-              <Link href="/">Kliknij tutaj</Link>, aby powrócić do
-              {unlocked ? "strony głównej" : "śpiewników"}
-              {". "}
+              <Link href="/">Kliknij tutaj</Link>, aby powrócić do{" "}
+              {unlocked ? "strony głównej" : "śpiewników"}{" "}
               <span className={styles.counter}>[{seconds}]</span>
             </p>
           </div>

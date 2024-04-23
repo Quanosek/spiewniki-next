@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
 
-import { bookShortcut, booksList } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/availableBooks";
 import SimpleText from "@/scripts/simpleText";
 
 // API to find connected files with list of defined books

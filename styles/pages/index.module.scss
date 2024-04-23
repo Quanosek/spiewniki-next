@@ -43,7 +43,6 @@
       position: relative;
       top: 1px;
       font-size: 110%;
-      letter-spacing: 0.35px;
     }
 
     @media (max-width: 320px) {
@@ -132,6 +131,7 @@
     font-size: 130%;
     font-weight: bold;
     border-radius: 0.4rem;
+    background-color: transparent;
   }
 }
 

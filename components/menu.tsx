@@ -36,9 +36,7 @@ export default function Menu() {
         return;
       }
 
-      if (event.key === "Escape") {
-        if (menu) openMenu(undefined);
-      }
+      if (event.key === "Escape" && menu) openMenu(undefined);
     };
 
     document.addEventListener("keyup", KeyupEvent);

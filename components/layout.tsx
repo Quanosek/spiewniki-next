@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 
+import { GoogleAnalytics } from "nextjs-google-analytics";
+
 import { Header, Footer } from "@/components/assets";
 import Menu from "@/components/menu";
-
-import { GoogleAnalytics } from "nextjs-google-analytics";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

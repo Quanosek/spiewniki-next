@@ -7,7 +7,7 @@ import axios from "axios";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { bookShortcut, booksList } from "@/scripts/bookShortcut";
+import { bookShortcut, booksList } from "@/scripts/availableBooks";
 import { openMenu } from "@/scripts/buttons";
 
 export default function FavoritesMenu() {
@@ -16,15 +16,11 @@ export default function FavoritesMenu() {
   const favoritesData = JSON.parse(localStorage.getItem("favorites") as string);
   const [favorites, setFavorites] = useState(favoritesData || []);
 
-  const [hoverElement, setHoverElement] = useState(
-    undefined as number | undefined
-  );
+  const [hoverElement, setHoverElement] = useState<any>();
 
   // remove selected hymn from list of favorites
   const removeFromList = (index: number) => {
-    const newArray = favorites.filter((fav: any) => {
-      return fav !== favorites[index];
-    });
+    const newArray = favorites.filter((fav: any) => fav !== favorites[index]);
 
     setFavorites(newArray);
     localStorage.setItem("favorites", JSON.stringify(newArray));
@@ -43,6 +39,7 @@ export default function FavoritesMenu() {
 
           <button className={!favorites.length ? "disabled" : ""}>
             <select
+              name="sort"
               defaultValue="timestamp"
               onChange={(e) => {
                 const newArray = favorites.sort((a: any, b: any) => {
@@ -141,9 +138,7 @@ export default function FavoritesMenu() {
 
                 <button
                   className={styles.removeButton}
-                  style={{
-                    display: hoverElement === index ? "flex" : "",
-                  }}
+                  style={{ display: hoverElement === index ? "flex" : "" }}
                   onClick={() => removeFromList(index)}
                 >
                   <Image

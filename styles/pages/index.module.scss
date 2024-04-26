@@ -110,7 +110,7 @@
 }
 
 .hamburgerMenu {
-  z-index: 2;
+  z-index: 10;
   padding-top: calc(var(--navbar-height) + 3rem);
   position: absolute;
   top: 0;
@@ -126,7 +126,6 @@
 
   a,
   button {
-    z-index: 1;
     padding: 3vw 10%;
     font-size: 130%;
     font-weight: bold;

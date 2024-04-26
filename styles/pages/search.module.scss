@@ -112,77 +112,12 @@
   cursor: default;
 }
 
-.results {
-  $radius: 0.6rem;
+$radius: 0.6rem;
 
+.results {
   width: 80%;
   border-radius: $radius;
   background-color: var(--elements);
-
-  a {
-    z-index: 100;
-    padding: 1rem 1.1rem;
-    display: block;
-    border-radius: $radius;
-    transition: 0.1s background-color ease-out;
-
-    &:hover {
-      background-color: var(--elements-hover);
-    }
-
-    h2,
-    p {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    h2 {
-      height: 100%;
-      width: 100%;
-      font-size: 120%;
-    }
-
-    .lyrics {
-      opacity: 65%;
-      display: flex;
-      position: relative;
-      margin: 6px 6px 0;
-      flex-direction: column;
-      gap: 3px;
-      font-size: 95%;
-      transition: 0.2s ease-out;
-
-      &::after {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-
-        background: linear-gradient(
-          180deg,
-          var(--elements) -20%,
-          rgba(#ffffff, 0) 25%,
-          rgb(#ffffff, 0) 55%,
-          var(--elements) 125%
-        );
-      }
-    }
-
-    &:hover .lyrics {
-      opacity: 70%;
-
-      &::after {
-        background: linear-gradient(
-          180deg,
-          var(--elements-hover) -18%,
-          rgba(#ffffff, 0) 30%,
-          rgb(#ffffff, 0) 50%,
-          var(--elements-hover) 120%
-        );
-      }
-    }
-  }
 
   hr {
     height: 2px;
@@ -190,15 +125,87 @@
   }
 }
 
-.scrollButton {
-  z-index: 99; // always on top
+.result {
+  position: relative;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: $radius;
+  transition: 0.1s background-color ease-out;
 
-  margin: -4.5rem 0 -2.5rem;
+  &:hover {
+    background-color: var(--elements-hover);
+  }
+
+  .favorite {
+    opacity: 75%;
+    position: absolute;
+    top: min(1rem, 25%);
+    right: 1rem;
+  }
+
+  h2,
+  p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  h2 {
+    height: 100%;
+    width: 100%;
+    font-size: 120%;
+  }
+
+  .lyrics {
+    opacity: 65%;
+    display: flex;
+    position: relative;
+    margin: 6px 6px 0;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 95%;
+    transition: 0.2s ease-out;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+
+      background: linear-gradient(
+        180deg,
+        var(--elements) -20%,
+        rgba(#ffffff, 0) 25%,
+        rgb(#ffffff, 0) 55%,
+        var(--elements) 125%
+      );
+    }
+  }
+
+  &:hover .lyrics {
+    opacity: 70%;
+
+    &::after {
+      background: linear-gradient(
+        180deg,
+        var(--elements-hover) -18%,
+        rgba(#ffffff, 0) 30%,
+        rgb(#ffffff, 0) 50%,
+        var(--elements-hover) 120%
+      );
+    }
+  }
+}
+
+.scrollButton {
+  z-index: 1;
   padding: 1rem;
   width: 3.5rem;
   aspect-ratio: 1/1;
   position: sticky;
-  bottom: 3%;
+  bottom: 5%;
   left: 100%;
   background-color: var(--accent-color) !important;
   box-shadow: 0 3px 8px -1px #000000;
@@ -254,11 +261,11 @@
     margin-bottom: 0.5rem;
     width: 100%;
     font-size: 85%;
+  }
 
-    a {
-      margin: 2px;
-      padding: 0.85rem 1rem;
-    }
+  .result {
+    margin: 2px;
+    padding: 0.85rem 1rem;
   }
 
   .scrollButton {
@@ -335,12 +342,18 @@
   .results {
     margin-bottom: 4vw;
     font-size: 4vw;
+  }
 
-    a {
-      padding: 4vw 4vw;
+  .result {
+    padding: 4vw 4vw;
 
-      p {
-        margin: 2vw 1vw 0;
+    .favorite {
+      top: 4vw;
+      right: 4vw;
+
+      img {
+        width: 6.5vw;
+        height: auto;
       }
     }
   }

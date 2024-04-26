@@ -110,7 +110,7 @@ export default function SearchPage() {
       localStorage.getItem("settings") as string
     );
     const prevSearch = JSON.parse(localStorage.getItem("prevSearch") as string);
-    if (quickSearch) setInputValue(prevSearch?.search);
+    if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search);
 
     // searching on load
     const loadData = (fetchData: any) => {
@@ -368,38 +368,60 @@ export default function SearchPage() {
               (!data.length && (
                 <p className={styles.noResults}>Brak wyników wyszukiwania</p>
               )) ||
-              data.map((hymn: Hymn, index: number, row: string) => (
-                <div key={index}>
-                  <Link
-                    href={hymnLink(hymn)}
-                    onClick={() => {
-                      const { quickSearch } = JSON.parse(
-                        localStorage.getItem("settings") as string
-                      );
+              data.map((hymn: Hymn, index: number, row: string) => {
+                const isFavorite = localStorage
+                  .getItem("favorites")
+                  ?.includes(hymn.name);
 
-                      localStorage.setItem(
-                        "prevSearch",
-                        JSON.stringify({
-                          book,
-                          search: quickSearch ? inputValue : "",
-                        })
-                      );
-                    }}
-                  >
-                    <h2>{hymn.name}</h2>
+                return (
+                  <div key={index}>
+                    <Link
+                      href={hymnLink(hymn)}
+                      className={styles.result}
+                      onClick={() => {
+                        const { quickSearch } = JSON.parse(
+                          localStorage.getItem("settings") as string
+                        );
 
-                    {hymn.lyrics && (
-                      <div className={styles.lyrics}>
-                        {hymn.lyrics.map((verse: string, i: number) => (
-                          <p key={i}>{verse}</p>
-                        ))}
+                        localStorage.setItem(
+                          "prevSearch",
+                          JSON.stringify({
+                            book,
+                            search: quickSearch ? inputValue : "",
+                          })
+                        );
+                      }}
+                    >
+                      <div
+                        title="Dodane do listy ulubionych"
+                        className={styles.favorite}
+                        style={{ display: isFavorite ? "block" : "none" }}
+                      >
+                        <Image
+                          className="icon"
+                          alt="favorite"
+                          src="/icons/star_filled.svg"
+                          width={25}
+                          height={25}
+                          draggable={false}
+                        />
                       </div>
-                    )}
-                  </Link>
 
-                  {index + 1 !== row.length && <hr />}
-                </div>
-              ))}
+                      <h2>{hymn.name}</h2>
+
+                      {hymn.lyrics && (
+                        <div className={styles.lyrics}>
+                          {hymn.lyrics.map((verse: string, i: number) => (
+                            <p key={i}>{verse}</p>
+                          ))}
+                        </div>
+                      )}
+                    </Link>
+
+                    {index + 1 !== row.length && <hr />}
+                  </div>
+                );
+              })}
           </div>
 
           <button

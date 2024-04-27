@@ -49,12 +49,16 @@ export default function HomePage() {
   const [hamburgerMenu, showHamburgerMenu] = useState(false);
 
   useEffect(() => {
-    if (hamburgerMenu) {
-      const TopScroll = document.documentElement.scrollTop;
-      const LeftScroll = document.documentElement.scrollLeft;
+    const TopScroll = document.documentElement.scrollTop;
+    const LeftScroll = document.documentElement.scrollLeft;
 
-      window.onscroll = () => window.scrollTo(LeftScroll, TopScroll);
-    } else window.onscroll = () => {};
+    const ScrollEvent = () => {
+      if (!hamburgerMenu) return;
+      window.scrollTo(LeftScroll, TopScroll);
+    };
+
+    document.addEventListener("scroll", ScrollEvent);
+    return () => document.removeEventListener("scroll", ScrollEvent);
   }, [hamburgerMenu]);
 
   return (

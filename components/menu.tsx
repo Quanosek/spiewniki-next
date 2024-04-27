@@ -18,17 +18,15 @@ export default function Menu() {
   useEffect(() => {
     if (!router.isReady) return;
 
-    // prevent scrolling
-    if (menu) {
-      const TopScroll = document.documentElement.scrollTop;
-      const LeftScroll = document.documentElement.scrollLeft;
+    setShowMenu(menu ? true : false);
 
-      window.onscroll = () => window.scrollTo(LeftScroll, TopScroll);
-      setShowMenu(true);
-    } else {
-      window.onscroll = () => {};
-      setShowMenu(false);
-    }
+    // prevent scrolling
+    const TopScroll = document.documentElement.scrollTop;
+    const LeftScroll = document.documentElement.scrollLeft;
+
+    const ScrollEvent = () => {
+      if (menu) window.scrollTo(LeftScroll, TopScroll);
+    };
 
     // keyboard shortcuts
     const KeyupEvent = (event: KeyboardEvent) => {
@@ -39,8 +37,12 @@ export default function Menu() {
       if (event.key === "Escape" && menu) openMenu(undefined);
     };
 
+    document.addEventListener("scroll", ScrollEvent);
     document.addEventListener("keyup", KeyupEvent);
-    return () => document.removeEventListener("keyup", KeyupEvent);
+    return () => {
+      document.removeEventListener("scroll", ScrollEvent);
+      document.removeEventListener("keyup", KeyupEvent);
+    };
   }, [router, menu, params]);
 
   return (

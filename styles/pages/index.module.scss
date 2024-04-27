@@ -53,10 +53,6 @@
     }
   }
 
-  button {
-    background-color: transparent;
-  }
-
   // Hamburger Menu
   // https://wykladybiblijne.org/
 
@@ -110,7 +106,7 @@
 }
 
 .hamburgerMenu {
-  z-index: 10;
+  z-index: 2;
   padding-top: calc(var(--navbar-height) + 3rem);
   position: absolute;
   top: 0;

@@ -97,11 +97,17 @@ export default function HymnPage() {
 
     // mobile navbar hide on scroll event
     let lastScrollY = window.scrollY;
+
     document.onscroll = () => {
-      if (window.scrollY > lastScrollY) setHideNavbar(true);
-      else setHideNavbar(false);
-      lastScrollY = window.scrollY;
+      if (window.scrollY - lastScrollY > 50) {
+        setHideNavbar(true);
+      }
+      if (lastScrollY - window.scrollY > 65 || window.scrollY < 30) {
+        setHideNavbar(false);
+      }
     };
+
+    document.onscrollend = () => (lastScrollY = window.scrollY);
   }, [router]);
 
   // enable presentation mode

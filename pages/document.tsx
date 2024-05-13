@@ -13,7 +13,7 @@ interface RouterQuery {
 export default function DocumentPage() {
   const router = useRouter();
 
-  const libraryPath = "/libraries/pdfjs-4.0.269-legacy-dist/web/viewer.html";
+  const libraryPath = "/libraries/pdfjs-4.2.67-dist/web/viewer.html";
   const [documentPath, setDocumentPath] = useState("");
 
   useEffect(() => {

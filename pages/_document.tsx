@@ -29,7 +29,7 @@ export default function Document() {
 
             <link rel="icon" href="/logo/blue/favicon.ico" sizes="any" />
             <link rel="icon" href="/logo/blue/icon.svg" type="image/svg+xml" />
-            <link rel="apple-touch-icon" href="/logo/blue/apple-180x180.png" />
+            <link rel="apple-touch-icon" href="/logo/blue/apple-icon.png" />
 
             <link rel="manifest" href="/manifest_blue.json" />
           </>
@@ -43,10 +43,7 @@ export default function Document() {
               href="/logo/orange/icon.svg"
               type="image/svg+xml"
             />
-            <link
-              rel="apple-touch-icon"
-              href="/logo/orange/apple-180x180.png"
-            />
+            <link rel="apple-touch-icon" href="/logo/orange/apple-icon.png" />
 
             <link rel="manifest" href="/manifest_orange.json" />
           </>

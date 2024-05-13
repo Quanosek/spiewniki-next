@@ -1,10 +1,142 @@
-.container {
+.title {
+  position: relative;
+  right: min(1vw, 8px);
+  height: var(--mobileHeader-height);
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+
+  .logotype {
+    position: absolute;
+    bottom: -1vw;
+    justify-content: center;
+    scale: 1.25;
+
+    p {
+      font-size: min(5.5vw, 125%) !important;
+    }
+  }
+}
+
+.mobileHeader {
+  width: 100%;
+
+  &.active {
+    box-shadow: unset;
+
+    .logotype {
+      opacity: 0;
+    }
+  }
+
+  .logotype {
+    padding: 0 1%;
+    display: flex;
+    align-items: center;
+    gap: min(1.5vw, 0.5rem);
+
+    p {
+      position: relative;
+      top: 1px;
+      font-size: 110%;
+    }
+
+    @media (max-width: 320px) {
+      img {
+        height: 12.5vw;
+        width: auto;
+      }
+    }
+  }
+
+  // Hamburger Menu
+  // https://wykladybiblijne.org/
+
+  svg {
+    height: 90%;
+    aspect-ratio: 1/1;
+    stroke: #000000;
+    stroke-width: 2px;
+    fill: none;
+    position: absolute;
+
+    path {
+      transition: stroke-dasharray var(--duration, 0.85s) var(--easing, ease)
+          var(--delay, 0s),
+        stroke-dashoffset var(--duration, 0.85s) var(--easing, ease)
+          var(--delay, 0s);
+      stroke-dasharray: var(--array-1, 26px) var(--array-2, 100px);
+      stroke-dashoffset: var(--offset, 126px);
+      transform: translateZ(0);
+
+      &:nth-child(2) {
+        --duration: 0.7s;
+        --easing: ease-in;
+        --offset: 100px;
+        --array-2: 74px;
+      }
+      &:nth-child(3) {
+        --offset: 133px;
+        --array-2: 107px;
+      }
+    }
+
+    &.active path {
+      --offset: 57px;
+
+      &:nth-child(1),
+      &:nth-child(3) {
+        --delay: 0.15s;
+        --easing: cubic-bezier(0.2, 0.4, 0.2, 1.1);
+      }
+      &:nth-child(2) {
+        --duration: 0.4s;
+        --offset: 2px;
+        --array-1: 1px;
+      }
+      &:nth-child(3) {
+        --offset: 58px;
+      }
+    }
+  }
+}
+
+.hamburgerMenu {
+  z-index: 2;
+  padding-top: calc(var(--navbar-height) + 3rem);
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  background-color: var(--elements);
+
+  a,
+  button {
+    padding: 3vw 10%;
+    font-size: 130%;
+    font-weight: bold;
+    border-radius: 0.4rem;
+    background-color: transparent;
+  }
+}
+
+.content {
   position: relative;
   margin: 2rem 1.25rem;
   width: 65%;
   display: flex;
   flex-direction: column;
-  gap: 2vw;
+  gap: min(2vw, 2rem);
   font-size: 110%;
   border-radius: 0.4rem;
 
@@ -12,6 +144,7 @@
     margin: 0;
     padding: min(6vw, 2rem) 8% min(10vw, 3rem);
     width: 100%;
+    gap: 3vw;
     font-size: min(3vw, 85%);
     background-color: var(--elements);
   }
@@ -25,9 +158,9 @@
     text-decoration: underline;
     filter: brightness(120%);
   }
-}
 
-.counter {
-  opacity: 75%;
-  font-size: 90%;
+  p {
+    opacity: 75%;
+    font-size: 90%;
+  }
 }

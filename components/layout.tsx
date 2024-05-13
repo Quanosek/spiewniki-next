@@ -9,7 +9,10 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       {process.env.NODE_ENV !== "development" && (
-        <GoogleAnalytics trackPageViews />
+        <GoogleAnalytics
+          trackPageViews
+          gaMeasurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string}
+        />
       )}
 
       <Menu />

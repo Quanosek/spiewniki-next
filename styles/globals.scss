@@ -53,7 +53,7 @@ body {
   color: var(--text);
   background-color: var(--background);
   -webkit-tap-highlight-color: transparent;
-  transition: 0.15s background-color ease-out;
+  transition: 200ms background-color ease-in-out;
 
   @media print {
     color: #000000 !important;
@@ -96,7 +96,7 @@ footer {
   }
 
   a {
-    transition: 0.1s opacity ease-out;
+    transition: 150ms opacity ease-out;
 
     &:hover {
       text-decoration: underline;
@@ -151,7 +151,7 @@ header {
     a,
     button {
       padding: 0.6rem 1.1rem;
-      transition: 0.2s background-color ease-out;
+      transition: 200ms background-color ease-in-out;
 
       &:hover {
         background-color: var(--elements-hover);
@@ -244,7 +244,7 @@ button {
   align-items: center;
   border-radius: 0.4rem;
   background-color: var(--elements);
-  transition: 0.2s background-color ease-out;
+  transition: 200ms background-color ease-in-out;
   cursor: pointer;
 
   &:hover {

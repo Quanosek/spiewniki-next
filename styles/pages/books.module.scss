@@ -27,7 +27,7 @@
     gap: 1rem;
     font-size: 110%;
     border-radius: $radius;
-    transition: 0.1s background-color ease-out;
+    transition: 200ms background-color ease-in-out, 150ms color ease-out;
   }
 
   hr {
@@ -39,7 +39,7 @@
 .all {
   padding: 1rem;
   color: var(--accent-color);
-  transition: 0.15s ease-out;
+  transition: 150ms ease-out;
 
   &:hover {
     color: #ffffff;

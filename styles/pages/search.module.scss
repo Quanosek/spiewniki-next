@@ -15,7 +15,7 @@
     align-items: center;
     gap: 0.8rem;
     border-radius: 30px;
-    transition: 0.15s ease-out;
+    transition: 150ms ease-out;
     cursor: text;
 
     background-color: var(--elements);
@@ -52,7 +52,7 @@
     aspect-ratio: 1/1;
     display: none;
     border-radius: 100%;
-    transition: 0.2s background-color ease-out;
+    transition: 200ms background-color ease-in-out;
     cursor: pointer;
 
     &:hover {
@@ -80,7 +80,7 @@
     padding: 6px;
     border-radius: $radius;
     color: var(--accent-color);
-    transition: 0.15s ease-out;
+    transition: 150ms ease-out;
 
     p {
       padding: 8px 22px;
@@ -132,7 +132,7 @@ $radius: 0.6rem;
   flex-direction: column;
   justify-content: center;
   border-radius: $radius;
-  transition: 0.1s background-color ease-out;
+  transition: 200ms background-color ease-in-out;
 
   &:hover {
     background-color: var(--elements-hover);
@@ -166,7 +166,7 @@ $radius: 0.6rem;
     flex-direction: column;
     gap: 3px;
     font-size: 95%;
-    transition: 0.2s ease-out;
+    transition: 150ms ease-out;
 
     &::after {
       content: "";
@@ -209,7 +209,7 @@ $radius: 0.6rem;
   left: 100%;
   background-color: var(--accent-color) !important;
   box-shadow: 0 3px 8px -1px #000000;
-  transition: 0.15s ease-in-out;
+  transition: 150ms ease-out;
   border-radius: 100%;
 
   @media (min-width: 769px) {

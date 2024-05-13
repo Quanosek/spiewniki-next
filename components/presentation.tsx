@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import styles from "@/styles/components/presentation.module.scss";
 
-export default function Presentation(params: { data: any }) {
+export default function PresentationComponent(params: { data: any }) {
   const hymn = params.data; // all data from "/hymn" page
 
   const count = useRef(-1);

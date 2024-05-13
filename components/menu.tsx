@@ -1,15 +1,24 @@
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import Router, { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { openMenu } from "@/scripts/buttons";
+// menu boxes smart navigation
+export function hiddenMenuQuery(name: string | undefined) {
+  const { menu, ...params } = Router.query;
 
-import Favorites from "./menu/favorites";
-import Settings from "./menu/settings";
-import Shortcuts from "./menu/shortcuts";
+  Router.push(
+    // url
+    { query: name ? { ...params, menu: name } : { ...params } },
+    // as
+    { query: { ...params } },
+    // options
+    { scroll: false, shallow: true }
+  );
+}
 
-export default function Menu() {
+export default function MenuComponent() {
   const router = useRouter();
   const { menu, ...params } = router.query;
 
@@ -18,23 +27,26 @@ export default function Menu() {
   useEffect(() => {
     if (!router.isReady) return;
 
-    setShowMenu(menu ? true : false);
+    // menu render
+    setShowMenu(Boolean(menu));
 
     // prevent scrolling
-    const TopScroll = document.documentElement.scrollTop;
-    const LeftScroll = document.documentElement.scrollLeft;
-
-    const ScrollEvent = () => {
-      if (menu) window.scrollTo(LeftScroll, TopScroll);
-    };
+    const { scrollLeft, scrollTop } = document.documentElement;
+    const ScrollEvent = () => menu && window.scrollTo(scrollLeft, scrollTop);
 
     // keyboard shortcuts
     const KeyupEvent = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+      if (
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        event.metaKey ||
+        !menu
+      ) {
         return;
       }
 
-      if (event.key === "Escape" && menu) openMenu(undefined);
+      if (event.key === "Escape") hiddenMenuQuery(undefined);
     };
 
     document.addEventListener("scroll", ScrollEvent);
@@ -45,24 +57,29 @@ export default function Menu() {
     };
   }, [router, menu, params]);
 
+  // dynamic import menu
+  const DynamicComponent = dynamic(() => import(`./menu/${menu}`), {
+    ssr: false,
+  });
+
   return (
     <div
-      className={styles.handler}
+      className={styles.menuComponent}
       style={{
         visibility: showMenu ? "visible" : "hidden",
         opacity: showMenu ? 1 : 0,
-        transition: " 0.1s ease-in-out",
+        transition: "100ms ease-out",
       }}
     >
-      <div className={styles.background} onClick={() => openMenu(undefined)} />
+      <div
+        className={styles.menuBackground}
+        onClick={() => hiddenMenuQuery(undefined)}
+      />
 
       {menu && (
-        <div className={styles.menu}>
-          <div className={styles.container}>
-            {/* select menu window */}
-            {menu === "favorites" && <Favorites />}
-            {menu === "settings" && <Settings />}
-            {menu === "shortcuts" && <Shortcuts />}
+        <div className={styles.menuHandler}>
+          <div className={styles.menuBox}>
+            <DynamicComponent />
           </div>
         </div>
       )}

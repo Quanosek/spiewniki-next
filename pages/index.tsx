@@ -2,12 +2,12 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
-import { MobileNavbar, Footer } from "@/components/assets";
-
+import { Footer } from "@/components/layout";
+import MobileNavbar from "@/components/mobileNavbar";
 import { bookShortcut } from "@/scripts/availableBooks";
 import { randomHymn, shareButton } from "@/scripts/buttons";
 

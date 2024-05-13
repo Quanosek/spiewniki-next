@@ -8,7 +8,7 @@ import axios from "axios";
 import styles from "@/styles/components/menu.module.scss";
 
 import { bookShortcut, booksList } from "@/scripts/availableBooks";
-import { openMenu } from "@/scripts/buttons";
+import { hiddenMenuQuery } from "../menu";
 
 export default function FavoritesMenu() {
   const router = useRouter();
@@ -59,6 +59,7 @@ export default function FavoritesMenu() {
               <option value="timestamp">Czas dodania</option>
               <option value="alphabetic">Alfabetycznie</option>
             </select>
+
             <p>Sortuj</p>
 
             <Image
@@ -73,86 +74,82 @@ export default function FavoritesMenu() {
         </div>
 
         {favorites.length ? (
-          favorites.map((fav: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className={styles.favorite}
-                onMouseEnter={() => setHoverElement(index)}
-                onMouseLeave={() => setHoverElement(undefined)}
-              >
-                <Link
-                  href={{
-                    pathname: "/hymn",
-                    query: { book: fav.book, title: fav.title },
-                  }}
-                  onClick={async () => {
-                    try {
-                      // check book
-                      if (!booksList().includes(fav.book)) {
+          favorites.map((fav: any, index: number) => (
+            <div
+              key={index}
+              className={styles.favorite}
+              onMouseEnter={() => setHoverElement(index)}
+              onMouseLeave={() => setHoverElement(undefined)}
+            >
+              <Link
+                href={{
+                  pathname: "/hymn",
+                  query: { book: fav.book, title: fav.title },
+                }}
+                onClick={async () => {
+                  try {
+                    // check book
+                    if (!booksList().includes(fav.book)) {
+                      removeFromList(index);
+                      throw new Error();
+
+                      // check title
+                    } else {
+                      const { data } = await axios.get(
+                        `database/${bookShortcut(fav.book)}.json`
+                      );
+
+                      if (!data.find((elem: any) => elem.name === fav.title)) {
                         removeFromList(index);
                         throw new Error();
-
-                        // check title
-                      } else {
-                        const { data } = await axios.get(
-                          `database/${bookShortcut(fav.book)}.json`
-                        );
-
-                        if (
-                          !data.find((elem: any) => elem.name === fav.title)
-                        ) {
-                          removeFromList(index);
-                          throw new Error();
-                        }
                       }
-                    } catch (err) {
-                      router.back();
-
-                      window.alert(
-                        "Nie znaleziono wybranej pieśni! Pozycja została usunięta z listy ulubionych."
-                      );
                     }
-                  }}
-                >
-                  <p>{fav.title}</p>
+                  } catch (err) {
+                    router.back();
 
-                  <span>
-                    <p>
-                      {fav.timestamp
-                        ? new Date(fav.timestamp).toLocaleString("pl-PL", {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
+                    window.alert(
+                      "Nie znaleziono wybranej pieśni! Pozycja została usunięta z listy ulubionych."
+                    );
+                  }
+                }}
+              >
+                <p>{fav.title}</p>
 
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                          })
-                        : "NaN"}
-                      {" • "}
-                      {bookShortcut(fav.book)}
-                    </p>
-                  </span>
-                </Link>
+                <span>
+                  <p>
+                    {fav.timestamp
+                      ? new Date(fav.timestamp).toLocaleString("pl-PL", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
 
-                <button
-                  className={styles.removeButton}
-                  style={{ display: hoverElement === index ? "flex" : "" }}
-                  onClick={() => removeFromList(index)}
-                >
-                  <Image
-                    className="icon"
-                    alt="delete"
-                    src="/icons/close.svg"
-                    width={16}
-                    height={16}
-                    draggable={false}
-                  />
-                </button>
-              </div>
-            );
-          })
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                        })
+                      : "NaN"}
+                    {" • "}
+                    {bookShortcut(fav.book)}
+                  </p>
+                </span>
+              </Link>
+
+              <button
+                className={styles.removeButton}
+                style={{ display: hoverElement === index ? "flex" : "" }}
+                onClick={() => removeFromList(index)}
+              >
+                <Image
+                  className="icon"
+                  alt="delete"
+                  src="/icons/close.svg"
+                  width={16}
+                  height={16}
+                  draggable={false}
+                />
+              </button>
+            </div>
+          ))
         ) : (
           <p className={styles.placeholder}>Brak pozycji do wyświetlenia</p>
         )}
@@ -174,14 +171,14 @@ export default function FavoritesMenu() {
             }
           }}
         >
-          Wyczyść listę
+          <p>Wyczyść listę</p>
         </button>
 
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu."
-          onClick={() => openMenu(undefined)}
+          onClick={() => hiddenMenuQuery(undefined)}
         >
-          Zamknij
+          <p>Zamknij</p>
         </button>
       </div>
     </>

@@ -3,7 +3,7 @@
   top: 0;
   width: 100%;
   justify-content: space-between;
-  transition: 0.15s ease-out;
+  transition: 150ms ease-out;
 
   &.hide {
     top: calc(var(--mobileHeader-height) * -1);
@@ -41,7 +41,7 @@
     gap: $button-gap;
 
     background-color: transparent;
-    transition: 0.2s ease-out;
+    transition: 150ms ease-out;
 
     &:hover {
       opacity: 100%;
@@ -109,7 +109,7 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
-      transition: 0.15s background-color ease-in-out, 0.2s ease-out;
+      transition: 200ms background-color ease-in-out, 150ms ease-out;
 
       div {
         height: 100%;
@@ -136,7 +136,7 @@
           position: relative;
           bottom: 1px;
           opacity: 45%;
-          transition: 0.1s transform ease-in-out, 0.15s opacity ease-in-out;
+          transition: 150ms transform ease-out;
         }
       }
 
@@ -176,7 +176,7 @@
       background-color: var(--elements);
       border-radius: 0 0 0.4rem 0.4rem;
       font-size: 90%;
-      transition: 0.2s ease-in-out, 0.15s opacity ease-in-out;
+      transition: 150ms ease-out;
 
       button {
         opacity: 85%;
@@ -254,7 +254,7 @@
       padding: 0.5em 1em;
       font-size: 110%;
       background-color: var(--menu-elements);
-      transition: 0.2s background-color ease-out;
+      transition: 200ms background-color ease-in-out;
       border-radius: 0.2rem;
 
       &:hover {
@@ -366,7 +366,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 90%;
-  transition: 0.2s ease-out;
+  transition: 150ms ease-out;
 
   @media print {
     display: none !important;
@@ -488,17 +488,17 @@
     left: 0;
 
     button {
-      opacity: 100%;
+      opacity: 80%;
       position: relative;
       top: 0;
+
       padding: 0.8rem;
       width: 2.8rem;
       height: auto;
       aspect-ratio: 1/1;
       border-radius: 100%;
-      opacity: 80%;
       background-color: var(--elements);
-      transition: 0.2s ease-out;
+      transition: 150ms ease-out;
 
       &.randomButton,
       p {

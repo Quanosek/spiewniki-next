@@ -2,17 +2,16 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 import axios from "axios";
 
 import styles from "@/styles/pages/hymn.module.scss";
 
-import { MobileNavbar } from "@/components/assets";
+import MobileNavbar from "@/components/mobileNavbar";
 import Presentation from "@/components/presentation";
-
 import { bookShortcut } from "@/scripts/availableBooks";
-import { openMenu, randomHymn, shareButton } from "@/scripts/buttons";
+import { randomHymn, shareButton } from "@/scripts/buttons";
 
 interface RouterQuery {
   [key: string]: string;
@@ -390,10 +389,7 @@ export default function HymnPage() {
                 style={{ fontSize: fontSize.current }}
               >
                 {noChords.current && (
-                  <span
-                    className={styles.noChords}
-                    onClick={() => openMenu("settings")}
-                  >
+                  <span className={styles.noChords}>
                     Brak akordów do wyświetlenia
                   </span>
                 )}

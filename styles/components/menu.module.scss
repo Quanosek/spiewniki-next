@@ -1,11 +1,11 @@
-.handler {
+.menuComponent {
   z-index: 10;
   position: relative;
   display: flex;
   justify-content: center;
 }
 
-.background {
+.menuBackground {
   position: fixed;
   top: 0;
   width: 100%;
@@ -14,7 +14,7 @@
   backdrop-filter: blur(5px);
 }
 
-.menu {
+.menuHandler {
   $menuMargin: 5%;
 
   padding: 1.25rem 1rem;
@@ -54,7 +54,7 @@
   }
 }
 
-.container {
+.menuBox {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -91,7 +91,7 @@
   button {
     padding: min(2vw, 0.6rem) min(5vw, 1.5rem);
     background-color: var(--menu-elements);
-    transition: 0.2s background-color ease-out;
+    transition: 200ms background-color ease-in-out;
 
     &:hover {
       background-color: var(--menu-elements-hover);
@@ -209,7 +209,7 @@
     width: 100%;
     text-align: start;
     font-size: min(3.5vw, 100%);
-    transition: 0.1s background-color ease-out;
+    transition: 200ms background-color ease-in-out;
 
     p {
       max-width: 90%;
@@ -460,7 +460,7 @@
     display: flex;
     align-items: center;
     background-color: #9c9c9c;
-    transition: 0.2s ease-in-out;
+    transition: 150ms ease-out;
     border-radius: 30px;
     cursor: pointer;
 
@@ -470,7 +470,7 @@
       height: $buttonHeight;
       width: $buttonHeight;
       background-color: #f3f3f3;
-      transition: 0.1s ease-in-out;
+      transition: 150ms ease-out;
       border-radius: 100%;
     }
   }

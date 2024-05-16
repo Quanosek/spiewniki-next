@@ -165,36 +165,24 @@ header {
 }
 
 footer {
-  padding: 0.25rem 0;
+  padding: 2px 0;
+  font-size: 75%;
 
   .container {
     opacity: 85%;
+    flex-direction: column;
+    gap: 6px;
+  }
 
-    div {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      font-size: 90%;
-    }
+  hr {
+    opacity: 50%;
+    width: max(35rem, 40%);
+    height: 0.5px;
+    background-color: var(--text);
+  }
 
-    .bibleVerse {
-      text-align: end;
-    }
-
-    @media (max-width: 1024px) {
-      flex-direction: column;
-
-      div {
-        display: flex;
-        flex-direction: column;
-        gap: 0.3rem;
-        text-align: center;
-      }
-
-      .bibleVerse {
-        display: none;
-      }
-    }
+  .credits {
+    font-size: 90%;
   }
 }
 

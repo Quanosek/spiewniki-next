@@ -9,37 +9,6 @@ import { hiddenMenuQuery } from "./menu";
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
-export function Footer({ children }: any) {
-  return (
-    <div className="container">
-      <div>
-        <p>
-          Stworzone z {unlocked ? "💙" : "❤️"} przez{" "}
-          <Link href="https://github.com/Quanosek/">Jakuba Kłało</Link>
-          {" i "}
-          <Link href="https://github.com/Krist0f0l0s/">
-            Krzysztofa Olszewskiego
-          </Link>
-        </p>
-
-        <p>
-          Wszelkie prawa zastrzeżone &#169; 2022-{new Date().getFullYear()}
-          {unlocked ? (
-            <>
-              {" │ "}
-              domena&nbsp;<Link href="https://www.klalo.pl/">klalo.pl</Link>
-            </>
-          ) : (
-            ""
-          )}
-        </p>
-      </div>
-
-      {children}
-    </div>
-  );
-}
-
 export default function LayoutComponent({ children }: { children: ReactNode }) {
   return (
     <>
@@ -104,12 +73,27 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
       {children}
 
       <footer>
-        <Footer>
-          <p className="bibleVerse">
-            {`„Śpiewajcie Mu i grajcie, opowiadajcie o wszystkich cudach Jego!”`}
-            <br />1 Kronik 16:9
+        <div className="container">
+          <p>
+            „Śpiewajcie Mu i grajcie, opowiadajcie o wszystkich cudach Jego!” 1
+            Krn 16:9
           </p>
-        </Footer>
+
+          <hr />
+
+          <p className="credits">
+            Śpiewniki • 2022-{new Date().getFullYear()} &#169; Wszelkie prawa
+            zastrzeżone
+            {unlocked ? (
+              <>
+                {" │ "} domena&nbsp;
+                <Link href="https://www.klalo.pl/">klalo.pl</Link>
+              </>
+            ) : (
+              ""
+            )}
+          </p>
+        </div>
       </footer>
     </>
   );

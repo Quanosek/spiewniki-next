@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 import styles from "@/styles/pages/index.module.scss";
 
-import { Footer } from "@/components/layout";
 import MobileNavbar from "@/components/mobileNavbar";
 import { bookShortcut } from "@/scripts/availableBooks";
 import { randomHymn, shareButton } from "@/scripts/buttons";
@@ -201,7 +200,17 @@ export default function HomePage() {
         </main>
 
         <div className={styles.footer}>
-          <Footer />
+          <p>
+            Wszelkie prawa zastrzeżone &#169; 2022-{new Date().getFullYear()}
+            {unlocked ? (
+              <>
+                {" │ "} domena&nbsp;
+                <Link href="https://www.klalo.pl/">klalo.pl</Link>
+              </>
+            ) : (
+              ""
+            )}
+          </p>
         </div>
       </div>
 

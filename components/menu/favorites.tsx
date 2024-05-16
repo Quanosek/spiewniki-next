@@ -10,17 +10,26 @@ import styles from "@/styles/components/menu.module.scss";
 import { bookShortcut, booksList } from "@/scripts/availableBooks";
 import { hiddenMenuQuery } from "../menu";
 
+interface Favorite {
+  book: string;
+  id: number;
+  title: string;
+  timestamp: number;
+}
+
 export default function FavoritesMenu() {
   const router = useRouter();
 
+  // favorites array data
   const favoritesData = JSON.parse(localStorage.getItem("favorites") as string);
-  const [favorites, setFavorites] = useState(favoritesData || []);
+  const [favorites, setFavorites] = useState<Favorite[]>(favoritesData || []);
 
-  const [hoverElement, setHoverElement] = useState<any>();
+  // hover delete button on desktop
+  const [hoverElement, setHoverElement] = useState<number | undefined>();
 
   // remove selected hymn from list of favorites
   const removeFromList = (index: number) => {
-    const newArray = favorites.filter((fav: any) => fav !== favorites[index]);
+    const newArray = favorites.filter((fav) => fav !== favorites[index]);
 
     setFavorites(newArray);
     localStorage.setItem("favorites", JSON.stringify(newArray));
@@ -42,22 +51,44 @@ export default function FavoritesMenu() {
               name="sort"
               defaultValue="timestamp"
               onChange={(e) => {
-                const newArray = favorites.sort((a: any, b: any) => {
-                  switch (e.target.value) {
-                    case "timestamp":
-                      return b.timestamp - a.timestamp;
-                    case "alphabetic":
-                      return a.title.localeCompare(b.title, undefined, {
-                        numeric: true,
-                      });
-                  }
-                });
+                const option = e.target.value;
+                let sortedItems = [...favorites];
 
-                setFavorites(newArray);
+                if (option === "timestamp") {
+                  sortedItems.sort((a, b) => {
+                    return b.timestamp - a.timestamp;
+                  });
+                }
+
+                if (option === "alphabetic") {
+                  sortedItems.sort((a, b) => {
+                    return a.title.localeCompare(b.title, undefined, {
+                      numeric: true,
+                    });
+                  });
+                }
+
+                if (option === "books") {
+                  sortedItems.sort((a, b) => {
+                    // sort by title
+                    return a.title.localeCompare(b.title, undefined, {
+                      numeric: true,
+                    });
+                  });
+                  // sort by book name
+                  sortedItems.sort((a, b) => {
+                    return (
+                      booksList().indexOf(a.book) - booksList().indexOf(b.book)
+                    );
+                  });
+                }
+
+                setFavorites(sortedItems);
               }}
             >
-              <option value="timestamp">Czas dodania</option>
-              <option value="alphabetic">Alfabetycznie</option>
+              <option value="timestamp">Według czasu dodania</option>
+              <option value="alphabetic">Według tytułu</option>
+              <option value="books">Według śpiewnika</option>
             </select>
 
             <p>Sortuj</p>
@@ -73,8 +104,10 @@ export default function FavoritesMenu() {
           </button>
         </div>
 
-        {favorites.length ? (
-          favorites.map((fav: any, index: number) => (
+        {!favorites.length ? (
+          <p className={styles.placeholder}>Brak pozycji do wyświetlenia</p>
+        ) : (
+          favorites.map((fav, index) => (
             <div
               key={index}
               className={styles.favorite}
@@ -88,7 +121,7 @@ export default function FavoritesMenu() {
                 }}
                 onClick={async () => {
                   try {
-                    // check book
+                    // check book name
                     if (!booksList().includes(fav.book)) {
                       removeFromList(index);
                       throw new Error();
@@ -115,23 +148,23 @@ export default function FavoritesMenu() {
               >
                 <p>{fav.title}</p>
 
-                <span>
+                <div className={styles.info}>
                   <p>
-                    {fav.timestamp
-                      ? new Date(fav.timestamp).toLocaleString("pl-PL", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                        })
-                      : "NaN"}
-                    {" • "}
                     {bookShortcut(fav.book)}
+                    {" • "}
+                    <span>
+                      {new Date(fav.timestamp).toLocaleString("pl-PL", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      })}
+                    </span>
                   </p>
-                </span>
+                </div>
               </Link>
 
               <button
@@ -150,8 +183,6 @@ export default function FavoritesMenu() {
               </button>
             </div>
           ))
-        ) : (
-          <p className={styles.placeholder}>Brak pozycji do wyświetlenia</p>
         )}
       </div>
 

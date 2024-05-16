@@ -233,9 +233,13 @@
     background-color: var(--menu-elements-hover);
   }
 
-  span {
+  .info {
     opacity: 60%;
-    font-size: 70%;
+    font-size: 75%;
+
+    span {
+      font-size: 85%;
+    }
   }
 }
 

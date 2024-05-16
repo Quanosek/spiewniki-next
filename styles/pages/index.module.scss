@@ -426,7 +426,7 @@ $grid-gap-mobile: 1.2vw;
 }
 
 .footer {
-  opacity: 45%;
+  opacity: 50%;
   padding: min(3vw, 0.5rem) 0 calc(var(--navbar-height) + min(6vw, 1rem));
   display: flex;
   text-align: center;
@@ -435,13 +435,6 @@ $grid-gap-mobile: 1.2vw;
 
   @media (min-width: 769px) {
     display: none;
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
   }
 
   a:hover {

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { openMenu } from "@/scripts/buttons";
+import { hiddenMenuQuery } from "../menu";
 
 interface ShortcutProps {
   keyup: string;
@@ -44,13 +44,11 @@ export default function ShortcutsMenu() {
       </div>
 
       <div className={styles.content}>
-        {router.route !== "/search" && (
-          <Shortcut
-            keyup="R"
-            action={`Losowa pieśń
-              ${router.route === "/hymn" ? " z wybranego śpiewnika" : ""}`}
-          />
-        )}
+        <Shortcut
+          keyup="R"
+          action={`Losowa pieśń
+              ${router.route !== "/" ? " z wybranego śpiewnika" : ""}`}
+        />
 
         {router.route === "/hymn" && (
           <>
@@ -68,9 +66,9 @@ export default function ShortcutsMenu() {
       <div className={styles.buttons}>
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu."
-          onClick={() => openMenu(undefined)}
+          onClick={() => hiddenMenuQuery(undefined)}
         >
-          Zamknij
+          <p>Zamknij</p>
         </button>
       </div>
     </>

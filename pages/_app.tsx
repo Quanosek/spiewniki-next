@@ -2,11 +2,11 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect } from "react";
 
-import { defaultSettings } from "@/components/menu/settings";
-import Layout from "@/components/layout";
-
 import "the-new-css-reset/css/reset.css";
 import "@/styles/globals.scss";
+
+import { defaultSettings } from "@/components/menu/settings";
+import Layout from "@/components/layout";
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {

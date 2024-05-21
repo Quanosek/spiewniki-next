@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { useState, useEffect, useCallback, ReactElement } from "react";
+import { useEffect, useState, useCallback, ReactElement } from "react";
 
 import styles from "@/styles/components/menu.module.scss";
 
-import { openMenu } from "@/scripts/buttons";
+import { hiddenMenuQuery } from "../menu";
 
 interface Settings {
   themeColor: string;
@@ -67,8 +67,8 @@ export default function SettingsMenu() {
             src="/icons/text.svg"
             width={50}
             height={50}
-            priority={true}
             draggable={false}
+            priority
           />
 
           <input
@@ -193,14 +193,14 @@ export default function SettingsMenu() {
             if (prompt) setState({ ...defaultSettings });
           }}
         >
-          Przywróć domyślne
+          <p>Przywróć domyślne</p>
         </button>
 
         <button
           title="Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu."
-          onClick={() => openMenu(undefined)}
+          onClick={() => hiddenMenuQuery(undefined)}
         >
-          Zamknij
+          <p>Zamknij</p>
         </button>
       </div>
     </>

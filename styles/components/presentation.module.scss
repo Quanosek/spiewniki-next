@@ -1,19 +1,20 @@
 .component {
-  z-index: 999; // always on top
+  z-index: 10;
   position: fixed;
   right: 0;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 100%;
+
   height: 100%;
+  width: 100%;
   user-select: none;
 }
 
 .presentation {
   padding: 1% 3%;
-  width: 100%;
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -21,11 +22,11 @@
   gap: 1.5vw;
   color: var(--slide-text);
   background-color: var(--slide-background);
-  transition: 0.1s background-color ease-out;
+  transition: 200ms background-color ease-in-out;
   text-align: center;
 
   & > * {
-    transition: 0.1s ease-out;
+    transition: 150ms ease-out;
   }
 
   &.first {
@@ -109,28 +110,28 @@
 .progress {
   position: absolute;
   bottom: 0;
-  width: 100%;
   height: 1.2vh;
+  width: 100%;
   background-color: var(--menu-background);
 
   .fulfill {
     height: 100%;
-    transition: 0.1s ease-in-out;
+    transition: 150ms ease-out;
     background-color: var(--accent-color);
   }
 }
 
 .navigation {
-  opacity: 0%;
+  opacity: 0;
   position: absolute;
   bottom: -1.5vw;
   left: 1.5vw;
   display: flex;
   gap: 1vw;
-  transition: 0.1s ease-out;
+  transition: 150ms ease-out;
 
   &.show {
-    opacity: 100%;
+    opacity: 1;
     bottom: 1.5vw;
   }
 
@@ -140,7 +141,7 @@
     border: 1px solid var(--slide-text);
     border-radius: 100%;
     background-color: transparent;
-    transition: 0.1s opacity ease-out;
+    transition: 150ms opacity ease-out;
 
     &:hover {
       opacity: 45%;

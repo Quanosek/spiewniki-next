@@ -4,22 +4,6 @@ import axios from "axios";
 
 import { bookShortcut, booksList } from "@/scripts/availableBooks";
 
-export function openMenu(name: string | undefined) {
-  const { menu, ...params } = router.query;
-
-  if (name) {
-    router.push({ query: { ...params, menu: name } }, undefined, {
-      scroll: false,
-      shallow: true,
-    });
-  } else {
-    router.replace({ query: { ...params } }, undefined, {
-      scroll: false,
-      shallow: true,
-    });
-  }
-}
-
 export function randomHymn(book: string | undefined) {
   // get all hymns from all books
   if (!book) {
@@ -83,7 +67,7 @@ export function shareButton() {
   if (navigator.share) {
     // share content
     navigator.share({
-      text: `${router.query.title || "Śpiewniki"} `,
+      text: `${router.query.title || "Śpiewniki"}`,
       url: router.asPath,
     });
   } else if (navigator.clipboard) {

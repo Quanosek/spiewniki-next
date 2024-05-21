@@ -1,6 +1,7 @@
 import Head from "next/head";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import styles from "@/styles/pages/document.module.scss";
 
@@ -13,7 +14,7 @@ interface RouterQuery {
 export default function DocumentPage() {
   const router = useRouter();
 
-  const libraryPath = "/libraries/pdfjs-4.0.269-legacy-dist/web/viewer.html";
+  const libraryPath = "/libraries/pdfjs-4.2.67-dist/web/viewer.html";
   const [documentPath, setDocumentPath] = useState("");
 
   useEffect(() => {
@@ -32,18 +33,18 @@ export default function DocumentPage() {
 
   // keyboard shortcuts
   useEffect(() => {
-    const KeyupEvent = (event: KeyboardEvent) => {
+    const KeyupEvent = (e: KeyboardEvent) => {
       if (
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey ||
-        event.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey ||
+        e.metaKey ||
         router.query.menu
       ) {
         return;
       }
 
-      if (event.key === "Escape") router.back();
+      if (e.key === "Escape") router.back();
     };
 
     document.addEventListener("keyup", KeyupEvent);
@@ -56,11 +57,29 @@ export default function DocumentPage() {
         <title>Dokument PDF / Śpiewniki</title>
       </Head>
 
-      <div className="container">
+      <main style={{ padding: 0 }}>
+        <div className={styles.backButton}>
+          <button
+            title="Kliknij, lub użyj przycisku [Esc]"
+            onClick={() => router.back()}
+          >
+            <Image
+              style={{ transform: "rotate(90deg)" }}
+              className="icon"
+              alt="back"
+              src="/icons/arrow.svg"
+              width={20}
+              height={20}
+              draggable={false}
+            />
+            <p>Powrót</p>
+          </button>
+        </div>
+
         <div className={styles.document}>
           <iframe src={`${libraryPath}?file=${documentPath}`} />
         </div>
-      </div>
+      </main>
     </>
   );
 }

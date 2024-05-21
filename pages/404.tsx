@@ -46,37 +46,28 @@ export default function ErrorPage() {
         <title>Nie znaleziono strony / Śpiewniki</title>
       </Head>
 
-      <div className="container">
-        <div
-          className={`
-          ${unlocked ? styles.title : "mobileHeader"}
-          ${styles.mobileHeader}
-          ${hamburgerMenu && styles.active}
-          `}
-        >
-          <Link className={styles.logotype} href="/">
+      <main>
+        <div className={`${styles.title} ${unlocked && styles.center}`}>
+          <Link href="/" className={styles.logotype}>
             <Image
               className="icon"
               alt="bpsw"
               src="/logo/bpsw.svg"
-              width={45}
-              height={45}
-              priority={true}
+              width={40}
+              height={40}
               draggable={false}
+              priority
             />
-            <p>Śpiewniki</p>
+            <h1>Śpiewniki</h1>
           </Link>
 
           {!unlocked && (
-            // Hamburger Menu
-            // https://wykladybiblijne.org/
-
             <button
-              className="icon"
+              className={styles.hamburgerIcon}
               onClick={() => showHamburgerMenu(!hamburgerMenu)}
             >
               <svg
-                className={`${hamburgerMenu && styles.active}`}
+                className={`${hamburgerMenu && styles.active} icon`}
                 viewBox="0 0 64 48"
               >
                 <path d="M19,15 L45,15 C70,15 58,-2 49.0177126,7 L19,37"></path>
@@ -88,24 +79,29 @@ export default function ErrorPage() {
         </div>
 
         {hamburgerMenu && (
+          // mobile full-screen menu
           <div className={styles.hamburgerMenu}>
-            <Link href="https://nastrazy.org/">Nastrazy.org</Link>
-            <button onClick={shareButton}>Udostępnij</button>
+            <button onClick={shareButton}>
+              <p>Udostępnij</p>
+            </button>
+
+            <Link href="https://nastrazy.org/">
+              <p>Nastrazy.org</p>
+            </Link>
           </div>
         )}
 
-        <main>
-          <div className={styles.content}>
-            <h1>Strona napotkała problem</h1>
+        <div className={styles.content}>
+          <h1>Strona napotkała problem</h1>
 
-            <p>
-              <Link href="/">Kliknij tutaj</Link>, aby powrócić do{" "}
-              {unlocked ? "strony głównej" : "śpiewników"}{" "}
-              <span>[{seconds}]</span>
-            </p>
-          </div>
-        </main>
-      </div>
+          <p>
+            <Link href="/">Kliknij tutaj</Link>, aby powrócić do{" "}
+            {unlocked ? "strony głównej" : "śpiewników"}
+            {". "}
+            <span>[{seconds}]</span>
+          </p>
+        </div>
+      </main>
     </>
   );
 }

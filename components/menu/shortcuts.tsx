@@ -44,13 +44,11 @@ export default function ShortcutsMenu() {
       </div>
 
       <div className={styles.content}>
-        {router.route !== "/search" && (
-          <Shortcut
-            keyup="R"
-            action={`Losowa pieśń
-              ${router.route === "/hymn" ? " z wybranego śpiewnika" : ""}`}
-          />
-        )}
+        <Shortcut
+          keyup="R"
+          action={`Losowa pieśń
+              ${router.route !== "/" ? " z wybranego śpiewnika" : ""}`}
+        />
 
         {router.route === "/hymn" && (
           <>

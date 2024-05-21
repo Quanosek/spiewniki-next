@@ -1,5 +1,5 @@
 .menuComponent {
-  z-index: 10;
+  z-index: 5;
   position: relative;
   display: flex;
   justify-content: center;
@@ -8,21 +8,21 @@
 .menuBackground {
   position: fixed;
   top: 0;
-  width: 100%;
   height: 100%;
+  width: 100%;
   background: transparentize(#000000, 0.55);
   backdrop-filter: blur(5px);
 }
 
 .menuHandler {
-  $menuMargin: 5%;
+  $margin: 5%;
 
   padding: 1.25rem 1rem;
   position: fixed;
-  top: $menuMargin;
-  width: 98%;
+  top: $margin;
+  max-height: calc(100vh - (2 * $margin));
   max-width: 40rem;
-  max-height: calc(100vh - (2 * $menuMargin));
+  width: 98%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -207,13 +207,16 @@
   a {
     padding: min(0.8rem, 3vw) min(1.2rem, 3.5vw);
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
     text-align: start;
     font-size: min(3.5vw, 100%);
     transition: 200ms background-color ease-in-out;
 
     p {
       max-width: 90%;
-      font-size: 105%;
+      font-size: 110%;
     }
   }
 
@@ -247,8 +250,8 @@
   position: absolute;
   right: 0;
   height: 100%;
-  display: none;
   aspect-ratio: 1/1;
+  display: flex;
   background-color: transparent;
 
   img {
@@ -256,6 +259,8 @@
   }
 
   @media (min-width: 1025px) {
+    display: none;
+
     img {
       opacity: 60%;
     }
@@ -266,8 +271,9 @@
   }
 
   @media (max-width: 1024px) {
-    display: flex;
-    background-color: transparent !important;
+    &:hover {
+      background-color: transparent;
+    }
   }
 }
 
@@ -346,8 +352,8 @@
 }
 
 .fontPreview {
-  width: 60%;
   height: 3.5rem;
+  width: 60%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -382,23 +388,24 @@
   }
 
   input {
-    width: 80%;
     height: 0.5rem;
+    width: 80%;
     background: var(--accent-color);
     border-radius: 30px;
     cursor: pointer;
 
     &::-webkit-slider-thumb {
       appearance: none;
-      width: 1.5rem;
       height: 1.5rem;
+      width: 1.5rem;
       background-color: #ffffff;
-      border-radius: 100%;
+      border-radius: 30px;
 
       @media (max-width: 425px) {
         $size: min(8vw, 1.5rem);
-        width: $size;
+
         height: $size;
+        width: $size;
       }
     }
   }
@@ -440,8 +447,8 @@
   $buttonHeight: 1.5rem;
   $dotMargin: 0.25rem;
 
-  width: $buttonWidth;
   height: calc($buttonHeight + ($dotMargin * 2.5));
+  width: $buttonWidth;
 
   input:checked {
     & + span {
@@ -475,7 +482,7 @@
       width: $buttonHeight;
       background-color: #f3f3f3;
       transition: 150ms ease-out;
-      border-radius: 100%;
+      border-radius: 30px;
     }
   }
 
@@ -484,8 +491,8 @@
     $buttonHeight: min(8vw, 1.5rem);
     $dotMargin: 1vw;
 
-    width: $buttonWidth;
     height: calc($buttonHeight + ($dotMargin * 2.5));
+    width: $buttonWidth;
 
     input:checked + span:before {
       transform: translateX(

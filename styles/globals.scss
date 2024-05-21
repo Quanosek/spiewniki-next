@@ -1,26 +1,24 @@
 @import "./themes.scss";
 
+// custom variables
 :root {
+  --radius: 10px;
+  --space: 2px;
+
   --header-height: 4rem;
-  --navbar-height: min(15vw, 3.5rem);
-  --mobileHeader-height: calc(var(--navbar-height) * 1.065);
+  --navbar-height: calc(min(16vw, 3.5rem) + env(safe-area-inset-bottom));
+  --mobileHeader-height: min(16vw, 3.5rem);
 }
 
-// tab navigation focus
+// tab navigation border
 *:focus-visible {
   box-shadow: 0 0 1px 2px var(--text);
 }
 
-// text selection behavior
+// text selection
 ::selection {
   color: var(--elements);
   background: var(--accent-color);
-}
-
-// input placeholder visibility
-::placeholder {
-  font-size: 1rem;
-  opacity: 60%;
 }
 
 // used fonts
@@ -34,15 +32,15 @@
 @font-face {
   font-family: "Brutal Type Medium";
   src: url("/fonts/brutal_type_medium.woff2") format("woff2");
-  unicode-range: U+30-39;
+  unicode-range: U+30-39; // only numbers
   size-adjust: 105%;
   font-display: swap;
 }
 
-// printing mode
+// print page setup
 @page {
   size: A4;
-  margin: 1.5cm 1cm !important;
+  margin: 2cm 1cm;
 }
 
 // html basic tags
@@ -56,51 +54,32 @@ body {
   transition: 200ms background-color ease-in-out;
 
   @media print {
-    color: #000000 !important;
-    background-color: #ffffff !important;
+    width: 550px;
+    color: #000000;
+    background-color: #ffffff;
   }
-}
-
-.container {
-  margin: 0 auto;
-  max-width: calc(1440px + 3%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 header,
 footer {
-  z-index: 1;
-  width: 100%;
   background-color: var(--elements);
   font-size: 80%;
 
   .container {
+    margin: 0 auto;
     padding: 1rem 3%;
-    width: 100%;
     height: 100%;
+    max-width: calc(1440px + 3%);
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-  }
-
-  @media print {
-    display: none;
   }
 
   @media (max-width: 768px) {
     display: none;
   }
 
-  a {
-    transition: 150ms opacity ease-out;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  @media print {
+    display: none;
   }
 }
 
@@ -114,48 +93,34 @@ header {
     position: relative;
     right: $save-space;
     padding: 0 $save-space;
-    background-color: transparent !important;
-  }
-
-  a {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    border-radius: 0.4rem;
+    border-radius: calc(var(--radius) / 2);
 
     &:hover {
-      text-decoration: none;
+      background-color: transparent;
     }
-  }
 
-  h1,
-  h2 {
-    user-select: none;
-    opacity: 95%;
-    font-weight: bold;
-  }
-
-  h1 {
-    font-size: 200%;
-  }
-
-  h2 {
-    font-size: 165%;
+    h1 {
+      opacity: 95%;
+      font-size: 165%;
+    }
   }
 
   div {
     display: flex;
     align-items: center;
     gap: 2px;
+  }
 
-    a,
-    button {
-      padding: 0.6rem 1.1rem;
-      transition: 200ms background-color ease-in-out;
+  a,
+  button {
+    padding: 0.6rem 1.1rem;
+    transition: 200ms background-color ease-in-out;
 
-      &:hover {
-        background-color: var(--elements-hover);
-      }
+    &:hover {
+      background-color: var(--elements-hover);
     }
 
     p {
@@ -171,48 +136,50 @@ footer {
   .container {
     opacity: 85%;
     flex-direction: column;
+    align-items: center;
     gap: 6px;
   }
 
   hr {
     opacity: 50%;
-    width: max(35rem, 40%);
     height: 0.5px;
+    width: max(35rem, 40%);
     background-color: var(--text);
   }
 
   .credits {
     font-size: 90%;
+
+    a:hover {
+      text-decoration: underline;
+    }
   }
 }
 
+// consistent main container
 main {
-  padding: 2rem 3% 4rem;
-  width: 100%;
-  min-height: calc(100svh - var(--header-height));
   position: relative;
+  margin: 0 auto;
+  padding: 1.5rem 3% 4rem;
+  min-height: calc(100svh - var(--header-height));
+  max-width: calc(1440px + 3%);
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  gap: 2rem;
-
-  @media print {
-    padding: 0 !important;
-    min-height: unset;
-  }
+  gap: 1rem;
 
   @media (max-width: 768px) {
-    padding: min(6%, 1.5rem) 2% 5%;
-    min-height: calc(
-      100svh - var(--mobileHeader-height) - var(--navbar-height)
-    );
+    padding: 0 0 calc(var(--navbar-height) + min(4rem, 10vw)) 0;
+    min-height: 100svh;
   }
 
   @media (max-width: 425px) {
-    gap: 6.8vw;
+    gap: 4vw;
   }
 }
 
+// default tags
 h1 {
   font-size: 200%;
   font-weight: bold;
@@ -230,7 +197,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 0.4rem;
+  border-radius: calc(var(--radius) / 2);
   background-color: var(--elements);
   transition: 200ms background-color ease-in-out;
   cursor: pointer;
@@ -240,50 +207,45 @@ button {
   }
 }
 
+// bottom mobile navigation bar
 nav {
   z-index: 1;
-  padding: 3px;
   position: fixed;
   bottom: 0;
-  width: 100%;
+
+  padding: var(--space) calc(var(--space) * 2) env(safe-area-inset-bottom);
   height: var(--navbar-height);
-  display: none;
+  width: 100%;
+  display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   gap: 3vw;
-  user-select: none;
   background-color: var(--elements);
   box-shadow: 0 12px 16px 2px var(--text);
+  user-select: none;
 
   button {
-    margin-bottom: 2px;
+    height: calc(100% - 2 * var(--space));
     width: 5rem;
-    height: 100%;
+    display: flex;
     flex-direction: column;
-    gap: 3px;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
     background-color: transparent;
 
     &:hover {
       background-color: var(--elements-hover);
     }
 
-    img {
-      width: max(23px, 3.2vw);
-      height: auto;
-    }
-
     p {
-      font-size: max(10px, 1.5vw);
+      opacity: 85%;
+      font-size: 10px;
     }
   }
 
-  @media print {
-    display: none !important;
-  }
-
-  @media (max-width: 768px) {
-    display: flex;
+  @media (min-width: 769px) {
+    display: none;
   }
 
   @media (max-width: 320px) {
@@ -291,11 +253,10 @@ nav {
 
     button {
       width: 20%;
-      height: 100%;
 
       img {
-        width: 6.8vw;
-        height: auto;
+        height: 7.5vw;
+        width: auto;
       }
 
       p {
@@ -303,111 +264,13 @@ nav {
       }
     }
   }
-}
 
-// header component on mobile devices
-.mobileHeader {
-  z-index: 3;
-  position: relative;
-  padding: 1vw 2%;
-  width: 100%;
-  height: var(--mobileHeader-height);
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
-
-  font-size: min(5vw, 1.1rem);
-  font-weight: bold;
-  background-color: var(--elements);
-  box-shadow: 0 -12px 16px 2px var(--text);
-
-  @media (min-width: 769px) {
+  @media print {
     display: none;
   }
-
-  button {
-    z-index: 1;
-    opacity: 80%;
-
-    padding: 1%;
-    height: 100%;
-    aspect-ratio: 1/1;
-    background-color: transparent;
-
-    @media (max-width: 320px) {
-      img {
-        height: 8vw;
-        width: auto;
-      }
-    }
-  }
-
-  div {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .center {
-    position: absolute;
-    width: calc(100% - 6%); // mobileHeader padding
-    text-align: center;
-  }
 }
 
-// loading dots animation
-.loader,
-.loader:before,
-.loader:after {
-  $size: 2.5em;
-
-  width: $size;
-  height: $size;
-  border-radius: 100%;
-  animation-fill-mode: both;
-  animation: loadAnimation 1.8s infinite ease-in-out;
-}
-
-.loader {
-  margin: 2rem auto 5rem;
-  color: var(--text);
-  font-size: 10px;
-  transform: translateZ(0);
-  animation-delay: -0.16s;
-
-  &:before,
-  &:after {
-    content: "";
-    position: absolute;
-    top: 0;
-  }
-
-  &:before {
-    left: -3.5em;
-    animation-delay: -0.32s;
-  }
-
-  &:after {
-    left: 3.5em;
-  }
-}
-
-@keyframes loadAnimation {
-  0%,
-  80%,
-  100% {
-    box-shadow: 0 2.5em 0 -1.3em;
-  }
-
-  40% {
-    box-shadow: 0 2.5em 0 0;
-  }
-}
-
-// desktop-only elements
+// desktop-only element
 .desktopOnly {
   display: flex;
 
@@ -416,7 +279,7 @@ nav {
   }
 }
 
-// disabled buttons
+// global disabled option
 .disabled {
   opacity: 30% !important;
   pointer-events: none !important;

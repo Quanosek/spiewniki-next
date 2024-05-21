@@ -142,12 +142,12 @@ export default function PresentationComponent(params: { data: any }) {
 
   // keyboard shortcuts
   useEffect(() => {
-    const KeyupEvent = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+    const KeyupEvent = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
         return;
       }
 
-      if (event.key === "Escape" && !document.fullscreenElement) window.close();
+      if (e.key === "Escape" && !document.fullscreenElement) window.close();
     };
 
     document.addEventListener("keyup", KeyupEvent);
@@ -198,7 +198,7 @@ export default function PresentationComponent(params: { data: any }) {
           >
             <Image
               className="icon"
-              alt="arrow left"
+              alt="previous"
               src="/icons/arrow.svg"
               width={20}
               height={20}
@@ -212,7 +212,7 @@ export default function PresentationComponent(params: { data: any }) {
           >
             <Image
               className="icon"
-              alt="arrow next"
+              alt="next"
               src="/icons/arrow.svg"
               width={20}
               height={20}

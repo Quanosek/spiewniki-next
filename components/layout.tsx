@@ -34,15 +34,14 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
           >
             <Image
               className="icon"
-              alt="logotype"
+              alt="bpsw"
               src="/logo/bpsw.svg"
               width={45}
               height={45}
-              priority={true}
               draggable={false}
+              priority
             />
-
-            <h2>Śpiewniki</h2>
+            <h1>Śpiewniki</h1>
           </Link>
 
           <div className="buttons">
@@ -82,15 +81,17 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
           <hr />
 
           <p className="credits">
-            Śpiewniki • 2022-{new Date().getFullYear()} &#169; Wszelkie prawa
-            zastrzeżone
+            Wszelkie prawa zastrzeżone &#169; 2022-{new Date().getFullYear()}
+            {" │ "}
             {unlocked ? (
               <>
-                {" │ "} domena&nbsp;
+                domena&nbsp;
                 <Link href="https://www.klalo.pl/">klalo.pl</Link>
               </>
             ) : (
-              ""
+              <Link href="https://www.nastrazy.org/">
+                Wydawnictwo Na Straży
+              </Link>
             )}
           </p>
         </div>

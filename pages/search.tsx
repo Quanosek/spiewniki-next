@@ -5,10 +5,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useRef } from "react";
 
 import axios from "axios";
+import Highlighter from "react-highlight-words";
 
 import styles from "@/styles/pages/search.module.scss";
 
 import { bookShortcut, booksList } from "@/scripts/availableBooks";
+import { randomHymn } from "@/scripts/buttons";
 import SimpleText from "@/scripts/simpleText";
 
 interface Hymn {
@@ -92,7 +94,6 @@ export default function SearchPage() {
     );
 
     setData(Collector);
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -105,26 +106,22 @@ export default function SearchPage() {
     if (localStorage.getItem("focusSearchBox")) inputRef.current?.focus();
     localStorage.removeItem("focusSearchBox");
 
-    // fast search input value
+    // fast-search input value
     const { quickSearch } = JSON.parse(
       localStorage.getItem("settings") as string
     );
     const prevSearch = JSON.parse(localStorage.getItem("prevSearch") as string);
     if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search);
 
-    // searching on load
+    // init data load function
     const loadData = (fetchData: any) => {
       setRawData(fetchData);
 
-      if (prevSearch?.search) {
-        Search(fetchData, prevSearch.search || "");
-      } else {
-        setData(fetchData);
-        setLoading(false);
-      }
+      if (prevSearch?.search) Search(fetchData, prevSearch.search || "");
+      else setData(fetchData);
     };
 
-    // get all hymns from all books
+    // hymns from all books
     if (!book) {
       const Collector = new Array();
 
@@ -150,7 +147,7 @@ export default function SearchPage() {
         }
       });
 
-      // get all hymns from selected book
+      // hymns from selected book
     } else {
       axios
         .get(`database/${bookShortcut(book)}.json`)
@@ -162,17 +159,15 @@ export default function SearchPage() {
     }
   }, [router, book]);
 
-  // clear button
+  // clear input button
   const [showClearBtn, setShowClearBtn] = useState(false);
 
-  // searching on input change
   useEffect(() => {
-    // select search input on load
-    if (inputValue && !rawData) inputRef.current?.select();
-
-    // show clear button when input value
     if (inputValue) setShowClearBtn(true);
     else setShowClearBtn(false);
+
+    // select search when input value on init
+    if (inputValue && !rawData) inputRef.current?.select();
 
     // data update on input change
     if (rawData) {
@@ -181,18 +176,11 @@ export default function SearchPage() {
           return Search(rawData, inputValue || "");
         }, 100);
         return () => clearTimeout(timeout);
-      } else setData(rawData);
+      } else {
+        setData(rawData);
+      }
     }
   }, [inputValue, rawData]);
-
-  // clear search input and results
-  const cleanUp = useCallback(() => {
-    setInputValue("");
-    inputRef.current?.focus();
-
-    setData(rawData);
-    localStorage.removeItem("prevSearch");
-  }, [rawData]);
 
   // scroll-to-top button
   const [showTopBtn, setShowTopBtn] = useState(false);
@@ -207,7 +195,7 @@ export default function SearchPage() {
     return () => window.removeEventListener("scroll", scrollEvent);
   }, []);
 
-  // href link to hymn page
+  // href link to hymn
   const hymnLink = (hymn: Hymn) => {
     return {
       pathname: "/hymn",
@@ -218,14 +206,59 @@ export default function SearchPage() {
     };
   };
 
+  // infinite scroll handler
+  const [renderPage, setRenderPage] = useState(0);
+  const [renderedData, setRenderedData] = useState<any>([]);
+
+  useEffect(() => {
+    // increase render array index
+    const onScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 500
+      ) {
+        setRenderPage((page) => page + 1);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!data) return;
+
+    // split data into 30 elements arrays
+    const results = [];
+    for (let i = 0; i < data.length; i += 30) {
+      results.push(data.slice(i, i + 30));
+    }
+
+    // render content
+    const array = results.slice(0, renderPage + 1).flat();
+    setRenderedData(array);
+
+    setLoading(false);
+  }, [data, renderPage]);
+
+  // clear input and restore results
+  const cleanUp = useCallback(() => {
+    setInputValue("");
+    inputRef.current?.focus();
+
+    setData(rawData);
+    setRenderPage(0);
+    localStorage.removeItem("prevSearch");
+  }, [rawData]);
+
   // keyboard shortcuts
   useEffect(() => {
-    const KeyupEvent = (event: KeyboardEvent) => {
+    const KeyupEvent = (e: KeyboardEvent) => {
       if (
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey ||
-        event.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey ||
+        e.metaKey ||
         router.query.menu
       ) {
         return;
@@ -233,25 +266,29 @@ export default function SearchPage() {
 
       if (document.activeElement === inputRef.current) {
         // search-box shortcuts
-        if (event.key === "Escape") inputRef.current?.blur();
-        if (event.key === "Enter") {
+        if (e.key === "Escape") inputRef.current?.blur();
+        if (e.key === "Enter") {
           const hymn = data[0];
 
           if (hymn) router.push(hymnLink(hymn));
           else cleanUp();
         }
       } else {
-        const key = event.key.toUpperCase();
+        const key = e.key.toUpperCase();
 
         // global shortcuts
         if (key === "/") inputRef.current?.focus();
         if (key === "B") router.push(unlocked ? "/books" : "/");
+        if (key === "R") randomHymn(bookShortcut(book));
       }
     };
 
     document.addEventListener("keyup", KeyupEvent);
     return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [data, router, cleanUp, unlocked]);
+  }, [router, data, cleanUp, unlocked, book]);
+
+  // quick actions on result hover
+  // const [resultHovered, setResultHovered] = useState<number | undefined>();
 
   return (
     <>
@@ -259,76 +296,95 @@ export default function SearchPage() {
         <title>Wyszukiwanie / Śpiewniki</title>
       </Head>
 
-      <div className="container">
-        <div className="mobileHeader">
-          <button style={{ rotate: "90deg" }} onClick={() => router.push("/")}>
+      <main className={styles.main}>
+        <div className={styles.title}>
+          <Link href="/">
             <Image
+              style={{ transform: "rotate(90deg)" }}
               className="icon"
               alt="back"
               src="/icons/arrow.svg"
+              width={20}
+              height={20}
+              draggable={false}
+            />
+            <p>Powrót</p>
+          </Link>
+
+          {!isLoading && <h1>{bookShortcut(book || "all")}</h1>}
+
+          {unlocked && (
+            <Link href="/books">
+              <p>Zmień śpiewnik</p>
+              <Image
+                className="icon"
+                alt="filter"
+                src="/icons/filter.svg"
+                width={22}
+                height={22}
+                draggable={false}
+              />
+            </Link>
+          )}
+        </div>
+
+        <div className={styles.searchBox}>
+          <div className={styles.searchIcon}>
+            <Image
+              className="icon"
+              alt="search"
+              src="/icons/search.svg"
               width={25}
               height={25}
               draggable={false}
             />
-          </button>
+          </div>
 
-          <p className="center">Wyszukiwanie</p>
-        </div>
+          <input
+            ref={inputRef}
+            name="search-box"
+            title="Kliknij, lub użyj [/] na klawiaturze, aby rozpocząć wyszukiwanie"
+            placeholder={
+              "Rozpocznij wyszukiwanie " +
+              (data?.length ? `(${data?.length})` : "")
+            }
+            autoComplete="off"
+            value={inputValue}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInputValue(value);
+              setRenderPage(0);
 
-        <main>
-          <div className={styles.searchBox}>
-            <input
-              ref={inputRef}
-              name="search-box"
-              title="Kliknij, lub użyj [/] na klawiaturze, aby powrócić do wyszukiwania."
-              placeholder="Rozpocznij wyszukiwanie"
-              autoComplete="off"
-              value={inputValue}
-              onChange={(e) => {
-                const value = e.target.value;
-                setInputValue(value);
+              // saving search values
+              const { quickSearch } = JSON.parse(
+                localStorage.getItem("settings") as string
+              );
 
-                // saving search values
-                const { quickSearch } = JSON.parse(
-                  localStorage.getItem("settings") as string
-                );
+              localStorage.setItem(
+                "prevSearch",
+                JSON.stringify({ book, search: quickSearch ? value : "" })
+              );
 
-                localStorage.setItem(
-                  "prevSearch",
-                  JSON.stringify({ book, search: quickSearch ? value : "" })
-                );
+              // easter-egg
+              if (unlocked && value === "2137") {
+                localStorage.removeItem("prevSearch");
 
-                // easter-egg
-                if (unlocked && value === "2137") {
-                  localStorage.removeItem("prevSearch");
+                router.push({
+                  pathname: "/hymn",
+                  query: {
+                    book: "C",
+                    title: "7C. Pan kiedyś stanął nad brzegiem",
+                  },
+                });
+              }
+            }}
+            onFocus={(e) => e.target.select()}
+          />
 
-                  router.push({
-                    pathname: "/hymn",
-                    query: {
-                      book: "C",
-                      title: "7C. Pan kiedyś stanął nad brzegiem",
-                    },
-                  });
-                }
-              }}
-              onFocus={(e) => e.target.select()}
-            />
-
-            <div className={styles.searchIcon}>
-              <Image
-                className="icon"
-                alt="search icon"
-                src="/icons/search.svg"
-                width={25}
-                height={25}
-                draggable={false}
-              />
-            </div>
-
-            <div
+          {showClearBtn ? (
+            <button
               title="Wyczyść wyszukiwanie"
               className={styles.clearButton}
-              style={{ display: showClearBtn ? "flex" : "none" }}
               onClick={cleanUp}
             >
               <Image
@@ -339,110 +395,142 @@ export default function SearchPage() {
                 height={25}
                 draggable={false}
               />
-            </div>
-          </div>
-
-          {unlocked ? (
-            <div className={styles.filters}>
-              <h3>Szukaj&nbsp;w:</h3>
-
-              <button
-                title="Otwórz listę wszystkich śpiewników [B]"
-                onClick={() => router.push("/books")}
-              >
-                <p>{bookShortcut(book || "all")}</p>
-              </button>
-            </div>
+            </button>
           ) : (
-            <div className={styles.filters}>
-              <h3>Wybrano:</h3>
-
-              <button className={styles.disabled} tabIndex={-1}>
-                <p>{bookShortcut(book || "all")}</p>
-              </button>
-            </div>
+            <button
+              title="Otwórz losową pieśń [R]"
+              className={styles.randomButton}
+              onClick={() => randomHymn(bookShortcut(book))}
+            >
+              <Image
+                className="icon"
+                alt="dice"
+                src="/icons/dice.svg"
+                width={25}
+                height={25}
+                draggable={false}
+              />
+            </button>
           )}
+        </div>
 
-          <div className={styles.results}>
-            {(isLoading && <div className="loader" />) ||
-              (!data.length && (
-                <p className={styles.noResults}>Brak wyników wyszukiwania</p>
-              )) ||
-              data.map((hymn: Hymn, index: number, row: string) => {
+        <div className={styles.results}>
+          {!isLoading &&
+            (!renderedData.length ? (
+              <p className={styles.noResults}>Brak wyników wyszukiwania</p>
+            ) : (
+              renderedData.map((hymn: Hymn, index: number, row: Hymn[]) => {
                 const isFavorite = localStorage
                   .getItem("favorites")
                   ?.includes(hymn.name);
 
                 return (
                   <div key={index}>
-                    <Link
-                      href={hymnLink(hymn)}
-                      className={styles.result}
-                      onClick={() => {
-                        const { quickSearch } = JSON.parse(
-                          localStorage.getItem("settings") as string
-                        );
-
-                        localStorage.setItem(
-                          "prevSearch",
-                          JSON.stringify({
-                            book,
-                            search: quickSearch ? inputValue : "",
-                          })
-                        );
-                      }}
+                    <div
+                      className={styles.hymn}
+                      // onMouseEnter={() => setResultHovered(index)}
+                      // onMouseLeave={() => setResultHovered(undefined)}
                     >
-                      <div
-                        title="Dodane do listy ulubionych"
-                        className={styles.favorite}
-                        style={{ display: isFavorite ? "block" : "none" }}
+                      <Link
+                        className={styles.result}
+                        href={hymnLink(hymn)}
+                        onClick={() => {
+                          const { quickSearch } = JSON.parse(
+                            localStorage.getItem("settings") as string
+                          );
+
+                          localStorage.setItem(
+                            "prevSearch",
+                            JSON.stringify({
+                              book,
+                              search: quickSearch ? inputValue : "",
+                            })
+                          );
+                        }}
                       >
-                        <Image
-                          className="icon"
-                          alt="favorite"
-                          src="/icons/star_filled.svg"
-                          width={25}
-                          height={25}
-                          draggable={false}
-                        />
+                        <h2>
+                          {unlocked ? (
+                            <Highlighter
+                              autoEscape={true}
+                              highlightClassName={styles.highlight}
+                              searchWords={[inputValue]}
+                              textToHighlight={hymn.name}
+                            />
+                          ) : (
+                            hymn.name
+                          )}
+                        </h2>
+
+                        {hymn.lyrics && (
+                          <div className={styles.lyrics}>
+                            {hymn.lyrics.map((verse: string, i: number) => (
+                              <p key={i}>
+                                {unlocked ? (
+                                  <Highlighter
+                                    autoEscape={true}
+                                    highlightClassName={styles.highlight}
+                                    searchWords={[inputValue]}
+                                    textToHighlight={verse}
+                                  />
+                                ) : (
+                                  verse
+                                )}
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                      </Link>
+
+                      <div className={styles.quickActions}>
+                        {/* {resultHovered === index && (
+                          <button title="Pokaz slajdów" onClick={() => {}}>
+                            <Image
+                              className="icon"
+                              alt="presentation"
+                              src="/icons/monitor.svg"
+                              width={25}
+                              height={25}
+                              draggable={false}
+                            />
+                          </button>
+                        )} */}
+
+                        {isFavorite && (
+                          <button title="Usuń z ulubionych" onClick={() => {}}>
+                            <Image
+                              className="icon"
+                              alt="favorite"
+                              src="/icons/star_filled.svg"
+                              width={25}
+                              height={25}
+                              draggable={false}
+                            />
+                          </button>
+                        )}
                       </div>
-
-                      <h2>{hymn.name}</h2>
-
-                      {hymn.lyrics && (
-                        <div className={styles.lyrics}>
-                          {hymn.lyrics.map((verse: string, i: number) => (
-                            <p key={i}>{verse}</p>
-                          ))}
-                        </div>
-                      )}
-                    </Link>
+                    </div>
 
                     {index + 1 !== row.length && <hr />}
                   </div>
                 );
-              })}
-          </div>
+              })
+            ))}
+        </div>
 
-          <button
-            title="Powróć na górę strony"
-            className={styles.scrollButton}
-            style={{
-              visibility: showTopBtn ? "visible" : "hidden",
-              opacity: showTopBtn ? 0.8 : 0,
-            }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          >
-            <Image
-              alt="arrow up"
-              src="/icons/arrow.svg"
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </button>
-        </main>
-      </div>
+        <button
+          title="Powróć na górę strony"
+          className={`${showTopBtn && styles.show} ${styles.scrollButton}`}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          <Image
+            alt="up"
+            src="/icons/arrow.svg"
+            width={25}
+            height={25}
+            draggable={false}
+          />
+        </button>
+      </main>
     </>
   );
 }

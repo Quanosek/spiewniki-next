@@ -35,7 +35,7 @@ export default function HymnPage() {
   const fontSize = useRef<number>(); // set font size
 
   // hiding mobile navbar on scroll
-  const [hideNavbar, setHideNavbar] = useState(false);
+  const [hideControls, setHideControls] = useState(false);
 
   // settings on page load
   useEffect(() => {
@@ -99,10 +99,10 @@ export default function HymnPage() {
 
     document.onscroll = () => {
       if (window.scrollY - lastScrollY > 50) {
-        setHideNavbar(true);
+        setHideControls(true);
       }
       if (lastScrollY - window.scrollY > 65 || window.scrollY < 30) {
-        setHideNavbar(false);
+        setHideControls(false);
       }
     };
 
@@ -242,21 +242,20 @@ export default function HymnPage() {
 
   // keyboard shortcuts
   useEffect(() => {
-    if (!(hymn && router.isReady)) return;
-
-    const KeyupEvent = (event: KeyboardEvent) => {
+    const KeyupEvent = (e: KeyboardEvent) => {
       if (
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey ||
-        event.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey ||
+        e.metaKey ||
         router.query.menu ||
+        !hymn ||
         presentationMode
       ) {
         return;
       }
 
-      const key = event.key.toUpperCase();
+      const key = e.key.toUpperCase();
 
       if (key === "/") {
         localStorage.removeItem("prevSearch");
@@ -295,15 +294,11 @@ export default function HymnPage() {
 
       {presentationMode && <Presentation data={hymn} />}
 
-      <div className="container">
-        {/* mobile top navbar */}
-        <div
-          className={`mobileHeader ${styles.mobileHeader} ${
-            hideNavbar ? styles.hide : ""
-          }`}
-        >
-          <button style={{ rotate: "90deg" }} onClick={openPrevSearch}>
+      <main style={{ padding: 0 }}>
+        <div className={`${styles.title} ${hideControls ? styles.hide : ""}`}>
+          <button onClick={openPrevSearch}>
             <Image
+              style={{ rotate: "90deg" }}
               className="icon"
               alt="back"
               src="/icons/arrow.svg"
@@ -318,7 +313,7 @@ export default function HymnPage() {
               <button onClick={openDocument}>
                 <Image
                   className="icon"
-                  alt="pdf_file"
+                  alt="pdf"
                   src="/icons/document.svg"
                   width={25}
                   height={25}
@@ -327,14 +322,11 @@ export default function HymnPage() {
               </button>
             )}
 
-            <button
-              style={{ backgroundColor: "transparent" }}
-              onClick={favoriteButton}
-            >
+            <button onClick={favoriteButton}>
               <Image
                 className="icon"
                 alt="favorite"
-                src={`/icons/${isFavorite ? "star_filled" : "star_empty"}.svg`}
+                src={`/icons/star_${isFavorite ? "filled" : "empty"}.svg`}
                 width={25}
                 height={25}
                 draggable={false}
@@ -343,320 +335,312 @@ export default function HymnPage() {
           </div>
         </div>
 
-        <main>
-          <div className={styles.container}>
-            {/* left side buttons */}
-            <div className={`${styles.options} ${styles.leftSide}`}>
-              <button onClick={openPrevSearch}>
-                <Image
-                  className="icon"
-                  alt="search"
-                  src="/icons/search.svg"
-                  width={20}
-                  height={20}
-                  draggable={false}
-                />
-                <p>Powrót do wyszukiwania</p>
-              </button>
+        <div className={styles.container}>
+          {/* left side buttons */}
+          <div className={`${styles.options} ${styles.leftSide}`}>
+            <button onClick={openPrevSearch}>
+              <Image
+                className="icon"
+                alt="search"
+                src="/icons/search.svg"
+                width={22}
+                height={22}
+                draggable={false}
+              />
+              <p>Powrót do wyszukiwania</p>
+            </button>
 
-              <button
-                title={
-                  unlocked
-                    ? "Otwórz listę wszystkich śpiewników [B]"
-                    : "Przejdź do okna wyboru śpiewników."
-                }
-                onClick={() => {
-                  localStorage.removeItem("prevSearch");
-                  router.push(unlocked ? "/books" : "/");
-                }}
-              >
-                <Image
-                  className="icon"
-                  alt="book"
-                  src="/icons/book.svg"
-                  width={20}
-                  height={20}
-                  draggable={false}
-                />
-                <p>Wybór śpiewników</p>
-              </button>
-            </div>
+            <button
+              title={
+                unlocked
+                  ? "Otwórz listę wszystkich śpiewników [B]"
+                  : "Przejdź do okna wyboru śpiewników."
+              }
+              onClick={() => {
+                localStorage.removeItem("prevSearch");
+                router.push(unlocked ? "/books" : "/");
+              }}
+            >
+              <Image
+                className="icon"
+                alt="book"
+                src="/icons/book.svg"
+                width={22}
+                height={22}
+                draggable={false}
+              />
+              <p>Wybór śpiewników</p>
+            </button>
+          </div>
 
-            {/* show hymn content */}
-            <div className={styles.center}>
-              <div
-                className={styles.content}
-                style={{ fontSize: fontSize.current }}
-              >
-                {noChords.current && (
-                  <span className={styles.noChords}>
-                    Brak akordów do wyświetlenia
-                  </span>
-                )}
+          {/* show hymn content */}
+          <div className={styles.center}>
+            <div
+              className={styles.content}
+              style={{ fontSize: fontSize.current }}
+            >
+              {noChords.current && (
+                <span className={styles.noChords}>
+                  Brak akordów do wyświetlenia
+                </span>
+              )}
 
-                {(isLoading && <div className="loader" />) ||
-                  (hymn && (
-                    <>
-                      <div className={styles.text}>
-                        {/* title */}
-                        <div className={styles.title}>
-                          <p>{hymn.book}</p>
-                          <h1>{hymn.song.title}</h1>
-                        </div>
-
-                        {/* styling for printing */}
-                        <hr className={styles.printLine} />
-
-                        {/* lyrics */}
-                        <div className={styles.lyrics}>
-                          {hymn.lyrics.map((array: string[], i: number) => (
-                            <div key={i} className={styles.verse}>
-                              {array.map((verse, j) => {
-                                const { showChords } = JSON.parse(
-                                  localStorage.getItem("settings") as string
-                                );
-
-                                // skip chords line if user don't want to see them
-                                if (verse.startsWith(".") && !showChords) {
-                                  return;
-                                }
-
-                                // lyrics single verse line
-                                return (
-                                  <p
-                                    key={j}
-                                    className={
-                                      verse.startsWith(".") ? styles.chord : ""
-                                    }
-                                  >
-                                    {verse.replace(/^[\s.]/, "")}
-                                  </p>
-                                );
-                              })}
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* additional hymn information */}
-                        {(hymn.song.copyright || hymn.song.author) && (
-                          <div className={styles.credits}>
-                            <h3>{hymn.song.copyright}</h3>
-                            <p>{hymn.song.author}</p>
-                          </div>
-                        )}
+              {(isLoading && <div className="loader" />) ||
+                (hymn && (
+                  <>
+                    <div className={styles.text}>
+                      {/* title */}
+                      <div className={styles.hymnTitle}>
+                        <p>{hymn.book}</p>
+                        <h1>{hymn.song.title}</h1>
                       </div>
 
-                      {hymn.song.linked_songs && (
-                        <span className={styles.linked}>
-                          <p>Powiązane pieśni:</p>
+                      {/* styling for printing */}
+                      <hr className={styles.printLine} />
 
-                          {hymn.song.linked_songs.map(
-                            (
-                              linked: { book: string; title: string },
-                              index: number
-                            ) => {
-                              const { book, title } = linked;
-
-                              return (
-                                <Link
-                                  key={index}
-                                  title="Przejdź do wybranej pieśni"
-                                  href={{
-                                    pathname: "/hymn",
-                                    query: { book, title },
-                                  }}
-                                >
-                                  {linked.title}
-                                </Link>
+                      {/* lyrics */}
+                      <div className={styles.lyrics}>
+                        {hymn.lyrics.map((array: string[], i: number) => (
+                          <div key={i} className={styles.verse}>
+                            {array.map((verse, j) => {
+                              const { showChords } = JSON.parse(
+                                localStorage.getItem("settings") as string
                               );
-                            }
-                          )}
-                        </span>
+
+                              // skip chords line if user don't want to see them
+                              if (verse.startsWith(".") && !showChords) {
+                                return;
+                              }
+
+                              // lyrics single verse line
+                              return (
+                                <p
+                                  key={j}
+                                  className={
+                                    verse.startsWith(".") ? styles.chord : ""
+                                  }
+                                >
+                                  {verse.replace(/^[\s.]/, "")}
+                                </p>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* additional hymn information */}
+                      {(hymn.song.copyright || hymn.song.author) && (
+                        <div className={styles.credits}>
+                          {hymn.song.copyright && <p>{hymn.song.copyright}</p>}
+                          {hymn.song.author && <p>{hymn.song.author}</p>}
+                        </div>
                       )}
-                    </>
-                  ))}
-              </div>
+                    </div>
 
-              {/* bottom buttons */}
-              <div className={styles.controls}>
-                <button
-                  title="Przejdź do poprzedniej pieśni [←]"
-                  className={hideNavbar ? styles.hide : ""}
-                  onClick={() => changeHymn(hymn.id - 1)}
-                >
-                  <Image
-                    className={`${styles.previous} icon`}
-                    alt="arrow left"
-                    src="/icons/arrow.svg"
-                    width={30}
-                    height={30}
-                    draggable={false}
-                  />
-                  <p>Poprzednia</p>
-                </button>
+                    {hymn.song.linked_songs && (
+                      <span className={styles.linked}>
+                        <p className={styles.name}>Powiązane pieśni:</p>
 
-                <button
-                  title="Otwórz losową pieśń z wybranego śpiewnika [R]"
-                  className={styles.randomButton}
-                  onClick={() => randomHymn(hymn.book)}
-                >
-                  <p>Wylosuj pieśń</p>
-                </button>
+                        {hymn.song.linked_songs.map(
+                          (
+                            linked: { book: string; title: string },
+                            index: number
+                          ) => {
+                            const { book, title } = linked;
 
-                <button
-                  title="Przejdź do następnej pieśni [→]"
-                  onClick={() => changeHymn(hymn.id + 1)}
-                  className={hideNavbar ? styles.hide : ""}
-                >
-                  <p>Następna</p>
-                  <Image
-                    className={`${styles.next} icon`}
-                    alt="arrow right"
-                    src="/icons/arrow.svg"
-                    width={30}
-                    height={30}
-                    draggable={false}
-                  />
-                </button>
-              </div>
+                            return (
+                              <Link
+                                key={index}
+                                href={{
+                                  pathname: "/hymn",
+                                  query: { book, title },
+                                }}
+                                title="Przejdź do wybranej pieśni"
+                              >
+                                <p>{linked.title}</p>
+                              </Link>
+                            );
+                          }
+                        )}
+                      </span>
+                    )}
+                  </>
+                ))}
             </div>
 
-            {/* right side buttons */}
-            <div className={styles.options}>
-              <div
-                className={styles.presentationButton}
-                onMouseLeave={() => showPresOptions(false)}
-              >
-                <button
-                  title="Włącz pokaz slajdów pieśni na pełnym ekranie [P]"
-                  className={styles.defaultView}
-                >
-                  <div className={styles.buttonText} onClick={showPresentation}>
-                    <Image
-                      className="icon"
-                      alt="presentation"
-                      src="/icons/monitor.svg"
-                      width={20}
-                      height={20}
-                      draggable={false}
-                    />
-                    <p>Pokaz slajdów</p>
-                  </div>
-
-                  <div
-                    className={styles.moreArrow}
-                    onClick={() => showPresOptions((prev) => !prev)}
-                  >
-                    <Image
-                      className="icon"
-                      style={{
-                        transform: presOptions ? "rotate(180deg)" : "rotate(0)",
-                      }}
-                      alt="arrow down"
-                      src="/icons/arrow.svg"
-                      width={18}
-                      height={18}
-                      draggable={false}
-                    />
-                  </div>
-                </button>
-
-                <div
-                  className={`${styles.presOptions} ${
-                    presOptions ? styles.active : ""
-                  }`}
-                >
-                  <button
-                    tabIndex={-1}
-                    title="Pokaż pokaz slajdów w oddzielnym oknie."
-                    onClick={() => {
-                      const params = new URLSearchParams();
-                      params.append("book", book);
-                      params.append("title", title);
-                      params.append("presentation", "true");
-
-                      window.open(
-                        `/hymn?${params.toString()}`,
-                        "presentation",
-                        "width=960,height=540"
-                      );
-                    }}
-                  >
-                    <p>Otwórz w nowym oknie</p>
-                  </button>
-                </div>
-              </div>
-
+            {/* bottom buttons */}
+            <div className={styles.controls}>
               <button
-                title={
-                  isFavorite
-                    ? "Kliknij, aby usunąć pieśń z listy ulubionych."
-                    : "Kliknij, aby dodać pieśń do listy ulubionych."
-                }
-                onClick={favoriteButton}
+                title="Przejdź do poprzedniej pieśni [←]"
+                className={hideControls ? styles.hide : ""}
+                onClick={() => changeHymn(hymn.id - 1)}
               >
                 <Image
-                  className="icon"
-                  alt="favorite"
-                  src={`/icons/${
-                    isFavorite ? "star_filled" : "star_empty"
-                  }.svg`}
+                  className={`${styles.previous} icon`}
+                  alt="left"
+                  src="/icons/arrow.svg"
                   width={20}
                   height={20}
                   draggable={false}
                 />
-                <p>
-                  {isFavorite ? "Usuń z ulubionych" : "Dodaj do ulubionych"}
-                </p>
+                <p>Poprzednia</p>
               </button>
 
               <button
-                tabIndex={hymnFiles.pdf ? 0 : -1}
-                title="Otwórz dokument PDF pieśni [D]"
-                className={`${hymnFiles.pdf ? "" : "disabled"}`}
-                onClick={openDocument}
+                title="Otwórz losową pieśń z wybranego śpiewnika [R]"
+                className={styles.randomButton}
+                onClick={() => randomHymn(hymn.book)}
               >
-                <Image
-                  className="icon"
-                  alt="pdf_file"
-                  src="/icons/document.svg"
-                  width={20}
-                  height={20}
-                  draggable={false}
-                />
-                <p>Otwórz PDF</p>
-              </button>
-
-              <button title="Skopiuj link pieśni" onClick={shareButton}>
-                <Image
-                  className="icon"
-                  alt="share"
-                  src="/icons/link.svg"
-                  width={20}
-                  height={20}
-                  draggable={false}
-                />
-                <p>Udostępnij</p>
+                <p>Wylosuj pieśń</p>
               </button>
 
               <button
-                title="Wydrukuj tekst pieśni"
-                onClick={() => !isLoading && window.print()}
+                title="Przejdź do następnej pieśni [→]"
+                className={hideControls ? styles.hide : ""}
+                onClick={() => changeHymn(hymn.id + 1)}
               >
+                <p>Następna</p>
                 <Image
-                  className="icon"
-                  alt="print"
-                  src="/icons/printer.svg"
+                  className={`${styles.next} icon`}
+                  alt="right"
+                  src="/icons/arrow.svg"
                   width={20}
                   height={20}
                   draggable={false}
                 />
-                <p>Wydrukuj</p>
               </button>
             </div>
           </div>
-        </main>
-      </div>
+
+          {/* right side buttons */}
+          <div className={styles.options}>
+            <div
+              className={styles.presentationButton}
+              onMouseLeave={() => showPresOptions(false)}
+            >
+              <button
+                title="Włącz pokaz slajdów pieśni na pełnym ekranie [P]"
+                className={styles.default}
+              >
+                <div className={styles.buttonText} onClick={showPresentation}>
+                  <Image
+                    className="icon"
+                    alt="presentation"
+                    src="/icons/monitor.svg"
+                    width={20}
+                    height={20}
+                    draggable={false}
+                  />
+                  <p>Pokaz slajdów</p>
+                </div>
+
+                <div
+                  className={styles.moreArrow}
+                  onClick={() => showPresOptions((prev) => !prev)}
+                >
+                  <Image
+                    style={{
+                      transform: presOptions ? "rotate(180deg)" : "rotate(0)",
+                    }}
+                    className="icon"
+                    alt="more"
+                    src="/icons/arrow.svg"
+                    width={18}
+                    height={18}
+                    draggable={false}
+                  />
+                </div>
+              </button>
+
+              <div
+                className={`${styles.list} ${presOptions ? styles.active : ""}`}
+              >
+                <button
+                  tabIndex={-1}
+                  title="Pokaż pokaz slajdów w oddzielnym oknie."
+                  onClick={() => {
+                    const params = new URLSearchParams();
+                    params.append("book", book);
+                    params.append("title", title);
+                    params.append("presentation", "true");
+
+                    window.open(
+                      `/hymn?${params.toString()}`,
+                      "presentation",
+                      "width=960,height=540"
+                    );
+                  }}
+                >
+                  <p>Otwórz w nowym oknie</p>
+                </button>
+              </div>
+            </div>
+
+            <button
+              title={
+                isFavorite
+                  ? "Kliknij, aby usunąć pieśń z listy ulubionych."
+                  : "Kliknij, aby dodać pieśń do listy ulubionych."
+              }
+              onClick={favoriteButton}
+            >
+              <Image
+                className="icon"
+                alt="favorite"
+                src={`/icons/${isFavorite ? "star_filled" : "star_empty"}.svg`}
+                width={20}
+                height={20}
+                draggable={false}
+              />
+              <p>{isFavorite ? "Usuń z ulubionych" : "Dodaj do ulubionych"}</p>
+            </button>
+
+            <button
+              tabIndex={hymnFiles.pdf ? 0 : -1}
+              title="Otwórz dokument PDF pieśni [D]"
+              className={`${hymnFiles.pdf ? "" : "disabled"}`}
+              onClick={openDocument}
+            >
+              <Image
+                className="icon"
+                alt="pdf"
+                src="/icons/document.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+              <p>Otwórz PDF</p>
+            </button>
+
+            <button title="Skopiuj link pieśni" onClick={shareButton}>
+              <Image
+                className="icon"
+                alt="share"
+                src="/icons/link.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+              <p>Udostępnij</p>
+            </button>
+
+            <button
+              title="Wydrukuj tekst pieśni"
+              onClick={() => !isLoading && window.print()}
+            >
+              <Image
+                className="icon"
+                alt="print"
+                src="/icons/printer.svg"
+                width={20}
+                height={20}
+                draggable={false}
+              />
+              <p>Wydrukuj</p>
+            </button>
+          </div>
+        </div>
+      </main>
 
       <MobileNavbar />
     </>

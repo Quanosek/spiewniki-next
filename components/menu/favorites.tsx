@@ -25,7 +25,7 @@ export default function FavoritesMenu() {
   const [favorites, setFavorites] = useState<Favorite[]>(favoritesData || []);
 
   // hover delete button on desktop
-  const [hoverElement, setHoverElement] = useState<number | undefined>();
+  const [elemHovered, setElemHovered] = useState<number | undefined>();
 
   // remove selected hymn from list of favorites
   const removeFromList = (index: number) => {
@@ -95,7 +95,7 @@ export default function FavoritesMenu() {
 
             <Image
               className="icon"
-              alt="arrow"
+              alt="options"
               src="/icons/arrow.svg"
               width={16}
               height={16}
@@ -111,8 +111,8 @@ export default function FavoritesMenu() {
             <div
               key={index}
               className={styles.favorite}
-              onMouseEnter={() => setHoverElement(index)}
-              onMouseLeave={() => setHoverElement(undefined)}
+              onMouseEnter={() => setElemHovered(index)}
+              onMouseLeave={() => setElemHovered(undefined)}
             >
               <Link
                 href={{
@@ -169,15 +169,15 @@ export default function FavoritesMenu() {
 
               <button
                 className={styles.removeButton}
-                style={{ display: hoverElement === index ? "flex" : "" }}
+                style={{ display: elemHovered === index ? "flex" : "" }}
                 onClick={() => removeFromList(index)}
               >
                 <Image
                   className="icon"
                   alt="delete"
                   src="/icons/close.svg"
-                  width={16}
-                  height={16}
+                  width={20}
+                  height={20}
                   draggable={false}
                 />
               </button>

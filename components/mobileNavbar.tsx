@@ -26,8 +26,8 @@ export default function MobileNavbarComponent() {
             className="icon"
             alt="books"
             src="/icons/book.svg"
-            width={20}
-            height={20}
+            width={25}
+            height={25}
             draggable={false}
           />
           <p>Śpiewniki</p>
@@ -39,8 +39,8 @@ export default function MobileNavbarComponent() {
           className="icon"
           alt="list"
           src="/icons/list.svg"
-          width={20}
-          height={20}
+          width={25}
+          height={25}
           draggable={false}
         />
         <p>Ulubione</p>
@@ -54,10 +54,10 @@ export default function MobileNavbarComponent() {
       >
         <Image
           className="icon"
-          alt="random"
+          alt="dice"
           src="/icons/dice.svg"
-          width={20}
-          height={20}
+          width={25}
+          height={25}
           draggable={false}
         />
         <p>Wylosuj</p>
@@ -68,8 +68,8 @@ export default function MobileNavbarComponent() {
           className="icon"
           alt="settings"
           src="/icons/settings.svg"
-          width={20}
-          height={20}
+          width={25}
+          height={25}
           draggable={false}
         />
         <p>Ustawienia</p>
@@ -81,8 +81,8 @@ export default function MobileNavbarComponent() {
             className="icon"
             alt="share"
             src="/icons/link.svg"
-            width={20}
-            height={20}
+            width={25}
+            height={25}
             draggable={false}
           />
           <p>Udostępnij</p>

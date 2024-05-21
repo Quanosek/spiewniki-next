@@ -35,18 +35,12 @@ export default function MenuComponent() {
     const ScrollEvent = () => menu && window.scrollTo(scrollLeft, scrollTop);
 
     // keyboard shortcuts
-    const KeyupEvent = (event: KeyboardEvent) => {
-      if (
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey ||
-        event.metaKey ||
-        !menu
-      ) {
+    const KeyupEvent = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || !menu) {
         return;
       }
 
-      if (event.key === "Escape") hiddenMenuQuery(undefined);
+      if (e.key === "Escape") hiddenMenuQuery(undefined);
     };
 
     document.addEventListener("scroll", ScrollEvent);

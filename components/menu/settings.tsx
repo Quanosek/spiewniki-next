@@ -67,8 +67,8 @@ export default function SettingsMenu() {
             src="/icons/text.svg"
             width={50}
             height={50}
-            priority={true}
             draggable={false}
+            priority
           />
 
           <input

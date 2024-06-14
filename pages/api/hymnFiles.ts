@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 import { bookShortcut } from "@/scripts/availableBooks";
-import SimpleText from "@/scripts/simpleText";
+import simplifyText from "@/scripts/simplifyText";
 
 // API to find connected files with specific hymn
 export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
@@ -19,7 +19,7 @@ export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
     const match = title.match(/^\d+[a-zA-Z]?/);
 
     if (match) id = match[0];
-    else id = new SimpleText(title).modify();
+    else id = new simplifyText(title).modify();
 
     const locateFile = (category: string) => {
       try {

@@ -1,4 +1,4 @@
-import router from "next/router";
+import Router from "next/router";
 
 import axios from "axios";
 
@@ -26,7 +26,7 @@ export function randomHymn(book: string | undefined) {
         Collector.map(({ data }) => hymns.push(...data));
         const random = Math.floor(Math.random() * (hymns.length + 1));
 
-        router.push({
+        Router.push({
           pathname: "/hymn",
           query: {
             book: bookShortcut(hymns[random].book),
@@ -51,7 +51,7 @@ export function randomHymn(book: string | undefined) {
       .then(({ data }) => {
         const random = Math.floor(Math.random() * (data.length + 1));
 
-        router.push({
+        Router.push({
           pathname: "/hymn",
           query: {
             book: bookShortcut(data[random].book),
@@ -67,8 +67,8 @@ export function shareButton() {
   if (navigator.share) {
     // share content
     navigator.share({
-      text: `${router.query.title || "Śpiewniki"}`,
-      url: router.asPath,
+      text: `${Router.query.title || "Śpiewniki"}`,
+      url: Router.asPath,
     });
   } else if (navigator.clipboard) {
     // copy to clipboard

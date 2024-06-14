@@ -304,8 +304,6 @@
 }
 
 .quickActions {
-  pointer-events: none;
-
   position: absolute;
   top: var(--space);
   right: var(--space);
@@ -330,6 +328,15 @@
     &:hover {
       opacity: 100%;
       background-color: var(--elements-hover);
+    }
+
+    &.onHover {
+      @media (min-width: 769px) {
+        display: none;
+      }
+      @media (max-width: 1024px) {
+        display: none !important;
+      }
     }
 
     @media (max-width: 768px) {

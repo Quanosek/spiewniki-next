@@ -186,11 +186,13 @@ export default function SettingsMenu() {
         <button
           className={styles.alert}
           onClick={() => {
-            const prompt = confirm(
-              "Czy na pewno chcesz przywrócić ustawienia domyślne?"
-            );
+            if (
+              !confirm("Czy na pewno chcesz przywrócić ustawienia domyślne?")
+            ) {
+              return;
+            }
 
-            if (prompt) setState({ ...defaultSettings });
+            setState({ ...defaultSettings });
           }}
         >
           <p>Przywróć domyślne</p>

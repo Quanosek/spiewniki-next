@@ -4,13 +4,13 @@ import fs from "fs";
 import path from "path";
 
 import { bookShortcut, booksList } from "@/scripts/availableBooks";
-import SimpleText from "@/scripts/simpleText";
+import simplifyText from "@/scripts/simplifyText";
 
 // API to find connected files with list of defined books
 export default function booksData(req: NextApiRequest, res: NextApiResponse) {
   try {
     const results = booksList().map((book) => {
-      const name = new SimpleText(bookShortcut(book)).modify();
+      const name = new simplifyText(bookShortcut(book)).modify();
 
       const locateFile = (category: string) => {
         try {

@@ -10,6 +10,7 @@ import { bookShortcut, booksList } from "@/scripts/availableBooks";
 
 export default function BooksPage() {
   const router = useRouter();
+
   const [data, setData] = useState([]);
 
   // fetch all books data

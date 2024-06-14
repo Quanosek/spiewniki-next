@@ -132,7 +132,11 @@ export default function FavoritesMenu() {
                         `database/${bookShortcut(fav.book)}.json`
                       );
 
-                      if (!data.find((elem: any) => elem.name === fav.title)) {
+                      if (
+                        !data.find((elem: { name: string }) => {
+                          return elem.name === fav.title;
+                        })
+                      ) {
                         removeFromList(index);
                         throw new Error();
                       }
@@ -192,14 +196,12 @@ export default function FavoritesMenu() {
           onClick={() => {
             if (!favorites.length) return alert("Brak ulubionych pieśni!");
 
-            const prompt = confirm(
-              "Czy na pewno chcesz wyczyścić listę ulubionych?"
-            );
-
-            if (prompt) {
-              setFavorites([]);
-              localStorage.removeItem("favorites");
+            if (!confirm("Czy na pewno chcesz wyczyścić listę ulubionych?")) {
+              return;
             }
+
+            setFavorites([]);
+            localStorage.removeItem("favorites");
           }}
         >
           <p>Wyczyść listę</p>

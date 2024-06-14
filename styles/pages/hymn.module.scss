@@ -145,8 +145,9 @@ $button-gap: 12px;
       position: absolute;
       top: 0;
       left: 0;
-      height: 100%;
-      width: 100%;
+      bottom: 0;
+      right: 0;
+
       border-radius: 0.4rem;
       border: 2px solid var(--elements-hover);
       pointer-events: none;
@@ -393,6 +394,11 @@ $button-gap: 12px;
     font-size: 95%;
   }
 
+  .italic {
+    opacity: 85%;
+    font-style: italic;
+  }
+
   .verse {
     display: flex;
     flex-direction: column;
@@ -515,6 +521,7 @@ $button-gap: 12px;
       img {
         position: relative;
       }
+
       .previous {
         right: 1px;
       }

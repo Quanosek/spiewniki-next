@@ -11,16 +11,8 @@ import styles from "@/styles/pages/search.module.scss";
 
 import { bookShortcut, booksList } from "@/scripts/availableBooks";
 import { randomHymn } from "@/scripts/buttons";
-import SimpleText from "@/scripts/simpleText";
-
-interface Hymn {
-  book: string;
-  name: string;
-  lyrics: string[];
-  song: {
-    lyrics: string[];
-  };
-}
+import HymnTypes from "@/scripts/hymnTypes";
+import simplifyText from "@/scripts/simplifyText";
 
 export default function SearchPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -30,8 +22,8 @@ export default function SearchPage() {
   const book = router.query.book as string;
 
   // data fetching
-  const [rawData, setRawData] = useState<any>();
-  const [data, setData] = useState<any>();
+  const [rawData, setRawData] = useState<HymnTypes[]>();
+  const [data, setData] = useState<HymnTypes[]>();
   const [isLoading, setLoading] = useState(true);
 
   // dynamic search-box input
@@ -39,7 +31,7 @@ export default function SearchPage() {
   const [inputValue, setInputValue] = useState("");
 
   // searching algorithm
-  const Search = (data: any, input: string) => {
+  const Search = (data: HymnTypes[], input: string) => {
     const NamesCollector = new Array();
     const LyricsCollector = new Array();
 
@@ -47,15 +39,15 @@ export default function SearchPage() {
       localStorage.getItem("settings") as string
     );
 
-    data.map((hymn: Hymn) => {
-      const { book, name, song } = hymn;
+    data.map((hymn: HymnTypes) => {
+      const { id, book, name, song } = hymn;
 
-      const formattedName = new SimpleText(name).format();
-      const formattedInput = new SimpleText(input).format();
+      const formattedName = new simplifyText(name).format();
+      const formattedInput = new simplifyText(input).format();
 
       if (formattedName.includes(formattedInput)) {
         // title found
-        NamesCollector.push({ book, name });
+        NamesCollector.push({ id, book, name });
       } else if (contextSearch) {
         // lyrics found
         const lyrics = Object.values(song.lyrics)
@@ -64,10 +56,11 @@ export default function SearchPage() {
           .map((verse) => verse.slice(1));
 
         lyrics.map((verse, index) => {
-          const formattedVerse = new SimpleText(verse).format();
+          const formattedVerse = new simplifyText(verse).format();
 
           if (formattedVerse.includes(formattedInput)) {
             LyricsCollector.push({
+              id,
               book,
               name,
               lyrics: [
@@ -114,7 +107,7 @@ export default function SearchPage() {
     if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search);
 
     // init data load function
-    const loadData = (fetchData: any) => {
+    const loadData = (fetchData: HymnTypes[]) => {
       setRawData(fetchData);
 
       if (prevSearch?.search) Search(fetchData, prevSearch.search || "");
@@ -182,13 +175,25 @@ export default function SearchPage() {
     }
   }, [inputValue, rawData]);
 
+  // infinite scroll handler
+  const [renderPage, setRenderPage] = useState(0);
+  const [renderedData, setRenderedData] = useState<HymnTypes[]>([]);
+
   // scroll-to-top button
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
     const scrollEvent = () => {
-      if (window.scrollY > 350) setShowTopBtn(true);
-      else setShowTopBtn(false);
+      // increase render array index
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 500
+      ) {
+        setRenderPage((page) => page + 1);
+      }
+
+      // show scroll-to-top button
+      setShowTopBtn(window.scrollY > 350);
     };
 
     window.addEventListener("scroll", scrollEvent);
@@ -196,7 +201,7 @@ export default function SearchPage() {
   }, []);
 
   // href link to hymn
-  const hymnLink = (hymn: Hymn) => {
+  const hymnLink = (hymn: HymnTypes) => {
     return {
       pathname: "/hymn",
       query: {
@@ -205,41 +210,6 @@ export default function SearchPage() {
       },
     };
   };
-
-  // infinite scroll handler
-  const [renderPage, setRenderPage] = useState(0);
-  const [renderedData, setRenderedData] = useState<any>([]);
-
-  useEffect(() => {
-    // increase render array index
-    const onScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 500
-      ) {
-        setRenderPage((page) => page + 1);
-      }
-    };
-
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    if (!data) return;
-
-    // split data into 30 elements arrays
-    const results = [];
-    for (let i = 0; i < data.length; i += 30) {
-      results.push(data.slice(i, i + 30));
-    }
-
-    // render content
-    const array = results.slice(0, renderPage + 1).flat();
-    setRenderedData(array);
-
-    setLoading(false);
-  }, [data, renderPage]);
 
   // clear input and restore results
   const cleanUp = useCallback(() => {
@@ -268,8 +238,7 @@ export default function SearchPage() {
         // search-box shortcuts
         if (e.key === "Escape") inputRef.current?.blur();
         if (e.key === "Enter") {
-          const hymn = data[0];
-
+          const hymn = data && data[0];
           if (hymn) router.push(hymnLink(hymn));
           else cleanUp();
         }
@@ -287,8 +256,25 @@ export default function SearchPage() {
     return () => document.removeEventListener("keyup", KeyupEvent);
   }, [router, data, cleanUp, unlocked, book]);
 
+  // set rendered data
+  useEffect(() => {
+    if (!data) return;
+
+    // split data into 30 elements arrays
+    const results = [];
+    for (let i = 0; i < data.length; i += 30) {
+      results.push(data.slice(i, i + 30));
+    }
+
+    // render content
+    const array = results.slice(0, renderPage + 1).flat();
+    setRenderedData(array);
+
+    setLoading(false);
+  }, [data, renderPage]);
+
   // quick actions on result hover
-  // const [resultHovered, setResultHovered] = useState<number | undefined>();
+  const [resultHovered, setResultHovered] = useState<number | undefined>();
 
   return (
     <>
@@ -415,21 +401,21 @@ export default function SearchPage() {
         </div>
 
         <div className={styles.results}>
-          {!isLoading &&
+          {isLoading ||
             (!renderedData.length ? (
               <p className={styles.noResults}>Brak wyników wyszukiwania</p>
             ) : (
-              renderedData.map((hymn: Hymn, index: number, row: Hymn[]) => {
-                const isFavorite = localStorage
-                  .getItem("favorites")
-                  ?.includes(hymn.name);
+              renderedData.map((hymn, index, row) => {
+                let isFavorite = Boolean(
+                  localStorage.getItem("favorites")?.includes(hymn.name)
+                );
 
                 return (
                   <div key={index}>
                     <div
                       className={styles.hymn}
-                      // onMouseEnter={() => setResultHovered(index)}
-                      // onMouseLeave={() => setResultHovered(undefined)}
+                      onMouseEnter={() => setResultHovered(index)}
+                      onMouseLeave={() => setResultHovered(undefined)}
                     >
                       <Link
                         className={styles.result}
@@ -463,14 +449,14 @@ export default function SearchPage() {
 
                         {hymn.lyrics && (
                           <div className={styles.lyrics}>
-                            {hymn.lyrics.map((verse: string, i: number) => (
+                            {hymn.lyrics.map((verse, i) => (
                               <p key={i}>
                                 {unlocked ? (
                                   <Highlighter
                                     autoEscape={true}
                                     highlightClassName={styles.highlight}
                                     searchWords={[inputValue]}
-                                    textToHighlight={verse}
+                                    textToHighlight={verse.toString()}
                                   />
                                 ) : (
                                   verse
@@ -482,8 +468,46 @@ export default function SearchPage() {
                       </Link>
 
                       <div className={styles.quickActions}>
-                        {/* {resultHovered === index && (
-                          <button title="Pokaz slajdów" onClick={() => {}}>
+                        {unlocked && (
+                          <button
+                            title="Otwórz pokaz slajdów"
+                            className={styles.onHover}
+                            style={{
+                              display: resultHovered === index ? "flex" : "",
+                            }}
+                            onClick={() => {
+                              const book = bookShortcut(hymn.book);
+                              const title = hymn.name;
+
+                              const presWindow =
+                                localStorage.getItem("presWindow");
+
+                              if (!presWindow) {
+                                // fullscreen mode
+                                const elem = document.documentElement;
+                                elem.requestFullscreen &&
+                                  elem.requestFullscreen();
+
+                                router.push({
+                                  pathname: "/presentation",
+                                  query: { book, title },
+                                });
+                              } else {
+                                // open new window
+                                const params = new URLSearchParams();
+                                params.append("book", book);
+                                params.append("title", title);
+
+                                window.open(
+                                  `/presentation?${params.toString()}`,
+                                  "presentation",
+                                  "width=960,height=540"
+                                );
+
+                                localStorage.setItem("presWindow", "true");
+                              }
+                            }}
+                          >
                             <Image
                               className="icon"
                               alt="presentation"
@@ -493,10 +517,40 @@ export default function SearchPage() {
                               draggable={false}
                             />
                           </button>
-                        )} */}
+                        )}
 
                         {isFavorite && (
-                          <button title="Usuń z ulubionych" onClick={() => {}}>
+                          <button
+                            title="Usuń pieśń z ulubionych"
+                            onClick={() => {
+                              if (
+                                !confirm(
+                                  "Czy chcesz usunąć wybraną pieśń z ulubionych?"
+                                )
+                              ) {
+                                return;
+                              }
+
+                              let favorites = JSON.parse(
+                                localStorage.getItem("favorites") || "[]"
+                              );
+
+                              favorites = favorites.filter(
+                                (elem: { book: string; id: number }) => {
+                                  return (
+                                    elem.book !== bookShortcut(hymn.book) ||
+                                    elem.id !== hymn.id
+                                  );
+                                }
+                              );
+
+                              isFavorite = false;
+                              localStorage.setItem(
+                                "favorites",
+                                JSON.stringify(favorites)
+                              );
+                            }}
+                          >
                             <Image
                               className="icon"
                               alt="favorite"

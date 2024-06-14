@@ -100,7 +100,7 @@ export default function HomePage() {
         </div>
 
         {hamburgerMenu && (
-          // mobile full-screen menu
+          // mobile fullscreen menu
           <div className={styles.hamburgerMenu}>
             <button onClick={shareButton}>
               <p>Udostępnij</p>

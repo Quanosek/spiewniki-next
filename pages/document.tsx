@@ -5,25 +5,21 @@ import { useEffect, useState } from "react";
 
 import styles from "@/styles/pages/document.module.scss";
 
-import SimpleText from "@/scripts/simpleText";
-
-interface RouterQuery {
-  [key: string]: string;
-}
+import simplifyText from "@/scripts/simplifyText";
 
 export default function DocumentPage() {
   const router = useRouter();
 
-  const libraryPath = "/libraries/pdfjs-4.2.67-dist/web/viewer.html";
+  const libraryPath = "/libraries/pdfjs-4.3.136-legacy-dist/web/viewer.html";
   const [documentPath, setDocumentPath] = useState("");
 
   useEffect(() => {
     if (!router.isReady) return;
-    const { d, book, id } = router.query as RouterQuery;
+    const { d, book, id } = router.query as { [key: string]: string };
 
     // get document
     if (d) {
-      setDocumentPath(`/pdf/${new SimpleText(d).modify()}.pdf`);
+      setDocumentPath(`/pdf/${new simplifyText(d).modify()}.pdf`);
     } else if (book && id) {
       setDocumentPath(`/pdf/${book}/${id}.pdf`);
     } else {

@@ -1,73 +1,75 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useRef } from "react";
 
 import styles from "@/styles/components/presentation.module.scss";
 
-export default function PresentationComponent(params: { data: any }) {
-  const hymn = params.data; // all data from "/hymn" page
+import HymnTypes from "@/scripts/hymnTypes";
 
-  const count = useRef(-1);
-  const [slide, setSlide] = useState<any>();
+export default function PresentationComponent(params: { data: HymnTypes }) {
+  const hymn = params.data;
+  const router = useRouter();
 
-  // define order and type of presentation
-  let order: string[] | number[];
-  let presentation: boolean;
-
+  let order: any;
   if (hymn.song.presentation) {
-    presentation = true;
+    // presentation order
     order = hymn.song.presentation
       .split(" ")
       .filter((item: string) => item !== "");
   } else {
-    presentation = false;
-    order = hymn.lyrics.map((verse: string, index: number) => index);
+    // counter order
+    order = Object.keys(hymn.song.lyrics);
   }
+
+  const slide = useRef(-1);
 
   // format lyrics to display
   const lyricsFormat = useCallback(
-    (data: any) => {
-      let content;
-      if (presentation) content = data.song.lyrics[order[count.current]];
-      else content = data.lyrics[order[count.current]];
+    (data: HymnTypes) => {
+      if (!order) return;
 
-      if (content) {
-        content = content
-          .filter((line: string) => line.startsWith(" ")) // show only text lines
-          .map((line: string) => line.slice(1)) // remove first space
-          .map((line: string) => line.replace(/\(.*?\)/g, "")) // remove text in brackets
-          .filter((line: string) => line !== "" && line !== " "); // remove empty lines
-      }
+      const content = data.song.lyrics[order[slide.current]];
+      if (!content) return;
 
-      return content;
+      return content
+        .filter((line: string) => line.startsWith(" ")) // show only text lines
+        .map((line: string) => line.slice(1)) // remove first space
+        .map((line: string) => line.replace(/\(.*?\)/g, "")) // remove text in brackets
+        .filter((line: string) => line !== "" && line !== " "); // remove empty lines
     },
-    [presentation, order]
+    [order]
   );
 
   // slideshow navigation
+  const [verse, setVerse] = useState<string[]>();
+
   const prevSlide = useCallback(() => {
-    if (count.current >= 0) {
-      count.current--;
-      setSlide(lyricsFormat(hymn));
+    if (!hymn) return;
+
+    if (slide.current >= 0) {
+      slide.current--;
+      setVerse(lyricsFormat(hymn));
     }
-  }, [lyricsFormat, hymn]);
+  }, [hymn, lyricsFormat]);
 
   const nextSlide = useCallback(() => {
-    if (count.current <= order.length) {
-      count.current++;
-      setSlide(lyricsFormat(hymn));
+    if (!(hymn && order)) return;
+
+    if (slide.current <= order.length) {
+      slide.current++;
+      setVerse(lyricsFormat(hymn));
     }
 
-    if (count.current > order.length) {
+    if (slide.current > order.length) {
       if (document.fullscreenElement) document.exitFullscreen();
-      else count.current--;
+      else slide.current--;
     }
-  }, [order, lyricsFormat, hymn]);
+  }, [hymn, lyricsFormat, order]);
 
-  // mouse behavior parameters
-  const [alwaysShowCursor, setAlwaysShowCursor] = useState(false);
+  // mouse behavior params
   const [showCursor, setShowCursor] = useState(false);
-
-  const cursorHideTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
+  const [alwaysShowCursor, setAlwaysShowCursor] = useState(false);
+  const cursorHideTimeout = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     // hide mouse cursor on idle
@@ -78,21 +80,21 @@ export default function PresentationComponent(params: { data: any }) {
       clearTimeout(cursorHideTimeout.current);
 
       if (!alwaysShowCursor) {
-        cursorHideTimeout.current = setTimeout(
-          () => setShowCursor(false),
-          1500
-        );
+        cursorHideTimeout.current = setTimeout(() => {
+          return setShowCursor(false);
+        }, 1500);
       }
     };
 
-    // handle fullscreen navigation
-    let startPosition: number, endPosition: number;
+    // handle fullscreen navigation controls
+    let startPosition: number;
+    let endPosition: number;
+
     const handleEvent = (event: Event) => {
-      // custom event types
       const TouchEvent = event as TouchEvent;
       const KeyboardEvent = event as KeyboardEvent;
 
-      // touch screen navigation
+      // touch controls
       if (event.type === "touchstart") {
         startPosition = TouchEvent.touches[0].clientX;
       }
@@ -138,21 +140,7 @@ export default function PresentationComponent(params: { data: any }) {
         return document.removeEventListener(eventType, handleEvent);
       });
     };
-  }, [alwaysShowCursor, prevSlide, nextSlide]);
-
-  // keyboard shortcuts
-  useEffect(() => {
-    const KeyupEvent = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
-        return;
-      }
-
-      if (e.key === "Escape" && !document.fullscreenElement) window.close();
-    };
-
-    document.addEventListener("keyup", KeyupEvent);
-    return () => document.removeEventListener("keyup", KeyupEvent);
-  }, []);
+  }, [alwaysShowCursor, prevSlide, nextSlide, router]);
 
   return (
     <div
@@ -160,35 +148,26 @@ export default function PresentationComponent(params: { data: any }) {
       style={{ cursor: showCursor ? "default" : "none" }}
     >
       <div
-        // dynamic classes
-        className={`${styles.presentation}
-          ${count.current < 0 ? styles.first : ""}
-          ${count.current >= order.length ? styles.last : ""}`}
+        className={`
+            ${styles.content}
+            ${slide.current < 0 && styles.first}
+            ${slide.current >= order.length && styles.last}
+          `}
       >
-        {/* title section */}
+        {/* title name */}
         <div className={styles.title}>
           <h1>{hymn.name}</h1>
           <h2>{hymn.book}</h2>
         </div>
 
-        {/* lyrics section */}
+        {/* lyrics */}
         <div className={styles.verse}>
-          {slide &&
-            slide.map((line: string, index: number) => (
-              <p key={index}>{line}</p>
-            ))}
+          {verse && verse.map((line, i) => <p key={i}>{line}</p>)}
         </div>
 
-        {/* progress bar section */}
-        <div className={styles.progress}>
-          <div
-            className={styles.fulfill}
-            style={{ width: `${(100 / order.length) * (count.current + 1)}%` }}
-          />
-        </div>
-
+        {/* action buttons */}
         <div
-          className={`${styles.navigation} ${showCursor ? styles.show : ""}`}
+          className={`${styles.navigation} ${showCursor && styles.show}`}
           onMouseEnter={() => setAlwaysShowCursor(true)}
           onMouseLeave={() => setAlwaysShowCursor(false)}
         >
@@ -197,28 +176,37 @@ export default function PresentationComponent(params: { data: any }) {
             onClick={prevSlide}
           >
             <Image
-              className="icon"
+              className={`${styles.prev} icon`}
               alt="previous"
               src="/icons/arrow.svg"
-              width={20}
-              height={20}
+              width={50}
+              height={50}
               draggable={false}
             />
           </button>
 
           <button
-            title="Następny slajd. Użyj Spacji, klawiszy [→] [↓] lub kółka myszy w dół."
+            title="Następny slajd. Użyj spacji, klawiszy [→] [↓] lub kółka myszy w dół."
             onClick={nextSlide}
           >
             <Image
-              className="icon"
+              className={`${styles.next} icon`}
               alt="next"
               src="/icons/arrow.svg"
-              width={20}
-              height={20}
+              width={50}
+              height={50}
               draggable={false}
             />
           </button>
+        </div>
+
+        {/* progress bar */}
+        <div className={styles.progressBar}>
+          <div
+            style={{
+              width: `${(100 / order.length) * (slide.current + 1)}%`,
+            }}
+          />
         </div>
       </div>
     </div>

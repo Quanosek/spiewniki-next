@@ -57,8 +57,8 @@ export default function ShortcutsMenu() {
               keyup="D"
               action="Dokument PDF wybranej pieśni (jeśli istnieje)"
             />
-            <Shortcut keyup="→" action="Następna pieśń w śpiewniku" />
             <Shortcut keyup="←" action="Poprzednia pieśń w śpiewniku" />
+            <Shortcut keyup="→" action="Następna pieśń w śpiewniku" />
           </>
         )}
       </div>

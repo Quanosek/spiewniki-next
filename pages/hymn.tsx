@@ -418,13 +418,17 @@ export default function HymnPage() {
                                   // skip chords line if user don't want to see them
                                   if (isChord && !showChords) return;
 
+                                  const line = verse
+                                    .replace(/^[\s.]/, "") // first space
+                                    .replace(/(?<=\[:) | (?=:\])/g, "\u00A0"); // spaces between brackets
+
                                   // lyrics single verse line
                                   return (
                                     <p
                                       key={j}
                                       className={isChord ? styles.chord : ""}
                                     >
-                                      {verse.replace(/^[\s.]/, "")}
+                                      {line}
                                     </p>
                                   );
                                 })}

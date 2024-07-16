@@ -420,6 +420,7 @@ export default function HymnPage() {
 
                                   const line = verse
                                     .replace(/^[\s.]/, "") // first space
+                                    .replace(/\b(\w)\b\s/g, "$1\u00A0") // spaces after single letter words
                                     .replace(/(?<=\[:) | (?=:\])/g, "\u00A0"); // spaces between brackets
 
                                   // lyrics single verse line

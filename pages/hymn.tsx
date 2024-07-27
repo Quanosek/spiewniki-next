@@ -303,19 +303,6 @@ export default function HymnPage() {
           </button>
 
           <div>
-            {hymnFiles.mp3 && (
-              <button className="disabled" onClick={() => {}}>
-                <Image
-                  className="icon"
-                  alt="pdf"
-                  src="/icons/music.svg"
-                  width={25}
-                  height={25}
-                  draggable={false}
-                />
-              </button>
-            )}
-
             {hymnFiles.pdf && (
               <button onClick={() => openDocument(hymnFiles.pdf)}>
                 <Image
@@ -629,23 +616,6 @@ export default function HymnPage() {
                 draggable={false}
               />
               <p>Otwórz PDF</p>
-            </button>
-
-            <button
-              tabIndex={hymnFiles.mp3 ? 0 : -1}
-              title="Odtwórz linię melodyczną wybranej pieśni [M]"
-              className={(hymnFiles.mp3 ? "" : "disabled") + "disabled"}
-              onClick={() => {}}
-            >
-              <Image
-                className="icon"
-                alt="mp3"
-                src="/icons/music.svg"
-                width={20}
-                height={20}
-                draggable={false}
-              />
-              <p>Odtwórz melodię</p>
             </button>
 
             <button

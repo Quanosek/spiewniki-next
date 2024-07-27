@@ -34,7 +34,7 @@ export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
 
     const results = {
       pdf: locateFile("pdf"),
-      mp3: locateFile("mp3"),
+      // ...files
     };
 
     return res.status(200).json(results);

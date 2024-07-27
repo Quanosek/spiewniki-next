@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
+import { hiddenMenuQuery } from "../menu";
 
 import styles from "@/styles/components/menu.module.scss";
-
-import { hiddenMenuQuery } from "../menu";
 
 interface ShortcutProps {
   keyup: string;

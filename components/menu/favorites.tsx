@@ -2,13 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
 import axios from "axios";
+import { hiddenMenuQuery } from "../menu";
+import { bookShortcut, booksList } from "@/lib/availableBooks";
 
 import styles from "@/styles/components/menu.module.scss";
-
-import { bookShortcut, booksList } from "@/scripts/availableBooks";
-import { hiddenMenuQuery } from "../menu";
 
 interface Favorite {
   book: string;

@@ -1,14 +1,12 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
 import axios from "axios";
+import Presentation from "@/components/presentation";
+import { bookShortcut } from "@/lib/availableBooks";
+import HymnTypes from "@/lib/hymnTypes";
 
 import styles from "@/styles/components/presentation.module.scss";
-
-import Presentation from "@/components/presentation";
-import { bookShortcut } from "@/scripts/availableBooks";
-import HymnTypes from "@/scripts/hymnTypes";
 
 export default function PresentationPage() {
   const router = useRouter();

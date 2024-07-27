@@ -1,10 +1,9 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useRef } from "react";
+import HymnTypes from "@/lib/hymnTypes";
 
 import styles from "@/styles/components/presentation.module.scss";
-
-import HymnTypes from "@/scripts/hymnTypes";
 
 export default function PresentationComponent(params: { data: HymnTypes }) {
   const hymn = params.data;

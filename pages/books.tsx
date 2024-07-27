@@ -3,10 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { bookShortcut, booksList } from "@/lib/availableBooks";
 
 import styles from "@/styles/pages/books.module.scss";
-
-import { bookShortcut, booksList } from "@/scripts/availableBooks";
 
 export default function BooksPage() {
   const router = useRouter();

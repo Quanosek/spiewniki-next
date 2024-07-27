@@ -1,10 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-
 import fs from "fs";
 import path from "path";
-
-import { bookShortcut, booksList } from "@/scripts/availableBooks";
-import simplifyText from "@/scripts/simplifyText";
+import { NextApiRequest, NextApiResponse } from "next";
+import { bookShortcut, booksList } from "@/lib/availableBooks";
+import simplifyText from "@/lib/simplifyText";
 
 // API to find connected files with list of defined books
 export default function booksData(req: NextApiRequest, res: NextApiResponse) {
@@ -28,7 +26,6 @@ export default function booksData(req: NextApiRequest, res: NextApiResponse) {
       return {
         name: book,
         pdf: locateFile("pdf"),
-        // params...
       };
     });
 

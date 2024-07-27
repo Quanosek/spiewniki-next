@@ -2,15 +2,14 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import simplifyText from "@/lib/simplifyText";
 
 import styles from "@/styles/pages/document.module.scss";
-
-import simplifyText from "@/scripts/simplifyText";
 
 export default function DocumentPage() {
   const router = useRouter();
 
-  const libraryPath = "/libraries/pdfjs-4.3.136-legacy-dist/web/viewer.html";
+  const libraryPath = "/libraries/pdfjs-4.5.136-legacy-dist/web/viewer.html";
   const [documentPath, setDocumentPath] = useState("");
 
   useEffect(() => {

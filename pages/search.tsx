@@ -3,16 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useRef } from "react";
-
 import axios from "axios";
 import Highlighter from "react-highlight-words";
+import { bookShortcut, booksList } from "@/lib/availableBooks";
+import { randomHymn } from "@/lib/buttons";
+import HymnTypes from "@/lib/hymnTypes";
+import simplifyText from "@/lib/simplifyText";
 
 import styles from "@/styles/pages/search.module.scss";
-
-import { bookShortcut, booksList } from "@/scripts/availableBooks";
-import { randomHymn } from "@/scripts/buttons";
-import HymnTypes from "@/scripts/hymnTypes";
-import simplifyText from "@/scripts/simplifyText";
 
 export default function SearchPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";

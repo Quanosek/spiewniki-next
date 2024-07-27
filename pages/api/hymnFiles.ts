@@ -1,10 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-
 import fs from "fs";
 import path from "path";
-
-import { bookShortcut } from "@/scripts/availableBooks";
-import simplifyText from "@/scripts/simplifyText";
+import { NextApiRequest, NextApiResponse } from "next";
+import { bookShortcut } from "@/lib/availableBooks";
+import simplifyText from "@/lib/simplifyText";
 
 // API to find connected files with specific hymn
 export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
@@ -36,7 +34,7 @@ export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
 
     const results = {
       pdf: locateFile("pdf"),
-      // params...
+      mp3: locateFile("mp3"),
     };
 
     return res.status(200).json(results);

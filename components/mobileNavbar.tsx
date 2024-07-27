@@ -1,8 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-
-import { bookShortcut } from "@/scripts/availableBooks";
-import { randomHymn, shareButton } from "@/scripts/buttons";
+import { bookShortcut } from "@/lib/availableBooks";
+import { randomHymn, shareButton } from "@/lib/buttons";
 import { hiddenMenuQuery } from "./menu";
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";

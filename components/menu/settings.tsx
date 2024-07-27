@@ -1,9 +1,8 @@
 import Image from "next/image";
 import { useEffect, useState, useCallback, ReactElement } from "react";
+import { hiddenMenuQuery } from "../menu";
 
 import styles from "@/styles/components/menu.module.scss";
-
-import { hiddenMenuQuery } from "../menu";
 
 interface Settings {
   themeColor: string;

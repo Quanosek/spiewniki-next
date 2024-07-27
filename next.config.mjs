@@ -14,7 +14,7 @@ const lockedFiles = new Array();
   "Pieśni Chóru Syloe",
 ].forEach((book) => lockedFiles.push(`!database/${book}.json`));
 
-const excludes = ["!pdf/**/*", "!libraries/**/*"].concat(
+const excludes = ["!libraries/**/*", "!pdf/**/*"].concat(
   unlocked ? [] : lockedFiles
 );
 

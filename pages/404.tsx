@@ -3,10 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { shareButton } from "@/lib/buttons";
 
 import styles from "@/styles/pages/error.module.scss";
-
-import { shareButton } from "@/scripts/buttons";
 
 export default function ErrorPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";

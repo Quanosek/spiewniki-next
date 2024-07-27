@@ -3,16 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useRef } from "react";
-
 import axios from "axios";
-
-import styles from "@/styles/pages/hymn.module.scss";
-
 import MobileNavbar from "@/components/mobileNavbar";
 import Presentation from "@/components/presentation";
-import { bookShortcut } from "@/scripts/availableBooks";
-import { randomHymn, shareButton } from "@/scripts/buttons";
-import HymnTypes from "@/scripts/hymnTypes";
+import { bookShortcut } from "@/lib/availableBooks";
+import { randomHymn, shareButton } from "@/lib/buttons";
+import HymnTypes from "@/lib/hymnTypes";
+
+import styles from "@/styles/pages/hymn.module.scss";
 
 export default function HymnPage() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
@@ -420,6 +418,7 @@ export default function HymnPage() {
 
                                   const line = verse
                                     .replace(/^[\s.]/, "") // first space
+                                    .replace(/\b(\w)\b\s/g, "$1\u00A0") // spaces after single letter words
                                     .replace(/(?<=\[:) | (?=:\])/g, "\u00A0"); // spaces between brackets
 
                                   // lyrics single verse line

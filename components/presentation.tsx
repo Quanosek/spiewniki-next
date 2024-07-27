@@ -1,10 +1,9 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useRef } from "react";
+import HymnTypes from "@/lib/hymnTypes";
 
 import styles from "@/styles/components/presentation.module.scss";
-
-import HymnTypes from "@/scripts/hymnTypes";
 
 export default function PresentationComponent(params: { data: HymnTypes }) {
   const hymn = params.data;
@@ -162,7 +161,14 @@ export default function PresentationComponent(params: { data: HymnTypes }) {
 
         {/* lyrics */}
         <div className={styles.verse}>
-          {verse && verse.map((line, i) => <p key={i}>{line}</p>)}
+          {verse &&
+            verse.map((line, i) => {
+              const formattedLine = line
+                .replace(/\b(\w)\b\s/g, "$1\u00A0") // spaces after single letter words
+                .replace(/(?<=\[:) | (?=:\])/g, "\u00A0"); // spaces between brackets
+
+              return <p key={i}>{formattedLine}</p>;
+            })}
         </div>
 
         {/* action buttons */}

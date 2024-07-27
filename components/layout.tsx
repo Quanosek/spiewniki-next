@@ -1,11 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
-
 import { GoogleAnalytics } from "nextjs-google-analytics";
-
-import Menu from "@/components/menu";
 import { hiddenMenuQuery } from "./menu";
+import Menu from "@/components/menu";
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 

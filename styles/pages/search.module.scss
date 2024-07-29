@@ -309,7 +309,7 @@
   right: var(--space);
   height: calc(100% - 2 * var(--space));
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
 
   @media (max-width: 768px) {
     top: 0;

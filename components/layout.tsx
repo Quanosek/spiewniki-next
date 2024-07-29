@@ -80,16 +80,11 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
 
           <p className="credits">
             Wszelkie prawa zastrzeżone &#169; 2022-{new Date().getFullYear()}
-            {" │ "}
-            {unlocked ? (
+            {unlocked && (
               <>
-                domena&nbsp;
+                {" │ domena "}
                 <Link href="https://www.klalo.pl/">klalo.pl</Link>
               </>
-            ) : (
-              <Link href="https://www.nastrazy.org/">
-                Wydawnictwo Na Straży
-              </Link>
             )}
           </p>
         </div>

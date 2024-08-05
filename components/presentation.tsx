@@ -5,9 +5,9 @@ import HymnTypes from "@/lib/hymnTypes";
 
 import styles from "@/styles/components/presentation.module.scss";
 
-export default function PresentationComponent(params: { data: HymnTypes }) {
-  const hymn = params.data;
+export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
   const router = useRouter();
+  const ic = hymn && hymn.song.title.includes("IC");
 
   let order: any;
   if (hymn.song.presentation) {
@@ -154,13 +154,23 @@ export default function PresentationComponent(params: { data: HymnTypes }) {
           `}
       >
         {/* title name */}
-        <div className={styles.title}>
-          <h1>{hymn.name}</h1>
-          <h2>{hymn.book}</h2>
-        </div>
+        {!ic && (
+          <div className={styles.title}>
+            <h1>{hymn.name}</h1>
+            <h2>{hymn.book}</h2>
+          </div>
+        )}
 
         {/* lyrics */}
-        <div className={styles.verse}>
+        {ic && slide.current === 0 && (
+          <h1 className={styles.icTitle}>{hymn.song.title}</h1>
+        )}
+
+        <div
+          className={`${styles.verse} ${ic && styles.international} ${
+            ic && slide.current === 0 && styles.grid
+          }`}
+        >
           {verse &&
             verse.map((line, i) => {
               const formattedLine = line

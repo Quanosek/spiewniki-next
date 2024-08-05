@@ -44,7 +44,7 @@ export default function PresentationPage() {
       </Head>
 
       <div className={styles.fullscreen}>
-        {hymn && <Presentation data={hymn} />}
+        {hymn && <Presentation hymn={hymn} />}
       </div>
     </>
   );

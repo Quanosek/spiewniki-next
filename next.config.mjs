@@ -10,8 +10,9 @@ const lockedFiles = new Array();
   "Śpiewniczek Młodzieżowy",
   "Śpiewnik Koziański",
   "Śpiewnik Poznański",
-  "Różne pieśni",
   "Pieśni Chóru Syloe",
+  "Śpiewnik Międzynarodowy (IC)",
+  "Różne pieśni",
 ].forEach((book) => lockedFiles.push(`!database/${book}.json`));
 
 const excludes = ["!libraries/**/*", "!pdf/**/*"].concat(

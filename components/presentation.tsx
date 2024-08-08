@@ -6,6 +6,8 @@ import HymnTypes from "@/lib/hymnTypes";
 import styles from "@/styles/components/presentation.module.scss";
 
 export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+
   const router = useRouter();
   const ic = hymn && hymn.song.title.includes("IC");
 
@@ -29,6 +31,14 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
     setOrder(order);
   }, [hymn, ic]);
 
+  const closePresentation = useCallback(() => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else {
+      const { presentation, ...query } = router.query;
+      router.replace({ query });
+    }
+  }, [router]);
+
   const [slide, setSlide] = useState(0);
   const [verse, setVerse] = useState<string[]>();
 
@@ -41,12 +51,9 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
     if (slide <= order.length) setSlide(slide + 1);
     else {
       if (document.fullscreenElement) document.exitFullscreen();
-      else {
-        const { presentation, ...query } = router.query;
-        router.replace({ query });
-      }
+      else closePresentation();
     }
-  }, [order, slide, router]);
+  }, [order, slide, closePresentation]);
 
   useEffect(() => {
     if (!(hymn || order)) return;
@@ -151,13 +158,8 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
         nextSlide();
       }
 
-      if (KeyboardEvent.key === "Escape") {
-        if (document.fullscreenElement) document.exitFullscreen();
-        else {
-          const { presentation, ...query } = router.query;
-          router.replace({ query });
-        }
-      }
+      if (KeyboardEvent.key === "Escape") closePresentation();
+      if (KeyboardEvent.key === "L") setSlide(-1);
     };
 
     // events handlers
@@ -174,7 +176,7 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
         return document.removeEventListener(eventType, handleEvent);
       });
     };
-  }, [router, prevSlide, nextSlide, alwaysShowCursor]);
+  }, [router, alwaysShowCursor, prevSlide, nextSlide, closePresentation]);
 
   return (
     <div
@@ -245,6 +247,20 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
               className={`${styles.next} icon`}
               alt="next"
               src="/icons/arrow.svg"
+              width={50}
+              height={50}
+              draggable={false}
+            />
+          </button>
+
+          <button
+            title="Wyjdź z pokazu slajdów [Escape]"
+            onClick={closePresentation}
+          >
+            <Image
+              className="icon"
+              alt="exit"
+              src="/icons/close.svg"
               width={50}
               height={50}
               draggable={false}

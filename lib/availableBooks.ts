@@ -9,6 +9,7 @@ export function bookShortcut(input: string) {
     P: "Śpiewnik Poznański",
     E: "Śpiewniczek Młodzieżowy",
     S: "Pieśni Chóru Syloe",
+    M: "Śpiewnik Międzynarodowy (IC)",
     R: "Różne pieśni",
   };
 
@@ -33,7 +34,7 @@ export function booksList() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
   const list = unlocked
-    ? ["B", "C", "N", "K", "P", "E", "S", "R"]
+    ? ["B", "C", "N", "K", "P", "E", "S", "M", "R"]
     : ["B", "C", "N"];
 
   return list;

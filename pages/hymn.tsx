@@ -4,6 +4,7 @@ import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState, useCallback, useRef } from "react";
 import axios from "axios";
+import LyricsComponent from "@/components/lyrics";
 import MobileNavbar from "@/components/mobileNavbar";
 import Presentation from "@/components/presentation";
 import { bookShortcut } from "@/lib/availableBooks";
@@ -286,7 +287,7 @@ export default function HymnPage() {
         <title>{hymn ? `${title} / Śpiewniki` : "Śpiewniki"}</title>
       </Head>
 
-      {hymn && presentation && <Presentation data={hymn} />}
+      {presentation && hymn && <Presentation hymn={hymn} />}
 
       <main style={{ padding: 0 }}>
         <div className={`${styles.title} ${hideControls ? styles.hide : ""}`}>
@@ -394,46 +395,7 @@ export default function HymnPage() {
 
                       {/* lyrics */}
                       <div className={styles.lyrics}>
-                        {hymn.lyrics &&
-                          hymn.lyrics.map((array, i) => {
-                            const id = Object.keys(hymn.song.lyrics)[i];
-
-                            return (
-                              <div
-                                key={i}
-                                id={id}
-                                className={`
-                                  ${styles.verse}
-                                  ${id.includes("T") && styles.italic}
-                                `}
-                              >
-                                {array.map((verse, j) => {
-                                  const isChord = verse.startsWith(".");
-                                  const { showChords } = JSON.parse(
-                                    localStorage.getItem("settings") as string
-                                  );
-
-                                  // skip chords line if user don't want to see them
-                                  if (isChord && !showChords) return;
-
-                                  const line = verse
-                                    .replace(/^[\s.]/, "") // first space
-                                    .replace(/\b(\w)\b\s/g, "$1\u00A0") // spaces after single letter words
-                                    .replace(/(?<=\[:) | (?=:\])/g, "\u00A0"); // spaces between brackets
-
-                                  // lyrics single verse line
-                                  return (
-                                    <p
-                                      key={j}
-                                      className={isChord ? styles.chord : ""}
-                                    >
-                                      {line}
-                                    </p>
-                                  );
-                                })}
-                              </div>
-                            );
-                          })}
+                        <LyricsComponent hymn={hymn} />
                       </div>
 
                       {/* additional hymn information */}

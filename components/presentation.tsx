@@ -5,67 +5,94 @@ import HymnTypes from "@/lib/hymnTypes";
 
 import styles from "@/styles/components/presentation.module.scss";
 
-export default function PresentationComponent(params: { data: HymnTypes }) {
-  const hymn = params.data;
+export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
   const router = useRouter();
+  const ic = hymn && hymn.song.title.includes("IC");
 
-  let order: any;
-  if (hymn.song.presentation) {
-    // presentation order
-    order = hymn.song.presentation
-      .split(" ")
-      .filter((item: string) => item !== "");
-  } else {
-    // counter order
-    order = Object.keys(hymn.song.lyrics);
-  }
+  // slides order
+  const [order, setOrder] = useState<any>([]);
 
-  const slide = useRef(-1);
+  useEffect(() => {
+    if (!hymn) return;
+    let order: string[] = [];
 
-  // format lyrics to display
-  const lyricsFormat = useCallback(
-    (data: HymnTypes) => {
-      if (!order) return;
+    if (hymn.song.presentation) {
+      // presentation order
+      order = hymn.song.presentation
+        .split(" ")
+        .filter((item: string) => item !== "");
+    } else {
+      // counter order
+      order = Object.keys(hymn.song.lyrics);
+    }
 
-      const content = data.song.lyrics[order[slide.current]];
-      if (!content) return;
+    setOrder(order);
+  }, [hymn, ic]);
 
-      return content
+  const [slide, setSlide] = useState(0);
+  const [verse, setVerse] = useState<string[]>();
+
+  // slides navigation
+  const prevSlide = useCallback(() => {
+    if (slide > 0) setSlide(slide - 1);
+  }, [slide]);
+
+  const nextSlide = useCallback(() => {
+    if (slide <= order.length) setSlide(slide + 1);
+    else {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else {
+        const { presentation, ...query } = router.query;
+        router.replace({ query });
+      }
+    }
+  }, [order, slide, router]);
+
+  useEffect(() => {
+    if (!(hymn || order)) return;
+
+    const verse = hymn.song.lyrics[order[slide - 1]];
+    if (!verse) return;
+
+    setVerse(
+      verse
         .filter((line: string) => line.startsWith(" ")) // show only text lines
         .map((line: string) => line.slice(1)) // remove first space
         .map((line: string) => line.replace(/\(.*?\)/g, "")) // remove text in brackets
-        .filter((line: string) => line !== "" && line !== " "); // remove empty lines
-    },
-    [order]
-  );
+        .filter((line: string) => line !== "" && line !== " ") // remove empty lines));
+    );
+  }, [hymn, order, slide]);
 
-  // slideshow navigation
-  const [verse, setVerse] = useState<string[]>();
+  // detect line with and modify font size
+  const linesWidth = useRef<HTMLParagraphElement>(null);
 
-  const prevSlide = useCallback(() => {
-    if (!hymn) return;
+  useEffect(() => {
+    const lines = linesWidth.current;
+    lines?.style.removeProperty("font-size");
 
-    if (slide.current >= 0) {
-      slide.current--;
-      setVerse(lyricsFormat(hymn));
-    }
-  }, [hymn, lyricsFormat]);
+    const paragraph = lines?.clientWidth;
+    if (!paragraph) return;
 
-  const nextSlide = useCallback(() => {
-    if (!(hymn && order)) return;
+    const margin = paragraph - window.innerWidth;
 
-    if (slide.current <= order.length) {
-      slide.current++;
-      setVerse(lyricsFormat(hymn));
+    if (margin < -300) {
+      lines?.style.setProperty("font-size", ic ? "5.0vw" : "4.5vw");
     }
 
-    if (slide.current > order.length) {
-      if (document.fullscreenElement) document.exitFullscreen();
-      else slide.current--;
+    if (margin > -40) {
+      lines?.style.setProperty("font-size", ic ? "3.8vw" : "3.5vw");
+    } else if (margin > -20) {
+      lines?.style.setProperty("font-size", ic ? "3.6vw" : "3.3vw");
+    } else if (margin > 0) {
+      lines?.style.setProperty("font-size", ic ? "3.4vw" : "3.1vw");
+    } else if (margin > 20) {
+      lines?.style.setProperty("font-size", ic ? "3.2vw" : "2.9vw");
+    } else if (margin > 40) {
+      lines?.style.setProperty("font-size", ic ? "3.0vw" : "2.7vw");
     }
-  }, [hymn, lyricsFormat, order]);
+  }, [ic, verse]);
 
-  // mouse behavior params
+  // mouse auto hide/show behavior
   const [showCursor, setShowCursor] = useState(false);
   const [alwaysShowCursor, setAlwaysShowCursor] = useState(false);
   const cursorHideTimeout = useRef<NodeJS.Timeout>();
@@ -85,7 +112,7 @@ export default function PresentationComponent(params: { data: HymnTypes }) {
       }
     };
 
-    // handle fullscreen navigation controls
+    // fullscreen navigation controls
     let startPosition: number;
     let endPosition: number;
 
@@ -123,6 +150,14 @@ export default function PresentationComponent(params: { data: HymnTypes }) {
       ) {
         nextSlide();
       }
+
+      if (KeyboardEvent.key === "Escape") {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else {
+          const { presentation, ...query } = router.query;
+          router.replace({ query });
+        }
+      }
     };
 
     // events handlers
@@ -139,7 +174,7 @@ export default function PresentationComponent(params: { data: HymnTypes }) {
         return document.removeEventListener(eventType, handleEvent);
       });
     };
-  }, [alwaysShowCursor, prevSlide, nextSlide, router]);
+  }, [router, prevSlide, nextSlide, alwaysShowCursor]);
 
   return (
     <div
@@ -149,18 +184,29 @@ export default function PresentationComponent(params: { data: HymnTypes }) {
       <div
         className={`
             ${styles.content}
-            ${slide.current < 0 && styles.first}
-            ${slide.current >= order.length && styles.last}
+            ${slide === 0 && styles.first}
+            ${slide > order.length && styles.last}
           `}
       >
         {/* title name */}
-        <div className={styles.title}>
-          <h1>{hymn.name}</h1>
-          <h2>{hymn.book}</h2>
-        </div>
+        {!ic && (
+          <div className={styles.title}>
+            <h1>{hymn.name}</h1>
+            <h2>{hymn.book}</h2>
+          </div>
+        )}
 
         {/* lyrics */}
-        <div className={styles.verse}>
+        {ic && slide === 1 && (
+          <h1 className={styles.icTitle}>{hymn.song.title}</h1>
+        )}
+
+        <div
+          ref={linesWidth}
+          className={`${styles.verse} ${ic && styles.international} ${
+            ic && slide === 1 && styles.grid
+          }`}
+        >
           {verse &&
             verse.map((line, i) => {
               const formattedLine = line
@@ -208,11 +254,7 @@ export default function PresentationComponent(params: { data: HymnTypes }) {
 
         {/* progress bar */}
         <div className={styles.progressBar}>
-          <div
-            style={{
-              width: `${(100 / order.length) * (slide.current + 1)}%`,
-            }}
-          />
+          <div style={{ width: `${(100 / order.length) * slide}%` }} />
         </div>
       </div>
     </div>

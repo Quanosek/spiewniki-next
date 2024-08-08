@@ -54,6 +54,8 @@ export default function SearchPage() {
           .map((verse) => verse.slice(1));
 
         lyrics.map((verse, index) => {
+          if (input.match(/^[0-9]+$/)) return;
+
           const formattedVerse = new simplifyText(verse).format();
 
           if (formattedVerse.includes(formattedInput)) {

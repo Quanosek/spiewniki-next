@@ -388,6 +388,7 @@ $button-gap: 12px;
   padding-left: 0.5rem;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 1em;
 
   @media (max-width: 768px) {
@@ -412,12 +413,30 @@ $button-gap: 12px;
     }
   }
 
+  .changeLanguage {
+    margin-left: -0.5rem;
+    padding: 6px 15px 6px 12px;
+    text-align: center;
+    color: var(--text);
+    background-color: var(--menu-elements-hover);
+    border-radius: 0.4rem;
+    cursor: pointer;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
   @media print {
     padding: 0 0.5rem;
     width: 100%;
 
     .verse {
       page-break-inside: avoid;
+    }
+
+    .changeLanguage {
+      display: none;
     }
   }
 }

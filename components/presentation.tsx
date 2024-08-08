@@ -6,8 +6,6 @@ import HymnTypes from "@/lib/hymnTypes";
 import styles from "@/styles/components/presentation.module.scss";
 
 export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
-
   const router = useRouter();
   const ic = hymn && hymn.song.title.includes("IC");
 
@@ -31,6 +29,7 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
     setOrder(order);
   }, [hymn, ic]);
 
+  // exit from presentation mode
   const closePresentation = useCallback(() => {
     if (document.fullscreenElement) document.exitFullscreen();
     else {
@@ -39,10 +38,10 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
     }
   }, [router]);
 
+  // slides navigation
   const [slide, setSlide] = useState(0);
   const [verse, setVerse] = useState<string[]>();
 
-  // slides navigation
   const prevSlide = useCallback(() => {
     if (slide > 0) setSlide(slide - 1);
   }, [slide]);

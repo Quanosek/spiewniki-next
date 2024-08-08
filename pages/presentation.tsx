@@ -37,6 +37,18 @@ export default function PresentationPage() {
     };
   }, [router]);
 
+  // keyboard shortcuts
+  useEffect(() => {
+    const KeyupEvent = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+
+      if (e.key === "Escape") router.back();
+    };
+
+    document.addEventListener("keyup", KeyupEvent);
+    return () => document.removeEventListener("keyup", KeyupEvent);
+  }, [router]);
+
   return (
     <>
       <Head>

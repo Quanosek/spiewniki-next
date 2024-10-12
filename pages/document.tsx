@@ -9,7 +9,7 @@ import styles from "@/styles/pages/document.module.scss";
 export default function DocumentPage() {
   const router = useRouter();
 
-  const libraryPath = "/libraries/pdfjs-4.5.136-legacy-dist/web/viewer.html";
+  const libraryPath = "/libraries/pdfjs-4.7.76-legacy-dist/web/viewer.html";
   const [documentPath, setDocumentPath] = useState("");
 
   useEffect(() => {

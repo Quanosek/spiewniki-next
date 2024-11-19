@@ -387,7 +387,12 @@ export default function HymnPage() {
                       {/* title */}
                       <div className={styles.hymnTitle}>
                         <p>{hymn.book}</p>
-                        <h1>{hymn.song.title}</h1>
+                        <h1>
+                          {
+                            // spaces after single letter words
+                            hymn.song.title.replace(/\b(\w)\b\s/g, "$1\u00A0")
+                          }
+                        </h1>
                       </div>
 
                       {/* styling for printing */}

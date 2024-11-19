@@ -47,7 +47,8 @@ export default function LyricsComponent({ hymn }: { hymn: HymnTypes }) {
           const line = verse
             .replace(/^[\s.]/, "") // first space
             .replace(/\b(\w)\b\s/g, "$1\u00A0") // spaces after single letter words
-            .replace(/(?<=\[:) | (?=:\])/g, "\u00A0"); // spaces between brackets
+            .replace(/(?<=\[:) | (?=:\])/g, "\u00A0") // spaces between repeat brackets
+            .replace(/\:\]\s/g, ":]\u00A0"); // space between ":]"" and "x"
 
           // lyrics single verse line
           return (

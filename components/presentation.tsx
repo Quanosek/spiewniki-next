@@ -29,16 +29,17 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
     setOrder(order);
   }, [hymn, ic]);
 
-  // exit from presentation mode
+  // slides navigation buttons
   const closePresentation = useCallback(() => {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else {
-      const { presentation, ...query } = router.query;
-      router.replace({ query });
-    }
-  }, [router]);
+    const presWindow = localStorage.getItem("presWindow");
 
-  // slides navigation
+    if (!presWindow) {
+      document.exitFullscreen();
+    } else {
+      window.close();
+    }
+  }, []);
+
   const [slide, setSlide] = useState(0);
   const [verse, setVerse] = useState<string[]>();
 

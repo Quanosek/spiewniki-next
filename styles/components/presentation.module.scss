@@ -202,7 +202,7 @@
   bottom: -1.5vw;
   left: 1.5vw;
   display: flex;
-  gap: 1vw;
+  gap: 0.8vw;
   transition: 150ms ease-out;
 
   &.show {
@@ -212,7 +212,9 @@
 
   button {
     opacity: 25%;
-    padding: 1vw;
+    padding: 0.8vw;
+    height: 3.2vw;
+    width: auto;
     border: 0.15vw solid var(--slide-text);
     border-radius: 100%;
     background-color: transparent;
@@ -224,8 +226,9 @@
 
     img {
       position: relative;
-      height: 1.8vw;
-      width: auto;
+      height: 100%;
+      width: 100%;
+      aspect-ratio: 1/1;
     }
 
     .logo {

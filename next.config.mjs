@@ -26,9 +26,7 @@ const withPWA = withPWAInit({
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
   reloadOnOnline: true,
-  workboxOptions: {
-    disableDevLogs: true,
-  },
+  workboxOptions: { disableDevLogs: true },
   publicExcludes: excludes,
 });
 
@@ -36,7 +34,5 @@ const withPWA = withPWAInit({
 export default withPWA({
   reactStrictMode: true,
   swcMinify: true,
-  images: {
-    minimumCacheTTL: 60,
-  },
+  images: { minimumCacheTTL: 60 },
 });

@@ -50,7 +50,7 @@ export default function FavoritesMenu() {
               defaultValue="timestamp"
               onChange={(e) => {
                 const option = e.target.value;
-                let sortedItems = [...favorites];
+                const sortedItems = [...favorites];
 
                 if (option === "timestamp") {
                   sortedItems.sort((a, b) => {
@@ -140,6 +140,7 @@ export default function FavoritesMenu() {
                       }
                     }
                   } catch (err) {
+                    console.log(err);
                     router.back();
 
                     window.alert(

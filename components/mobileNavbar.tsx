@@ -18,7 +18,7 @@ export default function MobileNavbarComponent() {
         <button
           onClick={() => {
             localStorage.removeItem("prevSearch");
-            unlocked ? router.push("/books") : router.push("/");
+            router.push(unlocked ? "/books" : "/");
           }}
         >
           <Image

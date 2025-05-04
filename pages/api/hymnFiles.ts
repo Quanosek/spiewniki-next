@@ -1,15 +1,15 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
-import { NextApiRequest, NextApiResponse } from "next";
+
 import { bookShortcut } from "@/lib/availableBooks";
 import simplifyText from "@/lib/simplifyText";
 
 // API to find connected files with specific hymn
 export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
-  let { book, title } = req.query as {
-    [key: string]: string;
-  };
+  const { title } = req.query as { [key: string]: string };
 
+  let { book } = req.query as { [key: string]: string };
   book = bookShortcut(book);
 
   try {
@@ -28,6 +28,7 @@ export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
         if (file) return { book, id };
         else return null;
       } catch (err) {
+        console.error(err);
         return null;
       }
     };

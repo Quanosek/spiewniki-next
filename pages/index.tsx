@@ -52,7 +52,7 @@ export default function HomePage() {
         localStorage.setItem("focusSearchBox", "true");
         router.push("/search");
       }
-      if (key === "B") unlocked && router.push("/books");
+      if (unlocked && key === "B") router.push("/books");
       if (key === "R") randomHymn(undefined);
     };
 

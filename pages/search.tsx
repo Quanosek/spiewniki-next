@@ -30,8 +30,8 @@ export default function SearchPage() {
 
   // searching algorithm
   const Search = (data: HymnTypes[], input: string) => {
-    const NamesCollector = new Array();
-    const LyricsCollector = new Array();
+    const NamesCollector: any[] = [];
+    const LyricsCollector: any[] = [];
 
     const { contextSearch } = JSON.parse(
       localStorage.getItem("settings") as string
@@ -116,7 +116,7 @@ export default function SearchPage() {
 
     // hymns from all books
     if (!book) {
-      const Collector = new Array();
+      const Collector: any[] = [];
 
       booksList().map(async (book) => {
         Collector.push(
@@ -129,7 +129,7 @@ export default function SearchPage() {
         );
 
         if (Collector.length === booksList().length) {
-          let hymns = new Array();
+          let hymns: any[] = [];
 
           Collector.map(({ data }) => hymns.push(...data));
           hymns = hymns.sort((a, b) => {
@@ -485,8 +485,9 @@ export default function SearchPage() {
                               if (!presWindow) {
                                 // fullscreen mode
                                 const elem = document.documentElement;
-                                elem.requestFullscreen &&
+                                if (elem.requestFullscreen) {
                                   elem.requestFullscreen();
+                                }
 
                                 router.push({
                                   pathname: "/presentation",

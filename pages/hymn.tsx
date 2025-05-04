@@ -224,7 +224,7 @@ export default function HymnPage() {
 
     // open in fullscreen
     const elem = document.documentElement;
-    elem.requestFullscreen && elem.requestFullscreen();
+    if (elem.requestFullscreen) elem.requestFullscreen();
 
     document.onfullscreenchange = () => {
       if (document.fullscreenElement) {

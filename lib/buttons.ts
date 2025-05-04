@@ -9,7 +9,7 @@ export function randomHymn(book: string | undefined) {
     localStorage.removeItem("prevSearch");
 
     const all = booksList();
-    const Collector = new Array();
+    const Collector: any[] = [];
 
     all.forEach(async (book) => {
       Collector.push(
@@ -19,7 +19,7 @@ export function randomHymn(book: string | undefined) {
       );
 
       if (Collector.length === all.length) {
-        let hymns = new Array();
+        const hymns: any[] = [];
 
         Collector.map(({ data }) => hymns.push(...data));
         const random = Math.floor(Math.random() * (hymns.length + 1));

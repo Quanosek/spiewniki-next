@@ -1,11 +1,12 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import path from "path";
-import { NextApiRequest, NextApiResponse } from "next";
+
 import { bookShortcut, booksList } from "@/lib/availableBooks";
 import simplifyText from "@/lib/simplifyText";
 
 // API to find connected files with list of defined books
-export default function booksData(req: NextApiRequest, res: NextApiResponse) {
+export default function booksData(_req: NextApiRequest, res: NextApiResponse) {
   try {
     const results = booksList().map((book) => {
       const name = new simplifyText(bookShortcut(book)).modify();
@@ -19,6 +20,7 @@ export default function booksData(req: NextApiRequest, res: NextApiResponse) {
           if (file) return { book, name };
           else return null;
         } catch (err) {
+          console.error(err);
           return null;
         }
       };

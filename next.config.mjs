@@ -4,7 +4,7 @@ import withPWAInit from "@ducanh2912/next-pwa";
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
 
-const lockedFiles = new Array();
+const lockedFiles = [];
 
 [
   "Śpiewniczek Młodzieżowy",

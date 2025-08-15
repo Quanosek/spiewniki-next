@@ -1,43 +1,43 @@
-import Image from "next/image";
-import { useEffect, useState, useCallback, ReactElement } from "react";
-import { hiddenMenuQuery } from "../menu";
+import Image from 'next/image'
+import { useEffect, useState, useCallback, ReactElement } from 'react'
+import { hiddenMenuQuery } from '../menu'
 
-import styles from "@/styles/components/menu.module.scss";
+import styles from '@/styles/components/menu.module.scss'
 
 interface Settings {
-  themeColor: string;
-  fontSize: number;
-  showChords: boolean;
-  contextSearch: boolean;
-  quickSearch: boolean;
+  themeColor: string
+  fontSize: number
+  showChords: boolean
+  contextSearch: boolean
+  quickSearch: boolean
 }
 
 // default settings values
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
 
 export const defaultSettings = {
-  themeColor: unlocked ? "black" : "light",
+  themeColor: unlocked ? 'black' : 'light',
   fontSize: 21,
   showChords: false,
   contextSearch: true,
   quickSearch: true,
-};
+}
 
 export default function SettingsMenu() {
   const settings: Settings = JSON.parse(
-    localStorage.getItem("settings") as string
-  );
+    localStorage.getItem('settings') as string
+  )
 
   // dynamic states
   const [
     { fontSize, themeColor, showChords, contextSearch, quickSearch },
     setState,
-  ] = useState(settings || defaultSettings);
+  ] = useState(settings || defaultSettings)
 
   // save settings to local storage
   const saveSettings = useCallback(() => {
     localStorage.setItem(
-      "settings",
+      'settings',
       JSON.stringify({
         themeColor,
         fontSize,
@@ -45,25 +45,25 @@ export default function SettingsMenu() {
         contextSearch,
         quickSearch,
       })
-    );
-  }, [themeColor, fontSize, showChords, contextSearch, quickSearch]);
+    )
+  }, [themeColor, fontSize, showChords, contextSearch, quickSearch])
 
   // save settings on change
   useEffect(() => {
-    saveSettings();
-    document.documentElement.className = `${document.documentElement.classList[0]} ${themeColor}`;
-  }, [saveSettings, themeColor]);
+    saveSettings()
+    document.documentElement.className = `${document.documentElement.classList[0]} ${themeColor}`
+  }, [saveSettings, themeColor])
 
   // theme colors labels
   const Themes = (names: string[]) => {
-    const themes: ReactElement[] = [];
+    const themes: ReactElement[] = []
 
     names.forEach((name) => {
       themes.push(
         <label htmlFor={name} key={name}>
           <Image
-            alt="text"
-            src="/icons/text.svg"
+            alt='text'
+            src='/icons/text.svg'
             width={50}
             height={50}
             draggable={false}
@@ -71,24 +71,24 @@ export default function SettingsMenu() {
           />
 
           <input
-            type="radio"
+            type='radio'
             id={name}
             value={name}
-            name="themeColor"
+            name='themeColor'
             checked={themeColor === name}
             onChange={() => {
               setState((prevState) => ({
                 ...prevState,
                 themeColor: name,
-              }));
+              }))
             }}
           />
         </label>
-      );
-    });
+      )
+    })
 
-    return <form className={styles.themeSelection}>{themes}</form>;
-  };
+    return <form className={styles.themeSelection}>{themes}</form>
+  }
 
   // quick settings options buttons
   const ToggleSwitch = (description: string, name: string, value: boolean) => (
@@ -97,23 +97,23 @@ export default function SettingsMenu() {
 
       <label className={styles.checkbox}>
         <input
-          type="checkbox"
-          name="toggle-checkbox"
+          type='checkbox'
+          name='toggle-checkbox'
           checked={value}
           onChange={() => {
             setState((prevState: any) => {
               return {
                 ...prevState,
                 [name]: !prevState[name],
-              };
-            });
+              }
+            })
           }}
         />
 
         <span />
       </label>
     </div>
-  );
+  )
 
   return (
     <>
@@ -125,8 +125,8 @@ export default function SettingsMenu() {
           <h3>Motyw kolorów:</h3>
 
           {unlocked
-            ? Themes(["black", "dark", "light", "reading"])
-            : Themes(["light", "reading", "black", "dark"])}
+            ? Themes(['black', 'dark', 'light', 'reading'])
+            : Themes(['light', 'reading', 'black', 'dark'])}
         </div>
 
         {/* FONT SIZE */}
@@ -141,16 +141,16 @@ export default function SettingsMenu() {
             <div className={styles.smaller}>A</div>
 
             <input
-              type="range"
-              min="14"
-              max="28"
-              step="0.5"
+              type='range'
+              min='14'
+              max='28'
+              step='0.5'
               value={fontSize}
               onChange={(e) => {
                 setState((prevState) => ({
                   ...prevState,
                   fontSize: Number(e.target.value),
-                }));
+                }))
               }}
             />
 
@@ -161,20 +161,20 @@ export default function SettingsMenu() {
         {/* QUICK OPTIONS SWITCHERS */}
         <div className={styles.settingsSection}>
           {ToggleSwitch(
-            "Wyświetlanie akordów nad liniami tekstu",
-            "showChords",
+            'Wyświetlanie akordów nad liniami tekstu',
+            'showChords',
             showChords
           )}
 
           {ToggleSwitch(
-            "Wyszukiwanie w treści pieśni",
-            "contextSearch",
+            'Wyszukiwanie w treści pieśni',
+            'contextSearch',
             contextSearch
           )}
 
           {ToggleSwitch(
-            "Szybki powrót do ostatniego wyszukiwania ",
-            "quickSearch",
+            'Szybki powrót do ostatniego wyszukiwania ',
+            'quickSearch',
             quickSearch
           )}
         </div>
@@ -186,24 +186,24 @@ export default function SettingsMenu() {
           className={styles.alert}
           onClick={() => {
             if (
-              !confirm("Czy na pewno chcesz przywrócić ustawienia domyślne?")
+              !confirm('Czy na pewno chcesz przywrócić ustawienia domyślne?')
             ) {
-              return;
+              return
             }
 
-            setState({ ...defaultSettings });
+            setState({ ...defaultSettings })
           }}
         >
           <p>Przywróć domyślne</p>
         </button>
 
         <button
-          title="Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu."
+          title='Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu.'
           onClick={() => hiddenMenuQuery(undefined)}
         >
           <p>Zamknij</p>
         </button>
       </div>
     </>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-@import "./themes.scss";
+@import './themes.scss';
 
 // custom variables
 :root {
@@ -23,15 +23,15 @@
 
 // used fonts
 @font-face {
-  font-family: "Gill Sans MT";
-  src: url("/fonts/gill_sans_mt.woff2") format("woff2");
+  font-family: 'Gill Sans MT';
+  src: url('/fonts/gill_sans_mt.woff2') format('woff2');
   size-adjust: 110%;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Brutal Type Medium";
-  src: url("/fonts/brutal_type_medium.woff2") format("woff2");
+  font-family: 'Brutal Type Medium';
+  src: url('/fonts/brutal_type_medium.woff2') format('woff2');
   unicode-range: U+30-39; // only numbers
   size-adjust: 105%;
   font-display: swap;
@@ -47,7 +47,7 @@
 html,
 body {
   overscroll-behavior-y: contain;
-  font-family: "Brutal Type Medium", "Gill Sans MT";
+  font-family: 'Brutal Type Medium', 'Gill Sans MT';
   color: var(--text);
   background-color: var(--background);
   -webkit-tap-highlight-color: transparent;

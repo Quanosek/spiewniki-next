@@ -1,62 +1,62 @@
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState, useCallback, useRef } from "react";
-import axios from "axios";
-import Highlighter from "react-highlight-words";
-import { bookShortcut, booksList } from "@/lib/availableBooks";
-import { randomHymn } from "@/lib/buttons";
-import HymnTypes from "@/lib/hymnTypes";
-import simplifyText from "@/lib/simplifyText";
+import Head from 'next/head'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import axios from 'axios'
+import Highlighter from 'react-highlight-words'
+import { bookShortcut, booksList } from '@/lib/availableBooks'
+import { randomHymn } from '@/lib/buttons'
+import HymnTypes from '@/lib/hymnTypes'
+import simplifyText from '@/lib/simplifyText'
 
-import styles from "@/styles/pages/search.module.scss";
+import styles from '@/styles/pages/search.module.scss'
 
 export default function SearchPage() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
 
   // router queries
-  const router = useRouter();
-  const book = router.query.book as string;
+  const router = useRouter()
+  const book = router.query.book as string
 
   // data fetching
-  const [rawData, setRawData] = useState<HymnTypes[]>();
-  const [data, setData] = useState<HymnTypes[]>();
-  const [isLoading, setLoading] = useState(true);
+  const [rawData, setRawData] = useState<HymnTypes[]>()
+  const [data, setData] = useState<HymnTypes[]>()
+  const [isLoading, setLoading] = useState(true)
 
   // dynamic search-box input
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [inputValue, setInputValue] = useState('')
 
   // searching algorithm
   const Search = (data: HymnTypes[], input: string) => {
-    const NamesCollector: any[] = [];
-    const LyricsCollector: any[] = [];
+    const NamesCollector: any[] = []
+    const LyricsCollector: any[] = []
 
     const { contextSearch } = JSON.parse(
-      localStorage.getItem("settings") as string
-    );
+      localStorage.getItem('settings') as string
+    )
 
     data.map((hymn: HymnTypes) => {
-      const { id, book, name, song } = hymn;
+      const { id, book, name, song } = hymn
 
-      const formattedName = new simplifyText(name).format();
-      const formattedInput = new simplifyText(input).format();
+      const formattedName = new simplifyText(name).format()
+      const formattedInput = new simplifyText(input).format()
 
       if (formattedName.includes(formattedInput)) {
         // title found
-        NamesCollector.push({ id, book, name });
+        NamesCollector.push({ id, book, name })
       } else if (contextSearch) {
         // lyrics found
         const lyrics = Object.values(song.lyrics)
           .flat()
-          .filter((verse) => verse.startsWith(" "))
-          .map((verse) => verse.slice(1));
+          .filter((verse) => verse.startsWith(' '))
+          .map((verse) => verse.slice(1))
 
         lyrics.map((verse, index) => {
-          if (input.match(/^[0-9]+$/)) return;
+          if (input.match(/^[0-9]+$/)) return
 
-          const formattedVerse = new simplifyText(verse).format();
+          const formattedVerse = new simplifyText(verse).format()
 
           if (formattedVerse.includes(formattedInput)) {
             LyricsCollector.push({
@@ -65,80 +65,80 @@ export default function SearchPage() {
               name,
               lyrics: [
                 lyrics[index - 1]
-                  ? `${lyrics[index - 2] ? "..." : ""} ${lyrics[index - 1]}`
-                  : "",
+                  ? `${lyrics[index - 2] ? '...' : ''} ${lyrics[index - 1]}`
+                  : '',
                 verse,
-                lyrics[index + 1] ? lyrics[index + 1] : "",
+                lyrics[index + 1] ? lyrics[index + 1] : '',
                 lyrics[index + 2]
-                  ? `${lyrics[index + 2]} ${lyrics[index + 3] ? "..." : ""}`
-                  : "",
+                  ? `${lyrics[index + 2]} ${lyrics[index + 3] ? '...' : ''}`
+                  : '',
               ],
-            });
+            })
           }
-        });
+        })
       }
-    });
+    })
 
     // merge Collectors
     const Collector = [...NamesCollector, ...LyricsCollector].filter(
       (value, index, self) => {
-        return index === self.findIndex((x) => x.name === value.name);
+        return index === self.findIndex((x) => x.name === value.name)
       }
-    );
+    )
 
-    setData(Collector);
-  };
+    setData(Collector)
+  }
 
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!router.isReady) return
 
     // wrong book name error
-    if (book && !bookShortcut(book)) router.push("/404");
+    if (book && !bookShortcut(book)) router.push('/404')
 
     // focus search-box on load
-    if (localStorage.getItem("focusSearchBox")) inputRef.current?.focus();
-    localStorage.removeItem("focusSearchBox");
+    if (localStorage.getItem('focusSearchBox')) inputRef.current?.focus()
+    localStorage.removeItem('focusSearchBox')
 
     // fast-search input value
     const { quickSearch } = JSON.parse(
-      localStorage.getItem("settings") as string
-    );
-    const prevSearch = JSON.parse(localStorage.getItem("prevSearch") as string);
-    if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search);
+      localStorage.getItem('settings') as string
+    )
+    const prevSearch = JSON.parse(localStorage.getItem('prevSearch') as string)
+    if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search)
 
     // init data load function
     const loadData = (fetchData: HymnTypes[]) => {
-      setRawData(fetchData);
+      setRawData(fetchData)
 
-      if (prevSearch?.search) Search(fetchData, prevSearch.search || "");
-      else setData(fetchData);
-    };
+      if (prevSearch?.search) Search(fetchData, prevSearch.search || '')
+      else setData(fetchData)
+    }
 
     // hymns from all books
     if (!book) {
-      const Collector: any[] = [];
+      const Collector: any[] = []
 
       booksList().map(async (book) => {
         Collector.push(
           await axios
             .get(`database/${bookShortcut(book)}.json`)
             .catch((err) => {
-              console.error(err);
-              router.push("/404");
+              console.error(err)
+              router.push('/404')
             })
-        );
+        )
 
         if (Collector.length === booksList().length) {
-          let hymns: any[] = [];
+          let hymns: any[] = []
 
-          Collector.map(({ data }) => hymns.push(...data));
+          Collector.map(({ data }) => hymns.push(...data))
           hymns = hymns.sort((a, b) => {
-            return a.name.localeCompare(b.name, undefined, { numeric: true });
-          });
+            return a.name.localeCompare(b.name, undefined, { numeric: true })
+          })
 
-          loadData(hymns);
+          loadData(hymns)
         }
-      });
+      })
 
       // hymns from selected book
     } else {
@@ -146,41 +146,41 @@ export default function SearchPage() {
         .get(`database/${bookShortcut(book)}.json`)
         .then(({ data }) => loadData(data))
         .catch((err) => {
-          console.error(err);
-          router.push("/404");
-        });
+          console.error(err)
+          router.push('/404')
+        })
     }
-  }, [router, book]);
+  }, [router, book])
 
   // clear input button
-  const [showClearBtn, setShowClearBtn] = useState(false);
+  const [showClearBtn, setShowClearBtn] = useState(false)
 
   useEffect(() => {
-    if (inputValue) setShowClearBtn(true);
-    else setShowClearBtn(false);
+    if (inputValue) setShowClearBtn(true)
+    else setShowClearBtn(false)
 
     // select search when input value on init
-    if (inputValue && !rawData) inputRef.current?.select();
+    if (inputValue && !rawData) inputRef.current?.select()
 
     // data update on input change
     if (rawData) {
       if (inputValue) {
         const timeout = setTimeout(() => {
-          return Search(rawData, inputValue || "");
-        }, 100);
-        return () => clearTimeout(timeout);
+          return Search(rawData, inputValue || '')
+        }, 100)
+        return () => clearTimeout(timeout)
       } else {
-        setData(rawData);
+        setData(rawData)
       }
     }
-  }, [inputValue, rawData]);
+  }, [inputValue, rawData])
 
   // infinite scroll handler
-  const [renderPage, setRenderPage] = useState(0);
-  const [renderedData, setRenderedData] = useState<HymnTypes[]>([]);
+  const [renderPage, setRenderPage] = useState(0)
+  const [renderedData, setRenderedData] = useState<HymnTypes[]>([])
 
   // scroll-to-top button
-  const [showTopBtn, setShowTopBtn] = useState(false);
+  const [showTopBtn, setShowTopBtn] = useState(false)
 
   useEffect(() => {
     const scrollEvent = () => {
@@ -189,37 +189,37 @@ export default function SearchPage() {
         window.innerHeight + window.scrollY >=
         document.body.offsetHeight - 500
       ) {
-        setRenderPage((page) => page + 1);
+        setRenderPage((page) => page + 1)
       }
 
       // show scroll-to-top button
-      setShowTopBtn(window.scrollY > 350);
-    };
+      setShowTopBtn(window.scrollY > 350)
+    }
 
-    window.addEventListener("scroll", scrollEvent);
-    return () => window.removeEventListener("scroll", scrollEvent);
-  }, []);
+    window.addEventListener('scroll', scrollEvent)
+    return () => window.removeEventListener('scroll', scrollEvent)
+  }, [])
 
   // href link to hymn
   const hymnLink = (hymn: HymnTypes) => {
     return {
-      pathname: "/hymn",
+      pathname: '/hymn',
       query: {
         book: bookShortcut(hymn.book),
         title: hymn.name,
       },
-    };
-  };
+    }
+  }
 
   // clear input and restore results
   const cleanUp = useCallback(() => {
-    setInputValue("");
-    inputRef.current?.focus();
+    setInputValue('')
+    inputRef.current?.focus()
 
-    setData(rawData);
-    setRenderPage(0);
-    localStorage.removeItem("prevSearch");
-  }, [rawData]);
+    setData(rawData)
+    setRenderPage(0)
+    localStorage.removeItem('prevSearch')
+  }, [rawData])
 
   // keyboard shortcuts
   useEffect(() => {
@@ -231,50 +231,50 @@ export default function SearchPage() {
         e.metaKey ||
         router.query.menu
       ) {
-        return;
+        return
       }
 
       if (document.activeElement === inputRef.current) {
         // search-box shortcuts
-        if (e.key === "Escape") inputRef.current?.blur();
-        if (e.key === "Enter") {
-          const hymn = data && data[0];
-          if (hymn) router.push(hymnLink(hymn));
-          else cleanUp();
+        if (e.key === 'Escape') inputRef.current?.blur()
+        if (e.key === 'Enter') {
+          const hymn = data && data[0]
+          if (hymn) router.push(hymnLink(hymn))
+          else cleanUp()
         }
       } else {
-        const key = e.key.toUpperCase();
+        const key = e.key.toUpperCase()
 
         // global shortcuts
-        if (key === "/") inputRef.current?.focus();
-        if (key === "B") router.push(unlocked ? "/books" : "/");
-        if (key === "R") randomHymn(bookShortcut(book));
+        if (key === '/') inputRef.current?.focus()
+        if (key === 'B') router.push(unlocked ? '/books' : '/')
+        if (key === 'R') randomHymn(bookShortcut(book))
       }
-    };
+    }
 
-    document.addEventListener("keyup", KeyupEvent);
-    return () => document.removeEventListener("keyup", KeyupEvent);
-  }, [router, data, cleanUp, unlocked, book]);
+    document.addEventListener('keyup', KeyupEvent)
+    return () => document.removeEventListener('keyup', KeyupEvent)
+  }, [router, data, cleanUp, unlocked, book])
 
   // set rendered data
   useEffect(() => {
-    if (!data) return;
+    if (!data) return
 
     // split data into 30 elements arrays
-    const results = [];
+    const results = []
     for (let i = 0; i < data.length; i += 30) {
-      results.push(data.slice(i, i + 30));
+      results.push(data.slice(i, i + 30))
     }
 
     // render content
-    const array = results.slice(0, renderPage + 1).flat();
-    setRenderedData(array);
+    const array = results.slice(0, renderPage + 1).flat()
+    setRenderedData(array)
 
-    setLoading(false);
-  }, [data, renderPage]);
+    setLoading(false)
+  }, [data, renderPage])
 
   // quick actions on result hover
-  const [resultHovered, setResultHovered] = useState<number | undefined>();
+  const [resultHovered, setResultHovered] = useState<number | undefined>()
 
   return (
     <>
@@ -284,12 +284,12 @@ export default function SearchPage() {
 
       <main className={styles.main}>
         <div className={styles.title}>
-          <Link href="/">
+          <Link href='/'>
             <Image
-              style={{ transform: "rotate(90deg)" }}
-              className="icon"
-              alt="back"
-              src="/icons/arrow.svg"
+              style={{ transform: 'rotate(90deg)' }}
+              className='icon'
+              alt='back'
+              src='/icons/arrow.svg'
               width={20}
               height={20}
               draggable={false}
@@ -297,15 +297,15 @@ export default function SearchPage() {
             <p>Powrót</p>
           </Link>
 
-          {!isLoading && <h1>{bookShortcut(book || "all")}</h1>}
+          {!isLoading && <h1>{bookShortcut(book || 'all')}</h1>}
 
           {unlocked && (
-            <Link href="/books">
+            <Link href='/books'>
               <p>Zmień śpiewnik</p>
               <Image
-                className="icon"
-                alt="filter"
-                src="/icons/filter.svg"
+                className='icon'
+                alt='filter'
+                src='/icons/filter.svg'
                 width={22}
                 height={22}
                 draggable={false}
@@ -317,9 +317,9 @@ export default function SearchPage() {
         <div className={styles.searchBox}>
           <div className={styles.searchIcon}>
             <Image
-              className="icon"
-              alt="search"
-              src="/icons/search.svg"
+              className='icon'
+              alt='search'
+              src='/icons/search.svg'
               width={25}
               height={25}
               draggable={false}
@@ -328,40 +328,40 @@ export default function SearchPage() {
 
           <input
             ref={inputRef}
-            name="search-box"
-            title="Kliknij, lub użyj [/] na klawiaturze, aby rozpocząć wyszukiwanie"
+            name='search-box'
+            title='Kliknij, lub użyj [/] na klawiaturze, aby rozpocząć wyszukiwanie'
             placeholder={
-              "Rozpocznij wyszukiwanie " +
-              (data?.length ? `(${data?.length})` : "")
+              'Rozpocznij wyszukiwanie ' +
+              (data?.length ? `(${data?.length})` : '')
             }
-            autoComplete="off"
+            autoComplete='off'
             value={inputValue}
             onChange={(e) => {
-              const value = e.target.value;
-              setInputValue(value);
-              setRenderPage(0);
+              const value = e.target.value
+              setInputValue(value)
+              setRenderPage(0)
 
               // saving search values
               const { quickSearch } = JSON.parse(
-                localStorage.getItem("settings") as string
-              );
+                localStorage.getItem('settings') as string
+              )
 
               localStorage.setItem(
-                "prevSearch",
-                JSON.stringify({ book, search: quickSearch ? value : "" })
-              );
+                'prevSearch',
+                JSON.stringify({ book, search: quickSearch ? value : '' })
+              )
 
               // easter-egg
-              if (unlocked && value === "2137") {
-                localStorage.removeItem("prevSearch");
+              if (unlocked && value === '2137') {
+                localStorage.removeItem('prevSearch')
 
                 router.push({
-                  pathname: "/hymn",
+                  pathname: '/hymn',
                   query: {
-                    book: "C",
-                    title: "7C. Pan kiedyś stanął nad brzegiem",
+                    book: 'C',
+                    title: '7C. Pan kiedyś stanął nad brzegiem',
                   },
-                });
+                })
               }
             }}
             onFocus={(e) => e.target.select()}
@@ -369,14 +369,14 @@ export default function SearchPage() {
 
           {showClearBtn ? (
             <button
-              title="Wyczyść wyszukiwanie"
+              title='Wyczyść wyszukiwanie'
               className={styles.clearButton}
               onClick={cleanUp}
             >
               <Image
-                className="icon"
-                alt="clear"
-                src="/icons/close.svg"
+                className='icon'
+                alt='clear'
+                src='/icons/close.svg'
                 width={25}
                 height={25}
                 draggable={false}
@@ -384,14 +384,14 @@ export default function SearchPage() {
             </button>
           ) : (
             <button
-              title="Otwórz losową pieśń [R]"
+              title='Otwórz losową pieśń [R]'
               className={styles.randomButton}
               onClick={() => randomHymn(bookShortcut(book))}
             >
               <Image
-                className="icon"
-                alt="dice"
-                src="/icons/dice.svg"
+                className='icon'
+                alt='dice'
+                src='/icons/dice.svg'
                 width={25}
                 height={25}
                 draggable={false}
@@ -407,8 +407,8 @@ export default function SearchPage() {
             ) : (
               renderedData.map((hymn, index, row) => {
                 let isFavorite = Boolean(
-                  localStorage.getItem("favorites")?.includes(hymn.name)
-                );
+                  localStorage.getItem('favorites')?.includes(hymn.name)
+                )
 
                 return (
                   <div key={index}>
@@ -422,16 +422,16 @@ export default function SearchPage() {
                         href={hymnLink(hymn)}
                         onClick={() => {
                           const { quickSearch } = JSON.parse(
-                            localStorage.getItem("settings") as string
-                          );
+                            localStorage.getItem('settings') as string
+                          )
 
                           localStorage.setItem(
-                            "prevSearch",
+                            'prevSearch',
                             JSON.stringify({
                               book,
-                              search: quickSearch ? inputValue : "",
+                              search: quickSearch ? inputValue : '',
                             })
-                          );
+                          )
                         }}
                       >
                         <h2>
@@ -470,49 +470,49 @@ export default function SearchPage() {
                       <div className={styles.quickActions}>
                         {unlocked && (
                           <button
-                            title="Otwórz pokaz slajdów"
+                            title='Otwórz pokaz slajdów'
                             className={styles.onHover}
                             style={{
-                              display: resultHovered === index ? "flex" : "",
+                              display: resultHovered === index ? 'flex' : '',
                             }}
                             onClick={() => {
-                              const book = bookShortcut(hymn.book);
-                              const title = hymn.name;
+                              const book = bookShortcut(hymn.book)
+                              const title = hymn.name
 
                               const presWindow =
-                                localStorage.getItem("presWindow");
+                                localStorage.getItem('presWindow')
 
                               if (!presWindow) {
                                 // fullscreen mode
-                                const elem = document.documentElement;
+                                const elem = document.documentElement
                                 if (elem.requestFullscreen) {
-                                  elem.requestFullscreen();
+                                  elem.requestFullscreen()
                                 }
 
                                 router.push({
-                                  pathname: "/presentation",
+                                  pathname: '/presentation',
                                   query: { book, title },
-                                });
+                                })
                               } else {
                                 // open new window
-                                const params = new URLSearchParams();
-                                params.append("book", book);
-                                params.append("title", title);
+                                const params = new URLSearchParams()
+                                params.append('book', book)
+                                params.append('title', title)
 
                                 window.open(
                                   `/presentation?${params.toString()}`,
-                                  "presentation",
-                                  "width=960,height=540"
-                                );
+                                  'presentation',
+                                  'width=960,height=540'
+                                )
 
-                                localStorage.setItem("presWindow", "true");
+                                localStorage.setItem('presWindow', 'true')
                               }
                             }}
                           >
                             <Image
-                              className="icon"
-                              alt="presentation"
-                              src="/icons/monitor.svg"
+                              className='icon'
+                              alt='presentation'
+                              src='/icons/monitor.svg'
                               width={25}
                               height={25}
                               draggable={false}
@@ -522,40 +522,40 @@ export default function SearchPage() {
 
                         {isFavorite && (
                           <button
-                            title="Usuń pieśń z ulubionych"
+                            title='Usuń pieśń z ulubionych'
                             onClick={() => {
                               if (
                                 !confirm(
-                                  "Czy chcesz usunąć wybraną pieśń z ulubionych?"
+                                  'Czy chcesz usunąć wybraną pieśń z ulubionych?'
                                 )
                               ) {
-                                return;
+                                return
                               }
 
                               let favorites = JSON.parse(
-                                localStorage.getItem("favorites") || "[]"
-                              );
+                                localStorage.getItem('favorites') || '[]'
+                              )
 
                               favorites = favorites.filter(
                                 (elem: { book: string; id: number }) => {
                                   return (
                                     elem.book !== bookShortcut(hymn.book) ||
                                     elem.id !== hymn.id
-                                  );
+                                  )
                                 }
-                              );
+                              )
 
-                              isFavorite = false;
+                              isFavorite = false
                               localStorage.setItem(
-                                "favorites",
+                                'favorites',
                                 JSON.stringify(favorites)
-                              );
+                              )
                             }}
                           >
                             <Image
-                              className="icon"
-                              alt="favorite"
-                              src="/icons/star_filled.svg"
+                              className='icon'
+                              alt='favorite'
+                              src='/icons/star_filled.svg'
                               width={25}
                               height={25}
                               draggable={false}
@@ -567,19 +567,19 @@ export default function SearchPage() {
 
                     {index + 1 !== row.length && <hr />}
                   </div>
-                );
+                )
               })
             ))}
         </div>
 
         <button
-          title="Powróć na górę strony"
+          title='Powróć na górę strony'
           className={`${showTopBtn && styles.show} ${styles.scrollButton}`}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
           <Image
-            alt="up"
-            src="/icons/arrow.svg"
+            alt='up'
+            src='/icons/arrow.svg'
             width={25}
             height={25}
             draggable={false}
@@ -587,5 +587,5 @@ export default function SearchPage() {
         </button>
       </main>
     </>
-  );
+  )
 }

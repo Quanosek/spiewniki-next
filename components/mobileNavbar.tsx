@@ -1,30 +1,30 @@
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { bookShortcut } from "@/lib/availableBooks";
-import { randomHymn, shareButton } from "@/lib/buttons";
-import { hiddenMenuQuery } from "./menu";
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import { bookShortcut } from '@/lib/availableBooks'
+import { randomHymn, shareButton } from '@/lib/buttons'
+import { hiddenMenuQuery } from './menu'
 
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == "true";
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
 
 export default function MobileNavbarComponent() {
-  const router = useRouter();
+  const router = useRouter()
 
-  let moreButtons = true;
-  if (!unlocked && router.pathname === "/") moreButtons = false;
+  let moreButtons = true
+  if (!unlocked && router.pathname === '/') moreButtons = false
 
   return (
     <nav>
       {moreButtons && (
         <button
           onClick={() => {
-            localStorage.removeItem("prevSearch");
-            router.push(unlocked ? "/books" : "/");
+            localStorage.removeItem('prevSearch')
+            router.push(unlocked ? '/books' : '/')
           }}
         >
           <Image
-            className="icon"
-            alt="books"
-            src="/icons/book.svg"
+            className='icon'
+            alt='books'
+            src='/icons/book.svg'
             width={25}
             height={25}
             draggable={false}
@@ -33,11 +33,11 @@ export default function MobileNavbarComponent() {
         </button>
       )}
 
-      <button onClick={() => hiddenMenuQuery("favorites")}>
+      <button onClick={() => hiddenMenuQuery('favorites')}>
         <Image
-          className="icon"
-          alt="list"
-          src="/icons/list.svg"
+          className='icon'
+          alt='list'
+          src='/icons/list.svg'
           width={25}
           height={25}
           draggable={false}
@@ -47,14 +47,14 @@ export default function MobileNavbarComponent() {
 
       <button
         onClick={() => {
-          const book = router.query.book as string;
-          randomHymn(bookShortcut(book));
+          const book = router.query.book as string
+          randomHymn(bookShortcut(book))
         }}
       >
         <Image
-          className="icon"
-          alt="dice"
-          src="/icons/dice.svg"
+          className='icon'
+          alt='dice'
+          src='/icons/dice.svg'
           width={25}
           height={25}
           draggable={false}
@@ -62,11 +62,11 @@ export default function MobileNavbarComponent() {
         <p>Wylosuj</p>
       </button>
 
-      <button onClick={() => hiddenMenuQuery("settings")}>
+      <button onClick={() => hiddenMenuQuery('settings')}>
         <Image
-          className="icon"
-          alt="settings"
-          src="/icons/settings.svg"
+          className='icon'
+          alt='settings'
+          src='/icons/settings.svg'
           width={25}
           height={25}
           draggable={false}
@@ -77,9 +77,9 @@ export default function MobileNavbarComponent() {
       {moreButtons && (
         <button onClick={shareButton}>
           <Image
-            className="icon"
-            alt="share"
-            src="/icons/link.svg"
+            className='icon'
+            alt='share'
+            src='/icons/link.svg'
             width={25}
             height={25}
             draggable={false}
@@ -88,5 +88,5 @@ export default function MobileNavbarComponent() {
         </button>
       )}
     </nav>
-  );
+  )
 }

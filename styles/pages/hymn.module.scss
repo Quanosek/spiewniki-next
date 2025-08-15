@@ -141,7 +141,7 @@ $button-gap: 12px;
 
   @media (min-width: 1025px) {
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;

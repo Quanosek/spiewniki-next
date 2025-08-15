@@ -1,26 +1,26 @@
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { bookShortcut, booksList } from "@/lib/availableBooks";
+import Head from 'next/head'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { bookShortcut, booksList } from '@/lib/availableBooks'
 
-import styles from "@/styles/pages/books.module.scss";
+import styles from '@/styles/pages/books.module.scss'
 
 export default function BooksPage() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([])
 
   // fetch all books data
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!router.isReady) return
 
-    fetch("/api/booksData")
+    fetch('/api/booksData')
       .then((res) => res.json())
       .then((data) => setData(data))
-      .catch((err) => console.error(err));
-  }, [router]);
+      .catch((err) => console.error(err))
+  }, [router])
 
   return (
     <>
@@ -32,10 +32,10 @@ export default function BooksPage() {
         <div className={styles.title}>
           <button onClick={() => router.back()}>
             <Image
-              style={{ transform: "rotate(90deg)" }}
-              className="icon"
-              alt="back"
-              src="/icons/arrow.svg"
+              style={{ transform: 'rotate(90deg)' }}
+              className='icon'
+              alt='back'
+              src='/icons/arrow.svg'
               width={20}
               height={20}
               draggable={false}
@@ -47,7 +47,7 @@ export default function BooksPage() {
         </div>
 
         <div className={styles.list}>
-          <Link className={styles.all} href="/search">
+          <Link className={styles.all} href='/search'>
             <h2>Wszystkie śpiewniki</h2>
           </Link>
 
@@ -56,16 +56,16 @@ export default function BooksPage() {
           {booksList().map((book, i) => {
             const pdfFile = data.find(
               (file: { name: string; pdf: boolean }) => {
-                return file.name === book && file.pdf;
+                return file.name === book && file.pdf
               }
-            );
+            )
 
             return (
               <div key={i}>
                 <div className={styles.book}>
                   <Link
                     className={styles.result}
-                    href={{ pathname: "/search", query: { book } }}
+                    href={{ pathname: '/search', query: { book } }}
                   >
                     <h2>{bookShortcut(book)}</h2>
                   </Link>
@@ -74,15 +74,15 @@ export default function BooksPage() {
                     <Link
                       className={styles.pdfFile}
                       href={{
-                        pathname: "/document",
+                        pathname: '/document',
                         query: { d: bookShortcut(book) },
                       }}
                     >
                       <p>Otwórz PDF</p>
                       <Image
-                        className="icon"
-                        alt="pdf"
-                        src="/icons/document.svg"
+                        className='icon'
+                        alt='pdf'
+                        src='/icons/document.svg'
                         width={25}
                         height={25}
                         draggable={false}
@@ -93,10 +93,10 @@ export default function BooksPage() {
 
                 {i + 1 !== data.length && <hr />}
               </div>
-            );
+            )
           })}
         </div>
       </main>
     </>
-  );
+  )
 }

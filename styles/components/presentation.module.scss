@@ -10,7 +10,7 @@
   background-color: #000000;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -174,8 +174,8 @@
     gap: 0px 0px;
     grid-auto-flow: row;
     grid-template-areas:
-      "US US FR FR DE DE"
-      ". PL PL RO RO .";
+      'US US FR FR DE DE'
+      '. PL PL RO RO .';
 
     p:nth-child(1) {
       grid-area: US;

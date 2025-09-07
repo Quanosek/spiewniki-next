@@ -2,33 +2,15 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import { bookShortcut, booksList } from '@/utils/books'
 
 import styles from '@/styles/pages/books.module.scss'
 
-interface BookData {
-  name: string
-  pdf: boolean
-}
-
 export default function BooksPage() {
   const router = useRouter()
 
-  const [data, setData] = useState<BookData[]>([])
-
-  // Fetch all books data
-  useEffect(() => {
-    if (!router.isReady) return
-
-    fetch('/api/booksData')
-      .then((res) => res.json())
-      .then((data) => setData(data))
-      .catch((err) => console.error(err))
-  }, [router])
-
   const Book = ({ book }: { book: string }) => {
-    const pdfFile = data.find((file) => file.name === book && file.pdf)
+    const hasPDF = ['B', 'C', 'N', 'E']
 
     return (
       <div className={styles.book}>
@@ -39,7 +21,7 @@ export default function BooksPage() {
           <h2>{bookShortcut(book)}</h2>
         </Link>
 
-        {pdfFile && (
+        {hasPDF.includes(book) && (
           <Link
             href={{
               pathname: '/document',
@@ -62,8 +44,6 @@ export default function BooksPage() {
     )
   }
 
-  const books = booksList()
-
   return (
     <>
       <Head>
@@ -74,12 +54,12 @@ export default function BooksPage() {
         <div className={styles.title}>
           <button onClick={() => router.back()}>
             <Image
-              style={{ transform: 'rotate(90deg)' }}
+              style={{ rotate: '90deg' }}
               className='icon'
               alt='back'
               src='/icons/arrow.svg'
-              width={20}
-              height={20}
+              width={16}
+              height={16}
               draggable={false}
             />
             <p>Powrót</p>
@@ -95,7 +75,7 @@ export default function BooksPage() {
 
           <hr />
 
-          {books.map((book, index, row) => (
+          {booksList().map((book, index, row) => (
             <div key={index}>
               <Book book={book} />
               {index + 1 !== row.length && <hr />}

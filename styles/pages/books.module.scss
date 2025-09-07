@@ -1,8 +1,10 @@
+@import '../mixins';
+
 .title {
   position: relative;
   margin-bottom: 6px;
   height: 45px;
-  width: 80%;
+  width: min(850px, 96%);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -10,8 +12,7 @@
   button {
     z-index: 1;
     opacity: 85%;
-    padding: 0 12px;
-    height: 100%;
+    padding: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,6 +20,10 @@
     border-radius: var(--radius);
     background-color: transparent;
     transition: 150ms transform ease-out;
+
+    p {
+      line-height: 8px;
+    }
 
     @media (min-width: 769px) {
       &:hover {
@@ -34,7 +39,7 @@
     width: 100%;
     text-align: center;
     font-size: 140%;
-    font-weight: normal;
+    font-weight: 600;
   }
 
   @media (max-width: 1024px) {
@@ -86,16 +91,17 @@
 }
 
 .list {
-  width: 80%;
+  width: min(850px, 96%);
   border-radius: var(--radius);
   background-color: var(--elements);
+  @include element-glow();
 
   a {
     margin: var(--space);
     padding: 1rem 1.25rem;
     display: flex;
     border-radius: calc(var(--radius) - var(--space));
-    transition: 200ms background-color ease-in-out, 150ms color ease-out;
+    transition: 150ms color ease-out;
   }
 
   hr {
@@ -128,8 +134,7 @@
   color: var(--accent-color);
 
   &:hover {
-    color: #ffffff;
-    background-color: var(--accent-color);
+    background-color: var(--elements-hover);
   }
 }
 

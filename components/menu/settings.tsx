@@ -1,12 +1,11 @@
 import Image from 'next/image'
 import { useEffect, useState, useCallback, ReactElement } from 'react'
-
+import { useTheme } from 'next-themes'
 import { hiddenMenuQuery } from '../menu'
 
 import styles from '@/styles/components/menu.module.scss'
 
 interface Settings {
-  themeColor: string
   fontSize: number
   showChords: boolean
   contextSearch: boolean
@@ -17,7 +16,6 @@ interface Settings {
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export const defaultSettings = {
-  themeColor: unlocked ? 'black' : 'light',
   fontSize: 21,
   showChords: false,
   contextSearch: true,
@@ -25,35 +23,33 @@ export const defaultSettings = {
 }
 
 export default function SettingsMenu() {
+  const { theme, setTheme } = useTheme()
+
   const settings: Settings = JSON.parse(
     localStorage.getItem('settings') as string
   )
 
   // dynamic states
-  const [
-    { fontSize, themeColor, showChords, contextSearch, quickSearch },
-    setState,
-  ] = useState(settings || defaultSettings)
+  const [{ fontSize, showChords, contextSearch, quickSearch }, setState] =
+    useState(settings || defaultSettings)
 
   // save settings to local storage
   const saveSettings = useCallback(() => {
     localStorage.setItem(
       'settings',
       JSON.stringify({
-        themeColor,
         fontSize,
         showChords,
         contextSearch,
         quickSearch,
       })
     )
-  }, [themeColor, fontSize, showChords, contextSearch, quickSearch])
+  }, [fontSize, showChords, contextSearch, quickSearch])
 
   // save settings on change
   useEffect(() => {
     saveSettings()
-    document.documentElement.className = `${document.documentElement.classList[0]} ${themeColor}`
-  }, [saveSettings, themeColor])
+  }, [saveSettings])
 
   // theme colors labels
   const Themes = (names: string[]) => {
@@ -75,14 +71,9 @@ export default function SettingsMenu() {
             type='radio'
             id={name}
             value={name}
-            name='themeColor'
-            checked={themeColor === name}
-            onChange={() => {
-              setState((prevState) => ({
-                ...prevState,
-                themeColor: name,
-              }))
-            }}
+            name='theme'
+            checked={theme === name}
+            onChange={() => setTheme(name)}
           />
         </label>
       )
@@ -126,8 +117,24 @@ export default function SettingsMenu() {
           <h3>Motyw kolorów:</h3>
 
           {unlocked
-            ? Themes(['black', 'dark', 'light', 'reading'])
-            : Themes(['light', 'reading', 'black', 'dark'])}
+            ? Themes([
+                'black',
+                // 'dark-blue',
+                'gray',
+                'white',
+                'reading',
+                // 'light-blue',
+                // 'light-purple',
+              ])
+            : Themes([
+                'white',
+                'reading',
+                // 'light-blue',
+                // 'light-purple',
+                'gray',
+                // 'dark-blue',
+                'black',
+              ])}
         </div>
 
         {/* FONT SIZE */}

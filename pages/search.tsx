@@ -477,12 +477,12 @@ export default function SearchPage() {
         <div className={styles.title}>
           <Link href='/'>
             <Image
-              style={{ transform: 'rotate(90deg)' }}
+              style={{ rotate: '90deg' }}
               className='icon'
               alt='back'
               src='/icons/arrow.svg'
-              width={20}
-              height={20}
+              width={16}
+              height={16}
               draggable={false}
             />
             <p>Powrót</p>

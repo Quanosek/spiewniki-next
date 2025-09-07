@@ -715,7 +715,9 @@ export default function HymnPage() {
             height={20}
             draggable={false}
           />
-          <p>Otwórz PDF</p>
+          <p>
+            {Object.keys(hymnFiles).length > 0 ? 'Otwórz PDF' : 'Ładowanie...'}
+          </p>
         </button>
 
         <button title='Skopiuj link do wybranej pieśni' onClick={shareButton}>

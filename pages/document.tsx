@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import simplifyText from '@/lib/simplifyText'
+import simplifyText from '@/utils/simplifyText'
 
 import styles from '@/styles/pages/document.module.scss'
 
@@ -14,19 +14,24 @@ export default function DocumentPage() {
 
   useEffect(() => {
     if (!router.isReady) return
-    const { d, book, id } = router.query as { [key: string]: string }
+    const { d, book, id } = router.query
 
-    // get document
-    if (d) {
+    // Get document
+    if (typeof d === 'string' && d.trim()) {
       setDocumentPath(`/pdf/${new simplifyText(d).modify()}.pdf`)
-    } else if (book && id) {
+    } else if (
+      typeof book === 'string' &&
+      book.trim() &&
+      typeof id === 'string' &&
+      id.trim()
+    ) {
       setDocumentPath(`/pdf/${book}/${id}.pdf`)
     } else {
       router.back()
     }
   }, [router])
 
-  // keyboard shortcuts
+  // Keyboard shortcuts
   useEffect(() => {
     const KeyupEvent = (e: KeyboardEvent) => {
       if (
@@ -72,7 +77,11 @@ export default function DocumentPage() {
         </div>
 
         <div className={styles.document}>
-          <iframe src={`${libraryPath}?file=${documentPath}`} />
+          <iframe
+            src={`${libraryPath}?file=${encodeURIComponent(documentPath)}`}
+            sandbox='allow-scripts allow-same-origin'
+            title='PDF Document Viewer'
+          />
         </div>
       </main>
     </>

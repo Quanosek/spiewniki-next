@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { useEffect, useState, useCallback, ReactElement } from 'react'
+
 import { hiddenMenuQuery } from '../menu'
 
 import styles from '@/styles/components/menu.module.scss'
@@ -13,7 +14,7 @@ interface Settings {
 }
 
 // default settings values
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export const defaultSettings = {
   themeColor: unlocked ? 'black' : 'light',
@@ -101,10 +102,10 @@ export default function SettingsMenu() {
           name='toggle-checkbox'
           checked={value}
           onChange={() => {
-            setState((prevState: any) => {
+            setState((prevState: Settings) => {
               return {
                 ...prevState,
-                [name]: !prevState[name],
+                [name]: !prevState[name as keyof Settings],
               }
             })
           }}

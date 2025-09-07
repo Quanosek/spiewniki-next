@@ -16,7 +16,6 @@
 
 .menuHandler {
   $margin: 5%;
-
   padding: 1.25rem 1rem;
   position: fixed;
   top: $margin;
@@ -55,12 +54,11 @@
 }
 
 .menuBox {
+  $gap: min(2vw, 0.5rem);
   width: 100%;
   display: flex;
   flex-direction: column;
   text-align: center;
-
-  $gap: min(2vw, 0.5rem);
   gap: $gap;
 
   h2 {
@@ -70,7 +68,7 @@
   }
 }
 
-// menu components template
+// Menu components template
 
 .content {
   display: flex;
@@ -112,7 +110,7 @@
   }
 }
 
-// FAVORITES MENU
+// Favorites menu
 
 .favorites {
   position: relative;
@@ -278,7 +276,7 @@
   }
 }
 
-// SETTINGS MENU
+// Settings menu
 
 .settingsSection {
   padding: 1.2rem 0;
@@ -442,12 +440,10 @@
 }
 
 .checkbox {
-  position: relative;
-
   $buttonWidth: 4rem;
   $buttonHeight: 1.5rem;
   $dotMargin: 0.25rem;
-
+  position: relative;
   height: calc($buttonHeight + ($dotMargin * 2.5));
   width: $buttonWidth;
 
@@ -492,7 +488,6 @@
     $buttonWidth: min(18vw, 4rem);
     $buttonHeight: min(8vw, 1.5rem);
     $dotMargin: 1vw;
-
     height: calc($buttonHeight + ($dotMargin * 2.5));
     width: $buttonWidth;
 
@@ -510,7 +505,7 @@
   }
 }
 
-// SHORTCUTS MENU
+// Shortcuts menu
 
 .shortcut {
   padding: 0.65rem;

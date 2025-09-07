@@ -1,5 +1,4 @@
-// convert book name
-export function bookShortcut(input: string) {
+const bookShortcut = (input: string) => {
   const booksMap: Record<string, string> = {
     all: 'Wszystkie śpiewniki',
     B: 'Pieśni Brzasku Tysiąclecia',
@@ -8,8 +7,8 @@ export function bookShortcut(input: string) {
     K: 'Śpiewnik Koziański',
     P: 'Śpiewnik Poznański',
     E: 'Śpiewniczek Młodzieżowy',
-    S: 'Pieśni Chóru Syloe',
     M: 'Śpiewnik Międzynarodowy (IC)',
+    S: 'Pieśni Chóru Syloe',
     R: 'Różne pieśni',
   }
 
@@ -29,9 +28,8 @@ export function bookShortcut(input: string) {
   }
 }
 
-// get books list
-export function booksList() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+const booksList = () => {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
   const list = unlocked
     ? ['B', 'C', 'N', 'K', 'P', 'E', 'S', 'M', 'R']
@@ -39,3 +37,5 @@ export function booksList() {
 
   return list
 }
+
+export { bookShortcut, booksList }

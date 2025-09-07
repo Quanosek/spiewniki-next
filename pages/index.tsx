@@ -3,14 +3,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import MobileNavbar from '@/components/mobileNavbar'
-import { bookShortcut } from '@/lib/availableBooks'
-import { randomHymn, shareButton } from '@/lib/buttons'
+import MobileNavbar from '@/components/mobile-navbar'
+import { bookShortcut } from '@/utils/books'
+import shareButton from '@/utils/share'
+import randomHymn from '@/utils/randomHymn'
 
 import styles from '@/styles/pages/index.module.scss'
 
-export default function HomePage() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+export default function Home() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
   const router = useRouter()
 
   useEffect(() => {
@@ -21,13 +22,12 @@ export default function HomePage() {
   const [hamburgerMenu, showHamburgerMenu] = useState(false)
 
   useEffect(() => {
-    const TopScroll = document.documentElement.scrollTop
-    const LeftScroll = document.documentElement.scrollLeft
+    if (!hamburgerMenu) return
 
-    const ScrollEvent = () => {
-      if (!hamburgerMenu) return
-      window.scrollTo(LeftScroll, TopScroll)
-    }
+    const LeftScroll = document.documentElement.scrollLeft
+    const TopScroll = document.documentElement.scrollTop
+
+    const ScrollEvent = () => window.scrollTo(LeftScroll, TopScroll)
 
     document.addEventListener('scroll', ScrollEvent)
     return () => document.removeEventListener('scroll', ScrollEvent)
@@ -149,11 +149,11 @@ export default function HomePage() {
 
         <div className={styles.container}>
           <div className={styles.grid}>
-            {['B', 'C', 'N'].map((book, i) => (
-              <div key={i}>
+            {['B', 'C', 'N'].map((book, index) => (
+              <div key={index}>
                 <Link
-                  className={styles.book}
                   href={{ pathname: '/search', query: { book } }}
+                  className={styles.book}
                 >
                   <Image
                     alt='cover'

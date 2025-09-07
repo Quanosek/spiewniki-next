@@ -1,12 +1,20 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
+import { bookShortcut } from '@/utils/books'
+import simplifyText from '@/utils/simplifyText'
 
-import { bookShortcut } from '@/lib/availableBooks'
-import simplifyText from '@/lib/simplifyText'
+type Data = {
+  pdf?: { book: string; id: string } | null
+  error?: string
+}
 
 // API to find connected files with specific hymn
-export default function hymnFiles(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
   const { title } = req.query as { [key: string]: string }
 
   let { book } = req.query as { [key: string]: string }

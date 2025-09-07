@@ -1,12 +1,25 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
+import { bookShortcut, booksList } from '@/utils/books'
+import simplifyText from '@/utils/simplifyText'
 
-import { bookShortcut, booksList } from '@/lib/availableBooks'
-import simplifyText from '@/lib/simplifyText'
+type Data =
+  | {
+      name: string
+      pdf: {
+        book: string
+        name: string
+      } | null
+    }[]
+  | { error: string }
 
 // API to find connected files with list of defined books
-export default function booksData(_req: NextApiRequest, res: NextApiResponse) {
+export default function handler(
+  _req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
   try {
     const results = booksList().map((book) => {
       const name = new simplifyText(bookShortcut(book)).modify()

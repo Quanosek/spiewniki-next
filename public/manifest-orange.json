@@ -2,12 +2,10 @@
   "id": "spiewniki-orange",
   "name": "Śpiewniki",
   "description": "Zebrane w jednym miejscu różne śpiewniki i pieśni religijne",
-
   "start_url": "/",
   "theme_color": "#000000",
   "background_color": "#000000",
   "display": "standalone",
-
   "icons": [
     {
       "src": "/logo/orange/icon.svg",

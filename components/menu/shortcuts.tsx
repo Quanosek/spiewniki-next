@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+
 import { hiddenMenuQuery } from '../menu'
 
 import styles from '@/styles/components/menu.module.scss'
@@ -9,7 +10,7 @@ interface ShortcutProps {
 }
 
 export default function ShortcutsMenu() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
   const router = useRouter()
 
   const Shortcut = ({ keyup, action }: ShortcutProps) => (

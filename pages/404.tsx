@@ -3,37 +3,35 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { shareButton } from '@/lib/buttons'
+import shareButton from '@/utils/share'
 
 import styles from '@/styles/pages/error.module.scss'
 
 export default function ErrorPage() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
   const router = useRouter()
 
   const [seconds, setSeconds] = useState(10) // 10 seconds
 
-  // auto-redirect counter
+  // Auto-redirect counter
   useEffect(() => {
     const counter = setInterval(() => {
-      setSeconds((prevSeconds: number) => prevSeconds - 1)
-      if (seconds <= 1) router.push('/')
+      setSeconds((prev) => (prev <= 1 ? (router.push('/'), 0) : prev - 1))
     }, 1000)
 
     return () => clearInterval(counter)
-  }, [router, seconds])
+  }, [router])
 
-  // prevent scrolling on active hamburger menu
+  // Prevent scrolling on active hamburger menu
   const [hamburgerMenu, showHamburgerMenu] = useState(false)
 
   useEffect(() => {
-    const TopScroll = document.documentElement.scrollTop
-    const LeftScroll = document.documentElement.scrollLeft
+    if (!hamburgerMenu) return
 
-    const ScrollEvent = () => {
-      if (!hamburgerMenu) return
-      window.scrollTo(LeftScroll, TopScroll)
-    }
+    const LeftScroll = document.documentElement.scrollLeft
+    const TopScroll = document.documentElement.scrollTop
+
+    const ScrollEvent = () => window.scrollTo(LeftScroll, TopScroll)
 
     document.addEventListener('scroll', ScrollEvent)
     return () => document.removeEventListener('scroll', ScrollEvent)
@@ -78,7 +76,6 @@ export default function ErrorPage() {
         </div>
 
         {hamburgerMenu && (
-          // mobile fullscreen menu
           <div className={styles.hamburgerMenu}>
             <button onClick={shareButton}>
               <p>Udostępnij</p>

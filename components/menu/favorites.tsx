@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import axios from 'axios'
+import { bookShortcut, booksList } from '@/utils/books'
+
 import { hiddenMenuQuery } from '../menu'
-import { bookShortcut, booksList } from '@/lib/availableBooks'
 
 import styles from '@/styles/components/menu.module.scss'
 
@@ -23,7 +24,7 @@ export default function FavoritesMenu() {
   const [favorites, setFavorites] = useState<Favorite[]>(favoritesData || [])
 
   // hover delete button on desktop
-  const [elemHovered, setElemHovered] = useState<number | undefined>()
+  const [elemHovered, setElemHovered] = useState<number>()
 
   // remove selected hymn from list of favorites
   const removeFromList = (index: number) => {
@@ -127,7 +128,7 @@ export default function FavoritesMenu() {
                       // check title
                     } else {
                       const { data } = await axios.get(
-                        `database/${bookShortcut(fav.book)}.json`
+                        `database/${fav.book}.json`
                       )
 
                       if (

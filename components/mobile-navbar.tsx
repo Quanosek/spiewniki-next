@@ -1,10 +1,12 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { bookShortcut } from '@/lib/availableBooks'
-import { randomHymn, shareButton } from '@/lib/buttons'
+import { bookShortcut } from '@/utils/books'
+import shareButton from '@/utils/share'
+import randomHymn from '@/utils/randomHymn'
+
 import { hiddenMenuQuery } from './menu'
 
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function MobileNavbarComponent() {
   const router = useRouter()

@@ -3,41 +3,46 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Presentation from '@/components/presentation'
-import { bookShortcut } from '@/lib/availableBooks'
-import HymnTypes from '@/lib/hymnTypes'
+import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/components/presentation.module.scss'
 
 export default function PresentationPage() {
   const router = useRouter()
 
-  const [hymn, setHymn] = useState<HymnTypes | undefined>()
+  const [hymn, setHymn] = useState<Hymn>()
 
   useEffect(() => {
     if (!router.isReady) return
-    const { book, title } = router.query as { [key: string]: string }
+    const { book, title } = router.query
 
-    // fetch data
+    // Fetch data
     axios
-      .get(`database/${bookShortcut(book)}.json`)
+      .get(`database/${book}.json`)
       .then(({ data }) => {
         const hymn = data.find((elem: { name: string }) => elem.name === title)
         setHymn(hymn)
       })
       .catch((err) => console.error(err))
 
-    // exit on fullscreen escape
-    document.onfullscreenchange = () => {
+    // Exit on fullscreen escape
+    const fullscreenChangeHandler = () => {
       if (!document.fullscreenElement) return router.back()
     }
 
-    // remove saved window mode
-    window.onbeforeunload = () => {
-      return localStorage.removeItem('presWindow')
+    // Remove saved window mode
+    const beforeUnloadHandler = () => localStorage.removeItem('presWindow')
+
+    document.addEventListener('fullscreenchange', fullscreenChangeHandler)
+    window.addEventListener('beforeunload', beforeUnloadHandler)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', fullscreenChangeHandler)
+      window.removeEventListener('beforeunload', beforeUnloadHandler)
     }
   }, [router])
 
-  // keyboard shortcuts
+  // Keyboard shortcuts
   useEffect(() => {
     const KeyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return

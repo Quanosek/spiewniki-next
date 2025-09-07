@@ -1,49 +1,60 @@
-@import './themes.scss';
-
-// custom variables
 :root {
-  --radius: 10px;
-  --space: 2px;
-
   --header-height: 4rem;
   --navbar-height: calc(min(16vw, 3.5rem) + env(safe-area-inset-bottom));
   --mobileHeader-height: min(16vw, 3.5rem);
+  --radius: 10px;
+  --space: 2px;
 }
 
-// tab navigation border
 *:focus-visible {
   box-shadow: 0 0 1px 2px var(--text);
 }
 
-// text selection
 ::selection {
   color: var(--elements);
   background: var(--accent-color);
 }
 
-// used fonts
+@media (min-width: 769px) {
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--menu-elements);
+    cursor: grab;
+
+    &:hover {
+      background-color: var(--menu-elements-hover);
+    }
+  }
+}
+
 @font-face {
   font-family: 'Gill Sans MT';
-  src: url('/fonts/gill_sans_mt.woff2') format('woff2');
+  src: url('/fonts/gill-sans-mt.woff2') format('woff2');
   size-adjust: 110%;
   font-display: swap;
 }
 
 @font-face {
   font-family: 'Brutal Type Medium';
-  src: url('/fonts/brutal_type_medium.woff2') format('woff2');
+  src: url('/fonts/brutal-type-medium.woff2') format('woff2');
   unicode-range: U+30-39; // only numbers
   size-adjust: 105%;
   font-display: swap;
 }
 
-// print page setup
 @page {
   size: A4;
   margin: 2cm 1cm;
 }
 
-// html basic tags
 html,
 body {
   overscroll-behavior-y: contain;
@@ -60,10 +71,23 @@ body {
   }
 }
 
-header,
-footer {
+body {
+  overflow-y: scroll;
+}
+
+header {
+  height: var(--header-height);
   background-color: var(--elements);
+  box-shadow: 0 -12px 12px 4px var(--text);
   font-size: 80%;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  @media print {
+    display: none;
+  }
 
   .container {
     margin: 0 auto;
@@ -74,22 +98,8 @@ footer {
     justify-content: space-between;
   }
 
-  @media (max-width: 768px) {
-    display: none;
-  }
-
-  @media print {
-    display: none;
-  }
-}
-
-header {
-  height: var(--header-height);
-  box-shadow: 0 -12px 12px 4px var(--text);
-
   .title {
     $save-space: 1rem;
-
     position: relative;
     right: $save-space;
     padding: 0 $save-space;
@@ -130,34 +140,6 @@ header {
   }
 }
 
-footer {
-  padding: 2px 0;
-  font-size: 75%;
-
-  .container {
-    opacity: 85%;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-
-  hr {
-    opacity: 50%;
-    height: 0.5px;
-    width: max(35rem, 40%);
-    background-color: var(--text);
-  }
-
-  .credits {
-    font-size: 90%;
-
-    a:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
-// consistent main container
 main {
   position: relative;
   margin: 0 auto;
@@ -180,7 +162,6 @@ main {
   }
 }
 
-// default tags
 h1 {
   font-size: 200%;
   font-weight: bold;
@@ -208,12 +189,10 @@ button {
   }
 }
 
-// bottom mobile navigation bar
 nav {
   z-index: 1;
   position: fixed;
   bottom: 0;
-
   padding: var(--space) calc(var(--space) * 2) env(safe-area-inset-bottom);
   height: var(--navbar-height);
   width: 100%;
@@ -271,7 +250,6 @@ nav {
   }
 }
 
-// desktop-only element
 .desktopOnly {
   display: flex;
 
@@ -280,7 +258,6 @@ nav {
   }
 }
 
-// global disabled option
 .disabled {
   opacity: 30% !important;
   pointer-events: none !important;

@@ -2,58 +2,70 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState, useCallback, useRef } from 'react'
-import axios from 'axios'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { bookShortcut, booksList } from '@/lib/availableBooks'
-import { randomHymn } from '@/lib/buttons'
-import HymnTypes from '@/lib/hymnTypes'
-import simplifyText from '@/lib/simplifyText'
+import axios, { AxiosResponse } from 'axios'
+import { bookShortcut, booksList } from '@/utils/books'
+import randomHymn from '@/utils/randomHymn'
+import simplifyText from '@/utils/simplifyText'
+import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/pages/search.module.scss'
 
-export default function SearchPage() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+interface HymnWithLyrics extends Hymn {
+  lyrics?: string[]
+}
 
-  // router queries
+export default function SearchPage() {
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
+  // Router queries
   const router = useRouter()
   const book = router.query.book as string
 
-  // data fetching
-  const [rawData, setRawData] = useState<HymnTypes[]>()
-  const [data, setData] = useState<HymnTypes[]>()
+  // Data fetching
+  const [rawData, setRawData] = useState<Hymn[]>()
+  const [data, setData] = useState<HymnWithLyrics[]>()
   const [isLoading, setLoading] = useState(true)
 
-  // dynamic search-box input
+  // Dynamic search-box input
   const inputRef = useRef<HTMLInputElement>(null)
   const [inputValue, setInputValue] = useState('')
 
-  // searching algorithm
-  const Search = (data: HymnTypes[], input: string) => {
-    const NamesCollector: any[] = []
-    const LyricsCollector: any[] = []
+  // Searching algorithm
+  const Search = (data: Hymn[], input: string) => {
+    const NamesCollector: HymnWithLyrics[] = []
+    const LyricsCollector: HymnWithLyrics[] = []
 
-    const { contextSearch } = JSON.parse(
-      localStorage.getItem('settings') as string
-    )
+    // Safe localStorage access
+    let contextSearch = false
+    try {
+      const settings = localStorage.getItem('settings')
+      if (settings) {
+        const parsedSettings = JSON.parse(settings)
+        contextSearch = parsedSettings.contextSearch
+      }
+    } catch (error) {
+      console.error('Error parsing settings:', error)
+    }
 
-    data.map((hymn: HymnTypes) => {
+    data.forEach((hymn) => {
       const { id, book, name, song } = hymn
 
       const formattedName = new simplifyText(name).format()
       const formattedInput = new simplifyText(input).format()
 
       if (formattedName.includes(formattedInput)) {
-        // title found
-        NamesCollector.push({ id, book, name })
+        // Title found
+        NamesCollector.push({ id, book, name, song })
       } else if (contextSearch) {
-        // lyrics found
+        // Lyrics found
         const lyrics = Object.values(song.lyrics)
           .flat()
           .filter((verse) => verse.startsWith(' '))
           .map((verse) => verse.slice(1))
 
-        lyrics.map((verse, index) => {
+        lyrics.forEach((verse, index) => {
           if (input.match(/^[0-9]+$/)) return
 
           const formattedVerse = new simplifyText(verse).format()
@@ -63,6 +75,7 @@ export default function SearchPage() {
               id,
               book,
               name,
+              song,
               lyrics: [
                 lyrics[index - 1]
                   ? `${lyrics[index - 2] ? '...' : ''} ${lyrics[index - 1]}`
@@ -79,7 +92,7 @@ export default function SearchPage() {
       }
     })
 
-    // merge Collectors
+    // Merge Collectors
     const Collector = [...NamesCollector, ...LyricsCollector].filter(
       (value, index, self) => {
         return index === self.findIndex((x) => x.name === value.name)
@@ -92,58 +105,77 @@ export default function SearchPage() {
   useEffect(() => {
     if (!router.isReady) return
 
-    // wrong book name error
-    if (book && !bookShortcut(book)) router.push('/404')
-
-    // focus search-box on load
-    if (localStorage.getItem('focusSearchBox')) inputRef.current?.focus()
+    // Focus search-box on load
+    const focusSearchBox = localStorage.getItem('focusSearchBox')
+    if (focusSearchBox) inputRef.current?.focus()
     localStorage.removeItem('focusSearchBox')
 
-    // fast-search input value
-    const { quickSearch } = JSON.parse(
-      localStorage.getItem('settings') as string
-    )
-    const prevSearch = JSON.parse(localStorage.getItem('prevSearch') as string)
+    // Fast-search input value
+    let quickSearch = false
+    let prevSearch = null
+
+    try {
+      const settings = localStorage.getItem('settings')
+
+      if (settings) {
+        const parsedSettings = JSON.parse(settings)
+        quickSearch = parsedSettings.quickSearch
+      }
+
+      const prevSearchData = localStorage.getItem('prevSearch')
+      if (prevSearchData) prevSearch = JSON.parse(prevSearchData)
+    } catch (error) {
+      console.error('Error parsing localStorage data:', error)
+    }
+
     if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search)
 
-    // init data load function
-    const loadData = (fetchData: HymnTypes[]) => {
+    // Init data load function
+    const loadData = (fetchData: Hymn[]) => {
       setRawData(fetchData)
 
       if (prevSearch?.search) Search(fetchData, prevSearch.search || '')
       else setData(fetchData)
     }
 
-    // hymns from all books
+    // Hymns from all books
     if (!book) {
-      const Collector: any[] = []
+      const fetchAllBooks = async () => {
+        try {
+          const responses = await Promise.all(
+            booksList().map((bookName) =>
+              axios.get<Hymn[]>(`database/${bookName}.json`).catch((err) => {
+                console.error(err)
+                return null
+              })
+            )
+          )
 
-      booksList().map(async (book) => {
-        Collector.push(
-          await axios
-            .get(`database/${bookShortcut(book)}.json`)
-            .catch((err) => {
-              console.error(err)
-              router.push('/404')
+          const validResponses = responses.filter(
+            (response): response is AxiosResponse<Hymn[]> => response !== null
+          )
+
+          const hymns = validResponses
+            .flatMap((response) => {
+              return response.data
             })
-        )
-
-        if (Collector.length === booksList().length) {
-          let hymns: any[] = []
-
-          Collector.map(({ data }) => hymns.push(...data))
-          hymns = hymns.sort((a, b) => {
-            return a.name.localeCompare(b.name, undefined, { numeric: true })
-          })
+            .sort((a, b) => {
+              return a.name.localeCompare(b.name, undefined, { numeric: true })
+            })
 
           loadData(hymns)
+        } catch (error) {
+          console.error(error)
+          router.push('/404')
         }
-      })
+      }
 
-      // hymns from selected book
+      fetchAllBooks()
+
+      // Hymns from selected book
     } else {
       axios
-        .get(`database/${bookShortcut(book)}.json`)
+        .get(`database/${book}.json`)
         .then(({ data }) => loadData(data))
         .catch((err) => {
           console.error(err)
@@ -152,17 +184,17 @@ export default function SearchPage() {
     }
   }, [router, book])
 
-  // clear input button
+  // Clear input button
   const [showClearBtn, setShowClearBtn] = useState(false)
 
   useEffect(() => {
     if (inputValue) setShowClearBtn(true)
     else setShowClearBtn(false)
 
-    // select search when input value on init
+    // Select search when input value on init
     if (inputValue && !rawData) inputRef.current?.select()
 
-    // data update on input change
+    // Data update on input change
     if (rawData) {
       if (inputValue) {
         const timeout = setTimeout(() => {
@@ -175,16 +207,16 @@ export default function SearchPage() {
     }
   }, [inputValue, rawData])
 
-  // infinite scroll handler
+  // Infinite scroll handler
   const [renderPage, setRenderPage] = useState(0)
-  const [renderedData, setRenderedData] = useState<HymnTypes[]>([])
+  const [renderedData, setRenderedData] = useState<HymnWithLyrics[]>([])
 
-  // scroll-to-top button
+  // Scroll-to-top button
   const [showTopBtn, setShowTopBtn] = useState(false)
 
   useEffect(() => {
     const scrollEvent = () => {
-      // increase render array index
+      // Increase render array index
       if (
         window.innerHeight + window.scrollY >=
         document.body.offsetHeight - 500
@@ -192,7 +224,7 @@ export default function SearchPage() {
         setRenderPage((page) => page + 1)
       }
 
-      // show scroll-to-top button
+      // Show scroll-to-top button
       setShowTopBtn(window.scrollY > 350)
     }
 
@@ -200,8 +232,8 @@ export default function SearchPage() {
     return () => window.removeEventListener('scroll', scrollEvent)
   }, [])
 
-  // href link to hymn
-  const hymnLink = (hymn: HymnTypes) => {
+  // Href link to hymn
+  const hymnLink = (hymn: HymnWithLyrics) => {
     return {
       pathname: '/hymn',
       query: {
@@ -211,7 +243,7 @@ export default function SearchPage() {
     }
   }
 
-  // clear input and restore results
+  // Clear input and restore results
   const cleanUp = useCallback(() => {
     setInputValue('')
     inputRef.current?.focus()
@@ -221,7 +253,7 @@ export default function SearchPage() {
     localStorage.removeItem('prevSearch')
   }, [rawData])
 
-  // keyboard shortcuts
+  // Keyboard shortcuts
   useEffect(() => {
     const KeyupEvent = (e: KeyboardEvent) => {
       if (
@@ -235,7 +267,7 @@ export default function SearchPage() {
       }
 
       if (document.activeElement === inputRef.current) {
-        // search-box shortcuts
+        // Search-box shortcuts
         if (e.key === 'Escape') inputRef.current?.blur()
         if (e.key === 'Enter') {
           const hymn = data && data[0]
@@ -245,7 +277,7 @@ export default function SearchPage() {
       } else {
         const key = e.key.toUpperCase()
 
-        // global shortcuts
+        // Global shortcuts
         if (key === '/') inputRef.current?.focus()
         if (key === 'B') router.push(unlocked ? '/books' : '/')
         if (key === 'R') randomHymn(bookShortcut(book))
@@ -256,25 +288,184 @@ export default function SearchPage() {
     return () => document.removeEventListener('keyup', KeyupEvent)
   }, [router, data, cleanUp, unlocked, book])
 
-  // set rendered data
+  // Set rendered data
   useEffect(() => {
     if (!data) return
 
-    // split data into 30 elements arrays
+    // Split data into 30 elements arrays
     const results = []
     for (let i = 0; i < data.length; i += 30) {
       results.push(data.slice(i, i + 30))
     }
 
-    // render content
+    // Render content
     const array = results.slice(0, renderPage + 1).flat()
     setRenderedData(array)
 
     setLoading(false)
   }, [data, renderPage])
 
-  // quick actions on result hover
-  const [resultHovered, setResultHovered] = useState<number | undefined>()
+  // Quick actions on result hover
+  const [resultHovered, setResultHovered] = useState<number>()
+
+  const SearchResult = ({
+    hymn,
+    index,
+  }: {
+    hymn: HymnWithLyrics
+    index: number
+  }) => {
+    let isFavorite = Boolean(
+      localStorage.getItem('favorites')?.includes(hymn.name)
+    )
+
+    return (
+      <div
+        className={styles.hymn}
+        onMouseEnter={() => setResultHovered(index)}
+        onMouseLeave={() => setResultHovered(undefined)}
+      >
+        <Link
+          href={hymnLink(hymn)}
+          className={styles.result}
+          onClick={() => {
+            const { quickSearch } = JSON.parse(
+              localStorage.getItem('settings') as string
+            )
+
+            localStorage.setItem(
+              'prevSearch',
+              JSON.stringify({
+                book,
+                search: quickSearch ? inputValue : '',
+              })
+            )
+          }}
+        >
+          <h2>
+            {unlocked ? (
+              <Highlighter
+                autoEscape={true}
+                highlightClassName={styles.highlight}
+                searchWords={[inputValue]}
+                textToHighlight={hymn.name}
+              />
+            ) : (
+              hymn.name
+            )}
+          </h2>
+
+          {hymn.lyrics && (
+            <div className={styles.lyrics}>
+              {hymn.lyrics.map((verse, index) => (
+                <p key={index}>
+                  {unlocked ? (
+                    <Highlighter
+                      autoEscape={true}
+                      highlightClassName={styles.highlight}
+                      searchWords={[inputValue]}
+                      textToHighlight={verse.toString()}
+                    />
+                  ) : (
+                    verse
+                  )}
+                </p>
+              ))}
+            </div>
+          )}
+        </Link>
+
+        <div className={styles.quickActions}>
+          {unlocked && (
+            <button
+              title='Otwórz pokaz slajdów'
+              className={styles.onHover}
+              style={{
+                display: resultHovered === index ? 'flex' : '',
+              }}
+              onClick={() => {
+                const book = bookShortcut(hymn.book)
+                const title = hymn.name
+
+                const presWindow = localStorage.getItem('presWindow')
+
+                if (!presWindow) {
+                  // Fullscreen mode
+                  const elem = document.documentElement
+                  if (elem.requestFullscreen) {
+                    elem.requestFullscreen()
+                  }
+
+                  router.push({
+                    pathname: '/presentation',
+                    query: { book, title },
+                  })
+                } else {
+                  // Open new window
+                  const params = new URLSearchParams()
+                  params.append('book', book)
+                  params.append('title', title)
+
+                  window.open(
+                    `/presentation?${params.toString()}`,
+                    'presentation',
+                    'width=960,height=540'
+                  )
+
+                  localStorage.setItem('presWindow', 'true')
+                }
+              }}
+            >
+              <Image
+                className='icon'
+                alt='presentation'
+                src='/icons/monitor.svg'
+                width={25}
+                height={25}
+                draggable={false}
+              />
+            </button>
+          )}
+
+          {isFavorite && (
+            <button
+              title='Usuń pieśń z ulubionych'
+              onClick={() => {
+                if (!confirm('Czy chcesz usunąć wybraną pieśń z ulubionych?')) {
+                  return
+                }
+
+                let favorites = JSON.parse(
+                  localStorage.getItem('favorites') || '[]'
+                )
+
+                favorites = favorites.filter(
+                  (elem: { book: string; id: number }) => {
+                    return (
+                      elem.book !== bookShortcut(hymn.book) ||
+                      elem.id !== hymn.id
+                    )
+                  }
+                )
+
+                isFavorite = false
+                localStorage.setItem('favorites', JSON.stringify(favorites))
+              }}
+            >
+              <Image
+                className='icon'
+                alt='favorite'
+                src='/icons/star-filled.svg'
+                width={25}
+                height={25}
+                draggable={false}
+              />
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -341,15 +532,23 @@ export default function SearchPage() {
               setInputValue(value)
               setRenderPage(0)
 
-              // saving search values
-              const { quickSearch } = JSON.parse(
-                localStorage.getItem('settings') as string
-              )
+              // Saving search values
+              try {
+                const settings = localStorage.getItem('settings')
+                let quickSearch = false
 
-              localStorage.setItem(
-                'prevSearch',
-                JSON.stringify({ book, search: quickSearch ? value : '' })
-              )
+                if (settings) {
+                  const parsedSettings = JSON.parse(settings)
+                  quickSearch = parsedSettings.quickSearch
+                }
+
+                localStorage.setItem(
+                  'prevSearch',
+                  JSON.stringify({ book, search: quickSearch ? value : '' })
+                )
+              } catch (error) {
+                console.error('Error saving search data:', error)
+              }
 
               // easter-egg
               if (unlocked && value === '2137') {
@@ -405,170 +604,12 @@ export default function SearchPage() {
             (!renderedData.length ? (
               <p className={styles.noResults}>Brak wyników wyszukiwania</p>
             ) : (
-              renderedData.map((hymn, index, row) => {
-                let isFavorite = Boolean(
-                  localStorage.getItem('favorites')?.includes(hymn.name)
-                )
-
-                return (
-                  <div key={index}>
-                    <div
-                      className={styles.hymn}
-                      onMouseEnter={() => setResultHovered(index)}
-                      onMouseLeave={() => setResultHovered(undefined)}
-                    >
-                      <Link
-                        className={styles.result}
-                        href={hymnLink(hymn)}
-                        onClick={() => {
-                          const { quickSearch } = JSON.parse(
-                            localStorage.getItem('settings') as string
-                          )
-
-                          localStorage.setItem(
-                            'prevSearch',
-                            JSON.stringify({
-                              book,
-                              search: quickSearch ? inputValue : '',
-                            })
-                          )
-                        }}
-                      >
-                        <h2>
-                          {unlocked ? (
-                            <Highlighter
-                              autoEscape={true}
-                              highlightClassName={styles.highlight}
-                              searchWords={[inputValue]}
-                              textToHighlight={hymn.name}
-                            />
-                          ) : (
-                            hymn.name
-                          )}
-                        </h2>
-
-                        {hymn.lyrics && (
-                          <div className={styles.lyrics}>
-                            {hymn.lyrics.map((verse, i) => (
-                              <p key={i}>
-                                {unlocked ? (
-                                  <Highlighter
-                                    autoEscape={true}
-                                    highlightClassName={styles.highlight}
-                                    searchWords={[inputValue]}
-                                    textToHighlight={verse.toString()}
-                                  />
-                                ) : (
-                                  verse
-                                )}
-                              </p>
-                            ))}
-                          </div>
-                        )}
-                      </Link>
-
-                      <div className={styles.quickActions}>
-                        {unlocked && (
-                          <button
-                            title='Otwórz pokaz slajdów'
-                            className={styles.onHover}
-                            style={{
-                              display: resultHovered === index ? 'flex' : '',
-                            }}
-                            onClick={() => {
-                              const book = bookShortcut(hymn.book)
-                              const title = hymn.name
-
-                              const presWindow =
-                                localStorage.getItem('presWindow')
-
-                              if (!presWindow) {
-                                // fullscreen mode
-                                const elem = document.documentElement
-                                if (elem.requestFullscreen) {
-                                  elem.requestFullscreen()
-                                }
-
-                                router.push({
-                                  pathname: '/presentation',
-                                  query: { book, title },
-                                })
-                              } else {
-                                // open new window
-                                const params = new URLSearchParams()
-                                params.append('book', book)
-                                params.append('title', title)
-
-                                window.open(
-                                  `/presentation?${params.toString()}`,
-                                  'presentation',
-                                  'width=960,height=540'
-                                )
-
-                                localStorage.setItem('presWindow', 'true')
-                              }
-                            }}
-                          >
-                            <Image
-                              className='icon'
-                              alt='presentation'
-                              src='/icons/monitor.svg'
-                              width={25}
-                              height={25}
-                              draggable={false}
-                            />
-                          </button>
-                        )}
-
-                        {isFavorite && (
-                          <button
-                            title='Usuń pieśń z ulubionych'
-                            onClick={() => {
-                              if (
-                                !confirm(
-                                  'Czy chcesz usunąć wybraną pieśń z ulubionych?'
-                                )
-                              ) {
-                                return
-                              }
-
-                              let favorites = JSON.parse(
-                                localStorage.getItem('favorites') || '[]'
-                              )
-
-                              favorites = favorites.filter(
-                                (elem: { book: string; id: number }) => {
-                                  return (
-                                    elem.book !== bookShortcut(hymn.book) ||
-                                    elem.id !== hymn.id
-                                  )
-                                }
-                              )
-
-                              isFavorite = false
-                              localStorage.setItem(
-                                'favorites',
-                                JSON.stringify(favorites)
-                              )
-                            }}
-                          >
-                            <Image
-                              className='icon'
-                              alt='favorite'
-                              src='/icons/star_filled.svg'
-                              width={25}
-                              height={25}
-                              draggable={false}
-                            />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    {index + 1 !== row.length && <hr />}
-                  </div>
-                )
-              })
+              renderedData.map((hymn, index, row) => (
+                <div key={index}>
+                  <SearchResult hymn={hymn} index={index} />
+                  {index + 1 !== row.length && <hr />}
+                </div>
+              ))
             ))}
         </div>
 

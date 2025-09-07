@@ -1,4 +1,3 @@
-// changing text to more useful form for local files directories
 class simplifyText {
   text: string
 
@@ -6,7 +5,6 @@ class simplifyText {
     this.text = text
   }
 
-  // unify text by removing diacritics and special characters
   format() {
     return this.text
       .toLowerCase()
@@ -22,14 +20,11 @@ class simplifyText {
       .replace(/[^\w\s]/gi, '')
   }
 
-  // replace spaces with underscores
   modify() {
     const formattedText = this.format()
-    const modifiedText = formattedText.replaceAll(' ', '_')
-
+    const modifiedText = formattedText.replaceAll(' ', '-')
     return modifiedText
   }
 }
 
-// export class as default
 export default simplifyText

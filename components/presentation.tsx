@@ -1,16 +1,16 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState, useCallback, useRef } from 'react'
-import HymnTypes from '@/lib/hymnTypes'
+import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/components/presentation.module.scss'
 
-export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
+export default function PresentationComponent({ hymn }: { hymn: Hymn }) {
   const router = useRouter()
   const ic = hymn && hymn.song.title.includes('IC')
 
   // slides order
-  const [order, setOrder] = useState<any>([])
+  const [order, setOrder] = useState<string[]>([])
 
   useEffect(() => {
     if (!hymn) return
@@ -40,16 +40,20 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
     }
   }, [])
 
-  const [slide, setSlide] = useState(0)
+  const [slide, setSlide] = useState(ic ? 1 : 0)
   const [verse, setVerse] = useState<string[]>()
 
   const prevSlide = useCallback(() => {
-    if (slide > 0) setSlide(slide - 1)
-  }, [slide])
+    if (ic && slide > 1) setSlide(slide - 1)
+    else if (!ic && slide > 0) setSlide(slide - 1)
+  }, [slide, ic])
 
   const nextSlide = useCallback(() => {
-    if (slide <= order.length) setSlide(slide + 1)
-    else {
+    const maxSlide = order.length + 1
+
+    if (slide < maxSlide) {
+      setSlide(slide + 1)
+    } else {
       if (document.fullscreenElement) document.exitFullscreen()
       else closePresentation()
     }
@@ -58,17 +62,18 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
   useEffect(() => {
     if (!(hymn || order)) return
 
-    const verse = hymn.song.lyrics[order[slide - 1]]
+    const slideIndex = slide - 1
+    const verse = hymn.song.lyrics[order[slideIndex]]
     if (!verse) return
 
     setVerse(
       verse
-        .filter((line: string) => line.startsWith(' ')) // show only text lines
-        .map((line: string) => line.slice(1)) // remove first space
-        .map((line: string) => line.replace(/\(.*?\)/g, '')) // remove text in brackets
-        .filter((line: string) => line !== '' && line !== ' ') // remove empty lines));
+        .filter((line) => line.startsWith(' ')) // show only text lines
+        .map((line) => line.slice(1)) // remove first space
+        .map((line) => line.replace(/\(.*?\)/g, '')) // remove text in brackets
+        .filter((line) => line !== '' && line !== ' ') // remove empty lines
     )
-  }, [hymn, order, slide])
+  }, [hymn, order, slide, ic])
 
   // detect line with and modify font size
   const linesWidth = useRef<HTMLParagraphElement>(null)
@@ -159,7 +164,7 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
       }
 
       if (KeyboardEvent.key === 'Escape') closePresentation()
-      if (KeyboardEvent.key === 'L') setSlide(-1)
+      if (KeyboardEvent.key === 'L') setSlide(ic ? 1 : -1)
     }
 
     // events handlers
@@ -176,7 +181,7 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
         return document.removeEventListener(eventType, handleEvent)
       })
     }
-  }, [router, alwaysShowCursor, prevSlide, nextSlide, closePresentation])
+  }, [router, alwaysShowCursor, prevSlide, nextSlide, closePresentation, ic])
 
   return (
     <div
@@ -186,7 +191,7 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
       <div
         className={`
             ${styles.content}
-            ${slide === 0 && styles.first}
+            ${!ic && slide === 0 && styles.first}
             ${slide > order.length && styles.last}
           `}
       >
@@ -210,12 +215,12 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
           }`}
         >
           {verse &&
-            verse.map((line, i) => {
+            verse.map((line, index) => {
               const formattedLine = line
                 .replace(/\b(\w)\b\s/g, '$1\u00A0') // spaces after single letter words
                 .replace(/(?<=\[:) | (?=:\])/g, '\u00A0') // spaces between brackets
 
-              return <p key={i}>{formattedLine}</p>
+              return <p key={index}>{formattedLine}</p>
             })}
         </div>
 
@@ -269,9 +274,20 @@ export default function PresentationComponent({ hymn }: { hymn: HymnTypes }) {
         </div>
 
         {/* progress bar */}
-        <div className={styles.progressBar}>
-          <div style={{ width: `${(100 / order.length) * slide}%` }} />
-        </div>
+        {slide <= order.length && (
+          <div className={styles.progressBar}>
+            <div
+              style={{
+                width: `${(() => {
+                  if ((ic && slide === 1) || (!ic && slide === 0)) return 0
+                  const totalSlides = ic ? order.length - 1 : order.length
+                  const currentSlide = ic ? slide - 1 : slide
+                  return (100 / totalSlides) * currentSlide
+                })()}%`,
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   )

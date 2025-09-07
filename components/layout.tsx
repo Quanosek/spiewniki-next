@@ -2,15 +2,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
-import { hiddenMenuQuery } from './menu'
-import Menu from '@/components/menu'
 
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+import Menu, { hiddenMenuQuery } from './menu'
+
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function LayoutComponent({ children }: { children: ReactNode }) {
   return (
     <>
-      {process.env.NODE_ENV !== 'development' && (
+      {process.env.NODE_ENV === 'production' && (
         <GoogleAnalytics
           trackPageViews
           gaMeasurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string}
@@ -34,8 +34,8 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
               className='icon'
               alt='bpsw'
               src='/logo/bpsw.svg'
-              width={45}
-              height={45}
+              width={36}
+              height={36}
               draggable={false}
               priority
             />
@@ -68,27 +68,6 @@ export default function LayoutComponent({ children }: { children: ReactNode }) {
       </header>
 
       {children}
-
-      <footer>
-        <div className='container'>
-          <p>
-            „Śpiewajcie Mu i grajcie, opowiadajcie o wszystkich cudach Jego!” 1
-            Krn 16:9
-          </p>
-
-          <hr />
-
-          <p className='credits'>
-            Wszelkie prawa zastrzeżone &#169; 2022-{new Date().getFullYear()}
-            {unlocked && (
-              <>
-                {' │ domena '}
-                <Link href='https://www.klalo.pl/'>klalo.pl</Link>
-              </>
-            )}
-          </p>
-        </div>
-      </footer>
     </>
   )
 }

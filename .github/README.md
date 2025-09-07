@@ -1,4 +1,4 @@
-<h1>spiewniki-next</h1>
+<h1>Śpiewniki</h1>
 
 <div>
   <img alt="pnpm" src="https://skillicons.dev/icons?i=pnpm" height="45" />

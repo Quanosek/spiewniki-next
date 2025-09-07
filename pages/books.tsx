@@ -3,16 +3,21 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { bookShortcut, booksList } from '@/lib/availableBooks'
+import { bookShortcut, booksList } from '@/utils/books'
 
 import styles from '@/styles/pages/books.module.scss'
+
+interface BookData {
+  name: string
+  pdf: boolean
+}
 
 export default function BooksPage() {
   const router = useRouter()
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState<BookData[]>([])
 
-  // fetch all books data
+  // Fetch all books data
   useEffect(() => {
     if (!router.isReady) return
 
@@ -21,6 +26,43 @@ export default function BooksPage() {
       .then((data) => setData(data))
       .catch((err) => console.error(err))
   }, [router])
+
+  const Book = ({ book }: { book: string }) => {
+    const pdfFile = data.find((file) => file.name === book && file.pdf)
+
+    return (
+      <div className={styles.book}>
+        <Link
+          href={{ pathname: '/search', query: { book } }}
+          className={styles.result}
+        >
+          <h2>{bookShortcut(book)}</h2>
+        </Link>
+
+        {pdfFile && (
+          <Link
+            href={{
+              pathname: '/document',
+              query: { d: bookShortcut(book) },
+            }}
+            className={styles.pdfFile}
+          >
+            <p>Otwórz PDF</p>
+            <Image
+              className='icon'
+              alt='pdf'
+              src='/icons/document.svg'
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </Link>
+        )}
+      </div>
+    )
+  }
+
+  const books = booksList()
 
   return (
     <>
@@ -47,54 +89,18 @@ export default function BooksPage() {
         </div>
 
         <div className={styles.list}>
-          <Link className={styles.all} href='/search'>
+          <Link href='/search' className={styles.all}>
             <h2>Wszystkie śpiewniki</h2>
           </Link>
 
           <hr />
 
-          {booksList().map((book, i) => {
-            const pdfFile = data.find(
-              (file: { name: string; pdf: boolean }) => {
-                return file.name === book && file.pdf
-              }
-            )
-
-            return (
-              <div key={i}>
-                <div className={styles.book}>
-                  <Link
-                    className={styles.result}
-                    href={{ pathname: '/search', query: { book } }}
-                  >
-                    <h2>{bookShortcut(book)}</h2>
-                  </Link>
-
-                  {pdfFile && (
-                    <Link
-                      className={styles.pdfFile}
-                      href={{
-                        pathname: '/document',
-                        query: { d: bookShortcut(book) },
-                      }}
-                    >
-                      <p>Otwórz PDF</p>
-                      <Image
-                        className='icon'
-                        alt='pdf'
-                        src='/icons/document.svg'
-                        width={25}
-                        height={25}
-                        draggable={false}
-                      />
-                    </Link>
-                  )}
-                </div>
-
-                {i + 1 !== data.length && <hr />}
-              </div>
-            )
-          })}
+          {books.map((book, index, row) => (
+            <div key={index}>
+              <Book book={book} />
+              {index + 1 !== row.length && <hr />}
+            </div>
+          ))}
         </div>
       </main>
     </>

@@ -1,7 +1,7 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import { Head, Html, Main, NextScript } from 'next/document'
 
 export default function Document() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED == 'true'
+  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
   return (
     <Html lang='pl'>
@@ -13,7 +13,7 @@ export default function Document() {
           content='Zebrane w jednym miejscu różne śpiewniki i pieśni religijne. Wszelkie prawa zastrzeżone &#169; 2022-2024'
         />
 
-        <meta name='mobile-wep-app-capable' content='yes' />
+        <meta name='mobile-web-app-capable' content='yes' />
         <meta name='apple-mobile-web-app-title' content='Śpiewniki' />
         <meta
           name='apple-mobile-web-app-status-bar-style'
@@ -22,7 +22,7 @@ export default function Document() {
 
         {unlocked ? (
           <>
-            {/* https://spiewniki.klalo.pl/ */}
+            {/* https://spiewniki.klalo.pl */}
 
             <meta name='robots' content='none' />
 
@@ -30,11 +30,11 @@ export default function Document() {
             <link rel='icon' href='/logo/blue/icon.svg' type='image/svg+xml' />
             <link rel='apple-touch-icon' href='/logo/blue/apple-icon.png' />
 
-            <link rel='manifest' href='/manifest_blue.json' />
+            <link rel='manifest' href='/manifest-blue.json' />
           </>
         ) : (
           <>
-            {/* https://spiewniki.nastrazy.org/ */}
+            {/* https://spiewniki.nastrazy.org */}
 
             <link rel='icon' href='/logo/orange/favicon.ico' sizes='any' />
             <link
@@ -44,7 +44,7 @@ export default function Document() {
             />
             <link rel='apple-touch-icon' href='/logo/orange/apple-icon.png' />
 
-            <link rel='manifest' href='/manifest_orange.json' />
+            <link rel='manifest' href='/manifest-orange.json' />
           </>
         )}
       </Head>

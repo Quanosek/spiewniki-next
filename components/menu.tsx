@@ -6,7 +6,8 @@ import styles from '@/styles/components/menu.module.scss'
 
 // menu boxes smart navigation
 export function hiddenMenuQuery(name: string | undefined) {
-  const { menu, ...params } = Router.query
+  const params = { ...Router.query }
+  delete params.menu
 
   Router.push(
     // url

@@ -15,7 +15,7 @@ excludedBooks.forEach((book) => lockedFiles.push(`!database/${book}.json`))
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-const excludes = ['!libraries/**/*', '!pdf/**/*'].concat(
+const excludes = ['!libraries/**/*', '!mp3/**/*', '!pdf/**/*'].concat(
   unlocked ? [] : lockedFiles
 )
 

@@ -1,5 +1,6 @@
 .title {
   $margin-bottom: 6px;
+
   position: relative;
   margin-bottom: $margin-bottom;
   padding: 1vw 2%;
@@ -23,7 +24,7 @@
     gap: 6px;
 
     h1 {
-      font-size: 135%;
+      font-size: 20px;
     }
   }
 
@@ -31,13 +32,9 @@
     z-index: 3;
     height: 100%;
     aspect-ratio: 1/1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
     border-radius: var(--radius);
     background-color: transparent;
-    transition: 150ms transform ease-out;
+    transition: transform 150ms ease-out;
 
     svg {
       position: absolute;
@@ -93,12 +90,11 @@
 
     .logotype {
       h1 {
-        font-size: 5vw;
+        font-size: 4.5vw;
       }
 
       img {
         height: 9vw;
-        width: auto;
       }
     }
 
@@ -134,7 +130,6 @@
 
       img {
         height: 9vw;
-        width: auto;
       }
     }
   }
@@ -161,7 +156,7 @@
   a,
   button {
     padding: min(3vw, 14px) 15%;
-    font-size: min(7vw, 125%);
+    font-size: 18px;
     font-weight: 700;
     border-radius: var(--radius);
     background-color: transparent;
@@ -174,7 +169,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  font-size: 120%;
+  font-size: 17px;
 
   @media (max-width: 1024px) {
     width: 95%;
@@ -184,7 +179,7 @@
     margin: 0;
     padding: min(6vw, 2rem) 8% min(10vw, 3rem);
     gap: min(2.5vw, 14px);
-    font-size: min(2.8vw, 85%);
+    font-size: 14px;
     background-color: var(--elements);
     border-radius: var(--radius);
   }
@@ -199,6 +194,6 @@
   }
 
   p {
-    font-size: 90%;
+    font-size: 14px;
   }
 }

@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import axios from 'axios'
-import { bookShortcut, booksList } from '@/utils/books'
 
+import { bookShortcut, booksList } from '@/utils/books'
 import { hiddenMenuQuery } from '../menu'
 
 import styles from '@/styles/components/menu.module.scss'

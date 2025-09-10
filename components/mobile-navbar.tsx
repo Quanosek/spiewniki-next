@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { bookShortcut } from '@/utils/books'
-import shareButton from '@/utils/share'
-import randomHymn from '@/utils/randomHymn'
 
+import { bookShortcut } from '@/utils/books'
+import shareButton from '@/utils/shareButton'
+import randomHymn from '@/utils/randomHymn'
 import { hiddenMenuQuery } from './menu'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
@@ -48,9 +48,18 @@ export default function MobileNavbarComponent() {
       </button>
 
       <button
-        onClick={() => {
+        onClick={async () => {
           const book = router.query.book as string
-          randomHymn(bookShortcut(book))
+          const hymn = await randomHymn(book)
+          if (hymn) {
+            router.push({
+              pathname: '/hymn',
+              query: {
+                book: bookShortcut(hymn.book),
+                title: hymn.name,
+              },
+            })
+          }
         }}
       >
         <Image

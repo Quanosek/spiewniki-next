@@ -3,20 +3,28 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import shareButton from '@/utils/share'
+
+import shareButton from '@/utils/shareButton'
 
 import styles from '@/styles/pages/error.module.scss'
 
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
 export default function ErrorPage() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
   const router = useRouter()
 
+  // Redirect countdown
   const [seconds, setSeconds] = useState(10) // 10 seconds
 
-  // Auto-redirect counter
   useEffect(() => {
     const counter = setInterval(() => {
-      setSeconds((prev) => (prev <= 1 ? (router.push('/'), 0) : prev - 1))
+      setSeconds((prev) => {
+        if (prev <= 1) {
+          router.push('/')
+          return 0
+        }
+        return prev - 1
+      })
     }, 1000)
 
     return () => clearInterval(counter)
@@ -28,13 +36,13 @@ export default function ErrorPage() {
   useEffect(() => {
     if (!hamburgerMenu) return
 
-    const LeftScroll = document.documentElement.scrollLeft
-    const TopScroll = document.documentElement.scrollTop
+    const leftScroll = document.documentElement.scrollLeft
+    const topScroll = document.documentElement.scrollTop
 
-    const ScrollEvent = () => window.scrollTo(LeftScroll, TopScroll)
+    const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
 
-    document.addEventListener('scroll', ScrollEvent)
-    return () => document.removeEventListener('scroll', ScrollEvent)
+    document.addEventListener('scroll', scrollEvent)
+    return () => document.removeEventListener('scroll', scrollEvent)
   }, [hamburgerMenu])
 
   return (
@@ -45,7 +53,15 @@ export default function ErrorPage() {
 
       <main>
         <div className={`${styles.title} ${unlocked && styles.center}`}>
-          <Link href='/' className={styles.logotype}>
+          <Link
+            href='/'
+            title={
+              unlocked
+                ? 'Powróć do strony głównej'
+                : 'Powróć do wyboru śpiewników'
+            }
+            className={styles.logotype}
+          >
             <Image
               className='icon'
               alt='bpsw'
@@ -61,7 +77,7 @@ export default function ErrorPage() {
           {!unlocked && (
             <button
               className={styles.hamburgerIcon}
-              onClick={() => showHamburgerMenu(!hamburgerMenu)}
+              onClick={() => showHamburgerMenu((prev) => !prev)}
             >
               <svg
                 className={`${hamburgerMenu && styles.active} icon`}
@@ -81,7 +97,7 @@ export default function ErrorPage() {
               <p>Udostępnij</p>
             </button>
 
-            <Link href='https://nastrazy.org/'>
+            <Link href='https://nastrazy.org'>
               <p>Nastrazy.org</p>
             </Link>
           </div>
@@ -92,7 +108,7 @@ export default function ErrorPage() {
 
           <p>
             <Link href='/'>Kliknij tutaj</Link>, aby powrócić do{' '}
-            {unlocked ? 'strony głównej' : 'śpiewników'}
+            {unlocked ? 'strony głównej' : 'wyboru śpiewników'}
             {'. '}
             <span>[{seconds}]</span>
           </p>

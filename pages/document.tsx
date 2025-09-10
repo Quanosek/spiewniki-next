@@ -2,23 +2,27 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import simplifyText from '@/utils/simplifyText'
+
+import { modifyText } from '@/utils/simplifyText'
 
 import styles from '@/styles/pages/document.module.scss'
+
+const libraryVersion = '4.10.38-legacy-dist'
+const libraryPath = `/libraries/pdfjs-${libraryVersion}/web/viewer.html`
 
 export default function DocumentPage() {
   const router = useRouter()
 
-  const libraryPath = '/libraries/pdfjs-4.10.38-legacy-dist/web/viewer.html'
+  // Determine PDF document path
   const [documentPath, setDocumentPath] = useState('')
 
   useEffect(() => {
     if (!router.isReady) return
+
     const { d, book, id } = router.query
 
-    // Get document
     if (typeof d === 'string' && d.trim()) {
-      setDocumentPath(`/pdf/${new simplifyText(d).modify()}.pdf`)
+      setDocumentPath(`/pdf/${modifyText(d)}.pdf`)
     } else if (
       typeof book === 'string' &&
       book.trim() &&
@@ -33,7 +37,7 @@ export default function DocumentPage() {
 
   // Keyboard shortcuts
   useEffect(() => {
-    const KeyupEvent = (e: KeyboardEvent) => {
+    const keyupEvent = (e: KeyboardEvent) => {
       if (
         e.ctrlKey ||
         e.shiftKey ||
@@ -47,8 +51,8 @@ export default function DocumentPage() {
       if (e.key === 'Escape') router.back()
     }
 
-    document.addEventListener('keyup', KeyupEvent)
-    return () => document.removeEventListener('keyup', KeyupEvent)
+    document.addEventListener('keyup', keyupEvent)
+    return () => document.removeEventListener('keyup', keyupEvent)
   }, [router])
 
   return (
@@ -60,16 +64,16 @@ export default function DocumentPage() {
       <main style={{ padding: 0 }}>
         <div className={styles.backButton}>
           <button
-            title='Kliknij, lub użyj przycisku [Esc]'
+            title='Powróć do poprzedniej strony [Esc]'
             onClick={() => router.back()}
           >
             <Image
-              style={{ transform: 'rotate(90deg)' }}
+              style={{ rotate: '90deg' }}
               className='icon'
               alt='back'
               src='/icons/arrow.svg'
-              width={20}
-              height={20}
+              width={16}
+              height={16}
               draggable={false}
             />
             <p>Powrót</p>

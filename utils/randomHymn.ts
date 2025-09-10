@@ -1,67 +1,37 @@
-import Router from 'next/router'
 import axios from 'axios'
-import type Hymn from '@/types/hymn'
 
-import { bookShortcut, booksList } from './books'
+import { booksList } from './books'
 
-const randomHymn = async (book: string | undefined) => {
+const randomHymn = async (book?: string) => {
   if (!book) {
-    localStorage.removeItem('prevSearch')
-
+    // No specific book, get random from all
     try {
       const responses = await Promise.all(
-        booksList().map((bookName) => {
-          return axios
-            .get<Hymn[]>(`database/${bookName}.json`)
-            .catch(() => null)
-        })
+        booksList().map((bookName) => axios.get(`/database/${bookName}.json`))
       )
 
-      const hymns = responses
-        .filter((response) => response !== null)
-        .flatMap((response) => response!.data)
+      const hymns = responses.flatMap((response) => response?.data ?? [])
 
       if (hymns.length > 0) {
-        const selectedHymn = hymns[Math.floor(Math.random() * hymns.length)]
-
-        Router.push({
-          pathname: '/hymn',
-          query: {
-            book: bookShortcut(selectedHymn.book),
-            title: selectedHymn.name,
-          },
-        })
+        return hymns[Math.floor(Math.random() * hymns.length)]
       }
     } catch (error) {
       console.error('Error fetching hymns:', error)
     }
   } else {
-    const fromStorage = localStorage.getItem('prevSearch')
-
-    if (fromStorage) {
-      const json = JSON.parse(fromStorage)
-      json.search = ''
-      localStorage.setItem('prevSearch', JSON.stringify(json))
-    }
-
+    // Specific book, get random from that book
     try {
-      const { data } = await axios.get<Hymn[]>(`/database/${book}.json`)
+      const { data } = await axios.get(`/database/${book}.json`)
 
       if (data.length > 0) {
-        const selectedHymn = data[Math.floor(Math.random() * data.length)]
-
-        Router.push({
-          pathname: '/hymn',
-          query: {
-            book: bookShortcut(selectedHymn.book),
-            title: selectedHymn.name,
-          },
-        })
+        return data[Math.floor(Math.random() * data.length)]
       }
     } catch (error) {
-      console.error('Error fetching hymn:', error)
+      console.error('Error fetching hymns:', error)
     }
   }
+
+  return null
 }
 
 export default randomHymn

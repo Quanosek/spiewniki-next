@@ -15,7 +15,7 @@ export default function ShortcutsMenu() {
 
   const Shortcut = ({ keyup, action }: ShortcutProps) => (
     <div className={styles.shortcut}>
-      <span className={styles.keyup}>
+      <span className={styles.keyUp}>
         <p>{keyup}</p>
       </span>
 

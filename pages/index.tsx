@@ -3,12 +3,27 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+
 import MobileNavbar from '@/components/mobile-navbar'
 import { bookShortcut } from '@/utils/books'
-import shareButton from '@/utils/share'
+import shareButton from '@/utils/shareButton'
 import randomHymn from '@/utils/randomHymn'
 
 import styles from '@/styles/pages/index.module.scss'
+
+const useScrollLock = (isActive: boolean) => {
+  useEffect(() => {
+    if (!isActive) return
+
+    const LeftScroll = document.documentElement.scrollLeft
+    const TopScroll = document.documentElement.scrollTop
+
+    const ScrollEvent = () => window.scrollTo(LeftScroll, TopScroll)
+
+    document.addEventListener('scroll', ScrollEvent)
+    return () => document.removeEventListener('scroll', ScrollEvent)
+  }, [isActive])
+}
 
 export default function Home() {
   const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
@@ -21,17 +36,7 @@ export default function Home() {
   // prevent scrolling on active hamburger menu
   const [hamburgerMenu, showHamburgerMenu] = useState(false)
 
-  useEffect(() => {
-    if (!hamburgerMenu) return
-
-    const LeftScroll = document.documentElement.scrollLeft
-    const TopScroll = document.documentElement.scrollTop
-
-    const ScrollEvent = () => window.scrollTo(LeftScroll, TopScroll)
-
-    document.addEventListener('scroll', ScrollEvent)
-    return () => document.removeEventListener('scroll', ScrollEvent)
-  }, [hamburgerMenu])
+  useScrollLock(hamburgerMenu)
 
   useEffect(() => {
     // keyboard shortcuts
@@ -53,7 +58,19 @@ export default function Home() {
         router.push('/search')
       }
       if (unlocked && key === 'B') router.push('/books')
-      if (key === 'R') randomHymn(undefined)
+      if (key === 'R') {
+        randomHymn().then((hymn) => {
+          if (hymn) {
+            router.push({
+              pathname: '/hymn',
+              query: {
+                book: bookShortcut(hymn.book),
+                title: hymn.name,
+              },
+            })
+          }
+        })
+      }
     }
 
     document.addEventListener('keyup', KeyupEvent)
@@ -105,7 +122,7 @@ export default function Home() {
               <p>Udostępnij</p>
             </button>
 
-            <Link href='https://nastrazy.org/'>
+            <Link href='https://nastrazy.org'>
               <p>Nastrazy.org</p>
             </Link>
           </div>
@@ -125,7 +142,7 @@ export default function Home() {
 
           <Link
             href='/search'
-            title='Kliknij, lub użyj [/] na klawiaturze, aby wyszukać we wszystkich śpiewnikach'
+            title='Rozpocznij wyszukiwanie we wszystkich śpiewnikach [/]'
             className={styles.search}
             onClick={() => localStorage.setItem('focusSearchBox', 'true')}
           >
@@ -134,7 +151,18 @@ export default function Home() {
 
           <button
             title='Otwórz losową pieśń [R]'
-            onClick={() => randomHymn(undefined)}
+            onClick={async () => {
+              const hymn = await randomHymn()
+              if (hymn) {
+                router.push({
+                  pathname: '/hymn',
+                  query: {
+                    book: bookShortcut(hymn.book),
+                    title: hymn.name,
+                  },
+                })
+              }
+            }}
           >
             <Image
               className='icon'
@@ -192,23 +220,6 @@ export default function Home() {
               <p>Pokaż wszystkie śpiewniki</p>
             </Link>
           )}
-        </div>
-
-        <div className={styles.mobileFooter}>
-          <p>
-            Wszelkie prawa zastrzeżone &#169; 2022-{new Date().getFullYear()}
-            {' │ '}
-            {unlocked ? (
-              <>
-                domena&nbsp;
-                <Link href='https://www.klalo.pl/'>klalo.pl</Link>
-              </>
-            ) : (
-              <Link href='https://www.nastrazy.org/'>
-                Wydawnictwo Na Straży
-              </Link>
-            )}
-          </p>
         </div>
       </main>
 

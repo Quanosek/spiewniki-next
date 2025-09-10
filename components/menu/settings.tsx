@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { useEffect, useState, useCallback, ReactElement } from 'react'
 import { useTheme } from 'next-themes'
+
 import { hiddenMenuQuery } from '../menu'
 
 import styles from '@/styles/components/menu.module.scss'
@@ -14,6 +15,7 @@ interface Settings {
 
 // default settings values
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+const defaultTheme = unlocked ? 'black' : 'white'
 
 export const defaultSettings = {
   fontSize: 21,
@@ -200,6 +202,7 @@ export default function SettingsMenu() {
             }
 
             setState({ ...defaultSettings })
+            setTheme(defaultTheme)
           }}
         >
           <p>Przywróć domyślne</p>

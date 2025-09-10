@@ -10,7 +10,7 @@
 }
 
 * {
-  transition: background-color 150ms ease-in;
+  transition: background-color 150ms ease-out;
 }
 
 *:focus-visible {
@@ -87,8 +87,8 @@ body {
 header {
   height: var(--header-height);
   background-color: var(--elements);
-  box-shadow: 0 -12px 12px 4px var(--text);
-  font-size: 80%;
+  box-shadow: 0 -12px 12px 4px #000000;
+  font-size: 11px;
 
   @media (max-width: 768px) {
     display: none;
@@ -122,8 +122,8 @@ header {
     }
 
     h1 {
-      opacity: 95%;
-      font-size: 165%;
+      opacity: 0.95;
+      font-size: 21px;
     }
   }
 
@@ -142,7 +142,7 @@ header {
     }
 
     p {
-      font-size: 120%;
+      font-size: 15px;
     }
   }
 }
@@ -171,7 +171,7 @@ main {
 
 h1 {
   font-size: 200%;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 h2 {
@@ -221,7 +221,7 @@ nav {
     }
 
     p {
-      opacity: 85%;
+      opacity: 0.85;
       font-size: 10px;
     }
   }
@@ -238,7 +238,6 @@ nav {
 
       img {
         height: 7.5vw;
-        width: auto;
       }
 
       p {
@@ -261,7 +260,7 @@ nav {
 }
 
 .disabled {
-  opacity: 30% !important;
+  opacity: 0.3 !important;
   pointer-events: none !important;
   user-select: none !important;
   cursor: default !important;

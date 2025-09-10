@@ -16,30 +16,24 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    // Default settings params
-    const settingsString = localStorage.getItem('settings')
-    let settings = null
-
+    // Initialize settings in localStorage
     try {
-      settings = settingsString ? JSON.parse(settingsString) : null
+      const settings = localStorage.getItem('settings')
+      if (!settings) {
+        localStorage.setItem('settings', JSON.stringify(defaultSettings))
+      }
     } catch (error) {
       console.error('Error parsing settings:', error)
-      localStorage.removeItem('settings')
-    }
-
-    if (!settings) {
       localStorage.setItem('settings', JSON.stringify(defaultSettings))
-      settings = defaultSettings
     }
 
-    const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
-    const accentClass = unlocked ? 'accent_blue' : 'accent_orange'
-    document.documentElement.className = `${accentClass}`
+    // Set global accent color
+    document.documentElement.className = unlocked
+      ? 'accent_blue'
+      : 'accent_orange'
 
-    // Prevent screen from sleeping
-    if (typeof navigator !== 'undefined' && navigator.wakeLock) {
-      navigator.wakeLock.request('screen').catch((err) => console.error(err))
-    }
+    // Screen Wake Lock API
+    navigator.wakeLock?.request('screen').catch(console.error)
   }, [])
 
   const defaultTheme = unlocked ? 'black' : 'white'
@@ -83,8 +77,8 @@ export default function App({ Component, pageProps }: AppProps) {
               href='/'
               title={
                 unlocked
-                  ? 'Zebrane w jednym miejscu śpiewniki i pieśni religijne.'
-                  : ''
+                  ? 'Powróć do strony głównej'
+                  : 'Powróć do wyboru śpiewników'
               }
               className='title'
             >
@@ -117,7 +111,7 @@ export default function App({ Component, pageProps }: AppProps) {
               </button>
 
               {!unlocked && (
-                <Link href='https://nastrazy.org/'>
+                <Link href='https://nastrazy.org'>
                   <p>Nastrazy.org</p>
                 </Link>
               )}

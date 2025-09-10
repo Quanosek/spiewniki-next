@@ -4,22 +4,20 @@
   position: relative;
   margin-bottom: 6px;
   height: 45px;
-  width: min(850px, 96%);
+  width: min(850px, 95%);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @include fade-in();
 
   button {
     z-index: 1;
-    opacity: 85%;
+    opacity: 0.85;
     padding: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     gap: 8px;
-    border-radius: var(--radius);
     background-color: transparent;
-    transition: 150ms transform ease-out;
+    border-radius: calc(var(--radius) / 2);
+    transition: transform 150ms ease-out;
 
     p {
       line-height: 8px;
@@ -27,7 +25,7 @@
 
     @media (min-width: 769px) {
       &:hover {
-        opacity: 100%;
+        opacity: 1;
         transform: translateY(-1px);
       }
     }
@@ -38,12 +36,7 @@
     right: 0;
     width: 100%;
     text-align: center;
-    font-size: 140%;
-    font-weight: 600;
-  }
-
-  @media (max-width: 1024px) {
-    width: 95%;
+    font-size: 21px;
   }
 
   @media (max-width: 768px) {
@@ -56,11 +49,11 @@
 
     h1 {
       padding-top: 0.5vw;
-      font-size: 115%;
+      font-size: 16px;
     }
 
     button {
-      opacity: 100%;
+      opacity: 1;
       padding: 0;
       height: 100%;
       aspect-ratio: 1/1;
@@ -70,8 +63,12 @@
       }
 
       img {
-        height: 25px;
+        height: min(25px, 5.5vw);
         width: auto;
+
+        &:first-child {
+          height: min(23px, 5.25vw);
+        }
       }
     }
   }
@@ -85,23 +82,24 @@
 
     button img {
       height: 6vw;
-      width: auto;
     }
   }
 }
 
 .list {
-  width: min(850px, 96%);
+  width: min(850px, 95%);
   border-radius: var(--radius);
   background-color: var(--elements);
+  font-size: 16px;
   @include element-glow();
+  @include fade-in(175ms);
 
   a {
     margin: var(--space);
     padding: 1rem 1.25rem;
     display: flex;
     border-radius: calc(var(--radius) - var(--space));
-    transition: 150ms color ease-out;
+    transition: color 150ms ease-out;
   }
 
   hr {
@@ -109,12 +107,8 @@
     background-color: var(--background);
   }
 
-  @media (max-width: 1024px) {
-    width: 95%;
-  }
-
   @media (max-width: 768px) {
-    font-size: 85%;
+    font-size: 14px;
 
     a {
       margin: 0;
@@ -122,16 +116,25 @@
   }
 
   @media (max-width: 425px) {
-    font-size: 3.2vw;
+    font-size: 4.2vw;
 
     a {
-      padding: 3.8vw 5vw;
+      padding: 3.5vw 4.5vw;
+    }
+
+    h2 {
+      font-size: 100%;
     }
   }
 }
 
 .all {
+  font-size: 16px;
   color: var(--accent-color);
+
+  @media (max-width: 768px) {
+    font-size: 100%;
+  }
 
   &:hover {
     background-color: var(--elements-hover);
@@ -141,9 +144,6 @@
 .book {
   position: relative;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 
   a:hover {
     background-color: var(--elements-hover);
@@ -160,23 +160,29 @@
 }
 
 .pdfFile {
-  opacity: 85%;
+  opacity: 0.85;
   position: absolute;
   top: 0;
   right: 0;
-
   height: calc(100% - 2 * var(--space));
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 
   &:hover {
-    opacity: 100%;
+    opacity: 1;
   }
 
   p {
-    font-size: 90%;
+    font-size: 13px;
     white-space: nowrap;
+  }
+
+  img {
+    height: 25px;
+    width: auto;
+    aspect-ratio: 1/1;
   }
 
   @media (max-width: 768px) {
@@ -186,9 +192,6 @@
 
   @media (max-width: 425px) {
     padding: 0 !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     aspect-ratio: 1/1;
 
     p {
@@ -197,7 +200,6 @@
 
     img {
       height: 5.5vw;
-      width: auto;
     }
   }
 }

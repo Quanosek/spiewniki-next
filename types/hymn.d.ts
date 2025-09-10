@@ -1,4 +1,4 @@
-export default interface Hymn {
+interface Hymn {
   id: number
   book: string
   name: string
@@ -27,3 +27,5 @@ export default interface Hymn {
     }
   }
 }
+
+export default Hymn

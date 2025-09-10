@@ -2,6 +2,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+
 import { bookShortcut, booksList } from '@/utils/books'
 
 import styles from '@/styles/pages/books.module.scss'
@@ -9,40 +11,29 @@ import styles from '@/styles/pages/books.module.scss'
 export default function BooksPage() {
   const router = useRouter()
 
-  const Book = ({ book }: { book: string }) => {
-    const hasPDF = ['B', 'C', 'N', 'E']
+  // Get books list
+  const allBooks = booksList()
+  const booksWithPdf = ['B', 'C', 'N', 'E']
 
-    return (
-      <div className={styles.book}>
-        <Link
-          href={{ pathname: '/search', query: { book } }}
-          className={styles.result}
-        >
-          <h2>{bookShortcut(book)}</h2>
-        </Link>
+  // Keyboard shortcuts
+  useEffect(() => {
+    const keyupEvent = (e: KeyboardEvent) => {
+      if (
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey ||
+        e.metaKey ||
+        router.query.menu
+      ) {
+        return
+      }
 
-        {hasPDF.includes(book) && (
-          <Link
-            href={{
-              pathname: '/document',
-              query: { d: bookShortcut(book) },
-            }}
-            className={styles.pdfFile}
-          >
-            <p>Otwórz PDF</p>
-            <Image
-              className='icon'
-              alt='pdf'
-              src='/icons/document.svg'
-              width={25}
-              height={25}
-              draggable={false}
-            />
-          </Link>
-        )}
-      </div>
-    )
-  }
+      if (e.key === 'Escape') router.back()
+    }
+
+    document.addEventListener('keyup', keyupEvent)
+    return () => document.removeEventListener('keyup', keyupEvent)
+  }, [router])
 
   return (
     <>
@@ -52,7 +43,10 @@ export default function BooksPage() {
 
       <main>
         <div className={styles.title}>
-          <button onClick={() => router.back()}>
+          <button
+            title='Powróć do poprzedniej strony [Esc]'
+            onClick={() => router.back()}
+          >
             <Image
               style={{ rotate: '90deg' }}
               className='icon'
@@ -75,10 +69,39 @@ export default function BooksPage() {
 
           <hr />
 
-          {booksList().map((book, index, row) => (
-            <div key={index}>
-              <Book book={book} />
-              {index + 1 !== row.length && <hr />}
+          {allBooks.map((book, index) => (
+            <div key={book}>
+              <div className={styles.book}>
+                <Link
+                  href={{ pathname: '/search', query: { book } }}
+                  className={styles.result}
+                >
+                  <h2>{bookShortcut(book)}</h2>
+                </Link>
+
+                {booksWithPdf.includes(book) && (
+                  <Link
+                    href={{
+                      pathname: '/document',
+                      query: { d: bookShortcut(book) },
+                    }}
+                    title='Pokaż śpiewnik w formacie PDF'
+                    className={styles.pdfFile}
+                  >
+                    <p>Otwórz PDF</p>
+                    <Image
+                      className='icon'
+                      alt='pdf'
+                      src='/icons/document.svg'
+                      width={25}
+                      height={25}
+                      draggable={false}
+                    />
+                  </Link>
+                )}
+              </div>
+
+              {index + 1 !== allBooks.length && <hr />}
             </div>
           ))}
         </div>

@@ -32,7 +32,7 @@
     gap: 6px;
 
     h1 {
-      font-size: 135%;
+      font-size: 22px;
     }
   }
 
@@ -182,15 +182,11 @@
 
 .searchBox {
   position: relative;
-  width: min(850px, 96%);
+  width: min(850px, 95%);
   display: flex;
   align-items: center;
-  transition: 150ms width ease-out;
   @include element-glow();
-
-  @media (max-width: 1024px) {
-    width: 95%;
-  }
+  @include fade-in();
 
   .searchIcon {
     position: absolute;
@@ -209,11 +205,11 @@
     width: 100%;
     display: flex;
     align-items: center;
-    font-size: 115%;
+    font-size: 19px;
     border-radius: var(--radius);
     border: var(--space) solid var(--elements);
     background-color: var(--elements);
-    transition: 150ms ease-out;
+    transition: border-color 150ms ease-out;
 
     @media (max-width: 768px) {
       font-size: 100%;
@@ -242,7 +238,7 @@
 
   @media (max-width: 425px) {
     .searchIcon {
-      left: 0.5vw;
+      left: 0.8vw;
 
       img {
         height: auto;
@@ -251,9 +247,9 @@
     }
 
     .search {
-      padding: 0.5vw 12.5vw;
-      height: 13vw;
-      font-size: 4vw;
+      padding: 0.8vw 12vw;
+      height: 12vw;
+      font-size: 4.2vw;
     }
 
     button img {
@@ -272,6 +268,7 @@ $grid-gap-mobile: 1.2vw;
   flex-direction: column;
   justify-content: center;
   gap: $grid-gap;
+  @include fade-in(175ms);
 
   p {
     font-size: 110%;
@@ -305,6 +302,7 @@ $grid-gap-mobile: 1.2vw;
 
   div {
     position: relative;
+    flex: 1;
   }
 }
 
@@ -323,8 +321,8 @@ $grid-gap-mobile: 1.2vw;
   }
 
   img {
+    width: 100%;
     height: auto;
-    width: auto;
     border-radius: calc(2 * var(--space));
     box-shadow: rgba(#000000, 0.2) 0px 10px 20px,
       rgba(#000000, 0.22) 0px 6px 6px;
@@ -351,6 +349,7 @@ $grid-gap-mobile: 1.2vw;
 
     img {
       height: min(10rem, 30vw);
+      width: auto;
       border-radius: 2%;
     }
 
@@ -385,14 +384,14 @@ $grid-gap-mobile: 1.2vw;
   }
 
   @media (max-width: 768px) {
-    opacity: 80%;
+    opacity: 0.8;
     top: 0;
     right: 0;
     padding: min(3.5vw, 1rem);
     filter: none;
 
     &:hover {
-      opacity: 100%;
+      opacity: 1;
       transform: none;
       background-color: var(--elements-hover);
       filter: none;
@@ -415,21 +414,5 @@ $grid-gap-mobile: 1.2vw;
 
   &:hover {
     background-color: var(--elements-hover);
-  }
-}
-
-.mobileFooter {
-  opacity: 50%;
-  display: flex;
-  text-align: center;
-  font-size: min(2.2vw, 80%);
-  user-select: none;
-
-  @media (min-width: 769px) {
-    display: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
   }
 }

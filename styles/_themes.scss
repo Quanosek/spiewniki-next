@@ -23,88 +23,45 @@
 }
 
 [data-theme='black'] {
+  --text: #edebe5;
+  --background: #000000;
   --elements: #161514;
   --elements-hover: #1e1d1c;
   --menu-background: #171717;
   --menu-elements: #212121;
   --menu-elements-hover: #2a2929;
-  //
-  --text: #edebe5;
-  --background: #000000;
-  --clr-secondary: #15151a;
-  --clr-secondary-lt: #1c1e25;
-  --clr-secondary-ltr: #262830;
-  @include dark-theme;
-}
-
-html[data-theme='dark-blue'] {
-  --text: #f0f0f0;
-  --background: #081027;
-  --clr-secondary: #121b34;
-  --clr-secondary-lt: #21273e;
-  --clr-secondary-ltr: #2a314b;
   @include dark-theme;
 }
 
 html[data-theme='gray'] {
+  --text: #ffffff;
+  --background: #2a2a2a;
   --elements: #303030;
   --elements-hover: #373635;
   --menu-background: #232323;
   --menu-elements: #383838;
   --menu-elements-hover: #464343;
-  //
-  --text: #ffffff;
-  --background: #2a2a2a;
-  --clr-secondary: #232323;
-  --clr-secondary-lt: #1f1f1f;
-  --clr-secondary-ltr: #1c1c1c;
   @include dark-theme;
 }
 
 html[data-theme='white'] {
+  --text: #3d3d3f;
+  --background: #f3f3f3;
   --elements: #ffffff;
   --elements-hover: #f8f8f8;
   --menu-background: #f8f8f8;
   --menu-elements: #dedede;
   --menu-elements-hover: #cecece;
-  //
-  --text: #3d3d3f;
-  --background: #f3f3f3;
-  --clr-secondary: #ffffff;
-  --clr-secondary-lt: #f8f8f8;
-  --clr-secondary-ltr: #f0f0f0;
   @include light-theme;
 }
 
 html[data-theme='reading'] {
+  --text: #14120d;
+  --background: #f6eede;
   --elements: #f9f3ea;
   --elements-hover: #efe7df;
   --menu-background: #efebe5;
   --menu-elements: #d2cac2;
   --menu-elements-hover: #dcd6cf;
-  //
-  --text: #14120d;
-  --background: #f6eede;
-  --clr-secondary: #f9f5ed;
-  --clr-secondary-lt: #f4f1e8;
-  --clr-secondary-ltr: #ebe6d9;
-  @include light-theme;
-}
-
-html[data-theme='light-blue'] {
-  --text: #000000;
-  --background: #d8f2fa;
-  --clr-secondary: #f6feff;
-  --clr-secondary-lt: #eef8fc;
-  --clr-secondary-ltr: #ecf2f6;
-  @include light-theme;
-}
-
-html[data-theme='light-purple'] {
-  --text: #000000;
-  --background: #eee5fc;
-  --clr-secondary: #faf7ff;
-  --clr-secondary-lt: #f6f0fc;
-  --clr-secondary-ltr: #ebe7ee;
   @include light-theme;
 }

@@ -299,6 +299,19 @@ export default function HymnPage() {
       })
   }, [])
 
+  const showPresentation = useCallback(
+    (hymn: ProcessedHymn) => {
+      const elem = document.documentElement
+      if (elem.requestFullscreen) elem.requestFullscreen()
+
+      router.push({
+        pathname: '/presentation',
+        query: { book: bookShortcut(hymn.book), title: hymn.song.title },
+      })
+    },
+    [router]
+  )
+
   useEffect(() => {
     const KeyupEvent = (e: KeyboardEvent) => {
       if (
@@ -333,6 +346,7 @@ export default function HymnPage() {
           }
         })
       }
+      if (key === 'P') showPresentation(hymn)
       if (key === 'F') toggleFavorite()
       if (key === 'D') openDocument(hymnFiles.pdf)
       if (key === 'M') playMusic(hymnFiles.mp3)
@@ -349,6 +363,7 @@ export default function HymnPage() {
     router,
     hymn,
     hymnFiles,
+    showPresentation,
     toggleFavorite,
     openDocument,
     playMusic,
@@ -660,17 +675,7 @@ export default function HymnPage() {
                   >
                     <div
                       className={styles.buttonText}
-                      onClick={() => {
-                        const elem = document.documentElement
-                        if (elem.requestFullscreen) {
-                          elem.requestFullscreen()
-                        }
-
-                        router.push({
-                          pathname: '/presentation',
-                          query: { book, title },
-                        })
-                      }}
+                      onClick={() => hymn && showPresentation(hymn)}
                     >
                       <Image
                         className='icon'

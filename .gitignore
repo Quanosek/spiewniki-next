@@ -36,9 +36,15 @@ yarn-error.log*
 next-env.d.ts
 
 # VS Code
-.vscode
+/.vscode
+
+# Database directories
+/public/database/
+/public/libraries/
+/public/mp3/
+/public/pdf/
 
 # PWA
-**/public/sw.js
-**/public/swe-worker-*.js
-**/public/workbox-*.js
+/public/sw.js
+/public/swe-worker-*.js
+/public/workbox-*.js

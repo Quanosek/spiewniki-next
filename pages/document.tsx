@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -7,10 +8,11 @@ import { modifyText } from '@/utils/simplifyText'
 
 import styles from '@/styles/pages/document.module.scss'
 
-const libraryVersion = '4.10.38-legacy-dist'
-const libraryPath = `/libraries/pdfjs-${libraryVersion}/web/viewer.html`
+export interface DocumentPageProps {
+  libraryPath: string
+}
 
-export default function DocumentPage() {
+export default function DocumentPage({ libraryPath }: DocumentPageProps) {
   const router = useRouter()
 
   // Determine PDF document path
@@ -90,4 +92,23 @@ export default function DocumentPage() {
       </main>
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps<DocumentPageProps> = async () => {
+  const fs = await import('fs')
+  const path = await import('path')
+
+  const libDir = path.join(process.cwd(), 'public', 'libraries')
+  const entries = await fs.promises.readdir(libDir)
+  const pdfjsFolder = entries.find((name) => name.startsWith('pdfjs-'))
+
+  if (!pdfjsFolder) {
+    throw new Error('PDF.js library folder not found in public/libraries')
+  }
+
+  return {
+    props: {
+      libraryPath: `/libraries/${pdfjsFolder}/web/viewer.html`,
+    },
+  }
 }

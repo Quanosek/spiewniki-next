@@ -1,0 +1,11 @@
+services:
+  weather:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spiewniki
+    ports:
+      - '3006:3000'
+    volumes:
+      - /app/node_modules

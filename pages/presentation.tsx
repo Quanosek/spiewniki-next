@@ -79,7 +79,7 @@ export default function PresentationPage() {
   }, [slide, ic])
 
   const nextSlide = useCallback(() => {
-    const maxSlide = order.length + 1
+    const maxSlide = ic ? order.length + 1 : order.length + 1
 
     if (slide < maxSlide) {
       setSlide(slide + 1)
@@ -87,7 +87,7 @@ export default function PresentationPage() {
       if (document.fullscreenElement) document.exitFullscreen()
       else closePresentation()
     }
-  }, [order, slide, closePresentation])
+  }, [order, slide, closePresentation, ic])
 
   useEffect(() => {
     if (!hymn || !order.length) return
@@ -132,11 +132,11 @@ export default function PresentationPage() {
     }
 
     if (lineCount >= 9) {
-      lines?.style.setProperty('font-size', '3.2vw')
+      lines?.style.setProperty('font-size', '3.5vw')
     } else if (lineCount === 8) {
-      lines?.style.setProperty('font-size', '3.6vw')
+      lines?.style.setProperty('font-size', '3.8vw')
     } else if (lineCount === 7) {
-      lines?.style.setProperty('font-size', '4.0vw')
+      lines?.style.setProperty('font-size', '4.1vw')
     }
   }, [ic, verse])
 
@@ -317,14 +317,24 @@ export default function PresentationPage() {
                 </button>
               </div>
 
-              <div className={styles.progressBar}>
+              <div
+                className={styles.progressBar}
+                style={{
+                  opacity:
+                    (ic && slide === 1) ||
+                    (!ic && slide === 0) ||
+                    slide > order.length
+                      ? 0
+                      : 1,
+                }}
+              >
                 <div
                   style={{
                     width: `${(() => {
                       if ((ic && slide === 1) || (!ic && slide === 0)) return 0
-                      const totalSlides = ic ? order.length : order.length
+                      const totalSlides = ic ? order.length - 1 : order.length
                       const currentSlide = ic ? slide - 1 : slide
-                      return (100 / totalSlides) * currentSlide
+                      return Math.min(100, (100 / totalSlides) * currentSlide)
                     })()}%`,
                   }}
                 />

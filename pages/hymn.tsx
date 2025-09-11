@@ -93,6 +93,8 @@ export default function HymnPage() {
   useEffect(() => {
     if (!router.isReady || !book || !title) return
 
+    document.body.setAttribute('data-page', 'hymn')
+
     axios
       .get(`database/${book}.json`)
       .then(({ data }) => {
@@ -156,6 +158,7 @@ export default function HymnPage() {
     return () => {
       document.removeEventListener('scroll', scrollHandler)
       document.removeEventListener('scrollend', scrollEndHandler)
+      document.body.removeAttribute('data-page')
     }
   }, [router, book, title])
 
@@ -306,7 +309,7 @@ export default function HymnPage() {
 
       router.push({
         pathname: '/presentation',
-        query: { book: bookShortcut(hymn.book), title: hymn.song.title },
+        query: { book: bookShortcut(hymn.book), title: hymn.name },
       })
     },
     [router]
@@ -820,7 +823,6 @@ export default function HymnPage() {
                 <button
                   title='Wydrukuj tekst wybranej pieśni [K]'
                   onClick={() => !isLoading && window.print()}
-                  className='disabled'
                 >
                   <Image
                     className='icon'

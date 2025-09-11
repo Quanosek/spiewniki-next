@@ -182,13 +182,13 @@ export default function PresentationPage() {
 
       if (
         ['ArrowLeft', 'ArrowUp'].includes(KeyboardEvent.key) ||
-        endPosition < 30
+        endPosition < -50
       ) {
         prevSlide()
       }
       if (
         [' ', 'ArrowRight', 'ArrowDown'].includes(KeyboardEvent.key) ||
-        endPosition >= 15
+        endPosition >= 0
       ) {
         nextSlide()
       }

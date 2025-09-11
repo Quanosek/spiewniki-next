@@ -3,7 +3,9 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import axios from 'axios'
+
 import type Hymn from '@/types/hymn'
+
 import styles from '@/styles/components/presentation.module.scss'
 
 export default function PresentationPage() {
@@ -157,6 +159,7 @@ export default function PresentationPage() {
     let startPosition: number
     let endPosition: number
 
+    // Slides custom navigation
     const handleEvent = (event: Event) => {
       const TouchEvent = event as TouchEvent
       const KeyboardEvent = event as KeyboardEvent
@@ -179,19 +182,18 @@ export default function PresentationPage() {
 
       if (
         ['ArrowLeft', 'ArrowUp'].includes(KeyboardEvent.key) ||
-        endPosition < 0
+        endPosition < 30
       ) {
         prevSlide()
       }
       if (
         [' ', 'ArrowRight', 'ArrowDown'].includes(KeyboardEvent.key) ||
-        endPosition >= 0
+        endPosition >= 15
       ) {
         nextSlide()
       }
 
       if (KeyboardEvent.key === 'Escape') closePresentation()
-      if (KeyboardEvent.key === 'L') setSlide(ic ? 1 : -1)
     }
 
     const eventTypes: Array<string> = ['keyup', 'touchstart', 'touchend']
@@ -207,18 +209,12 @@ export default function PresentationPage() {
         return document.removeEventListener(eventType, handleEvent)
       })
     }
-  }, [router, alwaysShowCursor, prevSlide, nextSlide, closePresentation, ic])
+  }, [alwaysShowCursor, nextSlide, prevSlide, closePresentation])
 
+  // hide default scrollbar
   useEffect(() => {
-    const KeyupEvent = (e: KeyboardEvent) => {
-      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return
-      if (e.key === 'Escape') router.back()
-    }
-
-    document.addEventListener('keyup', KeyupEvent)
     document.body.style.overflow = 'hidden'
     return () => {
-      document.removeEventListener('keyup', KeyupEvent)
       document.body.style.overflow = ''
     }
   }, [router])
@@ -275,7 +271,7 @@ export default function PresentationPage() {
                 onMouseLeave={() => setAlwaysShowCursor(false)}
               >
                 <button
-                  title='Poprzedni slajd. Użyj klawiszy [←] [↑] lub kółka myszy w górę.'
+                  title='Przejdź do poprzedniego slajdu [←] [↑]'
                   onClick={prevSlide}
                 >
                   <Image
@@ -289,7 +285,7 @@ export default function PresentationPage() {
                 </button>
 
                 <button
-                  title='Następny slajd. Użyj spacji, klawiszy [→] [↓] lub kółka myszy w dół.'
+                  title='Przejdź do następnego slajdu [Spacja] [→] [↓]'
                   onClick={nextSlide}
                 >
                   <Image
@@ -303,7 +299,7 @@ export default function PresentationPage() {
                 </button>
 
                 <button
-                  title='Wyjdź z pokazu slajdów [Escape]'
+                  title='Wyjdź z trybu pokazu slajdów [Esc]'
                   onClick={closePresentation}
                 >
                   <Image

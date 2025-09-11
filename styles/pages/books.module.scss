@@ -161,10 +161,11 @@
 
 .pdfFile {
   opacity: 0.85;
+  margin: 0 !important;
   position: absolute;
   top: 0;
-  right: 0;
-  height: calc(100% - 2 * var(--space));
+  right: var(--space);
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,6 +188,7 @@
 
   @media (max-width: 768px) {
     padding: 1rem !important;
+    right: 0;
     height: 100%;
   }
 

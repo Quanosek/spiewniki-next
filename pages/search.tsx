@@ -272,7 +272,7 @@ export default function SearchPage() {
         }
       } else {
         if (e.key === '/') inputRef.current?.focus()
-        if (e.key === 'Escape') router.back()
+        if (e.key === 'Escape') router.push('/')
 
         const key = e.key.toUpperCase()
 

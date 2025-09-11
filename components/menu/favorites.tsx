@@ -207,10 +207,7 @@ export default function FavoritesMenu() {
           <p>Wyczyść listę</p>
         </button>
 
-        <button
-          title='Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu.'
-          onClick={() => hiddenMenuQuery(undefined)}
-        >
+        <button onClick={() => hiddenMenuQuery(undefined)}>
           <p>Zamknij</p>
         </button>
       </div>

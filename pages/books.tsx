@@ -29,6 +29,10 @@ export default function BooksPage() {
       }
 
       if (e.key === 'Escape') router.back()
+      if (e.key === '/') {
+        localStorage.setItem('focusSearchBox', 'true')
+        router.push('/search')
+      }
     }
 
     document.addEventListener('keyup', keyupEvent)

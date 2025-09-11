@@ -328,6 +328,8 @@ export default function HymnPage() {
         return
       }
 
+      if (e.key === 'Escape') router.back()
+
       const key = e.key.toUpperCase()
 
       if (key === '/') {
@@ -757,9 +759,7 @@ export default function HymnPage() {
                 </button>
 
                 {hymn &&
-                  ['B', 'C', 'N', 'E', 'S'].includes(
-                    bookShortcut(hymn.book)
-                  ) && (
+                  ['B', 'C', 'N', 'S'].includes(bookShortcut(hymn.book)) && (
                     <button
                       tabIndex={hymnFiles.pdf ? 0 : -1}
                       title='Otwórz dokument PDF wybranej pieśni [D]'

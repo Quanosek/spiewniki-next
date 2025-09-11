@@ -23,51 +23,79 @@ export default function ShortcutsMenu() {
     </div>
   )
 
+  const route = router.route
+  const isHome = route === '/'
+  const isBooks = route === '/books'
+  const isSearch = route === '/search'
+  const isHymn = route === '/hymn'
+
   return (
     <>
-      <h2>Skróty klawiszowe</h2>
+      <h2>Skróty klawiszowe podstrony</h2>
 
       <div className={styles.content}>
-        <Shortcut keyup='Esc' action='Wyjście z widoku menu' />
+        <Shortcut
+          keyup='Esc'
+          action={
+            'Wyjście z widoku menu' +
+            (!isHome ? ' / powrót po poprzedniej podstrony' : '')
+          }
+        />
         <Shortcut
           keyup='/'
           action={
-            router.route === '/search'
+            isSearch
               ? 'Powrót do paska wyszukiwania'
               : 'Wyszukiwanie we wszystkich śpiewnikach'
           }
         />
 
-        {unlocked && (
+        {unlocked && !isBooks && (
           <Shortcut keyup='B' action='Lista wszystkich śpiewników' />
+        )}
+
+        {!isBooks && !isHymn && (
+          <Shortcut
+            keyup='R'
+            action={`Losowa pieśń${
+              !isHome && !isBooks ? ' z wybranego śpiewnika' : ''
+            }`}
+          />
         )}
       </div>
 
-      <div className={styles.content}>
-        <Shortcut
-          keyup='R'
-          action={`Losowa pieśń
-              ${router.route !== '/' ? ' z wybranego śpiewnika' : ''}`}
-        />
+      {isHymn && (
+        <>
+          <div className={styles.content}>
+            <Shortcut keyup='R' action='Losowa pieśń z wybranego śpiewnika' />
+            <Shortcut keyup='←' action='Poprzednia pieśń' />
+            <Shortcut keyup='→' action='Następna pieśń' />
+          </div>
 
-        {router.route === '/hymn' && (
-          <>
-            <Shortcut keyup='P' action='Pokaz slajdów wybranej pieśni' />
+          <div className={styles.content}>
+            <Shortcut keyup='P' action='Tryb pokazu slajdów' />
+            <Shortcut
+              keyup='F'
+              action='Dodanie/usunięcie pieśni z listy ulubionych'
+            />
             <Shortcut
               keyup='D'
               action='Dokument PDF wybranej pieśni (jeśli istnieje)'
             />
-            <Shortcut keyup='←' action='Poprzednia pieśń w śpiewniku' />
-            <Shortcut keyup='→' action='Następna pieśń w śpiewniku' />
-          </>
-        )}
-      </div>
+            {unlocked && (
+              <Shortcut
+                keyup='M'
+                action='Melodia wybranej pieśni (jeśli istnieje)'
+              />
+            )}
+            <Shortcut keyup='K' action='Treść pieśni do druku' />
+            <Shortcut keyup='S' action='Udostępnienie linku do pieśni' />
+          </div>
+        </>
+      )}
 
       <div className={styles.buttons}>
-        <button
-          title='Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu.'
-          onClick={() => hiddenMenuQuery(undefined)}
-        >
+        <button onClick={() => hiddenMenuQuery(undefined)}>
           <p>Zamknij</p>
         </button>
       </div>

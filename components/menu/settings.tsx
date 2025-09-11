@@ -208,10 +208,7 @@ export default function SettingsMenu() {
           <p>Przywróć domyślne</p>
         </button>
 
-        <button
-          title='Kliknij, lub użyj [Esc] na klawiaturze, aby zamknąć menu.'
-          onClick={() => hiddenMenuQuery(undefined)}
-        >
+        <button onClick={() => hiddenMenuQuery(undefined)}>
           <p>Zamknij</p>
         </button>
       </div>

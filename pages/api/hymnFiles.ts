@@ -9,7 +9,6 @@ type Data = {
   error?: string
 }
 
-// API to find connected files with specific hymn
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>

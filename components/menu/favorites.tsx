@@ -16,7 +16,7 @@ interface Favorite {
   timestamp: number
 }
 
-export default function FavoritesMenu() {
+export default function FavoritesMenu({ unlocked }: { unlocked: boolean }) {
   const router = useRouter()
 
   // favorites array data
@@ -77,7 +77,8 @@ export default function FavoritesMenu() {
                   // sort by book name
                   sortedItems.sort((a, b) => {
                     return (
-                      booksList().indexOf(a.book) - booksList().indexOf(b.book)
+                      booksList(unlocked).indexOf(a.book) -
+                      booksList(unlocked).indexOf(b.book)
                     )
                   })
                 }
@@ -121,7 +122,7 @@ export default function FavoritesMenu() {
                 onClick={async () => {
                   try {
                     // check book name
-                    if (!booksList().includes(fav.book)) {
+                    if (!booksList(unlocked).includes(fav.book)) {
                       removeFromList(index)
                       throw new Error()
 

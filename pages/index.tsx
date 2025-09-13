@@ -11,22 +11,9 @@ import randomHymn from '@/utils/randomHymn'
 
 import styles from '@/styles/pages/index.module.scss'
 
-const useScrollLock = (isActive: boolean) => {
-  useEffect(() => {
-    if (!isActive) return
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-    const LeftScroll = document.documentElement.scrollLeft
-    const TopScroll = document.documentElement.scrollTop
-
-    const ScrollEvent = () => window.scrollTo(LeftScroll, TopScroll)
-
-    document.addEventListener('scroll', ScrollEvent)
-    return () => document.removeEventListener('scroll', ScrollEvent)
-  }, [isActive])
-}
-
-export default function Home() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+export default function HomePage() {
   const router = useRouter()
 
   useEffect(() => {
@@ -36,7 +23,17 @@ export default function Home() {
   // prevent scrolling on active hamburger menu
   const [hamburgerMenu, showHamburgerMenu] = useState(false)
 
-  useScrollLock(hamburgerMenu)
+  useEffect(() => {
+    if (!hamburgerMenu) return
+
+    const LeftScroll = document.documentElement.scrollLeft
+    const TopScroll = document.documentElement.scrollTop
+
+    const ScrollEvent = () => window.scrollTo(LeftScroll, TopScroll)
+
+    document.addEventListener('scroll', ScrollEvent)
+    return () => document.removeEventListener('scroll', ScrollEvent)
+  }, [hamburgerMenu])
 
   useEffect(() => {
     // keyboard shortcuts
@@ -59,7 +56,7 @@ export default function Home() {
       }
       if (unlocked && key === 'B') router.push('/books')
       if (key === 'R') {
-        randomHymn().then((hymn) => {
+        randomHymn(unlocked).then((hymn) => {
           if (hymn) {
             router.push({
               pathname: '/hymn',
@@ -75,7 +72,7 @@ export default function Home() {
 
     document.addEventListener('keyup', KeyupEvent)
     return () => document.removeEventListener('keyup', KeyupEvent)
-  }, [router, unlocked])
+  }, [router])
 
   return (
     <>
@@ -152,7 +149,7 @@ export default function Home() {
           <button
             title='Otwórz losową pieśń [R]'
             onClick={async () => {
-              const hymn = await randomHymn()
+              const hymn = await randomHymn(unlocked)
               if (hymn) {
                 router.push({
                   pathname: '/hymn',
@@ -215,15 +212,19 @@ export default function Home() {
             ))}
           </div>
 
-          {unlocked && (
+          {unlocked ? (
             <Link href='/books' className={styles.moreButton}>
               <p>Pokaż wszystkie śpiewniki</p>
+            </Link>
+          ) : (
+            <Link href='/search?book=M' className={styles.moreButton}>
+              <p>Śpiewnik Międzynarodowy (IC)</p>
             </Link>
           )}
         </div>
       </main>
 
-      <MobileNavbar />
+      <MobileNavbar unlocked={unlocked} />
     </>
   )
 }

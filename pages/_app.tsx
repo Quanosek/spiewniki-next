@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
 import { ThemeProvider } from 'next-themes'
 
@@ -15,6 +16,8 @@ import '@/styles/globals.scss'
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+
   useEffect(() => {
     // Initialize settings in localStorage
     try {
@@ -76,7 +79,9 @@ export default function App({ Component, pageProps }: AppProps) {
             <Link
               href='/'
               title={
-                unlocked
+                router.pathname === '/'
+                  ? 'Zebrane w jednym miejscu różne śpiewniki i pieśni religijne'
+                  : unlocked
                   ? 'Powróć do strony głównej'
                   : 'Powróć do wyboru śpiewników'
               }

@@ -2,12 +2,14 @@ import axios from 'axios'
 
 import { booksList } from './books'
 
-const randomHymn = async (book?: string) => {
+const randomHymn = async (unlocked: boolean, book?: string) => {
   if (!book) {
     // No specific book, get random from all
     try {
       const responses = await Promise.all(
-        booksList().map((bookName) => axios.get(`/database/${bookName}.json`))
+        booksList(unlocked).map((bookName) =>
+          axios.get(`/database/${bookName}.json`)
+        )
       )
 
       const hymns = responses.flatMap((response) => response?.data ?? [])

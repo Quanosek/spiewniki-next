@@ -31,14 +31,14 @@ export default function ShortcutsMenu() {
 
   return (
     <>
-      <h2>Skróty klawiszowe podstrony</h2>
+      <h2>Skróty klawiszowe strony</h2>
 
       <div className={styles.content}>
         <Shortcut
           keyup='Esc'
           action={
             'Wyjście z widoku menu' +
-            (!isHome ? ' / powrót po poprzedniej podstrony' : '')
+            (!isHome ? ' / powrót po poprzedniej strony' : '')
           }
         />
         <Shortcut
@@ -78,15 +78,17 @@ export default function ShortcutsMenu() {
               keyup='F'
               action='Dodanie/usunięcie pieśni z listy ulubionych'
             />
-            <Shortcut
-              keyup='D'
-              action='Dokument PDF wybranej pieśni (jeśli istnieje)'
-            />
             {unlocked && (
-              <Shortcut
-                keyup='M'
-                action='Melodia wybranej pieśni (jeśli istnieje)'
-              />
+              <>
+                <Shortcut
+                  keyup='D'
+                  action='Dokument PDF wybranej pieśni (jeśli istnieje)'
+                />
+                <Shortcut
+                  keyup='M'
+                  action='Melodia wybranej pieśni (jeśli istnieje)'
+                />
+              </>
             )}
             <Shortcut keyup='K' action='Treść pieśni do druku' />
             <Shortcut keyup='S' action='Udostępnienie linku do pieśni' />

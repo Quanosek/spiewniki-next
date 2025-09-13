@@ -152,7 +152,7 @@ export default function SearchPage() {
       const fetchAllBooks = async () => {
         try {
           const responses = await Promise.all(
-            booksList().map((bookName) =>
+            booksList(unlocked).map((bookName) =>
               axios.get<Hymn[]>(`database/${bookName}.json`).catch((err) => {
                 console.error(err)
                 return null
@@ -278,7 +278,7 @@ export default function SearchPage() {
 
         if (key === 'B') router.push(unlocked ? '/books' : '/')
         if (key === 'R') {
-          randomHymn(book).then((hymn) => {
+          randomHymn(unlocked, book).then((hymn) => {
             if (hymn) {
               router.push({
                 pathname: '/hymn',
@@ -361,53 +361,51 @@ export default function SearchPage() {
         </Link>
 
         <div className={styles.quickActions}>
-          {unlocked && (
-            <button
-              title='Otwórz pokaz slajdów'
-              className={styles.onHover}
-              style={{ display: resultHovered ? 'flex' : '' }}
-              onClick={() => {
-                const book = bookShortcut(hymn.book)
-                const title = hymn.name
-                const presWindow = JSON.parse(
-                  localStorage.getItem('presWindow') || 'false'
+          <button
+            title='Otwórz pokaz slajdów'
+            className={styles.onHover}
+            style={{ display: resultHovered ? 'flex' : '' }}
+            onClick={() => {
+              const book = bookShortcut(hymn.book)
+              const title = hymn.name
+              const presWindow = JSON.parse(
+                localStorage.getItem('presWindow') || 'false'
+              )
+
+              if (!presWindow) {
+                const elem = document.documentElement
+                if (elem.requestFullscreen) {
+                  elem.requestFullscreen()
+                }
+
+                router.push({
+                  pathname: '/presentation',
+                  query: { book, title },
+                })
+              } else {
+                const params = new URLSearchParams()
+                params.append('book', book)
+                params.append('title', title)
+
+                window.open(
+                  `/presentation?${params.toString()}`,
+                  'presentation',
+                  'width=960,height=540'
                 )
 
-                if (!presWindow) {
-                  const elem = document.documentElement
-                  if (elem.requestFullscreen) {
-                    elem.requestFullscreen()
-                  }
-
-                  router.push({
-                    pathname: '/presentation',
-                    query: { book, title },
-                  })
-                } else {
-                  const params = new URLSearchParams()
-                  params.append('book', book)
-                  params.append('title', title)
-
-                  window.open(
-                    `/presentation?${params.toString()}`,
-                    'presentation',
-                    'width=960,height=540'
-                  )
-
-                  localStorage.setItem('presWindow', 'true')
-                }
-              }}
-            >
-              <Image
-                className='icon'
-                alt='presentation'
-                src='/icons/monitor.svg'
-                width={25}
-                height={25}
-                draggable={false}
-              />
-            </button>
-          )}
+                localStorage.setItem('presWindow', 'true')
+              }
+            }}
+          >
+            <Image
+              className='icon'
+              alt='presentation'
+              src='/icons/monitor.svg'
+              width={25}
+              height={25}
+              draggable={false}
+            />
+          </button>
 
           {isFavorite && (
             <button
@@ -564,10 +562,10 @@ export default function SearchPage() {
             </button>
           ) : (
             <button
-              title='Otwórz losową pieśń [R]'
+              title='Otwórz losową pieśń z wybranego śpiewnika [R]'
               className={styles.randomButton}
               onClick={async () => {
-                const hymn = await randomHymn(book)
+                const hymn = await randomHymn(unlocked, book)
                 if (hymn) {
                   router.push({
                     pathname: '/hymn',

@@ -280,7 +280,6 @@ $button-gap: 12px;
   justify-content: space-between;
   background-color: var(--elements);
   border-radius: calc(var(--radius) / 2);
-  overflow: hidden;
 
   .noChords {
     opacity: 85%;
@@ -505,7 +504,10 @@ $button-gap: 12px;
     padding: 12px 26px;
     gap: 8px;
     font-size: 90%;
-    @include element-glow(4px);
+
+    @media (min-width: 769px) {
+      @include element-glow(4px);
+    }
 
     .previous {
       rotate: 90deg;

@@ -8,11 +8,13 @@ import { bookShortcut, booksList } from '@/utils/books'
 
 import styles from '@/styles/pages/books.module.scss'
 
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
 export default function BooksPage() {
   const router = useRouter()
 
   // Get books list
-  const allBooks = booksList()
+  const allBooks = booksList(unlocked)
   const booksWithPdf = ['B', 'C', 'N', 'E']
 
   // Keyboard shortcuts

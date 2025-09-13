@@ -8,6 +8,8 @@ import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/components/presentation.module.scss'
 
+// const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
 export default function PresentationPage() {
   const router = useRouter()
   const [hymn, setHymn] = useState<Hymn>()

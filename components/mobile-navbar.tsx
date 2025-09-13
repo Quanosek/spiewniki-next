@@ -6,9 +6,11 @@ import shareButton from '@/utils/shareButton'
 import randomHymn from '@/utils/randomHymn'
 import { hiddenMenuQuery } from './menu'
 
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
-
-export default function MobileNavbarComponent() {
+export default function MobileNavbarComponent({
+  unlocked,
+}: {
+  unlocked: boolean
+}) {
   const router = useRouter()
 
   let moreButtons = true
@@ -50,7 +52,7 @@ export default function MobileNavbarComponent() {
       <button
         onClick={async () => {
           const book = router.query.book as string
-          const hymn = await randomHymn(book)
+          const hymn = await randomHymn(unlocked, book)
           if (hymn) {
             router.push({
               pathname: '/hymn',

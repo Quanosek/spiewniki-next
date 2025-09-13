@@ -13,6 +13,8 @@ import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/pages/hymn.module.scss'
 
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
 interface HymnWithLyrics extends Hymn {
   lyrics: string[][]
 }
@@ -65,7 +67,6 @@ const useSettings = (reloadKey?: unknown) => {
 }
 
 export default function HymnPage() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
   const router = useRouter()
 
   const book = typeof router.query.book === 'string' ? router.query.book : ''
@@ -163,7 +164,7 @@ export default function HymnPage() {
   }, [router, book, title])
 
   useEffect(() => {
-    if (!hymn) return
+    if (!(hymn && unlocked)) return
 
     fetch(`/api/hymnFiles?book=${hymn.book}&title=${hymn.song.title}`)
       .then((res) => {
@@ -339,7 +340,7 @@ export default function HymnPage() {
       }
       if (key === 'B') router.push(unlocked ? '/books' : '/')
       if (key === 'R') {
-        randomHymn(bookShortcut(hymn.book)).then((selectedHymn) => {
+        randomHymn(unlocked, bookShortcut(hymn.book)).then((selectedHymn) => {
           if (selectedHymn) {
             router.push({
               pathname: '/hymn',
@@ -353,8 +354,8 @@ export default function HymnPage() {
       }
       if (key === 'P') showPresentation(hymn)
       if (key === 'F') toggleFavorite()
-      if (key === 'D') openDocument(hymnFiles.pdf)
-      if (key === 'M') playMusic(hymnFiles.mp3)
+      if (unlocked && key === 'D') openDocument(hymnFiles.pdf)
+      if (unlocked && key === 'M') playMusic(hymnFiles.mp3)
       if (key === 'S') shareButton()
       if (key === 'K') window.print()
       if (key === 'ARROWLEFT') changeHymn(hymn, hymn.id - 1)
@@ -364,7 +365,6 @@ export default function HymnPage() {
     document.addEventListener('keyup', KeyupEvent)
     return () => document.removeEventListener('keyup', KeyupEvent)
   }, [
-    unlocked,
     router,
     hymn,
     hymnFiles,
@@ -535,7 +535,7 @@ export default function HymnPage() {
                   </button>
                 )}
 
-                {hymnFiles.pdf && (
+                {unlocked && hymnFiles.pdf && (
                   <button onClick={() => openDocument(hymnFiles.pdf)}>
                     <Image
                       className='icon'
@@ -563,7 +563,10 @@ export default function HymnPage() {
 
             <div className={styles.container}>
               <div className={`${styles.options} ${styles.leftSide}`}>
-                <button onClick={openPrevSearch}>
+                <button
+                  title={'Powróć do wyników wyszukiwania [Esc]'}
+                  onClick={openPrevSearch}
+                >
                   <Image
                     className='icon'
                     alt='search'
@@ -579,7 +582,7 @@ export default function HymnPage() {
                   title={
                     unlocked
                       ? 'Otwórz listę wszystkich śpiewników [B]'
-                      : 'Przejdź do okna wyboru śpiewników.'
+                      : 'Powróć do wyboru śpiewników [B]'
                   }
                   onClick={() => {
                     localStorage.removeItem('prevSearch')
@@ -634,6 +637,7 @@ export default function HymnPage() {
                       className={styles.randomButton}
                       onClick={async () => {
                         const selectedHymn = await randomHymn(
+                          unlocked,
                           bookShortcut(hymn.book)
                         )
                         if (selectedHymn) {
@@ -758,51 +762,57 @@ export default function HymnPage() {
                   </p>
                 </button>
 
-                {hymn &&
-                  ['B', 'C', 'N', 'S'].includes(bookShortcut(hymn.book)) && (
-                    <button
-                      tabIndex={hymnFiles.pdf ? 0 : -1}
-                      title='Otwórz dokument PDF wybranej pieśni [D]'
-                      className={hymnFiles.pdf ? '' : 'disabled'}
-                      onClick={() => openDocument(hymnFiles.pdf)}
-                    >
-                      <Image
-                        className='icon'
-                        alt='pdf'
-                        src='/icons/document.svg'
-                        width={20}
-                        height={20}
-                        draggable={false}
-                      />
-                      <p>
-                        {Object.keys(hymnFiles).length > 0
-                          ? 'Otwórz PDF'
-                          : 'Ładowanie...'}
-                      </p>
-                    </button>
-                  )}
+                {unlocked && (
+                  <>
+                    {hymn &&
+                      ['B', 'C', 'N', 'S'].includes(
+                        bookShortcut(hymn.book)
+                      ) && (
+                        <button
+                          tabIndex={hymnFiles.pdf ? 0 : -1}
+                          title='Otwórz dokument PDF wybranej pieśni [D]'
+                          className={hymnFiles.pdf ? '' : 'disabled'}
+                          onClick={() => openDocument(hymnFiles.pdf)}
+                        >
+                          <Image
+                            className='icon'
+                            alt='pdf'
+                            src='/icons/document.svg'
+                            width={20}
+                            height={20}
+                            draggable={false}
+                          />
+                          <p>
+                            {Object.keys(hymnFiles).length > 0
+                              ? 'Otwórz PDF'
+                              : 'Ładowanie...'}
+                          </p>
+                        </button>
+                      )}
 
-                {unlocked && hymn && bookShortcut(hymn.book) === 'N' && (
-                  <button
-                    tabIndex={hymnFiles.mp3 ? 0 : -1}
-                    title='Odtwórz linię melodyjną wybranej pieśni [M]'
-                    className={hymnFiles.mp3 ? '' : 'disabled'}
-                    onClick={() => playMusic(hymnFiles.mp3)}
-                  >
-                    <Image
-                      className='icon'
-                      alt='mp3'
-                      src='/icons/play.svg'
-                      width={20}
-                      height={20}
-                      draggable={false}
-                    />
-                    <p>
-                      {Object.keys(hymnFiles).length > 0
-                        ? 'Odtwórz melodię'
-                        : 'Ładowanie...'}
-                    </p>
-                  </button>
+                    {hymn && bookShortcut(hymn.book) === 'N' && (
+                      <button
+                        tabIndex={hymnFiles.mp3 ? 0 : -1}
+                        title='Odtwórz linię melodyjną wybranej pieśni [M]'
+                        className={hymnFiles.mp3 ? '' : 'disabled'}
+                        onClick={() => playMusic(hymnFiles.mp3)}
+                      >
+                        <Image
+                          className='icon'
+                          alt='mp3'
+                          src='/icons/play.svg'
+                          width={20}
+                          height={20}
+                          draggable={false}
+                        />
+                        <p>
+                          {Object.keys(hymnFiles).length > 0
+                            ? 'Odtwórz melodię'
+                            : 'Ładowanie...'}
+                        </p>
+                      </button>
+                    )}
+                  </>
                 )}
 
                 <button
@@ -840,7 +850,7 @@ export default function HymnPage() {
         )}
       </main>
 
-      <MobileNavbar />
+      <MobileNavbar unlocked={unlocked} />
     </>
   )
 }

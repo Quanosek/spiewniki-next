@@ -8,6 +8,8 @@ import { modifyText } from '@/utils/simplifyText'
 
 import styles from '@/styles/pages/document.module.scss'
 
+// const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
 export interface DocumentPageProps {
   libraryPath: string
 }

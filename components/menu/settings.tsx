@@ -13,10 +13,6 @@ interface Settings {
   quickSearch: boolean
 }
 
-// default settings values
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
-const defaultTheme = unlocked ? 'black' : 'white'
-
 export const defaultSettings = {
   fontSize: 21,
   showChords: false,
@@ -24,8 +20,9 @@ export const defaultSettings = {
   quickSearch: true,
 }
 
-export default function SettingsMenu() {
+export default function SettingsMenu({ unlocked }: { unlocked: boolean }) {
   const { theme, setTheme } = useTheme()
+  const defaultTheme = unlocked ? 'black' : 'white'
 
   const settings: Settings = JSON.parse(
     localStorage.getItem('settings') as string
@@ -119,24 +116,8 @@ export default function SettingsMenu() {
           <h3>Motyw kolorów:</h3>
 
           {unlocked
-            ? Themes([
-                'black',
-                // 'dark-blue',
-                'gray',
-                'white',
-                'reading',
-                // 'light-blue',
-                // 'light-purple',
-              ])
-            : Themes([
-                'white',
-                'reading',
-                // 'light-blue',
-                // 'light-purple',
-                'gray',
-                // 'dark-blue',
-                'black',
-              ])}
+            ? Themes(['black', 'gray', 'white', 'reading'])
+            : Themes(['white', 'reading', 'gray', 'black'])}
         </div>
 
         {/* FONT SIZE */}

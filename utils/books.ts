@@ -21,12 +21,10 @@ const bookShortcut = (input: string) => {
 }
 
 // Get list of available books
-const booksList = () => {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
-
+const booksList = (unlocked: boolean) => {
   const list = unlocked
     ? ['B', 'C', 'N', 'K', 'P', 'E', 'S', 'M', 'R']
-    : ['B', 'C', 'N']
+    : ['B', 'C', 'N', 'M']
 
   return list
 }

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
 import type Hymn from '@/types/hymn'
@@ -107,8 +107,9 @@ export default function PresentationPage() {
         .map((line) => line.replace(/\(.*?\)/g, ''))
         .filter((line) => line !== '' && line !== ' ')
     )
-  }, [hymn, order, slide, ic])
+  }, [hymn, order, slide])
 
+  // Adjust font size based on window width and verse length
   useEffect(() => {
     const lines = linesWidth.current
     lines?.style.removeProperty('font-size')
@@ -142,9 +143,10 @@ export default function PresentationPage() {
     } else if (lineCount === 7) {
       lines?.style.setProperty('font-size', '4.1vw')
     }
-  }, [ic, verse])
+  }, [verse, ic])
 
   useEffect(() => {
+    // Hide cursor visibility
     const mouseMoveEvent = (event: MouseEvent) => {
       if ((event.movementX && event.movementY) === 0) return
 
@@ -158,10 +160,10 @@ export default function PresentationPage() {
       }
     }
 
+    // Slides custom navigation
     let startPosition: number
     let endPosition: number
 
-    // Slides custom navigation
     const handleEvent = (event: Event) => {
       const TouchEvent = event as TouchEvent
       const KeyboardEvent = event as KeyboardEvent
@@ -213,7 +215,7 @@ export default function PresentationPage() {
     }
   }, [alwaysShowCursor, nextSlide, prevSlide, closePresentation])
 
-  // hide default scrollbar
+  // Hide default scrollbar
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => {

@@ -7,7 +7,7 @@ import axios from 'axios'
 
 import MobileNavbar from '@/components/mobile-navbar'
 import { bookShortcut } from '@/utils/books'
-import randomHymn from '@/utils/randomHymn'
+import getRandomHymn from '@/utils/getRandomHymn'
 import shareButton from '@/utils/shareButton'
 import type Hymn from '@/types/hymn'
 
@@ -214,6 +214,73 @@ export default function HymnPage() {
     }
   }, [router])
 
+  const changeHymn = useCallback((hymn: ProcessedHymn, id: number) => {
+    try {
+      const fromStorage = localStorage.getItem('prevSearch')
+      if (fromStorage) {
+        const json = JSON.parse(fromStorage)
+        json.search = ''
+        localStorage.setItem('prevSearch', JSON.stringify(json))
+      }
+    } catch (error) {
+      console.error('Error updating prevSearch:', error)
+    }
+
+    if (id < 0) {
+      setLoading(false)
+      return alert('To jest pierwsza pieśń w tym śpiewniku!')
+    }
+
+    axios
+      .get(`database/${bookShortcut(hymn.book)}.json`)
+      .then(({ data }) => {
+        if (id >= data.length) {
+          return alert('To jest ostatnia pieśń w tym śpiewniku!')
+        }
+
+        const hymn = data.find((elem: { id: number }) => elem.id === id)
+
+        Router.push({
+          pathname: '/hymn',
+          query: {
+            book: bookShortcut(hymn.book),
+            title: hymn.name,
+          },
+        })
+      })
+      .catch((err) => {
+        console.error(err)
+        Router.back()
+      })
+  }, [])
+
+  // Random hymn function
+  const randomHymn = useCallback(async () => {
+    const hymn = await getRandomHymn(unlocked, book)
+    if (hymn) {
+      router.push({
+        pathname: '/hymn',
+        query: {
+          book: bookShortcut(hymn.book),
+          title: hymn.name,
+        },
+      })
+    }
+  }, [book, router])
+
+  const showPresentation = useCallback(
+    (hymn: ProcessedHymn) => {
+      const elem = document.documentElement
+      if (elem.requestFullscreen) elem.requestFullscreen()
+
+      router.push({
+        pathname: '/presentation',
+        query: { book: bookShortcut(hymn.book), title: hymn.name },
+      })
+    },
+    [router]
+  )
+
   const toggleFavorite = useCallback(() => {
     if (!hymn) return
 
@@ -263,61 +330,9 @@ export default function HymnPage() {
     if (newWindow) newWindow.focus()
   }, [])
 
-  const changeHymn = useCallback((hymn: ProcessedHymn, id: number) => {
-    try {
-      const fromStorage = localStorage.getItem('prevSearch')
-      if (fromStorage) {
-        const json = JSON.parse(fromStorage)
-        json.search = ''
-        localStorage.setItem('prevSearch', JSON.stringify(json))
-      }
-    } catch (error) {
-      console.error('Error updating prevSearch:', error)
-    }
-
-    if (id < 0) {
-      setLoading(false)
-      return alert('To jest pierwsza pieśń w tym śpiewniku!')
-    }
-
-    axios
-      .get(`database/${bookShortcut(hymn.book)}.json`)
-      .then(({ data }) => {
-        if (id >= data.length) {
-          return alert('To jest ostatnia pieśń w tym śpiewniku!')
-        }
-
-        const hymn = data.find((elem: { id: number }) => elem.id === id)
-
-        Router.push({
-          pathname: '/hymn',
-          query: {
-            book: bookShortcut(hymn.book),
-            title: hymn.name,
-          },
-        })
-      })
-      .catch((err) => {
-        console.error(err)
-        Router.back()
-      })
-  }, [])
-
-  const showPresentation = useCallback(
-    (hymn: ProcessedHymn) => {
-      const elem = document.documentElement
-      if (elem.requestFullscreen) elem.requestFullscreen()
-
-      router.push({
-        pathname: '/presentation',
-        query: { book: bookShortcut(hymn.book), title: hymn.name },
-      })
-    },
-    [router]
-  )
-
+  // Keyboard shortcuts
   useEffect(() => {
-    const KeyupEvent = (e: KeyboardEvent) => {
+    const keyupEvent = (e: KeyboardEvent) => {
       if (
         e.ctrlKey ||
         e.shiftKey ||
@@ -329,50 +344,40 @@ export default function HymnPage() {
         return
       }
 
-      if (e.key === 'Escape') router.back()
-
-      const key = e.key.toUpperCase()
-
-      if (key === '/') {
+      if (e.key === 'Escape') openPrevSearch()
+      if (e.key === '/') {
         localStorage.removeItem('prevSearch')
         localStorage.setItem('focusSearchBox', 'true')
         router.push('/search')
       }
+      if (e.key === 'ArrowLeft') changeHymn(hymn, hymn.id - 1)
+      if (e.key === 'ArrowRight') changeHymn(hymn, hymn.id + 1)
+
+      const key = e.key.toUpperCase()
+
       if (key === 'B') router.push(unlocked ? '/books' : '/')
-      if (key === 'R') {
-        randomHymn(unlocked, bookShortcut(hymn.book)).then((selectedHymn) => {
-          if (selectedHymn) {
-            router.push({
-              pathname: '/hymn',
-              query: {
-                book: bookShortcut(selectedHymn.book),
-                title: selectedHymn.name,
-              },
-            })
-          }
-        })
-      }
+      if (key === 'R') randomHymn()
       if (key === 'P') showPresentation(hymn)
       if (key === 'F') toggleFavorite()
       if (unlocked && key === 'D') openDocument(hymnFiles.pdf)
       if (unlocked && key === 'M') playMusic(hymnFiles.mp3)
       if (key === 'S') shareButton()
       if (key === 'K') window.print()
-      if (key === 'ARROWLEFT') changeHymn(hymn, hymn.id - 1)
-      if (key === 'ARROWRIGHT') changeHymn(hymn, hymn.id + 1)
     }
 
-    document.addEventListener('keyup', KeyupEvent)
-    return () => document.removeEventListener('keyup', KeyupEvent)
+    document.addEventListener('keyup', keyupEvent)
+    return () => document.removeEventListener('keyup', keyupEvent)
   }, [
     router,
     hymn,
-    hymnFiles,
+    openPrevSearch,
+    changeHymn,
+    randomHymn,
     showPresentation,
     toggleFavorite,
+    hymnFiles,
     openDocument,
     playMusic,
-    changeHymn,
   ])
 
   const HymnData = ({
@@ -382,9 +387,8 @@ export default function HymnPage() {
     hymn: ProcessedHymn
     showChords: boolean
   }) => {
-    const hymnTitle = hymn.song.title.replace(/\b(\w)\b\s/g, '$1\u00A0')
-    const [language, setLanguage] = useState(3)
     const ic = hymn.song.title.includes('IC')
+    const [language, setLanguage] = useState(3)
 
     const FormattedVerse = ({
       array,
@@ -459,6 +463,8 @@ export default function HymnPage() {
         </Link>
       )
     }
+
+    const hymnTitle = hymn.song.title.replace(/\b(\w)\b\s/g, '$1\u00A0')
 
     return (
       <>
@@ -635,21 +641,7 @@ export default function HymnPage() {
                     <button
                       title='Otwórz losową pieśń z wybranego śpiewnika [R]'
                       className={styles.randomButton}
-                      onClick={async () => {
-                        const selectedHymn = await randomHymn(
-                          unlocked,
-                          bookShortcut(hymn.book)
-                        )
-                        if (selectedHymn) {
-                          router.push({
-                            pathname: '/hymn',
-                            query: {
-                              book: bookShortcut(selectedHymn.book),
-                              title: selectedHymn.name,
-                            },
-                          })
-                        }
-                      }}
+                      onClick={randomHymn}
                     >
                       <p>Wylosuj pieśń</p>
                     </button>

@@ -31,6 +31,7 @@ export default function Document() {
         <link rel='apple-touch-icon' href={`/logo/${color}/apple-icon.png`} />
         <link rel='manifest' href={`/manifest-${color}.json`} />
 
+        {/* Disable indexing for unlocked version of the app */}
         {unlocked && <meta name='robots' content='none' />}
       </Head>
 

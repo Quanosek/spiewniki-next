@@ -2,13 +2,13 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import axios, { AxiosResponse } from 'axios'
 
 import { defaultSettings } from '@/components/menu/settings'
 import { bookShortcut, booksList } from '@/utils/books'
-import randomHymn from '@/utils/randomHymn'
+import getRandomHymn from '@/utils/getRandomHymn'
 import { reformatText } from '@/utils/simplifyText'
 import type Hymn from '@/types/hymn'
 
@@ -22,7 +22,7 @@ interface HymnWithLyrics extends Hymn {
 
 export default function SearchPage() {
   const router = useRouter()
-  const book = router.query.book as string
+  const { book } = router.query as { [key: string]: string }
 
   const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
   const [rawData, setRawData] = useState<Hymn[]>()
@@ -251,6 +251,21 @@ export default function SearchPage() {
     setFavoritesState(states)
   }, [data])
 
+  // Random hymn function
+  const randomHymn = useCallback(async () => {
+    const hymn = await getRandomHymn(unlocked, book)
+    if (hymn) {
+      router.push({
+        pathname: '/hymn',
+        query: {
+          book: bookShortcut(hymn.book),
+          title: hymn.name,
+        },
+      })
+    }
+  }, [book, router])
+
+  // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
       if (
@@ -264,6 +279,7 @@ export default function SearchPage() {
       }
 
       if (document.activeElement === inputRef.current) {
+        // Input is focused
         if (e.key === 'Escape') inputRef.current?.blur()
         if (e.key === 'Enter') {
           const hymn = data && data[0]
@@ -271,31 +287,20 @@ export default function SearchPage() {
           else cleanUp()
         }
       } else {
-        if (e.key === '/') inputRef.current?.focus()
+        // Input is not focused
         if (e.key === 'Escape') router.push('/')
+        if (e.key === '/') inputRef.current?.focus()
 
         const key = e.key.toUpperCase()
 
         if (key === 'B') router.push(unlocked ? '/books' : '/')
-        if (key === 'R') {
-          randomHymn(unlocked, book).then((hymn) => {
-            if (hymn) {
-              router.push({
-                pathname: '/hymn',
-                query: {
-                  book: bookShortcut(hymn.book),
-                  title: hymn.name,
-                },
-              })
-            }
-          })
-        }
+        if (key === 'R') randomHymn()
       }
     }
 
     document.addEventListener('keyup', keyupEvent)
     return () => document.removeEventListener('keyup', keyupEvent)
-  }, [router, data, cleanUp, book, inputValue])
+  }, [router, data, inputValue, cleanUp, randomHymn])
 
   const SearchResult = ({
     hymn,
@@ -531,6 +536,7 @@ export default function SearchPage() {
                 })
               )
 
+              // easter-egg
               if (unlocked && value === '2137') {
                 localStorage.removeItem('prevSearch')
                 router.push({
@@ -564,18 +570,7 @@ export default function SearchPage() {
             <button
               title='Otwórz losową pieśń z wybranego śpiewnika [R]'
               className={styles.randomButton}
-              onClick={async () => {
-                const hymn = await randomHymn(unlocked, book)
-                if (hymn) {
-                  router.push({
-                    pathname: '/hymn',
-                    query: {
-                      book: bookShortcut(hymn.book),
-                      title: hymn.name,
-                    },
-                  })
-                }
-              }}
+              onClick={randomHymn}
             >
               <Image
                 className='icon'

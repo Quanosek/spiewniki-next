@@ -2,12 +2,12 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import MobileNavbar from '@/components/mobile-navbar'
 import { bookShortcut } from '@/utils/books'
+import getRandomHymn from '@/utils/getRandomHymn'
 import shareButton from '@/utils/shareButton'
-import randomHymn from '@/utils/randomHymn'
 
 import styles from '@/styles/pages/index.module.scss'
 
@@ -16,11 +16,12 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 export default function HomePage() {
   const router = useRouter()
 
+  // Reset previous search
   useEffect(() => {
     localStorage.removeItem('prevSearch')
   }, [])
 
-  // prevent scrolling on active hamburger menu
+  // Prevent scrolling on active hamburger menu
   const [hamburgerMenu, showHamburgerMenu] = useState(false)
 
   useEffect(() => {
@@ -35,9 +36,23 @@ export default function HomePage() {
     return () => document.removeEventListener('scroll', ScrollEvent)
   }, [hamburgerMenu])
 
+  // Random hymn function
+  const randomHymn = useCallback(async () => {
+    const hymn = await getRandomHymn(unlocked)
+    if (hymn) {
+      router.push({
+        pathname: '/hymn',
+        query: {
+          book: bookShortcut(hymn.book),
+          title: hymn.name,
+        },
+      })
+    }
+  }, [router])
+
+  // Keyboard shortcuts
   useEffect(() => {
-    // keyboard shortcuts
-    const KeyupEvent = (e: KeyboardEvent) => {
+    const keyupEvent = (e: KeyboardEvent) => {
       if (
         e.ctrlKey ||
         e.shiftKey ||
@@ -48,31 +63,20 @@ export default function HomePage() {
         return
       }
 
-      const key = e.key.toUpperCase()
-
-      if (key === '/') {
+      if (e.key === '/') {
         localStorage.setItem('focusSearchBox', 'true')
         router.push('/search')
       }
+
+      const key = e.key.toUpperCase()
+
       if (unlocked && key === 'B') router.push('/books')
-      if (key === 'R') {
-        randomHymn(unlocked).then((hymn) => {
-          if (hymn) {
-            router.push({
-              pathname: '/hymn',
-              query: {
-                book: bookShortcut(hymn.book),
-                title: hymn.name,
-              },
-            })
-          }
-        })
-      }
+      if (key === 'R') randomHymn()
     }
 
-    document.addEventListener('keyup', KeyupEvent)
-    return () => document.removeEventListener('keyup', KeyupEvent)
-  }, [router])
+    document.addEventListener('keyup', keyupEvent)
+    return () => document.removeEventListener('keyup', keyupEvent)
+  }, [router, randomHymn])
 
   return (
     <>
@@ -113,7 +117,6 @@ export default function HomePage() {
         </div>
 
         {hamburgerMenu && (
-          // mobile fullscreen menu
           <div className={styles.hamburgerMenu}>
             <button onClick={shareButton}>
               <p>Udostępnij</p>
@@ -146,21 +149,7 @@ export default function HomePage() {
             <p>Rozpocznij wyszukiwanie</p>
           </Link>
 
-          <button
-            title='Otwórz losową pieśń [R]'
-            onClick={async () => {
-              const hymn = await randomHymn(unlocked)
-              if (hymn) {
-                router.push({
-                  pathname: '/hymn',
-                  query: {
-                    book: bookShortcut(hymn.book),
-                    title: hymn.name,
-                  },
-                })
-              }
-            }}
-          >
+          <button title='Otwórz losową pieśń [R]' onClick={randomHymn}>
             <Image
               className='icon'
               alt='dice'
@@ -196,7 +185,7 @@ export default function HomePage() {
                     pathname: '/document',
                     query: { d: bookShortcut(book) },
                   }}
-                  title='Otwórz plik PDF śpiewnika'
+                  title='Pokaż śpiewnik w formacie PDF'
                   className={styles.pdfIcon}
                 >
                   <Image

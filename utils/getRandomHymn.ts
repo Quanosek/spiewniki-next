@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { booksList } from './books'
 
-const randomHymn = async (unlocked: boolean, book?: string) => {
+const getRandomHymn = async (unlocked: boolean, book?: string) => {
   if (!book) {
     // No specific book, get random from all
     try {
@@ -36,4 +36,4 @@ const randomHymn = async (unlocked: boolean, book?: string) => {
   return null
 }
 
-export default randomHymn
+export default getRandomHymn

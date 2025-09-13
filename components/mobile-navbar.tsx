@@ -1,9 +1,10 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useCallback } from 'react'
 
 import { bookShortcut } from '@/utils/books'
+import getRandomHymn from '@/utils/getRandomHymn'
 import shareButton from '@/utils/shareButton'
-import randomHymn from '@/utils/randomHymn'
 import { hiddenMenuQuery } from './menu'
 
 export default function MobileNavbarComponent({
@@ -12,9 +13,23 @@ export default function MobileNavbarComponent({
   unlocked: boolean
 }) {
   const router = useRouter()
+  const { book } = router.query as { [key: string]: string }
 
-  let moreButtons = true
-  if (!unlocked && router.pathname === '/') moreButtons = false
+  // Random hymn function
+  const randomHymn = useCallback(async () => {
+    const hymn = await getRandomHymn(unlocked, book)
+    if (hymn) {
+      router.push({
+        pathname: '/hymn',
+        query: {
+          book: bookShortcut(hymn.book),
+          title: hymn.name,
+        },
+      })
+    }
+  }, [unlocked, book, router])
+
+  const moreButtons = !unlocked && router.pathname === '/'
 
   return (
     <nav>
@@ -49,21 +64,7 @@ export default function MobileNavbarComponent({
         <p>Ulubione</p>
       </button>
 
-      <button
-        onClick={async () => {
-          const book = router.query.book as string
-          const hymn = await randomHymn(unlocked, book)
-          if (hymn) {
-            router.push({
-              pathname: '/hymn',
-              query: {
-                book: bookShortcut(hymn.book),
-                title: hymn.name,
-              },
-            })
-          }
-        }}
-      >
+      <button onClick={randomHymn}>
         <Image
           className='icon'
           alt='dice'

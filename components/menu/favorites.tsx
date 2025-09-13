@@ -9,6 +9,8 @@ import { hiddenMenuQuery } from '../menu'
 
 import styles from '@/styles/components/menu.module.scss'
 
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
 interface Favorite {
   book: string
   id: number
@@ -16,17 +18,17 @@ interface Favorite {
   timestamp: number
 }
 
-export default function FavoritesMenu({ unlocked }: { unlocked: boolean }) {
+export default function FavoritesMenu() {
   const router = useRouter()
 
-  // favorites array data
+  // Favorites array data
   const favoritesData = JSON.parse(localStorage.getItem('favorites') as string)
   const [favorites, setFavorites] = useState<Favorite[]>(favoritesData || [])
 
-  // hover delete button on desktop
+  // Hover delete button on desktop
   const [elemHovered, setElemHovered] = useState<number>()
 
-  // remove selected hymn from list of favorites
+  // Remove selected hymn from list of favorites
   const removeFromList = (index: number) => {
     const newArray = favorites.filter((fav) => fav !== favorites[index])
 

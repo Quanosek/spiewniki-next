@@ -6,6 +6,8 @@ import { hiddenMenuQuery } from '../menu'
 
 import styles from '@/styles/components/menu.module.scss'
 
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
 interface Settings {
   fontSize: number
   showChords: boolean
@@ -20,7 +22,7 @@ export const defaultSettings = {
   quickSearch: true,
 }
 
-export default function SettingsMenu({ unlocked }: { unlocked: boolean }) {
+export default function SettingsMenu() {
   const { theme, setTheme } = useTheme()
   const defaultTheme = unlocked ? 'black' : 'white'
 
@@ -28,11 +30,11 @@ export default function SettingsMenu({ unlocked }: { unlocked: boolean }) {
     localStorage.getItem('settings') as string
   )
 
-  // dynamic states
+  // Dynamic states
   const [{ fontSize, showChords, contextSearch, quickSearch }, setState] =
     useState(settings || defaultSettings)
 
-  // save settings to local storage
+  // Save settings to local storage
   const saveSettings = useCallback(() => {
     localStorage.setItem(
       'settings',
@@ -45,12 +47,12 @@ export default function SettingsMenu({ unlocked }: { unlocked: boolean }) {
     )
   }, [fontSize, showChords, contextSearch, quickSearch])
 
-  // save settings on change
+  // Save settings on change
   useEffect(() => {
     saveSettings()
   }, [saveSettings])
 
-  // theme colors labels
+  // Theme colors labels
   const Themes = (names: string[]) => {
     const themes: ReactElement[] = []
 
@@ -81,7 +83,7 @@ export default function SettingsMenu({ unlocked }: { unlocked: boolean }) {
     return <form className={styles.themeSelection}>{themes}</form>
   }
 
-  // quick settings options buttons
+  // Quick settings options buttons
   const ToggleSwitch = (description: string, name: string, value: boolean) => (
     <div className={styles.toggle}>
       <p>{description}</p>

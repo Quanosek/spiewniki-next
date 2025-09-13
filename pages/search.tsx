@@ -16,7 +16,7 @@ import styles from '@/styles/pages/search.module.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-interface HymnWithLyrics extends Hymn {
+interface ProcessedHymn extends Hymn {
   lyrics?: string[]
 }
 
@@ -26,12 +26,12 @@ export default function SearchPage() {
 
   const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
   const [rawData, setRawData] = useState<Hymn[]>()
-  const [data, setData] = useState<HymnWithLyrics[]>()
+  const [data, setData] = useState<ProcessedHymn[]>()
   const [inputValue, setInputValue] = useState('')
   const [showClearBtn, setShowClearBtn] = useState(false)
   const [renderPage, setRenderPage] = useState(0)
   const [showTopBtn, setShowTopBtn] = useState(false)
-  const [renderData, setRenderData] = useState<HymnWithLyrics[]>([])
+  const [renderData, setRenderData] = useState<ProcessedHymn[]>([])
   const [isLoading, setLoading] = useState(true)
   const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>(
     {}
@@ -40,8 +40,8 @@ export default function SearchPage() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const Search = (data: Hymn[], input: string) => {
-    const NamesCollector: HymnWithLyrics[] = []
-    const LyricsCollector: HymnWithLyrics[] = []
+    const NamesCollector: ProcessedHymn[] = []
+    const LyricsCollector: ProcessedHymn[] = []
     const settings = JSON.parse(localStorage.getItem('settings') || '{}')
     const contextSearch = settings.contextSearch || false
 
@@ -104,7 +104,7 @@ export default function SearchPage() {
     setData(rawData)
   }, [rawData])
 
-  const hymnLink = (hymn: HymnWithLyrics) => ({
+  const hymnLink = (hymn: ProcessedHymn) => ({
     pathname: '/hymn',
     query: {
       book: bookShortcut(hymn.book),
@@ -171,8 +171,8 @@ export default function SearchPage() {
             )
 
           loadData(hymns)
-        } catch (error) {
-          console.error(error)
+        } catch (err) {
+          console.error(err)
           router.push('/404')
         }
       }
@@ -253,14 +253,12 @@ export default function SearchPage() {
 
   // Random hymn function
   const randomHymn = useCallback(async () => {
-    const hymn = await getRandomHymn(unlocked, book)
-    if (hymn) {
+    const foundHymn = await getRandomHymn(unlocked, book)
+    if (foundHymn) {
+      const { book, title } = foundHymn
       router.push({
         pathname: '/hymn',
-        query: {
-          book: bookShortcut(hymn.book),
-          title: hymn.name,
-        },
+        query: { book, title },
       })
     }
   }, [book, router])
@@ -307,7 +305,7 @@ export default function SearchPage() {
     quickSearch,
     isFavorite,
   }: {
-    hymn: HymnWithLyrics
+    hymn: ProcessedHymn
     quickSearch: boolean | undefined
     isFavorite: boolean
   }) => {
@@ -367,7 +365,7 @@ export default function SearchPage() {
 
         <div className={styles.quickActions}>
           <button
-            title='Otwórz pokaz slajdów'
+            title='Włącz tryb prezentacji dla wybranej pieśni'
             className={styles.onHover}
             style={{ display: resultHovered ? 'flex' : '' }}
             onClick={() => {

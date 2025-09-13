@@ -40,10 +40,20 @@
     background-color: transparent;
     transition: 150ms transform ease-out;
 
+    @media (max-width: 768px) {
+      img {
+        height: min(25px, 5.5vw);
+        width: auto;
+
+        &:first-child {
+          height: min(23px, 5.25vw);
+        }
+      }
+    }
+
     @media (max-width: 425px) {
       img {
-        height: 5.5vw;
-        width: auto;
+        height: 6vw;
       }
     }
   }

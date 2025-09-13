@@ -4,13 +4,14 @@ import { hiddenMenuQuery } from '../menu'
 
 import styles from '@/styles/components/menu.module.scss'
 
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
 interface ShortcutProps {
   keyup: string
   action: string
 }
 
 export default function ShortcutsMenu() {
-  const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
   const router = useRouter()
 
   const Shortcut = ({ keyup, action }: ShortcutProps) => (

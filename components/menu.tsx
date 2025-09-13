@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import styles from '@/styles/components/menu.module.scss'
 
-// menu boxes smart navigation
+// Menu boxes smart navigation
 export function hiddenMenuQuery(name: string | undefined) {
   const params = { ...Router.query }
   delete params.menu
@@ -28,15 +28,15 @@ export default function MenuComponent() {
   useEffect(() => {
     if (!router.isReady) return
 
-    // menu render
+    // Menu render
     setShowMenu(Boolean(menu))
 
-    // prevent scrolling
+    // Prevent scrolling
     const { scrollLeft, scrollTop } = document.documentElement
-    const ScrollEvent = () => menu && window.scrollTo(scrollLeft, scrollTop)
+    const scrollEvent = () => menu && window.scrollTo(scrollLeft, scrollTop)
 
-    // keyboard shortcuts
-    const KeyupEvent = (e: KeyboardEvent) => {
+    // Keyboard shortcuts
+    const keyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || !menu) {
         return
       }
@@ -44,15 +44,15 @@ export default function MenuComponent() {
       if (e.key === 'Escape') hiddenMenuQuery(undefined)
     }
 
-    document.addEventListener('scroll', ScrollEvent)
-    document.addEventListener('keyup', KeyupEvent)
+    document.addEventListener('scroll', scrollEvent)
+    document.addEventListener('keyup', keyupEvent)
     return () => {
-      document.removeEventListener('scroll', ScrollEvent)
-      document.removeEventListener('keyup', KeyupEvent)
+      document.removeEventListener('scroll', scrollEvent)
+      document.removeEventListener('keyup', keyupEvent)
     }
   }, [router, menu, params])
 
-  // dynamic import menu
+  // Dynamic import menu
   const DynamicComponent = dynamic(() => import(`./menu/${menu}`), {
     ssr: false,
   })

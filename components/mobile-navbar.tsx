@@ -2,7 +2,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
-import { bookShortcut } from '@/utils/books'
 import getRandomHymn from '@/utils/getRandomHymn'
 import shareButton from '@/utils/shareButton'
 import { hiddenMenuQuery } from './menu'
@@ -17,19 +16,17 @@ export default function MobileNavbarComponent({
 
   // Random hymn function
   const randomHymn = useCallback(async () => {
-    const hymn = await getRandomHymn(unlocked, book)
-    if (hymn) {
+    const foundHymn = await getRandomHymn(unlocked, book)
+    if (foundHymn) {
+      const { book, title } = foundHymn
       router.push({
         pathname: '/hymn',
-        query: {
-          book: bookShortcut(hymn.book),
-          title: hymn.name,
-        },
+        query: { book, title },
       })
     }
   }, [unlocked, book, router])
 
-  const moreButtons = !unlocked && router.pathname === '/'
+  const moreButtons = unlocked || router.pathname !== '/'
 
   return (
     <nav>

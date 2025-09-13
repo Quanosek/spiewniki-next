@@ -5,6 +5,7 @@ import Router, { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 
+import { defaultSettings } from '@/components/menu/settings'
 import MobileNavbar from '@/components/mobile-navbar'
 import { bookShortcut } from '@/utils/books'
 import getRandomHymn from '@/utils/getRandomHymn'
@@ -15,101 +16,53 @@ import styles from '@/styles/pages/hymn.module.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-interface HymnWithLyrics extends Hymn {
+interface ProcessedHymn extends Hymn {
   lyrics: string[][]
-}
-
-interface ProcessedHymn extends HymnWithLyrics {
   song: Hymn['song'] & {
-    linked_songs?: Array<{
+    linked_songs?: {
       book: string
       title: string
-    }>
+    }[]
   }
 }
 
 interface HymnFiles {
-  pdf?: {
+  pdf: {
     book: string
     id: string
   }
-  mp3?: {
+  mp3: {
     book: string
     id: string
   }
-}
-
-interface Settings {
-  showChords?: boolean
-  fontSize?: number
-}
-
-const DEFAULT_SETTINGS: Required<Settings> = {
-  fontSize: 21,
-  showChords: false,
-}
-
-const useSettings = (reloadKey?: unknown) => {
-  const [settings, setSettings] = useState<Required<Settings>>(DEFAULT_SETTINGS)
-
-  useEffect(() => {
-    let loadedSettings: Settings = {}
-    try {
-      const settingsString = localStorage.getItem('settings')
-      loadedSettings = settingsString ? JSON.parse(settingsString) : {}
-    } catch (error) {
-      console.error('Error parsing settings:', error)
-    }
-    setSettings({ ...DEFAULT_SETTINGS, ...loadedSettings })
-  }, [reloadKey])
-
-  return settings
 }
 
 export default function HymnPage() {
   const router = useRouter()
 
-  const book = typeof router.query.book === 'string' ? router.query.book : ''
-  const title = typeof router.query.title === 'string' ? router.query.title : ''
-  const menu =
-    typeof router.query.menu === 'string' ? router.query.menu : undefined
+  const { book, title, menu } = router.query as {
+    book: string
+    title: string
+    menu?: string
+  }
 
+  // Define hymn
   const [hymn, setHymn] = useState<ProcessedHymn>()
-  const [isLoading, setLoading] = useState(true)
-  const [hideControls, setHideControls] = useState(false)
-  const [hymnFiles, setHymnFiles] = useState<HymnFiles>({})
-  const [isFavorite, setFavorite] = useState(false)
-  const [presOptions, showPresOptions] = useState(false)
-
-  const settings = useSettings(menu)
-
-  const includesChords = hymn
-    ? hymn.lyrics.some((array: string[]) =>
-        array.some((verse: string) => verse.startsWith('.'))
-      )
-    : false
-  const noChords = Boolean(settings.showChords && hymn && !includesChords)
-  const fontSize = settings.fontSize
 
   useEffect(() => {
-    if (!router.isReady || !book || !title) return
-
-    document.body.setAttribute('data-page', 'hymn')
+    if (!(router.isReady && book && title)) return
 
     axios
       .get(`database/${book}.json`)
       .then(({ data }) => {
         const hymn = data.find((elem: Hymn) => elem.name === title)
-        if (!hymn) {
-          router.push('/404')
-          return
-        }
+        if (!hymn) return router.push('/404')
 
         hymn.lyrics = Object.values(hymn.song.lyrics)
 
         if (hymn.song.linked_songs) {
           hymn.song.linked_songs = Object.values(hymn.song.linked_songs).map(
-            (song: unknown) => {
+            (song) => {
               const songStr = song as string
               const splitSong = songStr.split('\\')
 
@@ -122,19 +75,32 @@ export default function HymnPage() {
         }
 
         setHymn(hymn)
-        setLoading(false)
       })
       .catch((err) => {
         console.error(err)
         router.push('/404')
       })
+  }, [router, book, title])
 
-    if (typeof window === 'undefined') return
+  // Refresh dedicated hymn settings
+  const [settings, setSettings] = useState(defaultSettings)
 
+  useEffect(() => {
+    const settingsString = localStorage.getItem('settings')
+    const loadedSettings = settingsString ? JSON.parse(settingsString) : {}
+    setSettings({ ...defaultSettings, ...loadedSettings })
+  }, [menu])
+
+  const { showChords, fontSize } = settings
+
+  // Handle hiding controls on scroll in mobile view
+  const [hideControls, setHideControls] = useState(false)
+
+  useEffect(() => {
     let lastScrollY = window.scrollY
     let ticking = false
 
-    const scrollHandler = () => {
+    const scrollEvent = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
           if (window.scrollY - lastScrollY > 50) {
@@ -149,32 +115,113 @@ export default function HymnPage() {
       }
     }
 
-    const scrollEndHandler = () => {
+    const scrollEndEvent = () => {
       lastScrollY = window.scrollY
     }
 
-    document.addEventListener('scroll', scrollHandler, { passive: true })
-    document.addEventListener('scrollend', scrollEndHandler, { passive: true })
+    document.addEventListener('scroll', scrollEvent, { passive: true })
+    document.addEventListener('scrollend', scrollEndEvent, { passive: true })
 
     return () => {
-      document.removeEventListener('scroll', scrollHandler)
-      document.removeEventListener('scrollend', scrollEndHandler)
-      document.body.removeAttribute('data-page')
+      document.removeEventListener('scroll', scrollEvent)
+      document.removeEventListener('scrollend', scrollEndEvent)
     }
-  }, [router, book, title])
+  }, [])
+
+  // Open previous search results
+  const openPrevSearch = useCallback(() => {
+    localStorage.setItem('focusSearchBox', 'true')
+
+    try {
+      const prevSearch = localStorage.getItem('prevSearch')
+      if (prevSearch) {
+        const parsed = JSON.parse(prevSearch)
+        const { book } = parsed
+
+        if (book) {
+          router.push({
+            pathname: '/search',
+            query: { book },
+          })
+        } else router.push('/search')
+      } else router.push('/search')
+    } catch (err) {
+      console.error('Error parsing prevSearch:', err)
+      router.push('/search')
+    }
+  }, [router])
+
+  // Change hymn to previous/next
+  const changeHymn = useCallback(
+    (id: number) => {
+      if (!hymn) return
+
+      try {
+        const fromStorage = localStorage.getItem('prevSearch')
+        if (fromStorage) {
+          const json = JSON.parse(fromStorage)
+          json.search = ''
+          localStorage.setItem('prevSearch', JSON.stringify(json))
+        }
+      } catch (err) {
+        console.error('Error updating prevSearch:', err)
+      }
+
+      if (id < 0) return
+
+      axios
+        .get(`database/${bookShortcut(hymn.book)}.json`)
+        .then(({ data }) => {
+          if (id >= data.length) return
+
+          const hymn = data.find((elem: { id: number }) => elem.id === id)
+
+          Router.push({
+            pathname: '/hymn',
+            query: {
+              book: bookShortcut(hymn.book),
+              title: hymn.name,
+            },
+          })
+        })
+        .catch((err) => {
+          console.error(err)
+          Router.back()
+        })
+    },
+    [hymn]
+  )
+
+  // Random hymn function
+  const randomHymn = useCallback(async () => {
+    const foundHymn = await getRandomHymn(unlocked, book)
+    if (foundHymn) {
+      const { book, title } = foundHymn
+      router.push({
+        pathname: '/hymn',
+        query: { book, title },
+      })
+    }
+  }, [book, router])
+
+  // Open presentation view
+  const showPresentation = useCallback(() => {
+    if (!hymn) return
+
+    const elem = document.documentElement
+    if (elem.requestFullscreen) elem.requestFullscreen()
+
+    router.push({
+      pathname: '/presentation',
+      query: { book: bookShortcut(hymn.book), title: hymn.name },
+    })
+  }, [hymn, router])
+
+  // Handle favorite hymns
+  const [isFavorite, setFavorite] = useState(false)
 
   useEffect(() => {
-    if (!(hymn && unlocked)) return
-
-    fetch(`/api/hymnFiles?book=${hymn.book}&title=${hymn.song.title}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`)
-        }
-        return res.json()
-      })
-      .then((data) => setHymnFiles(data))
-      .catch((err) => console.error(err))
+    if (!hymn) return
 
     try {
       const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
@@ -183,103 +230,10 @@ export default function HymnPage() {
           return elem.book === book && elem.id === hymn.id
         })
       )
-    } catch (error) {
-      console.error('Error parsing favorites:', error)
+    } catch (err) {
+      console.error('Error parsing favorites:', err)
     }
   }, [hymn, book])
-
-  const openPrevSearch = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('focusSearchBox', 'true')
-
-      try {
-        const prevSearch = localStorage.getItem('prevSearch')
-        if (prevSearch) {
-          const parsed = JSON.parse(prevSearch)
-          const { book } = parsed
-
-          if (book) {
-            router.push({
-              pathname: '/search',
-              query: { book },
-            })
-          } else router.push('/search')
-        } else router.push('/search')
-      } catch (error) {
-        console.error('Error parsing prevSearch:', error)
-        router.push('/search')
-      }
-    } else {
-      router.push('/search')
-    }
-  }, [router])
-
-  const changeHymn = useCallback((hymn: ProcessedHymn, id: number) => {
-    try {
-      const fromStorage = localStorage.getItem('prevSearch')
-      if (fromStorage) {
-        const json = JSON.parse(fromStorage)
-        json.search = ''
-        localStorage.setItem('prevSearch', JSON.stringify(json))
-      }
-    } catch (error) {
-      console.error('Error updating prevSearch:', error)
-    }
-
-    if (id < 0) {
-      setLoading(false)
-      return alert('To jest pierwsza pieśń w tym śpiewniku!')
-    }
-
-    axios
-      .get(`database/${bookShortcut(hymn.book)}.json`)
-      .then(({ data }) => {
-        if (id >= data.length) {
-          return alert('To jest ostatnia pieśń w tym śpiewniku!')
-        }
-
-        const hymn = data.find((elem: { id: number }) => elem.id === id)
-
-        Router.push({
-          pathname: '/hymn',
-          query: {
-            book: bookShortcut(hymn.book),
-            title: hymn.name,
-          },
-        })
-      })
-      .catch((err) => {
-        console.error(err)
-        Router.back()
-      })
-  }, [])
-
-  // Random hymn function
-  const randomHymn = useCallback(async () => {
-    const hymn = await getRandomHymn(unlocked, book)
-    if (hymn) {
-      router.push({
-        pathname: '/hymn',
-        query: {
-          book: bookShortcut(hymn.book),
-          title: hymn.name,
-        },
-      })
-    }
-  }, [book, router])
-
-  const showPresentation = useCallback(
-    (hymn: ProcessedHymn) => {
-      const elem = document.documentElement
-      if (elem.requestFullscreen) elem.requestFullscreen()
-
-      router.push({
-        pathname: '/presentation',
-        query: { book: bookShortcut(hymn.book), title: hymn.name },
-      })
-    },
-    [router]
-  )
 
   const toggleFavorite = useCallback(() => {
     if (!hymn) return
@@ -310,24 +264,40 @@ export default function HymnPage() {
       }
 
       localStorage.setItem('favorites', JSON.stringify(favorites))
-    } catch (error) {
-      console.error('Error handling favorites:', error)
+    } catch (err) {
+      console.error('Error handling favorites:', err)
     }
+  }, [hymn])
+
+  // Handle additional hymn files
+  const [hymnFiles, setHymnFiles] = useState<HymnFiles>({} as HymnFiles)
+
+  useEffect(() => {
+    if (!(hymn && unlocked)) return
+
+    fetch(`/api/hymnFiles?book=${hymn.book}&title=${hymn.song.title}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`)
+        }
+        return res.json()
+      })
+      .then((data) => setHymnFiles(data))
+      .catch((err) => console.error(err))
   }, [hymn])
 
   const openDocument = useCallback((file: HymnFiles['pdf'] | undefined) => {
     if (!file) return
     const { book, id } = file
+
     Router.push({ pathname: '/document', query: { book, id } })
   }, [])
 
   const playMusic = useCallback((file: HymnFiles['mp3'] | undefined) => {
     if (!file) return
     const { book, id } = file
-    if (typeof window === 'undefined') return
-    const url = `/mp3/${book}/${id}.mp3`
-    const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
-    if (newWindow) newWindow.focus()
+
+    window.open(`/mp3/${book}/${id}.mp3`, '_blank', 'noopener,noreferrer')
   }, [])
 
   // Keyboard shortcuts
@@ -350,14 +320,14 @@ export default function HymnPage() {
         localStorage.setItem('focusSearchBox', 'true')
         router.push('/search')
       }
-      if (e.key === 'ArrowLeft') changeHymn(hymn, hymn.id - 1)
-      if (e.key === 'ArrowRight') changeHymn(hymn, hymn.id + 1)
+      if (e.key === 'ArrowLeft') changeHymn(hymn.id - 1)
+      if (e.key === 'ArrowRight') changeHymn(hymn.id + 1)
 
       const key = e.key.toUpperCase()
 
       if (key === 'B') router.push(unlocked ? '/books' : '/')
       if (key === 'R') randomHymn()
-      if (key === 'P') showPresentation(hymn)
+      if (key === 'P') showPresentation()
       if (key === 'F') toggleFavorite()
       if (unlocked && key === 'D') openDocument(hymnFiles.pdf)
       if (unlocked && key === 'M') playMusic(hymnFiles.mp3)
@@ -503,6 +473,14 @@ export default function HymnPage() {
     )
   }
 
+  // Detect if hymn has chords
+  const hasChords = hymn?.lyrics.some((array: string[]) => {
+    return array.some((verse: string) => verse.startsWith('.'))
+  })
+
+  // Show/hide presentation options
+  const [presOptions, showPresOptions] = useState(false)
+
   return (
     <>
       <Head>
@@ -510,7 +488,7 @@ export default function HymnPage() {
       </Head>
 
       <main style={{ padding: 0 }}>
-        {!isLoading && (
+        {hymn && (
           <>
             <div
               className={`${styles.title} ${hideControls ? styles.hide : ''}`}
@@ -609,60 +587,56 @@ export default function HymnPage() {
 
               <div className={styles.center}>
                 <div className={styles.content} style={{ fontSize }}>
-                  {noChords && (
+                  {showChords && !hasChords && (
                     <span className={styles.noChords}>
                       Brak akordów do wyświetlenia
                     </span>
                   )}
 
-                  {hymn && (
-                    <HymnData hymn={hymn} showChords={settings.showChords} />
-                  )}
+                  <HymnData hymn={hymn} showChords={showChords} />
                 </div>
 
-                {hymn && (
-                  <div className={styles.controls}>
-                    <button
-                      title='Przejdź do poprzedniej pieśni [←]'
-                      className={hideControls ? styles.hide : ''}
-                      onClick={() => changeHymn(hymn, hymn.id - 1)}
-                    >
-                      <Image
-                        className={`${styles.previous} icon`}
-                        alt='left'
-                        src='/icons/arrow.svg'
-                        width={12}
-                        height={12}
-                        draggable={false}
-                      />
-                      <p>Poprzednia</p>
-                    </button>
+                <div className={styles.controls}>
+                  <button
+                    title='Przejdź do poprzedniej pieśni [←]'
+                    className={hideControls ? styles.hide : ''}
+                    onClick={() => changeHymn(hymn.id - 1)}
+                  >
+                    <Image
+                      className={`${styles.previous} icon`}
+                      alt='left'
+                      src='/icons/arrow.svg'
+                      width={12}
+                      height={12}
+                      draggable={false}
+                    />
+                    <p>Poprzednia</p>
+                  </button>
 
-                    <button
-                      title='Otwórz losową pieśń z wybranego śpiewnika [R]'
-                      className={styles.randomButton}
-                      onClick={randomHymn}
-                    >
-                      <p>Wylosuj pieśń</p>
-                    </button>
+                  <button
+                    title='Otwórz losową pieśń z wybranego śpiewnika [R]'
+                    className={styles.randomButton}
+                    onClick={randomHymn}
+                  >
+                    <p>Wylosuj pieśń</p>
+                  </button>
 
-                    <button
-                      title='Przejdź do następnej pieśni [→]'
-                      className={hideControls ? styles.hide : ''}
-                      onClick={() => changeHymn(hymn, hymn.id + 1)}
-                    >
-                      <p>Następna</p>
-                      <Image
-                        className={`${styles.next} icon`}
-                        alt='right'
-                        src='/icons/arrow.svg'
-                        width={12}
-                        height={12}
-                        draggable={false}
-                      />
-                    </button>
-                  </div>
-                )}
+                  <button
+                    title='Przejdź do następnej pieśni [→]'
+                    className={hideControls ? styles.hide : ''}
+                    onClick={() => changeHymn(hymn.id + 1)}
+                  >
+                    <p>Następna</p>
+                    <Image
+                      className={`${styles.next} icon`}
+                      alt='right'
+                      src='/icons/arrow.svg'
+                      width={12}
+                      height={12}
+                      draggable={false}
+                    />
+                  </button>
+                </div>
               </div>
 
               <div className={styles.options}>
@@ -671,12 +645,12 @@ export default function HymnPage() {
                   onMouseLeave={() => showPresOptions(false)}
                 >
                   <button
-                    title='Włącz prezentację wybranej pieśni na pełnym ekranie [P]'
+                    title='Włącz tryb prezentacji dla wybranej pieśni [P]'
                     className={styles.default}
                   >
                     <div
                       className={styles.buttonText}
-                      onClick={() => hymn && showPresentation(hymn)}
+                      onClick={showPresentation}
                     >
                       <Image
                         className='icon'
@@ -756,33 +730,30 @@ export default function HymnPage() {
 
                 {unlocked && (
                   <>
-                    {hymn &&
-                      ['B', 'C', 'N', 'S'].includes(
-                        bookShortcut(hymn.book)
-                      ) && (
-                        <button
-                          tabIndex={hymnFiles.pdf ? 0 : -1}
-                          title='Otwórz dokument PDF wybranej pieśni [D]'
-                          className={hymnFiles.pdf ? '' : 'disabled'}
-                          onClick={() => openDocument(hymnFiles.pdf)}
-                        >
-                          <Image
-                            className='icon'
-                            alt='pdf'
-                            src='/icons/document.svg'
-                            width={20}
-                            height={20}
-                            draggable={false}
-                          />
-                          <p>
-                            {Object.keys(hymnFiles).length > 0
-                              ? 'Otwórz PDF'
-                              : 'Ładowanie...'}
-                          </p>
-                        </button>
-                      )}
+                    {['B', 'C', 'N', 'S'].includes(bookShortcut(hymn.book)) && (
+                      <button
+                        tabIndex={hymnFiles.pdf ? 0 : -1}
+                        title='Otwórz zapis nutowy wybranej pieśni [D]'
+                        className={hymnFiles.pdf ? '' : 'disabled'}
+                        onClick={() => openDocument(hymnFiles.pdf)}
+                      >
+                        <Image
+                          className='icon'
+                          alt='pdf'
+                          src='/icons/document.svg'
+                          width={20}
+                          height={20}
+                          draggable={false}
+                        />
+                        <p>
+                          {Object.keys(hymnFiles).length > 0
+                            ? 'Otwórz PDF'
+                            : 'Ładowanie...'}
+                        </p>
+                      </button>
+                    )}
 
-                    {hymn && bookShortcut(hymn.book) === 'N' && (
+                    {bookShortcut(hymn.book) === 'N' && (
                       <button
                         tabIndex={hymnFiles.mp3 ? 0 : -1}
                         title='Odtwórz linię melodyjną wybranej pieśni [M]'
@@ -824,7 +795,7 @@ export default function HymnPage() {
 
                 <button
                   title='Wydrukuj tekst wybranej pieśni [K]'
-                  onClick={() => !isLoading && window.print()}
+                  onClick={() => window.print()}
                 >
                   <Image
                     className='icon'

@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+import { bookShortcut } from '@/utils/books'
 import { booksList } from './books'
 
 const getRandomHymn = async (unlocked: boolean, book?: string) => {
@@ -15,7 +16,11 @@ const getRandomHymn = async (unlocked: boolean, book?: string) => {
       const hymns = responses.flatMap((response) => response?.data ?? [])
 
       if (hymns.length > 0) {
-        return hymns[Math.floor(Math.random() * hymns.length)]
+        const randomHymn = hymns[Math.floor(Math.random() * hymns.length)]
+        return {
+          book: bookShortcut(randomHymn.book),
+          title: randomHymn.name,
+        }
       }
     } catch (error) {
       console.error('Error fetching hymns:', error)
@@ -26,7 +31,11 @@ const getRandomHymn = async (unlocked: boolean, book?: string) => {
       const { data } = await axios.get(`/database/${book}.json`)
 
       if (data.length > 0) {
-        return data[Math.floor(Math.random() * data.length)]
+        const randomHymn = data[Math.floor(Math.random() * data.length)]
+        return {
+          book: bookShortcut(randomHymn.book),
+          title: randomHymn.name,
+        }
       }
     } catch (error) {
       console.error('Error fetching hymns:', error)

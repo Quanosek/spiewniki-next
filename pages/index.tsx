@@ -38,14 +38,12 @@ export default function HomePage() {
 
   // Random hymn function
   const randomHymn = useCallback(async () => {
-    const hymn = await getRandomHymn(unlocked)
-    if (hymn) {
+    const foundHymn = await getRandomHymn(unlocked)
+    if (foundHymn) {
+      const { book, title } = foundHymn
       router.push({
         pathname: '/hymn',
-        query: {
-          book: bookShortcut(hymn.book),
-          title: hymn.name,
-        },
+        query: { book, title },
       })
     }
   }, [router])

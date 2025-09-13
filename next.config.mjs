@@ -31,8 +31,7 @@ const withPWA = withPWAInit({
 
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  images: { minimumCacheTTL: 60 },
+  output: 'standalone',
 }
 
 export default withPWA(nextConfig)

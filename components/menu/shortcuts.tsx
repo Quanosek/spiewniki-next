@@ -51,8 +51,13 @@ export default function ShortcutsMenu() {
           }
         />
 
-        {unlocked && !isBooks && (
-          <Shortcut keyup='B' action='Lista wszystkich śpiewników' />
+        {!isBooks && (
+          <Shortcut
+            keyup='B'
+            action={
+              unlocked ? 'Lista wszystkich śpiewników' : 'Wybór śpiewników'
+            }
+          />
         )}
 
         {!isBooks && !isHymn && (

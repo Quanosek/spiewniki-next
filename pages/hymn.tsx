@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 
@@ -176,7 +176,7 @@ export default function HymnPage() {
 
           const hymn = data.find((elem: { id: number }) => elem.id === id)
 
-          Router.push({
+          router.push({
             pathname: '/hymn',
             query: {
               book: bookShortcut(hymn.book),
@@ -186,10 +186,10 @@ export default function HymnPage() {
         })
         .catch((err) => {
           console.error(err)
-          Router.back()
+          router.back()
         })
     },
-    [hymn]
+    [router, hymn]
   )
 
   // Random hymn function
@@ -286,12 +286,15 @@ export default function HymnPage() {
       .catch((err) => console.error(err))
   }, [hymn])
 
-  const openDocument = useCallback((file: HymnFiles['pdf'] | undefined) => {
-    if (!file) return
-    const { book, id } = file
+  const openDocument = useCallback(
+    (file: HymnFiles['pdf'] | undefined) => {
+      if (!file) return
+      const { book, id } = file
 
-    Router.push({ pathname: '/document', query: { book, id } })
-  }, [])
+      router.push({ pathname: '/document', query: { book, id } })
+    },
+    [router]
+  )
 
   const playMusic = useCallback((file: HymnFiles['mp3'] | undefined) => {
     if (!file) return

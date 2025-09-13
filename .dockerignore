@@ -1,12 +1,5 @@
-# Ignore unnecessary files and directories in the Docker build context
-node_modules
 .git
-*.log
-*.cache
-dist
-build
-coverage
-.env
-.DS_Store
-*.md
-*.lock
+.github
+.next
+node_modules
+next-env.d.ts

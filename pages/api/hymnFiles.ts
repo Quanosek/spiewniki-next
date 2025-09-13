@@ -25,7 +25,7 @@ export default function handler(
     if (match) id = match[0]
     else id = modifyText(title)
 
-    const locateFile = (category: string) => {
+    const locateDocumentFile = (category: string) => {
       try {
         const files = fs.readdirSync(
           path.join(process.cwd(), 'public', category, book)
@@ -88,7 +88,7 @@ export default function handler(
     }
 
     const results = {
-      pdf: locateFile('pdf'),
+      pdf: locateDocumentFile('pdf'),
       mp3: locateMusicFile('mp3'),
     }
 

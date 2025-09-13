@@ -2,4 +2,6 @@
 .github
 .next
 node_modules
+.dockerignore
+docker-compose.yml
 next-env.d.ts

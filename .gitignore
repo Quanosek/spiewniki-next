@@ -39,10 +39,8 @@ next-env.d.ts
 /.vscode
 
 # Database directories
-/public/database/*
-/public/libraries/*
 /public/mp3/*
-/public/pdf/*
+/public/pdf/*/
 
 # PWA
 /public/sw.js

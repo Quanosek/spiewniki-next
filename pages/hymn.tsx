@@ -551,7 +551,7 @@ export default function HymnPage() {
             <div className={styles.container}>
               <div className={`${styles.options} ${styles.leftSide}`}>
                 <button
-                  title={'Powróć do wyników wyszukiwania [Esc]'}
+                  title='Powróć do wyników wyszukiwania [Esc]'
                   onClick={openPrevSearch}
                 >
                   <Image

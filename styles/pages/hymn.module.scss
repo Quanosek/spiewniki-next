@@ -36,7 +36,7 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    border-radius: var(--radius);
+    border-radius: calc(var(--radius) / 2);
     background-color: transparent;
     transition: 150ms transform ease-out;
 
@@ -289,30 +289,31 @@ $button-gap: 12px;
   flex-direction: column;
   justify-content: space-between;
   background-color: var(--elements);
-  border-radius: calc(var(--radius) / 2);
+  border-radius: var(--radius);
 
   .noChords {
     opacity: 85%;
     margin: -1rem -1rem 0.5em -1rem;
     padding: 1em 1.5em;
+    border-radius: var(--radius);
     background-color: var(--elements-hover);
     font-size: 70%;
   }
 
   @media (min-width: 769px) {
-    @include element-glow(4px);
+    @include element-glow();
   }
 
   @media (max-width: 768px) {
-    padding: 0 0 calc(var(--navbar-height) + 2em);
+    padding: 0 0 calc(var(--navbar-height) + 3em);
     min-height: unset;
     background-color: transparent;
 
     .noChords {
       margin: 1rem 0 -0.5em;
-      border-radius: calc(var(--radius) / 2);
       background-color: var(--elements);
       font-size: 65%;
+      @include element-glow();
     }
   }
 
@@ -330,7 +331,6 @@ $button-gap: 12px;
 }
 
 .text {
-  margin-bottom: 1em;
   padding: 1rem;
   min-height: 30rem;
   display: flex;
@@ -430,7 +430,7 @@ $button-gap: 12px;
     text-align: center;
     color: var(--text);
     background-color: var(--menu-elements-hover);
-    border-radius: 0.4rem;
+    border-radius: calc(var(--radius) / 2);
     cursor: pointer;
 
     &:focus {
@@ -453,19 +453,17 @@ $button-gap: 12px;
 }
 
 .credits {
+  padding-bottom: 1em;
   opacity: 80%;
   margin: 0.5em 0 -1em;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
   font-size: 75%;
-
-  @media (max-width: 768px) {
-    margin-bottom: 0.5em;
-  }
 }
 
 .linked {
+  margin-top: 0.5rem;
   padding: 0.6em 0.8em 0.6em 1.2em;
   display: flex;
   justify-content: flex-start;
@@ -487,13 +485,15 @@ $button-gap: 12px;
   }
 
   @media (max-width: 768px) {
-    margin-top: 0.5em;
+    margin-top: 2em;
     padding: 1em;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    border-radius: var(--radius);
     background-color: var(--elements);
     font-size: 65%;
+    @include element-glow();
 
     .name {
       margin-left: 0.5em;

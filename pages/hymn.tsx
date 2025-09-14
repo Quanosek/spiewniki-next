@@ -549,7 +549,7 @@ export default function HymnPage() {
             </div>
 
             <div className={styles.container}>
-              <div className={`${styles.options} ${styles.leftSide}`}>
+              <div className={styles.options}>
                 <button
                   title='Powróć do wyników wyszukiwania [Esc]'
                   onClick={openPrevSearch}

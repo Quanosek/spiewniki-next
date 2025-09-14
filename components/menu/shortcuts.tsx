@@ -79,7 +79,7 @@ export default function ShortcutsMenu() {
           </div>
 
           <div className={styles.content}>
-            <Shortcut keyup='P' action='Tryb pokazu slajdów' />
+            <Shortcut keyup='P' action='Włączenie trybu prezentacji' />
             <Shortcut
               keyup='F'
               action='Dodanie/usunięcie pieśni z listy ulubionych'

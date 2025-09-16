@@ -12,60 +12,57 @@ import styles from '@/styles/components/presentation.module.scss'
 
 export default function PresentationPage() {
   const router = useRouter()
-  const [hymn, setHymn] = useState<Hymn>()
 
-  const ic = hymn && hymn.song.title.includes('IC')
+  const [hymn, setHymn] = useState<Hymn>()
+  const ic = hymn?.song.title.includes('IC')
+
   const [order, setOrder] = useState<string[]>([])
   const [slide, setSlide] = useState(ic ? 1 : 0)
   const [verse, setVerse] = useState<string[]>()
-  const [showCursor, setShowCursor] = useState(false)
   const [alwaysShowCursor, setAlwaysShowCursor] = useState(false)
 
-  const linesWidth = useRef<HTMLParagraphElement>(null)
-  const cursorHideTimeout = useRef<NodeJS.Timeout>()
+  const handleInit = useCallback(async (book: string, title: string) => {
+    try {
+      const { data } = await axios.get(`database/${book}.json`)
+
+      const foundHymn = data.find(
+        (elem: { name: string }) => elem.name === title
+      )
+
+      setHymn(foundHymn)
+
+      const hymnOrder =
+        foundHymn?.song.presentation?.split(' ').filter(Boolean) ??
+        Object.keys(foundHymn.song.lyrics)
+
+      setOrder(hymnOrder)
+      setSlide(foundHymn.song.title.includes('IC') ? 1 : 0)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [])
 
   useEffect(() => {
     if (!router.isReady) return
-    const { book, title } = router.query
-
-    axios
-      .get(`database/${book}.json`)
-      .then(({ data }) => {
-        const hymn = data.find((elem: { name: string }) => elem.name === title)
-        setHymn(hymn)
-      })
-      .catch((err) => console.error(err))
-
-    const fullscreenChangeHandler = () => {
-      if (!document.fullscreenElement) return router.back()
-    }
-
-    const beforeUnloadHandler = () => localStorage.removeItem('presWindow')
-
-    document.addEventListener('fullscreenchange', fullscreenChangeHandler)
-    window.addEventListener('beforeunload', beforeUnloadHandler)
-
-    return () => {
-      document.removeEventListener('fullscreenchange', fullscreenChangeHandler)
-      window.removeEventListener('beforeunload', beforeUnloadHandler)
-    }
-  }, [router])
+    const { book, title } = router.query as { [key: string]: string }
+    handleInit(book, title)
+  }, [router, handleInit])
 
   useEffect(() => {
-    if (!hymn) return
-    let order: string[] = []
+    const beforeUnloadHandler = () => localStorage.removeItem('presWindow')
 
-    if (hymn.song.presentation) {
-      order = hymn.song.presentation
-        .split(' ')
-        .filter((item: string) => item !== '')
-    } else {
-      order = Object.keys(hymn.song.lyrics)
+    const fullscreenChangeHandler = () => {
+      if (!document.fullscreenElement) router.back()
     }
 
-    setOrder(order)
-    setSlide(ic ? 1 : 0)
-  }, [hymn, ic])
+    window.addEventListener('beforeunload', beforeUnloadHandler)
+    document.addEventListener('fullscreenchange', fullscreenChangeHandler)
+
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler)
+      document.removeEventListener('fullscreenchange', fullscreenChangeHandler)
+    }
+  }, [router])
 
   const closePresentation = useCallback(() => {
     const presWindow = localStorage.getItem('presWindow')
@@ -80,7 +77,7 @@ export default function PresentationPage() {
   const prevSlide = useCallback(() => {
     if (ic && slide > 1) setSlide(slide - 1)
     else if (!ic && slide > 0) setSlide(slide - 1)
-  }, [slide, ic])
+  }, [ic, slide])
 
   const nextSlide = useCallback(() => {
     const maxSlide = ic ? order.length + 1 : order.length + 1
@@ -91,7 +88,7 @@ export default function PresentationPage() {
       if (document.fullscreenElement) document.exitFullscreen()
       else closePresentation()
     }
-  }, [order, slide, closePresentation, ic])
+  }, [ic, slide, closePresentation, order.length])
 
   useEffect(() => {
     if (!hymn || !order.length) return
@@ -110,6 +107,8 @@ export default function PresentationPage() {
   }, [hymn, order, slide])
 
   // Adjust font size based on window width and verse length
+  const linesWidth = useRef<HTMLParagraphElement>(null)
+
   useEffect(() => {
     const lines = linesWidth.current
     lines?.style.removeProperty('font-size')
@@ -145,8 +144,11 @@ export default function PresentationPage() {
     }
   }, [verse, ic])
 
+  // Hide cursor visibility
+  const [showCursor, setShowCursor] = useState(false)
+  const cursorHideTimeout = useRef<NodeJS.Timeout>()
+
   useEffect(() => {
-    // Hide cursor visibility
     const mouseMoveEvent = (event: MouseEvent) => {
       if ((event.movementX && event.movementY) === 0) return
 
@@ -226,7 +228,7 @@ export default function PresentationPage() {
   return (
     <>
       <Head>
-        <title>Pokaz slajdów / Śpiewniki</title>
+        <title>Tryb prezentacji / Śpiewniki</title>
       </Head>
 
       <div className={styles.fullscreen}>
@@ -259,14 +261,13 @@ export default function PresentationPage() {
                   ic && slide === 1 && styles.grid
                 }`}
               >
-                {verse &&
-                  verse.map((line, index) => {
-                    const formattedLine = line
-                      .replace(/\b(\w)\b\s/g, '$1\u00A0')
-                      .replace(/(?<=\[:) | (?=:\])/g, '\u00A0')
+                {verse?.map((line, index) => {
+                  const formattedLine = line
+                    .replace(/\b(\w)\b\s/g, '$1\u00A0')
+                    .replace(/(?<=\[:) | (?=:\])/g, '\u00A0')
 
-                    return <p key={index}>{formattedLine}</p>
-                  })}
+                  return <p key={index}>{formattedLine}</p>
+                })}
               </div>
 
               <div

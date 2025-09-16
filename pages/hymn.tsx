@@ -103,30 +103,28 @@ export default function HymnPage() {
     const scrollEvent = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          if (window.scrollY - lastScrollY > 50) {
+          const currentScrollY = window.scrollY
+          const scrollDelta = currentScrollY - lastScrollY
+
+          if (scrollDelta > 15 && !hideControls) {
             setHideControls(true)
-          }
-          if (lastScrollY - window.scrollY > 65 || window.scrollY < 30) {
+          } else if (
+            (scrollDelta < -10 || currentScrollY < 30) &&
+            hideControls
+          ) {
             setHideControls(false)
           }
+
+          lastScrollY = currentScrollY
           ticking = false
         })
         ticking = true
       }
     }
 
-    const scrollEndEvent = () => {
-      lastScrollY = window.scrollY
-    }
-
     document.addEventListener('scroll', scrollEvent, { passive: true })
-    document.addEventListener('scrollend', scrollEndEvent, { passive: true })
-
-    return () => {
-      document.removeEventListener('scroll', scrollEvent)
-      document.removeEventListener('scrollend', scrollEndEvent)
-    }
-  }, [])
+    return () => document.removeEventListener('scroll', scrollEvent)
+  }, [hideControls])
 
   // Open previous search results
   const openPrevSearch = useCallback(() => {
@@ -356,12 +354,15 @@ export default function HymnPage() {
   const HymnData = ({
     hymn,
     showChords,
+    language,
+    setLanguage,
   }: {
     hymn: ProcessedHymn
     showChords: boolean
+    language: number
+    setLanguage: (value: number) => void
   }) => {
     const ic = hymn.song.title.includes('IC')
-    const [language, setLanguage] = useState(3)
 
     const FormattedVerse = ({
       array,
@@ -484,6 +485,9 @@ export default function HymnPage() {
   // Show/hide presentation options
   const [presOptions, showPresOptions] = useState(false)
 
+  // Language selection for IC songs
+  const [language, setLanguage] = useState(3)
+
   return (
     <>
       <Head>
@@ -596,7 +600,12 @@ export default function HymnPage() {
                     </span>
                   )}
 
-                  <HymnData hymn={hymn} showChords={showChords} />
+                  <HymnData
+                    hymn={hymn}
+                    showChords={showChords}
+                    language={language}
+                    setLanguage={setLanguage}
+                  />
                 </div>
 
                 <div className={styles.controls}>

@@ -263,7 +263,7 @@ $grid-gap: 0.6rem;
 $grid-gap-mobile: 1.2vw;
 
 .container {
-  width: min(850px, 96%);
+  width: min(850px, 95%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -272,13 +272,9 @@ $grid-gap-mobile: 1.2vw;
 
   p {
     font-size: 110%;
-  }
 
-  @media (max-width: 1024px) {
-    width: 95%;
-
-    p {
-      font-size: min(2.2vw, 115%);
+    @media (max-width: 1024px) {
+      font-size: 2.2vw;
     }
   }
 
@@ -307,7 +303,7 @@ $grid-gap-mobile: 1.2vw;
 }
 
 .book {
-  padding: 6%;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -329,7 +325,7 @@ $grid-gap-mobile: 1.2vw;
   }
 
   p {
-    padding: 0 min(2.8vw, 2.8rem);
+    padding: 0 40px;
     width: 100%;
     text-align: center;
   }
@@ -338,7 +334,7 @@ $grid-gap-mobile: 1.2vw;
     gap: 1.65vw;
 
     p {
-      padding: 0 3.65vw;
+      padding: 0 3vw;
     }
   }
 
@@ -362,8 +358,8 @@ $grid-gap-mobile: 1.2vw;
 
 .pdfIcon {
   position: absolute;
-  top: 4%;
-  right: 8%;
+  top: 18px;
+  right: 18px;
   padding: 0.5rem;
   aspect-ratio: 1/1;
   display: flex;

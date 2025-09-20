@@ -228,6 +228,11 @@
   padding: 1rem 1.25rem;
   font-size: 125%;
   cursor: default;
+
+  @media (max-width: 425px) {
+    padding: 3.5vw 4.5vw;
+    font-size: 100%;
+  }
 }
 
 .hymn {

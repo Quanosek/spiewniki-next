@@ -1,6 +1,5 @@
 services:
   spiewniki:
-    image: quanosek/spiewniki:latest
     container_name: spiewniki
     restart: unless-stopped
     build: .

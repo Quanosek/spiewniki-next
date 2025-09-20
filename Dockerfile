@@ -11,16 +11,14 @@ RUN pnpm install
 
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED 1
-RUN pnpm run build
+RUN pnpm build
 
 # Stage 2: Run the application
 FROM node:22-alpine AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
 
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static

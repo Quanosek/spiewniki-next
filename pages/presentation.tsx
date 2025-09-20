@@ -232,117 +232,119 @@ export default function PresentationPage() {
       </Head>
 
       <div className={styles.fullscreen}>
-        {hymn && (
+        <div
+          className={styles.component}
+          style={{ cursor: showCursor ? 'default' : 'none' }}
+        >
           <div
-            className={styles.component}
-            style={{ cursor: showCursor ? 'default' : 'none' }}
-          >
-            <div
-              className={`
+            className={`
                 ${styles.content}
                 ${!ic && slide === 0 && styles.first}
                 ${slide > order.length && styles.last}
               `}
+            style={{
+              opacity: hymn ? 1 : 0,
+              transition: 'opacity 200ms ease-in',
+            }}
+          >
+            {!ic && (
+              <div className={styles.title}>
+                <h1>{hymn?.name}</h1>
+                <h2>{hymn?.book}</h2>
+              </div>
+            )}
+
+            {ic && slide === 1 && (
+              <h1 className={styles.icTitle}>{hymn?.song.title}</h1>
+            )}
+
+            <div
+              ref={linesWidth}
+              className={`${styles.verse} ${ic && styles.international} ${
+                ic && slide === 1 && styles.grid
+              }`}
             >
-              {!ic && (
-                <div className={styles.title}>
-                  <h1>{hymn.name}</h1>
-                  <h2>{hymn.book}</h2>
-                </div>
-              )}
+              {verse?.map((line, index) => {
+                const formattedLine = line
+                  .replace(/\b(\w)\b\s/g, '$1\u00A0')
+                  .replace(/(?<=\[:) | (?=:\])/g, '\u00A0')
 
-              {ic && slide === 1 && (
-                <h1 className={styles.icTitle}>{hymn.song.title}</h1>
-              )}
+                return <p key={index}>{formattedLine}</p>
+              })}
+            </div>
 
-              <div
-                ref={linesWidth}
-                className={`${styles.verse} ${ic && styles.international} ${
-                  ic && slide === 1 && styles.grid
-                }`}
+            <div
+              className={`${styles.navigation} ${showCursor && styles.show}`}
+              onMouseEnter={() => setAlwaysShowCursor(true)}
+              onMouseLeave={() => setAlwaysShowCursor(false)}
+            >
+              <button
+                title='Przejdź do poprzedniego slajdu [←] [↑]'
+                onClick={prevSlide}
               >
-                {verse?.map((line, index) => {
-                  const formattedLine = line
-                    .replace(/\b(\w)\b\s/g, '$1\u00A0')
-                    .replace(/(?<=\[:) | (?=:\])/g, '\u00A0')
-
-                  return <p key={index}>{formattedLine}</p>
-                })}
-              </div>
-
-              <div
-                className={`${styles.navigation} ${showCursor && styles.show}`}
-                onMouseEnter={() => setAlwaysShowCursor(true)}
-                onMouseLeave={() => setAlwaysShowCursor(false)}
-              >
-                <button
-                  title='Przejdź do poprzedniego slajdu [←] [↑]'
-                  onClick={prevSlide}
-                >
-                  <Image
-                    className={`${styles.prev} icon`}
-                    alt='previous'
-                    src='/icons/arrow.svg'
-                    width={50}
-                    height={50}
-                    draggable={false}
-                  />
-                </button>
-
-                <button
-                  title='Przejdź do następnego slajdu [Spacja] [→] [↓]'
-                  onClick={nextSlide}
-                >
-                  <Image
-                    className={`${styles.next} icon`}
-                    alt='next'
-                    src='/icons/arrow.svg'
-                    width={50}
-                    height={50}
-                    draggable={false}
-                  />
-                </button>
-
-                <button
-                  title='Wyjdź z trybu pokazu slajdów [Esc]'
-                  onClick={closePresentation}
-                >
-                  <Image
-                    className='icon'
-                    alt='exit'
-                    src='/icons/close.svg'
-                    width={50}
-                    height={50}
-                    draggable={false}
-                  />
-                </button>
-              </div>
-
-              <div
-                className={styles.progressBar}
-                style={{
-                  opacity:
-                    (ic && slide === 1) ||
-                    (!ic && slide === 0) ||
-                    slide > order.length
-                      ? 0
-                      : 1,
-                }}
-              >
-                <div
-                  style={{
-                    width: `${(() => {
-                      if ((ic && slide === 1) || (!ic && slide === 0)) return 0
-                      const totalSlides = ic ? order.length - 1 : order.length
-                      const currentSlide = ic ? slide - 1 : slide
-                      return Math.min(100, (100 / totalSlides) * currentSlide)
-                    })()}%`,
-                  }}
+                <Image
+                  className={`${styles.prev} icon`}
+                  alt='previous'
+                  src='/icons/arrow.svg'
+                  width={50}
+                  height={50}
+                  draggable={false}
                 />
-              </div>
+              </button>
+
+              <button
+                title='Przejdź do następnego slajdu [Spacja] [→] [↓]'
+                onClick={nextSlide}
+              >
+                <Image
+                  className={`${styles.next} icon`}
+                  alt='next'
+                  src='/icons/arrow.svg'
+                  width={50}
+                  height={50}
+                  draggable={false}
+                />
+              </button>
+
+              <button
+                title='Wyjdź z trybu pokazu slajdów [Esc]'
+                onClick={closePresentation}
+              >
+                <Image
+                  className='icon'
+                  alt='exit'
+                  src='/icons/close.svg'
+                  width={50}
+                  height={50}
+                  draggable={false}
+                />
+              </button>
+            </div>
+
+            <div
+              className={styles.progressBar}
+              style={{
+                opacity:
+                  (ic && slide === 1) ||
+                  (!ic && slide === 0) ||
+                  slide > order.length
+                    ? 0
+                    : 1,
+              }}
+            >
+              <div
+                style={{
+                  width: `${(() => {
+                    if ((ic && slide === 1) || (!ic && slide === 0)) return 0
+                    const totalSlides = ic ? order.length - 1 : order.length
+                    const currentSlide = ic ? slide - 1 : slide
+                    return Math.min(100, (100 / totalSlides) * currentSlide)
+                  })()}%`,
+                }}
+              />
             </div>
           </div>
-        )}
+        </div>
       </div>
     </>
   )

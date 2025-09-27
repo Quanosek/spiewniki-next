@@ -5,4 +5,5 @@
 node_modules
 .dockerignore
 docker-compose.yml
+LICENSE
 next-env.d.ts

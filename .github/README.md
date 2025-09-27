@@ -1,4 +1,4 @@
-<h1>Śpiewniki</h1>
+# Śpiewniki
 
 <div>
   <img alt="pnpm" src="https://skillicons.dev/icons?i=pnpm" height="45" />
@@ -14,23 +14,39 @@
   <img alt="sass" src="https://skillicons.dev/icons?i=sass" height="45" />
 </div>
 
-<br />
+## 📖 Project Description
 
-<div>
-  <p>Full frontend application using PWA to comprehensively display religious hymns and songs on any screen resolution without internet access caching.</p>
+A comprehensive frontend application using PWA technology to display religious hymns and songs on any screen resolution with offline functionality through advanced caching.
 
-  <ul>
-    <li>Using <a href="https://nextjs.org/docs/14/getting-started">Next.js</a> framework with Pages Router ( /pages )</li>
-    <li>Build by <a href="https://pnpm.io/">pnpm</a> package manager</li>
-  </ul>
-</div>
+### ⚡ Technologies
 
-<br />
+- **Framework**: [Next.js](https://nextjs.org/docs/14/getting-started) with Pages Router (`/pages`)
+- **Package Manager**: [pnpm](https://pnpm.io/)
+- **PWA**: Offline-first approach with service worker
+- **Styling**: Sass/SCSS with CSS modules
+- **TypeScript**: Full application typing
 
-<img width="100%" style="max-width: 1440px" src="./screenshot.webp" />
+### 🚀 Features
 
-<h2>Support</h2>
+- 📱 Responsive design for all devices
+- 🔄 Offline functionality (PWA)
+- 🎵 Display of religious hymns and songs
+- 📚 Support for multiple hymnals
+- ⭐ Favorites system
+- 🎨 Multiple color themes
+- 📄 PDF document support
+- 🔍 Hymn search functionality
 
-<a href="https://ko-fi.com/quanosek">
-  <img alt="quanosek" src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" width="210" height="50" />
+###
+
+<img width="100%" style="max-width: 900px" src="./screenshot.webp" alt="Screenshot of Śpiewniki application" />
+
+## ☕ Project Support
+
+If this project has been helpful to you, you can buy me a coffee as a thank you for the work invested.
+
+<a href="https://buycoffee.to/kubaklalo" target="_blank">
+  <img src="./buycoffee-to.png" width="169" height="25" alt="Buy me a coffee on buycoffee.to" />
 </a>
+
+<strong>Thank you for any support! 🙏</strong>

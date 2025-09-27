@@ -90,7 +90,7 @@ export default function MobileNavbarComponent({
           <Image
             className='icon'
             alt='share'
-            src='/icons/link.svg'
+            src='/icons/share.svg'
             width={25}
             height={25}
             draggable={false}

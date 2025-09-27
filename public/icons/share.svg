@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="icon" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 50 50">
+  <circle cx="37.6" cy="10.4" r="4.5" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+  <line x1="16.4" y1="22.7" x2="33.7" y2="12.7" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="3.2"/>
+  <circle cx="12.4" cy="25" r="4.5" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+  <line x1="33.7" y1="37.3" x2="16.4" y2="27.3" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="3.2"/>
+  <circle cx="37.5" cy="39.6" r="4.5" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+</svg>

@@ -84,22 +84,33 @@ export default function SettingsMenu() {
   }
 
   // Quick settings options buttons
-  const ToggleSwitch = (description: string, name: string, value: boolean) => (
+  const ToggleSwitch = ({
+    title,
+    description,
+    name,
+    state,
+  }: {
+    title: string
+    description: string
+    name: keyof Settings
+    state: boolean
+  }) => (
     <div className={styles.toggle}>
-      <p>{description}</p>
+      <div className={styles.text}>
+        <h4>{title}</h4>
+        <p>{description}</p>
+      </div>
 
       <label className={styles.checkbox}>
         <input
           type='checkbox'
           name='toggle-checkbox'
-          checked={value}
+          checked={state}
           onChange={() => {
-            setState((prevState: Settings) => {
-              return {
-                ...prevState,
-                [name]: !prevState[name as keyof Settings],
-              }
-            })
+            setState((prev) => ({
+              ...prev,
+              [name]: !prev[name],
+            }))
           }}
         />
 
@@ -152,24 +163,30 @@ export default function SettingsMenu() {
         </div>
 
         {/* QUICK OPTIONS SWITCHERS */}
-        <div className={styles.settingsSection}>
-          {ToggleSwitch(
-            'Wyświetlanie akordów nad liniami tekstu',
-            'showChords',
-            showChords
-          )}
+        <div className={`${styles.settingsSection} ${styles.toggleList}`}>
+          {ToggleSwitch({
+            title: 'Wyświetlanie akordów',
+            description:
+              'Symbole akordów gitarowych bezpośrednio nad liniami tekstu pieśni',
+            name: 'showChords',
+            state: showChords,
+          })}
 
-          {ToggleSwitch(
-            'Wyszukiwanie w treści pieśni',
-            'contextSearch',
-            contextSearch
-          )}
+          {ToggleSwitch({
+            title: 'Rozszerzone wyszukiwanie',
+            description: 'Wyszukiwanie pieśni po treści tekstu',
+            // description: "Wyszukiwanie pieśni po treści tekstu, autorze (@) i słowach kluczowych (#)",
+            name: 'contextSearch',
+            state: contextSearch,
+          })}
 
-          {ToggleSwitch(
-            'Szybki powrót do ostatniego wyszukiwania ',
-            'quickSearch',
-            quickSearch
-          )}
+          {ToggleSwitch({
+            title: 'Szybkie wyszukiwanie',
+            description:
+              'Przywrócenie ostatniego wyszukiwania po powrocie do listy',
+            name: 'quickSearch',
+            state: quickSearch,
+          })}
         </div>
       </div>
 

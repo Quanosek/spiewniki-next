@@ -791,21 +791,6 @@ export default function HymnPage() {
                 )}
 
                 <button
-                  title='Skopiuj link do wybranej pieśni [S]'
-                  onClick={shareButton}
-                >
-                  <Image
-                    className='icon'
-                    alt='share'
-                    src='/icons/link.svg'
-                    width={20}
-                    height={20}
-                    draggable={false}
-                  />
-                  <p>Udostępnij</p>
-                </button>
-
-                <button
                   title='Wydrukuj tekst wybranej pieśni [K]'
                   onClick={() => window.print()}
                 >
@@ -817,7 +802,22 @@ export default function HymnPage() {
                     height={20}
                     draggable={false}
                   />
-                  <p>Wydrukuj</p>
+                  <p>Drukuj</p>
+                </button>
+
+                <button
+                  title='Skopiuj link do wybranej pieśni [S]'
+                  onClick={shareButton}
+                >
+                  <Image
+                    className='icon'
+                    alt='share'
+                    src='/icons/share.svg'
+                    width={20}
+                    height={20}
+                    draggable={false}
+                  />
+                  <p>Udostępnij</p>
                 </button>
               </div>
             </div>

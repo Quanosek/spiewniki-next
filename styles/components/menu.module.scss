@@ -397,17 +397,10 @@
 
     &::-webkit-slider-thumb {
       appearance: none;
-      height: 1.5rem;
-      width: 1.5rem;
+      height: min(6vw, 1.5rem);
+      width: min(7vw, 1.8rem);
       background-color: #ffffff;
       border-radius: 30px;
-
-      @media (max-width: 425px) {
-        $size: min(8vw, 1.5rem);
-
-        height: $size;
-        width: $size;
-      }
     }
   }
 
@@ -466,7 +459,7 @@ $gap: min(2.5vw, 0.8rem);
   }
 
   .checkbox {
-    $dotMargin: min(0.8vw, 0.25rem);
+    $dotMargin: min(0.6vw, 0.2rem);
     $dotSize: min(5vw, 1.5rem);
 
     position: relative;

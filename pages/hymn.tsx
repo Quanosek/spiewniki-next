@@ -618,8 +618,8 @@ export default function HymnPage() {
                       className={`${styles.previous} icon`}
                       alt='left'
                       src='/icons/arrow.svg'
-                      width={12}
-                      height={12}
+                      width={14}
+                      height={14}
                       draggable={false}
                     />
                     <p>Poprzednia</p>
@@ -643,8 +643,8 @@ export default function HymnPage() {
                       className={`${styles.next} icon`}
                       alt='right'
                       src='/icons/arrow.svg'
-                      width={12}
-                      height={12}
+                      width={14}
+                      height={14}
                       draggable={false}
                     />
                   </button>
@@ -683,7 +683,7 @@ export default function HymnPage() {
                         style={{ rotate: presOptions ? '180deg' : '0deg' }}
                         className='icon'
                         alt='more'
-                        src='/icons/arrow.svg'
+                        src='/icons/dots.svg'
                         width={18}
                         height={18}
                         draggable={false}

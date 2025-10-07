@@ -53,7 +53,7 @@ export default function MobileNavbarComponent({
         <Image
           className='icon'
           alt='list'
-          src='/icons/list.svg'
+          src='/icons/favorites.svg'
           width={25}
           height={25}
           draggable={false}

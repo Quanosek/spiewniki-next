@@ -190,7 +190,7 @@ $button-gap: 12px;
       img {
         position: relative;
         bottom: 1px;
-        opacity: 45%;
+        opacity: 65%;
         transition: 150ms ease-out;
       }
     }
@@ -198,7 +198,7 @@ $button-gap: 12px;
     @media (min-width: 1025px) {
       &:hover {
         .moreArrow img {
-          opacity: 65%;
+          opacity: 90%;
         }
 
         div:hover {
@@ -383,6 +383,7 @@ $button-gap: 12px;
 }
 
 .lyrics {
+  margin-bottom: 0.25em;
   padding-left: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -390,6 +391,7 @@ $button-gap: 12px;
   gap: 1em;
 
   @media (max-width: 768px) {
+    margin-bottom: 0;
     padding: 0 !important;
     font-size: 95%;
   }

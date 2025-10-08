@@ -246,8 +246,12 @@ const withPWA = withPWAInit({
   register: true,
   reloadOnOnline: false,
   workboxOptions: {
-    disableDevLogs: true,
     runtimeCaching,
+    cleanupOutdatedCaches: true,
+    clientsClaim: true,
+    disableDevLogs: true,
+    navigationPreload: true,
+    skipWaiting: true,
   },
 })
 

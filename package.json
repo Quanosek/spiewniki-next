@@ -29,6 +29,7 @@
     "eslint-config-next": "14.2.32",
     "eslint-config-prettier": "~10.1.8",
     "sass": "^1.93.2",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "webpack": "^5.102.1"
   }
 }

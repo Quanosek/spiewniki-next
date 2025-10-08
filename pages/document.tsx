@@ -85,11 +85,13 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
         </div>
 
         <div className={styles.document}>
-          <iframe
-            src={`${libraryPath}?file=${encodeURIComponent(documentPath)}`}
-            sandbox='allow-scripts allow-same-origin'
-            title='PDF Document Viewer'
-          />
+          {documentPath && (
+            <iframe
+              src={`${libraryPath}?file=${encodeURIComponent(documentPath)}`}
+              sandbox='allow-scripts allow-same-origin'
+              title='PDF Document Viewer'
+            />
+          )}
         </div>
       </main>
     </>

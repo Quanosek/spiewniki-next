@@ -1,6 +1,6 @@
 {
   "name": "spiewniki",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,26 +10,26 @@
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
-    "axios": "^1.12.2",
+    "axios": "^1.13.2",
     "next": "14.2.32",
     "next-themes": "^0.4.6",
     "nextjs-google-analytics": "^2.3.7",
     "react": "~18.3.1",
     "react-dom": "~18.3.1",
     "react-highlight-words": "^0.21.0",
-    "sharp": "^0.34.4",
+    "sharp": "^0.34.5",
     "the-new-css-reset": "^1.11.3"
   },
   "devDependencies": {
-    "@types/node": "~22.18.8",
-    "@types/react": "~18.3.26",
+    "@types/node": "~22.18.13",
+    "@types/react": "~18.3.27",
     "@types/react-dom": "~18.3.7",
     "@types/react-highlight-words": "^0.20.0",
     "eslint": "8.57.1",
     "eslint-config-next": "14.2.32",
     "eslint-config-prettier": "~10.1.8",
-    "sass": "^1.93.2",
+    "sass": "^1.94.2",
     "typescript": "~5.9.3",
-    "webpack": "^5.102.1"
+    "webpack": "^5.103.0"
   }
 }

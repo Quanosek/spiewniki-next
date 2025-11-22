@@ -460,7 +460,7 @@ $gap: min(2.5vw, 0.8rem);
 
   .checkbox {
     $dotMargin: min(0.6vw, 0.2rem);
-    $dotSize: min(5vw, 1.5rem);
+    $dotSize: min(5.5vw, 1.6rem);
 
     position: relative;
     height: calc($dotSize + (2 * $dotMargin));

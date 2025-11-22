@@ -88,7 +88,7 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
           {documentPath && (
             <iframe
               src={`${libraryPath}?file=${encodeURIComponent(documentPath)}`}
-              sandbox='allow-scripts allow-same-origin'
+              sandbox='allow-scripts allow-same-origin allow-forms allow-popups allow-downloads'
               title='PDF Document Viewer'
             />
           )}

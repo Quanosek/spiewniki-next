@@ -2,6 +2,6 @@ packages:
   - .
 
 onlyBuiltDependencies:
-  - '@parcel/watcher'
+  - "@parcel/watcher"
   - sharp
   - unrs-resolver

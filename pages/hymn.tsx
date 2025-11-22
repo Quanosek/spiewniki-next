@@ -269,10 +269,12 @@ export default function HymnPage() {
 
   // Handle additional hymn files
   const [hymnFiles, setHymnFiles] = useState<HymnFiles>({} as HymnFiles)
+  const [filesLoading, setFilesLoading] = useState(true)
 
   useEffect(() => {
     if (!(hymn && unlocked)) return
 
+    setFilesLoading(true)
     fetch(`/api/hymnFiles?book=${hymn.book}&title=${hymn.song.title}`)
       .then((res) => {
         if (!res.ok) {
@@ -282,6 +284,7 @@ export default function HymnPage() {
       })
       .then((data) => setHymnFiles(data))
       .catch((err) => console.error(err))
+      .finally(() => setFilesLoading(false))
   }, [hymn])
 
   const openDocument = useCallback(
@@ -758,9 +761,11 @@ export default function HymnPage() {
                           draggable={false}
                         />
                         <p>
-                          {Object.keys(hymnFiles).length > 0
+                          {filesLoading
+                            ? 'Ładowanie...'
+                            : hymnFiles.pdf
                             ? 'Otwórz PDF'
-                            : 'Ładowanie...'}
+                            : 'Brak pliku PDF'}
                         </p>
                       </button>
                     )}
@@ -781,9 +786,11 @@ export default function HymnPage() {
                           draggable={false}
                         />
                         <p>
-                          {Object.keys(hymnFiles).length > 0
+                          {filesLoading
+                            ? 'Ładowanie...'
+                            : hymnFiles.mp3
                             ? 'Odtwórz melodię'
-                            : 'Ładowanie...'}
+                            : 'Brak pliku MP3'}
                         </p>
                       </button>
                     )}

@@ -57,10 +57,9 @@
       fill: none;
 
       path {
-        transition: stroke-dasharray var(--duration, 0.85s) var(--easing, ease)
-            var(--delay, 0s),
-          stroke-dashoffset var(--duration, 0.85s) var(--easing, ease)
-            var(--delay, 0s);
+        transition:
+          stroke-dasharray var(--duration, 0.85s) var(--easing, ease) var(--delay, 0s),
+          stroke-dashoffset var(--duration, 0.85s) var(--easing, ease) var(--delay, 0s);
         stroke-dasharray: var(--array-1, 26px) var(--array-2, 100px);
         stroke-dashoffset: var(--offset, 126px);
         transform: translateZ(0);
@@ -229,6 +228,10 @@
     border-radius: calc(var(--radius) - var(--space));
     background-color: transparent;
 
+    img {
+      scale: 105%;
+    }
+
     @media (min-width: 769px) {
       &:hover {
         background-color: var(--elements-hover);
@@ -320,7 +323,8 @@ $grid-gap-mobile: 1.2vw;
     width: 100%;
     height: auto;
     border-radius: calc(2 * var(--space));
-    box-shadow: rgba(#000000, 0.2) 0px 10px 20px,
+    box-shadow:
+      rgba(#000000, 0.2) 0px 10px 20px,
       rgba(#000000, 0.22) 0px 6px 6px;
   }
 
@@ -366,7 +370,9 @@ $grid-gap-mobile: 1.2vw;
   justify-content: center;
   align-items: center;
   border-radius: var(--radius);
-  transition: 200ms filter ease-out, 150ms transform ease-out;
+  transition:
+    200ms filter ease-out,
+    150ms transform ease-out;
   filter: drop-shadow(rgba(#000000, 0.3) 1px 1px) drop-shadow(#000000 0 0 5px);
 
   &:hover {

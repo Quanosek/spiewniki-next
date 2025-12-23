@@ -31,9 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
 
     // Set global accent color
-    document.documentElement.className = unlocked
-      ? 'accent_blue'
-      : 'accent_orange'
+    document.documentElement.className = unlocked ? 'accent_blue' : 'accent_orange'
 
     // Screen Wake Lock API
     navigator.wakeLock?.request('screen').catch(console.error)
@@ -44,31 +42,18 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta
-          name='viewport'
-          content='initial-scale=1, width=device-width, user-scalable=no'
-        />
+        <meta name='viewport' content='initial-scale=1, width=device-width, user-scalable=no' />
       </Head>
 
       <ThemeProvider
         defaultTheme={defaultTheme}
         enableColorScheme={false}
-        themes={[
-          'black',
-          'dark-blue',
-          'gray',
-          'white',
-          'reading',
-          'light-blue',
-          'light-purple',
-        ]}
+        themes={['black', 'dark-blue', 'gray', 'white', 'reading', 'light-blue', 'light-purple']}
       >
         {process.env.NODE_ENV === 'production' && (
           <GoogleAnalytics
             trackPageViews
-            gaMeasurementId={
-              process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string
-            }
+            gaMeasurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID as string}
           />
         )}
 
@@ -82,8 +67,8 @@ export default function App({ Component, pageProps }: AppProps) {
                 router.pathname === '/'
                   ? 'Zebrane w jednym miejscu różne śpiewniki i pieśni religijne'
                   : unlocked
-                  ? 'Powróć do strony głównej'
-                  : 'Powróć do wyboru śpiewników'
+                    ? 'Powróć do strony głównej'
+                    : 'Powróć do wyboru śpiewników'
               }
               className='title'
             >
@@ -108,10 +93,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <p>Ustawienia</p>
               </button>
 
-              <button
-                className='desktopOnly'
-                onClick={() => hiddenMenuQuery('shortcuts')}
-              >
+              <button className='desktopOnly' onClick={() => hiddenMenuQuery('shortcuts')}>
                 <p>Skróty klawiszowe</p>
               </button>
 

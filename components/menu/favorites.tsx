@@ -43,8 +43,7 @@ export default function FavoritesMenu() {
       <div className={`${styles.content} ${styles.favorites}`}>
         <div className={styles.settings}>
           <span>
-            {(favorites.length === 1 && 'dodano 1 pieśń') ||
-              `dodano ${favorites.length} pieśni`}
+            {(favorites.length === 1 && 'dodano 1 pieśń') || `dodano ${favorites.length} pieśni`}
           </span>
 
           <button className={!favorites.length ? 'disabled' : ''}>
@@ -77,12 +76,10 @@ export default function FavoritesMenu() {
                     })
                   })
                   // sort by book name
-                  sortedItems.sort((a, b) => {
-                    return (
-                      booksList(unlocked).indexOf(a.book) -
-                      booksList(unlocked).indexOf(b.book)
-                    )
-                  })
+                  sortedItems.sort(
+                    (a, b) =>
+                      booksList(unlocked).indexOf(a.book) - booksList(unlocked).indexOf(b.book)
+                  )
                 }
 
                 setFavorites(sortedItems)
@@ -98,7 +95,7 @@ export default function FavoritesMenu() {
             <Image
               className='icon'
               alt='options'
-              src='/icons/arrow.svg'
+              src='/icons/chevron.svg'
               width={16}
               height={16}
               draggable={false}
@@ -130,9 +127,7 @@ export default function FavoritesMenu() {
 
                       // check title
                     } else {
-                      const { data } = await axios.get(
-                        `database/${fav.book}.json`
-                      )
+                      const { data } = await axios.get(`database/${fav.book}.json`)
 
                       if (
                         !data.find((elem: { name: string }) => {

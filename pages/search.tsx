@@ -33,9 +33,7 @@ export default function SearchPage() {
   const [showTopBtn, setShowTopBtn] = useState(false)
   const [renderData, setRenderData] = useState<ProcessedHymn[]>([])
   const [isLoading, setLoading] = useState(true)
-  const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>(
-    {}
-  )
+  const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -69,14 +67,10 @@ export default function SearchPage() {
               name,
               song,
               lyrics: [
-                lyrics[index - 1]
-                  ? `${lyrics[index - 2] ? '...' : ''} ${lyrics[index - 1]}`
-                  : '',
+                lyrics[index - 1] ? `${lyrics[index - 2] ? '...' : ''} ${lyrics[index - 1]}` : '',
                 verse,
                 lyrics[index + 1] ? lyrics[index + 1] : '',
-                lyrics[index + 2]
-                  ? `${lyrics[index + 2]} ${lyrics[index + 3] ? '...' : ''}`
-                  : '',
+                lyrics[index + 2] ? `${lyrics[index + 2]} ${lyrics[index + 3] ? '...' : ''}` : '',
               ],
             })
           }
@@ -120,17 +114,13 @@ export default function SearchPage() {
   useEffect(() => {
     if (!router.isReady) return
 
-    const focusSearchBox = JSON.parse(
-      localStorage.getItem('focusSearchBox') || 'false'
-    )
+    const focusSearchBox = JSON.parse(localStorage.getItem('focusSearchBox') || 'false')
     if (focusSearchBox) inputRef.current?.focus()
     localStorage.removeItem('focusSearchBox')
 
     const settings = JSON.parse(localStorage.getItem('settings') || '{}')
     const quickSearch = settings.quickSearch || false
-    const prevSearch = JSON.parse(
-      localStorage.getItem('prevSearch') || '{"search": null}'
-    )
+    const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{"search": null}')
 
     if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search)
   }, [router.isReady])
@@ -138,9 +128,7 @@ export default function SearchPage() {
   useEffect(() => {
     if (!router.isReady) return
 
-    const prevSearch = JSON.parse(
-      localStorage.getItem('prevSearch') || '{"search": null}'
-    )
+    const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{"search": null}')
 
     const loadData = (fetchData: Hymn[]) => {
       setRawData(fetchData)
@@ -166,9 +154,7 @@ export default function SearchPage() {
 
           const hymns = validResponses
             .flatMap((response) => response.data)
-            .sort((a, b) =>
-              a.name.localeCompare(b.name, undefined, { numeric: true })
-            )
+            .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
 
           loadData(hymns)
         } catch (err) {
@@ -208,10 +194,7 @@ export default function SearchPage() {
 
   useEffect(() => {
     const scrollEvent = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 500
-      ) {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
         setRenderPage((page) => page + 1)
       }
       setShowTopBtn(window.scrollY > 350)
@@ -266,13 +249,7 @@ export default function SearchPage() {
   // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
-      if (
-        e.ctrlKey ||
-        e.shiftKey ||
-        e.altKey ||
-        e.metaKey ||
-        router.query.menu
-      ) {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {
         return
       }
 
@@ -371,9 +348,7 @@ export default function SearchPage() {
             onClick={() => {
               const book = bookShortcut(hymn.book)
               const title = hymn.name
-              const presWindow = JSON.parse(
-                localStorage.getItem('presWindow') || 'false'
-              )
+              const presWindow = JSON.parse(localStorage.getItem('presWindow') || 'false')
 
               if (!presWindow) {
                 const elem = document.documentElement
@@ -414,24 +389,16 @@ export default function SearchPage() {
             <button
               title='Usuń pieśń z listy ulubionych'
               onClick={() => {
-                if (
-                  !confirm(
-                    'Czy chcesz usunąć wybraną pieśń z listy ulubionych?'
-                  )
-                ) {
+                if (!confirm('Czy chcesz usunąć wybraną pieśń z listy ulubionych?')) {
                   return
                 }
 
                 const bookName = bookShortcut(hymn.book)
-                const favorites = JSON.parse(
-                  localStorage.getItem('favorites') || '[]'
-                )
+                const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
 
-                const newFavorites = favorites.filter(
-                  (elem: { book: string; id: number }) => {
-                    return elem.book !== bookName || elem.id !== hymn.id
-                  }
-                )
+                const newFavorites = favorites.filter((elem: { book: string; id: number }) => {
+                  return elem.book !== bookName || elem.id !== hymn.id
+                })
 
                 localStorage.setItem('favorites', JSON.stringify(newFavorites))
                 setFavoritesState((prev) => ({
@@ -466,9 +433,7 @@ export default function SearchPage() {
           <Link
             href='/'
             title={
-              unlocked
-                ? 'Powróć do strony głównej [Esc]'
-                : 'Powróć do wyboru śpiewników [Esc]'
+              unlocked ? 'Powróć do strony głównej [Esc]' : 'Powróć do wyboru śpiewników [Esc]'
             }
           >
             <Image
@@ -515,10 +480,7 @@ export default function SearchPage() {
           <input
             ref={inputRef}
             name='search-box'
-            placeholder={
-              'Rozpocznij wyszukiwanie ' +
-              (data?.length ? `(${data?.length})` : '')
-            }
+            placeholder={'Rozpocznij wyszukiwanie ' + (data?.length ? `(${data?.length})` : '')}
             autoComplete='off'
             value={inputValue}
             onChange={(e) => {
@@ -606,13 +568,7 @@ export default function SearchPage() {
           className={`${showTopBtn && styles.show} ${styles.scrollButton}`}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <Image
-            alt='up'
-            src='/icons/arrow.svg'
-            width={25}
-            height={25}
-            draggable={false}
-          />
+          <Image alt='up' src='/icons/arrow.svg' width={25} height={25} draggable={false} />
         </button>
       </main>
     </>

@@ -371,6 +371,24 @@ $button-gap: 12px;
   }
 }
 
+.credits {
+  opacity: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  .author {
+    margin: -0.25em 0 0.25em;
+    font-size: 80%;
+  }
+
+  .copyright {
+    margin: 0.5em 0 -1em;
+    padding-bottom: 1em;
+    font-size: 75%;
+  }
+}
+
 .printLine {
   display: none;
 
@@ -444,16 +462,6 @@ $button-gap: 12px;
   }
 }
 
-.credits {
-  padding-bottom: 1em;
-  opacity: 80%;
-  margin: 0.5em 0 -1em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  font-size: 75%;
-}
-
 .linked {
   margin-top: 0.5rem;
   padding: 0.6em 0.8em 0.6em 1.2em;
@@ -520,42 +528,58 @@ $button-gap: 12px;
   }
 
   @media (max-width: 768px) {
-    position: fixed;
-    left: 0;
-    bottom: calc(var(--navbar-height) + 1.5rem);
+    display: none;
+  }
 
-    padding: 0 3%;
-    width: 100%;
+  @media print {
+    display: none;
+  }
+}
 
-    button {
-      opacity: 85%;
+.controlsMobile {
+  position: fixed;
+  left: 0;
+  bottom: calc(var(--navbar-height) + 1.5rem);
+  padding: 0 3%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transition: 150ms ease-out;
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+
+  button {
+    opacity: 85%;
+    position: relative;
+    top: 0;
+    padding: min(0.8rem, 5vw);
+    height: min(3rem, 16vw);
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    background-color: var(--elements);
+    box-shadow: 0 3px 8px -3px #000000;
+    transition: 150ms ease-out;
+
+    .previous {
+      rotate: 90deg;
+    }
+    .next {
+      rotate: -90deg;
+    }
+
+    img {
       position: relative;
-      top: 0;
-      padding: 0.8rem;
-      height: 3rem;
-      aspect-ratio: 1/1;
-      border-radius: 100%;
-      background-color: var(--elements);
-      box-shadow: 0 3px 8px -3px #000000;
-      transition: 150ms ease-out;
-
-      &.randomButton,
-      p {
-        display: none;
-      }
-
-      img {
-        position: relative;
-        width: 20px;
-        height: auto;
-      }
+      width: min(20px, 100%);
+      height: auto;
     }
+  }
 
-    .hide {
-      opacity: 0;
-      scale: 35%;
-      top: var(--navbar-height);
-    }
+  .hide {
+    opacity: 0;
+    scale: 35%;
+    top: var(--navbar-height);
   }
 
   @media print {

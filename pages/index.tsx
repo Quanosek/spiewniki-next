@@ -51,13 +51,7 @@ export default function HomePage() {
   // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
-      if (
-        e.ctrlKey ||
-        e.shiftKey ||
-        e.altKey ||
-        e.metaKey ||
-        router.query.menu
-      ) {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {
         return
       }
 
@@ -102,10 +96,7 @@ export default function HomePage() {
               className={styles.hamburgerIcon}
               onClick={() => showHamburgerMenu(!hamburgerMenu)}
             >
-              <svg
-                className={`${hamburgerMenu && styles.active} icon`}
-                viewBox='0 0 64 48'
-              >
+              <svg className={`${hamburgerMenu && styles.active} icon`} viewBox='0 0 64 48'>
                 <path d='M19,15 L45,15 C70,15 58,-2 49.0177126,7 L19,37'></path>
                 <path d='M19,24 L45,24 C61.2371586,24 57,49 41,33 L32,24'></path>
                 <path d='M45,33 L19,33 C-8,33 6,-2 22,14 L45,37'></path>
@@ -163,10 +154,7 @@ export default function HomePage() {
           <div className={styles.grid}>
             {['B', 'C', 'N'].map((book, index) => (
               <div key={index}>
-                <Link
-                  href={{ pathname: '/search', query: { book } }}
-                  className={styles.book}
-                >
+                <Link href={{ pathname: '/search', query: { book } }} className={styles.book}>
                   <Image
                     alt='cover'
                     src={`/covers/${book}.webp`}

@@ -9,10 +9,7 @@ type Data = {
   error?: string
 }
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const { title } = req.query as { [key: string]: string }
 
   let { book } = req.query as { [key: string]: string }
@@ -27,9 +24,7 @@ export default function handler(
 
     const locateDocumentFile = (category: string) => {
       try {
-        const files = fs.readdirSync(
-          path.join(process.cwd(), 'public', category, book)
-        )
+        const files = fs.readdirSync(path.join(process.cwd(), 'public', category, book))
 
         // First try exact match (without extension)
         let file = files.find((a) => {
@@ -58,9 +53,7 @@ export default function handler(
 
     const locateMusicFile = (category: string) => {
       try {
-        const files = fs.readdirSync(
-          path.join(process.cwd(), 'public', category, book)
-        )
+        const files = fs.readdirSync(path.join(process.cwd(), 'public', category, book))
 
         // First try exact match (without extension)
         let file = files.find((a) => {

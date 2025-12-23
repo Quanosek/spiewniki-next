@@ -45,10 +45,9 @@
       fill: none;
 
       path {
-        transition: stroke-dasharray var(--duration, 0.85s) var(--easing, ease)
-            var(--delay, 0s),
-          stroke-dashoffset var(--duration, 0.85s) var(--easing, ease)
-            var(--delay, 0s);
+        transition:
+          stroke-dasharray var(--duration, 0.85s) var(--easing, ease) var(--delay, 0s),
+          stroke-dashoffset var(--duration, 0.85s) var(--easing, ease) var(--delay, 0s);
         stroke-dasharray: var(--array-1, 26px) var(--array-2, 100px);
         stroke-dashoffset: var(--offset, 126px);
         transform: translateZ(0);

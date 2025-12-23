@@ -66,10 +66,7 @@ export default function MenuComponent() {
         transition: '100ms ease-out',
       }}
     >
-      <div
-        className={styles.menuBackground}
-        onClick={() => hiddenMenuQuery(undefined)}
-      />
+      <div className={styles.menuBackground} onClick={() => hiddenMenuQuery(undefined)} />
 
       {menu && (
         <div className={styles.menuHandler}>

@@ -16,9 +16,7 @@ excludedBooks.forEach((book) => lockedFiles.push(`!database/${book}.json`))
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-const publicExcludes = ['!mp3/**/*', '!pdf/*/*'].concat(
-  unlocked ? [] : lockedFiles
-)
+const publicExcludes = ['!mp3/**/*', '!pdf/*/*'].concat(unlocked ? [] : lockedFiles)
 
 const runtimeCaching = [
   {
@@ -198,9 +196,7 @@ const runtimeCaching = [
   },
   {
     urlPattern: ({ request, url: { pathname }, sameOrigin }) =>
-      request.headers.get('RSC') === '1' &&
-      sameOrigin &&
-      !pathname.startsWith('/api/'),
+      request.headers.get('RSC') === '1' && sameOrigin && !pathname.startsWith('/api/'),
     handler: 'NetworkFirst',
     options: {
       cacheName: 'pages-rsc',
@@ -211,8 +207,7 @@ const runtimeCaching = [
     },
   },
   {
-    urlPattern: ({ url: { pathname }, sameOrigin }) =>
-      sameOrigin && !pathname.startsWith('/api/'),
+    urlPattern: ({ url: { pathname }, sameOrigin }) => sameOrigin && !pathname.startsWith('/api/'),
     handler: 'NetworkFirst',
     options: {
       cacheName: 'pages',

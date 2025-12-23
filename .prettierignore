@@ -1,0 +1,11 @@
+.next/
+node_modules/
+public/database/
+public/libraries/
+
+public/sw.js
+public/swe-worker-*.js
+public/workbox-*.js
+
+*.yaml
+*.yml

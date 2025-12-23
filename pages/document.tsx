@@ -27,12 +27,7 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
 
     if (typeof d === 'string' && d.trim()) {
       setDocumentPath(`/pdf/${modifyText(d)}.pdf`)
-    } else if (
-      typeof book === 'string' &&
-      book.trim() &&
-      typeof id === 'string' &&
-      id.trim()
-    ) {
+    } else if (typeof book === 'string' && book.trim() && typeof id === 'string' && id.trim()) {
       setDocumentPath(`/pdf/${book}/${id}.pdf`)
     } else {
       router.back()
@@ -42,13 +37,7 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
   // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
-      if (
-        e.ctrlKey ||
-        e.shiftKey ||
-        e.altKey ||
-        e.metaKey ||
-        router.query.menu
-      ) {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {
         return
       }
 
@@ -67,10 +56,7 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
 
       <main style={{ padding: 0 }}>
         <div className={styles.backButton}>
-          <button
-            title='Powróć do poprzedniej strony [Esc]'
-            onClick={() => router.back()}
-          >
+          <button title='Powróć do poprzedniej strony [Esc]' onClick={() => router.back()}>
             <Image
               style={{ rotate: '90deg' }}
               className='icon'

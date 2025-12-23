@@ -25,9 +25,7 @@ export default function PresentationPage() {
     try {
       const { data } = await axios.get(`database/${book}.json`)
 
-      const foundHymn = data.find(
-        (elem: { name: string }) => elem.name === title
-      )
+      const foundHymn = data.find((elem: { name: string }) => elem.name === title)
 
       setHymn(foundHymn)
 
@@ -186,16 +184,10 @@ export default function PresentationPage() {
         return
       }
 
-      if (
-        ['ArrowLeft', 'ArrowUp'].includes(KeyboardEvent.key) ||
-        endPosition < -50
-      ) {
+      if (['ArrowLeft', 'ArrowUp'].includes(KeyboardEvent.key) || endPosition < -50) {
         prevSlide()
       }
-      if (
-        [' ', 'ArrowRight', 'ArrowDown'].includes(KeyboardEvent.key) ||
-        endPosition >= 0
-      ) {
+      if ([' ', 'ArrowRight', 'ArrowDown'].includes(KeyboardEvent.key) || endPosition >= 0) {
         nextSlide()
       }
 
@@ -232,10 +224,7 @@ export default function PresentationPage() {
       </Head>
 
       <div className={styles.fullscreen}>
-        <div
-          className={styles.component}
-          style={{ cursor: showCursor ? 'default' : 'none' }}
-        >
+        <div className={styles.component} style={{ cursor: showCursor ? 'default' : 'none' }}>
           <div
             className={`
                 ${styles.content}
@@ -254,9 +243,7 @@ export default function PresentationPage() {
               </div>
             )}
 
-            {ic && slide === 1 && (
-              <h1 className={styles.icTitle}>{hymn?.song.title}</h1>
-            )}
+            {ic && slide === 1 && <h1 className={styles.icTitle}>{hymn?.song.title}</h1>}
 
             <div
               ref={linesWidth}
@@ -278,10 +265,7 @@ export default function PresentationPage() {
               onMouseEnter={() => setAlwaysShowCursor(true)}
               onMouseLeave={() => setAlwaysShowCursor(false)}
             >
-              <button
-                title='Przejdź do poprzedniego slajdu [←] [↑]'
-                onClick={prevSlide}
-              >
+              <button title='Przejdź do poprzedniego slajdu [←] [↑]' onClick={prevSlide}>
                 <Image
                   className={`${styles.prev} icon`}
                   alt='previous'
@@ -292,10 +276,7 @@ export default function PresentationPage() {
                 />
               </button>
 
-              <button
-                title='Przejdź do następnego slajdu [Spacja] [→] [↓]'
-                onClick={nextSlide}
-              >
+              <button title='Przejdź do następnego slajdu [Spacja] [→] [↓]' onClick={nextSlide}>
                 <Image
                   className={`${styles.next} icon`}
                   alt='next'
@@ -306,10 +287,7 @@ export default function PresentationPage() {
                 />
               </button>
 
-              <button
-                title='Wyjdź z trybu pokazu slajdów [Esc]'
-                onClick={closePresentation}
-              >
+              <button title='Wyjdź z trybu pokazu slajdów [Esc]' onClick={closePresentation}>
                 <Image
                   className='icon'
                   alt='exit'
@@ -325,11 +303,7 @@ export default function PresentationPage() {
               className={styles.progressBar}
               style={{
                 opacity:
-                  (ic && slide === 1) ||
-                  (!ic && slide === 0) ||
-                  slide > order.length
-                    ? 0
-                    : 1,
+                  (ic && slide === 1) || (!ic && slide === 0) || slide > order.length ? 0 : 1,
               }}
             >
               <div

@@ -61,17 +61,15 @@ export default function HymnPage() {
         hymn.lyrics = Object.values(hymn.song.lyrics)
 
         if (hymn.song.linked_songs) {
-          hymn.song.linked_songs = Object.values(hymn.song.linked_songs).map(
-            (song) => {
-              const songStr = song as string
-              const splitSong = songStr.split('\\')
+          hymn.song.linked_songs = Object.values(hymn.song.linked_songs).map((song) => {
+            const songStr = song as string
+            const splitSong = songStr.split('\\')
 
-              return {
-                book: bookShortcut(splitSong[0]),
-                title: splitSong[1],
-              }
+            return {
+              book: bookShortcut(splitSong[0]),
+              title: splitSong[1],
             }
-          )
+          })
         }
 
         setHymn(hymn)
@@ -108,10 +106,7 @@ export default function HymnPage() {
 
           if (scrollDelta > 15 && !hideControls) {
             setHideControls(true)
-          } else if (
-            (scrollDelta < -10 || currentScrollY < 30) &&
-            hideControls
-          ) {
+          } else if ((scrollDelta < -10 || currentScrollY < 30) && hideControls) {
             setHideControls(false)
           }
 
@@ -307,14 +302,7 @@ export default function HymnPage() {
   // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
-      if (
-        e.ctrlKey ||
-        e.shiftKey ||
-        e.altKey ||
-        e.metaKey ||
-        router.query.menu ||
-        !hymn
-      ) {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu || !hymn) {
         return
       }
 
@@ -367,20 +355,11 @@ export default function HymnPage() {
   }) => {
     const ic = hymn.song.title.includes('IC')
 
-    const FormattedVerse = ({
-      array,
-      index,
-    }: {
-      array: string[]
-      index: number
-    }) => {
+    const FormattedVerse = ({ array, index }: { array: string[]; index: number }) => {
       const id = Object.keys(hymn.song.lyrics)[index]
 
       return (
-        <div
-          id={id}
-          className={`${styles.verse} ${id.includes('T') && styles.italic}`}
-        >
+        <div id={id} className={`${styles.verse} ${id.includes('T') && styles.italic}`}>
           {ic && index === 0 && (
             <select
               className={styles.changeLanguage}
@@ -421,11 +400,7 @@ export default function HymnPage() {
       )
     }
 
-    const LinkedSong = ({
-      linked,
-    }: {
-      linked: { book: string; title: string }
-    }) => {
+    const LinkedSong = ({ linked }: { linked: { book: string; title: string } }) => {
       const { book, title } = linked
 
       return (
@@ -451,6 +426,12 @@ export default function HymnPage() {
             <h1>{hymnTitle}</h1>
           </div>
 
+          {hymn.song.author && (
+            <div className={styles.credits}>
+              <p className={styles.author}>{hymn.song.author}</p>
+            </div>
+          )}
+
           <hr className={styles.printLine} />
 
           <div className={styles.lyrics}>
@@ -459,10 +440,9 @@ export default function HymnPage() {
             ))}
           </div>
 
-          {(hymn.song.copyright || hymn.song.author) && (
+          {hymn.song.copyright && (
             <div className={styles.credits}>
-              {hymn.song.copyright && <p>{hymn.song.copyright}</p>}
-              {hymn.song.author && <p>{hymn.song.author}</p>}
+              <p className={styles.copyright}>{hymn.song.copyright}</p>
             </div>
           )}
         </div>
@@ -500,9 +480,7 @@ export default function HymnPage() {
       <main style={{ padding: 0 }}>
         {hymn && (
           <>
-            <div
-              className={`${styles.title} ${hideControls ? styles.hide : ''}`}
-            >
+            <div className={`${styles.title} ${hideControls ? styles.hide : ''}`}>
               <button onClick={openPrevSearch}>
                 <Image
                   style={{ rotate: '90deg' }}
@@ -557,10 +535,7 @@ export default function HymnPage() {
 
             <div className={styles.container}>
               <div className={styles.options}>
-                <button
-                  title='Powróć do wyników wyszukiwania [Esc]'
-                  onClick={openPrevSearch}
-                >
+                <button title='Powróć do wyników wyszukiwania [Esc]' onClick={openPrevSearch}>
                   <Image
                     className='icon'
                     alt='search'
@@ -598,9 +573,7 @@ export default function HymnPage() {
               <div className={styles.center}>
                 <div className={styles.content} style={{ fontSize }}>
                   {showChords && !hasChords && (
-                    <span className={styles.noChords}>
-                      Brak akordów do wyświetlenia
-                    </span>
+                    <span className={styles.noChords}>Brak akordów do wyświetlenia</span>
                   )}
 
                   <HymnData
@@ -652,6 +625,36 @@ export default function HymnPage() {
                     />
                   </button>
                 </div>
+
+                <div className={styles.controlsMobile}>
+                  <button
+                    className={hideControls ? styles.hide : ''}
+                    onClick={() => changeHymn(hymn.id - 1)}
+                  >
+                    <Image
+                      className={`${styles.previous} icon`}
+                      alt='left'
+                      src='/icons/chevron.svg'
+                      width={14}
+                      height={14}
+                      draggable={false}
+                    />
+                  </button>
+
+                  <button
+                    className={hideControls ? styles.hide : ''}
+                    onClick={() => changeHymn(hymn.id + 1)}
+                  >
+                    <Image
+                      className={`${styles.next} icon`}
+                      alt='right'
+                      src='/icons/chevron.svg'
+                      width={14}
+                      height={14}
+                      draggable={false}
+                    />
+                  </button>
+                </div>
               </div>
 
               <div className={styles.options}>
@@ -663,10 +666,7 @@ export default function HymnPage() {
                     title='Włącz tryb prezentacji dla wybranej pieśni [P]'
                     className={styles.default}
                   >
-                    <div
-                      className={styles.buttonText}
-                      onClick={showPresentation}
-                    >
+                    <div className={styles.buttonText} onClick={showPresentation}>
                       <Image
                         className='icon'
                         alt='presentation'
@@ -683,7 +683,6 @@ export default function HymnPage() {
                       onClick={() => showPresOptions((prev) => !prev)}
                     >
                       <Image
-                        style={{ rotate: presOptions ? '180deg' : '0deg' }}
                         className='icon'
                         alt='more'
                         src='/icons/dots.svg'
@@ -694,11 +693,7 @@ export default function HymnPage() {
                     </div>
                   </button>
 
-                  <div
-                    className={`${styles.list} ${
-                      presOptions ? styles.active : ''
-                    }`}
-                  >
+                  <div className={`${styles.list} ${presOptions ? styles.active : ''}`}>
                     <button
                       tabIndex={-1}
                       onClick={() => {
@@ -731,16 +726,12 @@ export default function HymnPage() {
                   <Image
                     className='icon'
                     alt='favorite'
-                    src={`/icons/${
-                      isFavorite ? 'star-filled' : 'star-empty'
-                    }.svg`}
+                    src={`/icons/${isFavorite ? 'star-filled' : 'star-empty'}.svg`}
                     width={20}
                     height={20}
                     draggable={false}
                   />
-                  <p>
-                    {isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}
-                  </p>
+                  <p>{isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}</p>
                 </button>
 
                 {unlocked && (
@@ -764,8 +755,8 @@ export default function HymnPage() {
                           {filesLoading
                             ? 'Ładowanie...'
                             : hymnFiles.pdf
-                            ? 'Otwórz PDF'
-                            : 'Brak pliku PDF'}
+                              ? 'Otwórz PDF'
+                              : 'Brak pliku PDF'}
                         </p>
                       </button>
                     )}
@@ -789,18 +780,15 @@ export default function HymnPage() {
                           {filesLoading
                             ? 'Ładowanie...'
                             : hymnFiles.mp3
-                            ? 'Odtwórz melodię'
-                            : 'Brak pliku MP3'}
+                              ? 'Odtwórz melodię'
+                              : 'Brak pliku MP3'}
                         </p>
                       </button>
                     )}
                   </>
                 )}
 
-                <button
-                  title='Wydrukuj tekst wybranej pieśni [K]'
-                  onClick={() => window.print()}
-                >
+                <button title='Wydrukuj tekst wybranej pieśni [K]' onClick={() => window.print()}>
                   <Image
                     className='icon'
                     alt='print'
@@ -812,10 +800,7 @@ export default function HymnPage() {
                   <p>Drukuj</p>
                 </button>
 
-                <button
-                  title='Skopiuj link do wybranej pieśni [S]'
-                  onClick={shareButton}
-                >
+                <button title='Skopiuj link do wybranej pieśni [S]' onClick={shareButton}>
                   <Image
                     className='icon'
                     alt='share'

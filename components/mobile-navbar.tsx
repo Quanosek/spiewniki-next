@@ -6,11 +6,7 @@ import getRandomHymn from '@/utils/getRandomHymn'
 import shareButton from '@/utils/shareButton'
 import { hiddenMenuQuery } from './menu'
 
-export default function MobileNavbarComponent({
-  unlocked,
-}: {
-  unlocked: boolean
-}) {
+export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean }) {
   const router = useRouter()
   const { book } = router.query as { [key: string]: string }
 

@@ -20,13 +20,7 @@ export default function BooksPage() {
   // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
-      if (
-        e.ctrlKey ||
-        e.shiftKey ||
-        e.altKey ||
-        e.metaKey ||
-        router.query.menu
-      ) {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {
         return
       }
 
@@ -49,10 +43,7 @@ export default function BooksPage() {
 
       <main>
         <div className={styles.title}>
-          <button
-            title='Powróć do poprzedniej strony [Esc]'
-            onClick={() => router.back()}
-          >
+          <button title='Powróć do poprzedniej strony [Esc]' onClick={() => router.back()}>
             <Image
               style={{ rotate: '90deg' }}
               className='icon'
@@ -78,10 +69,7 @@ export default function BooksPage() {
           {allBooks.map((book, index) => (
             <div key={book}>
               <div className={styles.book}>
-                <Link
-                  href={{ pathname: '/search', query: { book } }}
-                  className={styles.result}
-                >
+                <Link href={{ pathname: '/search', query: { book } }} className={styles.result}>
                   <h2>{bookShortcut(book)}</h2>
                 </Link>
 

@@ -26,13 +26,12 @@ export default function SettingsMenu() {
   const { theme, setTheme } = useTheme()
   const defaultTheme = unlocked ? 'black' : 'white'
 
-  const settings: Settings = JSON.parse(
-    localStorage.getItem('settings') as string
-  )
+  const settings: Settings = JSON.parse(localStorage.getItem('settings') as string)
 
   // Dynamic states
-  const [{ fontSize, showChords, contextSearch, quickSearch }, setState] =
-    useState(settings || defaultSettings)
+  const [{ fontSize, showChords, contextSearch, quickSearch }, setState] = useState(
+    settings || defaultSettings
+  )
 
   // Save settings to local storage
   const saveSettings = useCallback(() => {
@@ -166,8 +165,7 @@ export default function SettingsMenu() {
         <div className={`${styles.settingsSection} ${styles.toggleList}`}>
           {ToggleSwitch({
             title: 'Wyświetlanie akordów',
-            description:
-              'Symbole akordów gitarowych bezpośrednio nad liniami tekstu pieśni',
+            description: 'Symbole akordów gitarowych bezpośrednio nad liniami tekstu pieśni',
             name: 'showChords',
             state: showChords,
           })}
@@ -182,8 +180,7 @@ export default function SettingsMenu() {
 
           {ToggleSwitch({
             title: 'Szybkie wyszukiwanie',
-            description:
-              'Przywrócenie ostatniego wyszukiwania po powrocie do listy',
+            description: 'Przywrócenie ostatniego wyszukiwania po powrocie do listy',
             name: 'quickSearch',
             state: quickSearch,
           })}
@@ -195,9 +192,7 @@ export default function SettingsMenu() {
         <button
           className={styles.alert}
           onClick={() => {
-            if (
-              !confirm('Czy na pewno chcesz przywrócić ustawienia domyślne?')
-            ) {
+            if (!confirm('Czy na pewno chcesz przywrócić ustawienia domyślne?')) {
               return
             }
 

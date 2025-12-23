@@ -150,6 +150,10 @@
     border-radius: calc(var(--radius) - var(--space));
     background-color: transparent;
 
+    img {
+      scale: 105%;
+    }
+
     @media (min-width: 769px) {
       &:hover {
         background-color: var(--elements-hover);
@@ -366,7 +370,7 @@
 .scrollButton {
   visibility: hidden;
   opacity: 0;
-  scale: 0.8;
+  scale: 80%;
   position: sticky;
   bottom: 6.5%;
   left: 100%;
@@ -381,7 +385,7 @@
   &.show {
     visibility: visible;
     opacity: 0.85;
-    scale: 1;
+    scale: 100%;
   }
 
   img {

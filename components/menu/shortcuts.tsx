@@ -37,35 +37,26 @@ export default function ShortcutsMenu() {
       <div className={styles.content}>
         <Shortcut
           keyup='Esc'
-          action={
-            'Wyjście z widoku menu' +
-            (!isHome ? ' / powrót po poprzedniej strony' : '')
-          }
+          action={'Wyjście z widoku menu' + (!isHome ? ' / powrót po poprzedniej strony' : '')}
         />
         <Shortcut
           keyup='/'
           action={
-            isSearch
-              ? 'Powrót do paska wyszukiwania'
-              : 'Wyszukiwanie we wszystkich śpiewnikach'
+            isSearch ? 'Powrót do paska wyszukiwania' : 'Wyszukiwanie we wszystkich śpiewnikach'
           }
         />
 
         {!isBooks && (
           <Shortcut
             keyup='B'
-            action={
-              unlocked ? 'Lista wszystkich śpiewników' : 'Wybór śpiewników'
-            }
+            action={unlocked ? 'Lista wszystkich śpiewników' : 'Wybór śpiewników'}
           />
         )}
 
         {!isBooks && !isHymn && (
           <Shortcut
             keyup='R'
-            action={`Losowa pieśń${
-              !isHome && !isBooks ? ' z wybranego śpiewnika' : ''
-            }`}
+            action={`Losowa pieśń${!isHome && !isBooks ? ' z wybranego śpiewnika' : ''}`}
           />
         )}
       </div>
@@ -80,20 +71,11 @@ export default function ShortcutsMenu() {
 
           <div className={styles.content}>
             <Shortcut keyup='P' action='Włączenie trybu prezentacji' />
-            <Shortcut
-              keyup='F'
-              action='Dodanie/usunięcie pieśni z listy ulubionych'
-            />
+            <Shortcut keyup='F' action='Dodanie/usunięcie pieśni z listy ulubionych' />
             {unlocked && (
               <>
-                <Shortcut
-                  keyup='D'
-                  action='Dokument PDF wybranej pieśni (jeśli istnieje)'
-                />
-                <Shortcut
-                  keyup='M'
-                  action='Melodia wybranej pieśni (jeśli istnieje)'
-                />
+                <Shortcut keyup='D' action='Dokument PDF wybranej pieśni (jeśli istnieje)' />
+                <Shortcut keyup='M' action='Melodia wybranej pieśni (jeśli istnieje)' />
               </>
             )}
             <Shortcut keyup='K' action='Treść pieśni do druku' />

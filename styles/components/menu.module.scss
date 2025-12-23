@@ -30,7 +30,9 @@
   align-items: center;
   background-color: var(--menu-background);
   border-radius: var(--radius);
-  box-shadow: rgba(#000000, 0.2) 0px 10px 20px, rgba(#000000, 0.22) 0px 6px 6px;
+  box-shadow:
+    rgba(#000000, 0.2) 0px 10px 20px,
+    rgba(#000000, 0.22) 0px 6px 6px;
 
   @media (max-width: 768px) {
     padding: min(4vw, 1.25rem) 2.5vw;

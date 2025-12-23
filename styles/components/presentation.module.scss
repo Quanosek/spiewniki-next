@@ -131,7 +131,11 @@
     gap: 2vw;
     font-size: 4.5vw;
     font-weight: 700;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    text-shadow:
+      -1px 0 black,
+      0 1px black,
+      1px 0 black,
+      0 -1px black;
 
     p:nth-child(1) {
       color: #16abeb;
@@ -230,7 +234,7 @@
 
     .logo {
       top: 0.1vw;
-      scale: 1.4;
+      scale: 140%;
     }
     .prev {
       rotate: 90deg;

@@ -1,9 +1,14 @@
 .git
+.DS_Store
+
 .github
 .next
 .vscode
 node_modules
-.dockerignore
-docker-compose.yml
+
+.editorconfig
+.env.example
+.prettierignore
+.prettierrc
 LICENSE
 next-env.d.ts

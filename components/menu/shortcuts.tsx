@@ -72,12 +72,8 @@ export default function ShortcutsMenu() {
           <div className={styles.content}>
             <Shortcut keyup='P' action='Włączenie trybu prezentacji' />
             <Shortcut keyup='F' action='Dodanie/usunięcie pieśni z listy ulubionych' />
-            {unlocked && (
-              <>
-                <Shortcut keyup='D' action='Dokument PDF wybranej pieśni (jeśli istnieje)' />
-                <Shortcut keyup='M' action='Melodia wybranej pieśni (jeśli istnieje)' />
-              </>
-            )}
+            <Shortcut keyup='D' action='Dokument PDF wybranej pieśni (jeśli istnieje)' />
+            {unlocked && <Shortcut keyup='M' action='Melodia wybranej pieśni (jeśli istnieje)' />}
             <Shortcut keyup='K' action='Treść pieśni do druku' />
             <Shortcut keyup='S' action='Udostępnienie linku do pieśni' />
           </div>

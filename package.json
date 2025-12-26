@@ -1,10 +1,9 @@
 {
-  "version": "0.11.5",
+  "version": "0.11.6",
   "name": "spiewniki",
   "description": "Various hymnbooks and religious songs gathered in one place",
   "private": true,
   "author": "Jakub Kłało <kubaklalo@gmail.com>",
-  "license": "Apache License 2.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,7 +11,7 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "npm run format:check && npm run lint"
+    "validate": "pnpm run lint && pnpm run format:check"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",

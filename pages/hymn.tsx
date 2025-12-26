@@ -267,7 +267,7 @@ export default function HymnPage() {
   const [filesLoading, setFilesLoading] = useState(true)
 
   useEffect(() => {
-    if (!(hymn && unlocked)) return
+    if (!hymn) return
 
     setFilesLoading(true)
     fetch(`/api/hymnFiles?book=${hymn.book}&title=${hymn.song.title}`)
@@ -321,7 +321,7 @@ export default function HymnPage() {
       if (key === 'R') randomHymn()
       if (key === 'P') showPresentation()
       if (key === 'F') toggleFavorite()
-      if (unlocked && key === 'D') openDocument(hymnFiles.pdf)
+      if (key === 'D') openDocument(hymnFiles.pdf)
       if (unlocked && key === 'M') playMusic(hymnFiles.mp3)
       if (key === 'S') shareButton()
       if (key === 'K') window.print()
@@ -447,7 +447,7 @@ export default function HymnPage() {
           )}
         </div>
 
-        {hymn.song.linked_songs && (
+        {unlocked && hymn.song.linked_songs && (
           <span className={styles.linked}>
             <p className={styles.name}>Powiązane pieśni:</p>
 
@@ -507,7 +507,7 @@ export default function HymnPage() {
                   </button>
                 )}
 
-                {unlocked && hymnFiles.pdf && (
+                {hymnFiles.pdf && (
                   <button onClick={() => openDocument(hymnFiles.pdf)}>
                     <Image
                       className='icon'
@@ -734,58 +734,54 @@ export default function HymnPage() {
                   <p>{isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}</p>
                 </button>
 
-                {unlocked && (
-                  <>
-                    {['B', 'C', 'N', 'S'].includes(bookShortcut(hymn.book)) && (
-                      <button
-                        tabIndex={hymnFiles.pdf ? 0 : -1}
-                        title='Otwórz zapis nutowy wybranej pieśni [D]'
-                        className={hymnFiles.pdf ? '' : 'disabled'}
-                        onClick={() => openDocument(hymnFiles.pdf)}
-                      >
-                        <Image
-                          className='icon'
-                          alt='pdf'
-                          src='/icons/document.svg'
-                          width={20}
-                          height={20}
-                          draggable={false}
-                        />
-                        <p>
-                          {filesLoading
-                            ? 'Ładowanie...'
-                            : hymnFiles.pdf
-                              ? 'Otwórz PDF'
-                              : 'Brak pliku PDF'}
-                        </p>
-                      </button>
-                    )}
+                {['B', 'C', 'N', 'S'].includes(bookShortcut(hymn.book)) && (
+                  <button
+                    tabIndex={hymnFiles.pdf ? 0 : -1}
+                    title='Otwórz zapis nutowy wybranej pieśni [D]'
+                    className={hymnFiles.pdf ? '' : 'disabled'}
+                    onClick={() => openDocument(hymnFiles.pdf)}
+                  >
+                    <Image
+                      className='icon'
+                      alt='pdf'
+                      src='/icons/document.svg'
+                      width={20}
+                      height={20}
+                      draggable={false}
+                    />
+                    <p>
+                      {filesLoading
+                        ? 'Ładowanie...'
+                        : hymnFiles.pdf
+                          ? 'Otwórz PDF'
+                          : 'Brak pliku PDF'}
+                    </p>
+                  </button>
+                )}
 
-                    {bookShortcut(hymn.book) === 'N' && (
-                      <button
-                        tabIndex={hymnFiles.mp3 ? 0 : -1}
-                        title='Odtwórz linię melodyjną wybranej pieśni [M]'
-                        className={hymnFiles.mp3 ? '' : 'disabled'}
-                        onClick={() => playMusic(hymnFiles.mp3)}
-                      >
-                        <Image
-                          className='icon'
-                          alt='mp3'
-                          src='/icons/play.svg'
-                          width={20}
-                          height={20}
-                          draggable={false}
-                        />
-                        <p>
-                          {filesLoading
-                            ? 'Ładowanie...'
-                            : hymnFiles.mp3
-                              ? 'Odtwórz melodię'
-                              : 'Brak pliku MP3'}
-                        </p>
-                      </button>
-                    )}
-                  </>
+                {unlocked && bookShortcut(hymn.book) === 'N' && (
+                  <button
+                    tabIndex={hymnFiles.mp3 ? 0 : -1}
+                    title='Odtwórz linię melodyjną wybranej pieśni [M]'
+                    className={hymnFiles.mp3 ? '' : 'disabled'}
+                    onClick={() => playMusic(hymnFiles.mp3)}
+                  >
+                    <Image
+                      className='icon'
+                      alt='mp3'
+                      src='/icons/play.svg'
+                      width={20}
+                      height={20}
+                      draggable={false}
+                    />
+                    <p>
+                      {filesLoading
+                        ? 'Ładowanie...'
+                        : hymnFiles.mp3
+                          ? 'Odtwórz melodię'
+                          : 'Brak pliku MP3'}
+                    </p>
+                  </button>
                 )}
 
                 <button title='Wydrukuj tekst wybranej pieśni [K]' onClick={() => window.print()}>

@@ -33,8 +33,35 @@ export default function App({ Component, pageProps }: AppProps) {
     // Set global accent color
     document.documentElement.className = unlocked ? 'accent_blue' : 'accent_orange'
 
-    // Screen Wake Lock API
-    navigator.wakeLock?.request('screen').catch(console.error)
+    // Screen Wake Lock API with re-request on visibility change
+    let wakeLock: WakeLockSentinel | null = null
+
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen')
+          wakeLock.addEventListener('release', () => {
+            console.log('Wake Lock released')
+          })
+        }
+      } catch (err) {
+        console.error('Wake Lock error:', err)
+      }
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        requestWakeLock()
+      }
+    }
+
+    requestWakeLock()
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      wakeLock?.release()
+    }
   }, [])
 
   const defaultTheme = unlocked ? 'black' : 'white'

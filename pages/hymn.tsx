@@ -16,14 +16,16 @@ import styles from '@/styles/pages/hymn.module.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-interface ProcessedHymn extends Hymn {
+type ProcessedHymnSong = Hymn['song'] & {
+  linked_songs?: {
+    book: string
+    title: string
+  }[]
+}
+
+interface ProcessedHymn extends Omit<Hymn, 'song'> {
   lyrics: string[][]
-  song: Hymn['song'] & {
-    linked_songs?: {
-      book: string
-      title: string
-    }[]
-  }
+  song: ProcessedHymnSong
 }
 
 interface HymnFiles {
@@ -40,11 +42,9 @@ interface HymnFiles {
 export default function HymnPage() {
   const router = useRouter()
 
-  const { book, title, menu } = router.query as {
-    book: string
-    title: string
-    menu?: string
-  }
+  const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
+  const title = Array.isArray(router.query.title) ? router.query.title[0] : router.query.title
+  const menu = Array.isArray(router.query.menu) ? router.query.menu[0] : router.query.menu
 
   // Define hymn
   const [hymn, setHymn] = useState<ProcessedHymn>()
@@ -52,8 +52,10 @@ export default function HymnPage() {
   useEffect(() => {
     if (!(router.isReady && book && title)) return
 
+    const abortController = new AbortController()
+
     axios
-      .get(`database/${book}.json`)
+      .get(`database/${book}.json`, { signal: abortController.signal })
       .then(({ data }) => {
         const hymn = data.find((elem: Hymn) => elem.name === title)
         if (!hymn) return router.push('/404')
@@ -75,9 +77,12 @@ export default function HymnPage() {
         setHymn(hymn)
       })
       .catch((err) => {
+        if (axios.isCancel(err)) return
         console.error(err)
         router.push('/404')
       })
+
+    return () => abortController.abort()
   }, [router, book, title])
 
   // Refresh dedicated hymn settings
@@ -162,8 +167,10 @@ export default function HymnPage() {
 
       if (id < 0) return
 
+      const abortController = new AbortController()
+
       axios
-        .get(`database/${bookShortcut(hymn.book)}.json`)
+        .get(`database/${bookShortcut(hymn.book)}.json`, { signal: abortController.signal })
         .then(({ data }) => {
           if (id >= data.length) return
 
@@ -178,6 +185,7 @@ export default function HymnPage() {
           })
         })
         .catch((err) => {
+          if (axios.isCancel(err)) return
           console.error(err)
           router.back()
         })
@@ -697,6 +705,7 @@ export default function HymnPage() {
                     <button
                       tabIndex={-1}
                       onClick={() => {
+                        if (!book || !title) return
                         const params = new URLSearchParams()
                         params.append('book', book)
                         params.append('title', title)

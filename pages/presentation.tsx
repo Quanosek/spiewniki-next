@@ -6,7 +6,7 @@ import axios from 'axios'
 
 import type Hymn from '@/types/hymn'
 
-import styles from '@/styles/components/presentation.module.scss'
+import styles from '@/styles/pages/presentation.module.scss'
 
 // const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
@@ -22,8 +22,9 @@ export default function PresentationPage() {
   const [alwaysShowCursor, setAlwaysShowCursor] = useState(false)
 
   const handleInit = useCallback(async (book: string, title: string) => {
+    const abortController = new AbortController()
     try {
-      const { data } = await axios.get(`database/${book}.json`)
+      const { data } = await axios.get(`database/${book}.json`, { signal: abortController.signal })
 
       const foundHymn = data.find((elem: { name: string }) => elem.name === title)
 
@@ -36,15 +37,17 @@ export default function PresentationPage() {
       setOrder(hymnOrder)
       setSlide(foundHymn.song.title.includes('IC') ? 1 : 0)
     } catch (error) {
-      console.error(error)
+      if (!axios.isCancel(error)) console.error(error)
     }
+    return () => abortController.abort()
   }, [])
 
   useEffect(() => {
     if (!router.isReady) return
-    const { book, title } = router.query as { [key: string]: string }
-    handleInit(book, title)
-  }, [router, handleInit])
+    const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
+    const title = Array.isArray(router.query.title) ? router.query.title[0] : router.query.title
+    if (book && title) handleInit(book, title)
+  }, [router.isReady, router.query.book, router.query.title, handleInit])
 
   useEffect(() => {
     const beforeUnloadHandler = () => localStorage.removeItem('presWindow')

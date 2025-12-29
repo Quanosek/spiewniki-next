@@ -23,11 +23,13 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
   useEffect(() => {
     if (!router.isReady) return
 
-    const { d, book, id } = router.query
+    const d = Array.isArray(router.query.d) ? router.query.d[0] : router.query.d
+    const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
+    const id = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id
 
-    if (typeof d === 'string' && d.trim()) {
+    if (d && d.trim()) {
       setDocumentPath(`/pdf/${modifyText(d)}.pdf`)
-    } else if (typeof book === 'string' && book.trim() && typeof id === 'string' && id.trim()) {
+    } else if (book && book.trim() && id && id.trim()) {
       setDocumentPath(`/pdf/${book}/${id}.pdf`)
     } else {
       router.back()

@@ -16,13 +16,14 @@ import styles from '@/styles/pages/search.module.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-interface ProcessedHymn extends Hymn {
+interface ProcessedHymn extends Omit<Hymn, 'song'> {
+  song: Hymn['song']
   lyrics?: string[]
 }
 
 export default function SearchPage() {
   const router = useRouter()
-  const { book } = router.query as { [key: string]: string }
+  const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
 
   const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
   const [rawData, setRawData] = useState<Hymn[]>()
@@ -165,13 +166,18 @@ export default function SearchPage() {
 
       fetchAllBooks()
     } else {
+      const abortController = new AbortController()
+
       axios
-        .get(`database/${book}.json`)
+        .get(`database/${book}.json`, { signal: abortController.signal })
         .then(({ data }) => loadData(data))
         .catch((err) => {
+          if (axios.isCancel(err)) return
           console.error(err)
           router.push('/404')
         })
+
+      return () => abortController.abort()
     }
   }, [router, book])
 
@@ -183,7 +189,7 @@ export default function SearchPage() {
     if (rawData) {
       if (inputValue) {
         const timeout = setTimeout(() => {
-          if (rawData) Search(rawData, inputValue || '')
+          Search(rawData, inputValue)
         }, 100)
         return () => clearTimeout(timeout)
       } else {

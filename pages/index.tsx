@@ -27,13 +27,13 @@ export default function HomePage() {
   useEffect(() => {
     if (!hamburgerMenu) return
 
-    const LeftScroll = document.documentElement.scrollLeft
-    const TopScroll = document.documentElement.scrollTop
+    const leftScroll = document.documentElement.scrollLeft
+    const topScroll = document.documentElement.scrollTop
 
-    const ScrollEvent = () => window.scrollTo(LeftScroll, TopScroll)
+    const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
 
-    document.addEventListener('scroll', ScrollEvent)
-    return () => document.removeEventListener('scroll', ScrollEvent)
+    document.addEventListener('scroll', scrollEvent)
+    return () => document.removeEventListener('scroll', scrollEvent)
   }, [hamburgerMenu])
 
   // Random hymn function

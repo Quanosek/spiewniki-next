@@ -8,7 +8,7 @@ import { hiddenMenuQuery } from './menu'
 
 export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean }) {
   const router = useRouter()
-  const { book } = router.query as { [key: string]: string }
+  const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
 
   // Random hymn function
   const randomHymn = useCallback(async () => {

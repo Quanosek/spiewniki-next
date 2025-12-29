@@ -68,12 +68,21 @@ export default function PresentationPage() {
   const closePresentation = useCallback(() => {
     const presWindow = localStorage.getItem('presWindow')
 
-    if (!presWindow) {
-      document.exitFullscreen()
-    } else {
+    // Presentation in new browser window
+    if (presWindow) {
       window.close()
+      return
     }
-  }, [])
+
+    // Presentation in fullscreen mode
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+      return
+    }
+
+    // Presentation without fullscreen
+    router.back()
+  }, [router])
 
   const prevSlide = useCallback(() => {
     if (ic && slide > 1) setSlide(slide - 1)
@@ -86,8 +95,7 @@ export default function PresentationPage() {
     if (slide < maxSlide) {
       setSlide(slide + 1)
     } else {
-      if (document.fullscreenElement) document.exitFullscreen()
-      else closePresentation()
+      closePresentation()
     }
   }, [ic, slide, closePresentation, order.length])
 
@@ -222,6 +230,13 @@ export default function PresentationPage() {
     }
   }, [router])
 
+  const getProgressWidth = () => {
+    if ((ic && slide === 1) || (!ic && slide === 0)) return 0
+    const totalSlides = ic ? order.length - 1 : order.length
+    const currentSlide = ic ? slide - 1 : slide
+    return Math.min(100, (100 / totalSlides) * currentSlide)
+  }
+
   return (
     <>
       <Head>
@@ -311,16 +326,7 @@ export default function PresentationPage() {
                   (ic && slide === 1) || (!ic && slide === 0) || slide > order.length ? 0 : 1,
               }}
             >
-              <div
-                style={{
-                  width: `${(() => {
-                    if ((ic && slide === 1) || (!ic && slide === 0)) return 0
-                    const totalSlides = ic ? order.length - 1 : order.length
-                    const currentSlide = ic ? slide - 1 : slide
-                    return Math.min(100, (100 / totalSlides) * currentSlide)
-                  })()}%`,
-                }}
-              />
+              <div style={{ width: `${getProgressWidth()}%` }} />
             </div>
           </div>
         </div>

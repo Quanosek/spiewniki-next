@@ -19,6 +19,163 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 interface ProcessedHymn extends Omit<Hymn, 'song'> {
   song: Hymn['song']
   lyrics?: string[]
+  matchPosition?: number
+  matchType?: 'name' | 'lyrics'
+  formattedName: string
+  numberPrefix: number
+  hasLetterSuffix: boolean
+  lyricsPlain: string[]
+  dedupeKey: string
+}
+
+const numberPrefix = (value: string) => {
+  const match = value.match(/^\s*(\d+)/)
+  return match ? parseInt(match[1], 10) : NaN
+}
+
+const hasLetterSuffix = (value: string) => {
+  const trimmed = value.trim()
+  const match = trimmed.match(/^(\d+)([A-Za-z]+)/)
+  return !!(match && match[2])
+}
+
+const mapHymn = (hymn: Hymn): ProcessedHymn => {
+  const formattedName = reformatText(hymn.name)
+  const lyricsPlain = Object.values(hymn.song.lyrics)
+    .flat()
+    .filter((verse) => verse.startsWith(' '))
+    .map((verse) => verse.slice(1))
+
+  return {
+    ...hymn,
+    formattedName,
+    numberPrefix: numberPrefix(hymn.name),
+    hasLetterSuffix: hasLetterSuffix(hymn.name),
+    lyricsPlain,
+    dedupeKey: `${bookShortcut(hymn.book)}|${hymn.name}`,
+  }
+}
+
+// Match hymn titles against search query and return results with match position
+const matchNames = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
+  if (!hymn.formattedName.includes(formattedInput)) return null
+
+  return {
+    ...hymn,
+    matchPosition: hymn.formattedName.indexOf(formattedInput),
+    matchType: 'name',
+  }
+}
+
+// Match hymn lyrics against search query (only if contextSearch enabled)
+const matchLyrics = (
+  hymn: ProcessedHymn,
+  input: string,
+  formattedInput: string
+): ProcessedHymn[] => {
+  if (input.match(/^[0-9]+$/)) return []
+
+  const results: ProcessedHymn[] = []
+
+  hymn.lyricsPlain.forEach((verse, index) => {
+    const formattedVerse = reformatText(verse)
+    if (!formattedVerse.includes(formattedInput)) return
+
+    results.push({
+      ...hymn,
+      lyrics: [
+        hymn.lyricsPlain[index - 1]
+          ? `${hymn.lyricsPlain[index - 2] ? '...' : ''} ${hymn.lyricsPlain[index - 1]}`
+          : '',
+        verse,
+        hymn.lyricsPlain[index + 1] ? hymn.lyricsPlain[index + 1] : '',
+        hymn.lyricsPlain[index + 2]
+          ? `${hymn.lyricsPlain[index + 2]} ${hymn.lyricsPlain[index + 3] ? '...' : ''}`
+          : '',
+      ],
+      matchPosition: formattedVerse.indexOf(formattedInput),
+      matchType: 'lyrics',
+    })
+  })
+
+  return results
+}
+
+// Comparator for all-books mode
+const compareAllBooks = (unlocked: boolean) => (a: ProcessedHymn, b: ProcessedHymn) => {
+  const order = booksList(unlocked)
+
+  // Titles (name matches) before lyrics
+  if (a.matchType !== b.matchType) return a.matchType === 'name' ? -1 : 1
+
+  // Earlier match position (prefix) first
+  const pa = a.matchPosition ?? Number.MAX_SAFE_INTEGER
+  const pb = b.matchPosition ?? Number.MAX_SAFE_INTEGER
+  if (pa !== pb) return pa - pb
+
+  // Numeric titles grouped; sort by number value
+  const na = a.numberPrefix
+  const nb = b.numberPrefix
+  const aHasNumber = Number.isFinite(na)
+  const bHasNumber = Number.isFinite(nb)
+  if (aHasNumber && bHasNumber && na !== nb) return na - nb
+  if (aHasNumber !== bHasNumber) return aHasNumber ? -1 : 1
+
+  // Within same number, plain titles (no letter suffix) before suffixed ones
+  if (aHasNumber && bHasNumber && na === nb) {
+    if (a.hasLetterSuffix !== b.hasLetterSuffix) return a.hasLetterSuffix ? 1 : -1
+  }
+
+  // Book order per booksList
+  const ia = order.indexOf(bookShortcut(a.book))
+  const ib = order.indexOf(bookShortcut(b.book))
+  if (ia !== ib) return ia - ib
+
+  // Shorter titles first (stability)
+  const la = a.name.length
+  const lb = b.name.length
+  if (la !== lb) return la - lb
+
+  // Alphabetical by name (numeric-aware) as final tiebreaker
+  const nameCmp = a.name.localeCompare(b.name, undefined, { numeric: true })
+  if (nameCmp !== 0) return nameCmp
+
+  return 0
+}
+
+// Comparator for single-book mode
+const compareSingleBook = (a: ProcessedHymn, b: ProcessedHymn) => {
+  // Titles (name matches) before lyrics
+  if (a.matchType !== b.matchType) return a.matchType === 'name' ? -1 : 1
+
+  // Earlier match position (prefix) first
+  const pa = a.matchPosition ?? Number.MAX_SAFE_INTEGER
+  const pb = b.matchPosition ?? Number.MAX_SAFE_INTEGER
+  if (pa !== pb) return pa - pb
+
+  // Numeric titles grouped; sort by number value
+  const na = a.numberPrefix
+  const nb = b.numberPrefix
+  const aHasNumber = Number.isFinite(na)
+  const bHasNumber = Number.isFinite(nb)
+  if (aHasNumber && bHasNumber && na !== nb) return na - nb
+  if (aHasNumber !== bHasNumber) return aHasNumber ? -1 : 1
+
+  // Within same number, plain titles (no letter suffix) before suffixed ones
+  if (aHasNumber && bHasNumber && na === nb) {
+    if (a.hasLetterSuffix !== b.hasLetterSuffix) return a.hasLetterSuffix ? 1 : -1
+  }
+
+  // Shorter titles first (stability)
+  const la = a.name.length
+  const lb = b.name.length
+  if (la !== lb) return la - lb
+
+  // Alphabetical by name (numeric-aware) as final tiebreaker
+  const nameCmp = a.name.localeCompare(b.name, undefined, { numeric: true })
+  if (nameCmp !== 0) return nameCmp
+
+  return 0
 }
 
 export default function SearchPage() {
@@ -26,7 +183,7 @@ export default function SearchPage() {
   const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
 
   const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
-  const [rawData, setRawData] = useState<Hymn[]>()
+  const [rawData, setRawData] = useState<ProcessedHymn[]>()
   const [data, setData] = useState<ProcessedHymn[]>()
   const [inputValue, setInputValue] = useState('')
   const [showClearBtn, setShowClearBtn] = useState(false)
@@ -37,68 +194,9 @@ export default function SearchPage() {
   const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
 
   const inputRef = useRef<HTMLInputElement>(null)
+  const lastSearchRef = useRef<string>('')
 
-  const Search = (data: Hymn[], input: string) => {
-    const NamesCollector: ProcessedHymn[] = []
-    const LyricsCollector: ProcessedHymn[] = []
-    const settings = JSON.parse(localStorage.getItem('settings') || '{}')
-    const contextSearch = settings.contextSearch || false
-
-    data.forEach((hymn) => {
-      const { id, book, name, song } = hymn
-      const formattedName = reformatText(name)
-      const formattedInput = reformatText(input)
-
-      if (formattedName.includes(formattedInput)) {
-        NamesCollector.push({ id, book, name, song })
-      } else if (contextSearch) {
-        const lyrics = Object.values(song.lyrics)
-          .flat()
-          .filter((verse) => verse.startsWith(' '))
-          .map((verse) => verse.slice(1))
-
-        lyrics.forEach((verse, index) => {
-          if (input.match(/^[0-9]+$/)) return
-
-          const formattedVerse = reformatText(verse)
-          if (formattedVerse.includes(formattedInput)) {
-            LyricsCollector.push({
-              id,
-              book,
-              name,
-              song,
-              lyrics: [
-                lyrics[index - 1] ? `${lyrics[index - 2] ? '...' : ''} ${lyrics[index - 1]}` : '',
-                verse,
-                lyrics[index + 1] ? lyrics[index + 1] : '',
-                lyrics[index + 2] ? `${lyrics[index + 2]} ${lyrics[index + 3] ? '...' : ''}` : '',
-              ],
-            })
-          }
-        })
-      }
-    })
-
-    const collectorMap = new Map()
-    const allHymns = [...NamesCollector, ...LyricsCollector]
-
-    allHymns.forEach((hymn) => {
-      if (!collectorMap.has(hymn.name)) {
-        collectorMap.set(hymn.name, hymn)
-      }
-    })
-
-    setData(Array.from(collectorMap.values()))
-  }
-
-  const cleanUp = useCallback(() => {
-    localStorage.removeItem('prevSearch')
-    setInputValue('')
-    inputRef.current?.focus()
-    setRenderPage(0)
-    setData(rawData)
-  }, [rawData])
-
+  // Builds link to hymn detail page
   const hymnLink = (hymn: ProcessedHymn) => ({
     pathname: '/hymn',
     query: {
@@ -107,11 +205,77 @@ export default function SearchPage() {
     },
   })
 
+  // Main search algorithm: collect matches from names/lyrics, dedupe, and sort
+  const Search = useCallback(
+    (data: ProcessedHymn[], input: string) => {
+      const settings = localSettings || defaultSettings
+      const contextSearch = settings.contextSearch || false
+      const formattedInput = reformatText(input)
+
+      // Collect all matching hymns from titles and lyrics
+      const NamesCollector: ProcessedHymn[] = []
+      const LyricsCollector: ProcessedHymn[] = []
+
+      data.forEach((hymn) => {
+        // Try to match in title first
+        const nameMatch = matchNames(hymn, formattedInput)
+        if (nameMatch) {
+          NamesCollector.push(nameMatch)
+          return // Skip lyrics search if title matches
+        }
+
+        // Try to match in lyrics (if enabled)
+        if (contextSearch) {
+          const lyricMatches = matchLyrics(hymn, input, formattedInput)
+          LyricsCollector.push(...lyricMatches)
+        }
+      })
+
+      // Deduplicate by hymn book + name
+      const collectorMap = new Map<string, ProcessedHymn>()
+      const allMatches = [...NamesCollector, ...LyricsCollector]
+
+      allMatches.forEach((hymn) => {
+        if (!collectorMap.has(hymn.dedupeKey)) {
+          collectorMap.set(hymn.dedupeKey, hymn)
+        }
+      })
+
+      const result = Array.from(collectorMap.values())
+
+      // Sort results using appropriate comparator
+      if (!book) {
+        result.sort(compareAllBooks(unlocked))
+      } else {
+        result.sort(compareSingleBook)
+      }
+
+      setData(result)
+      lastSearchRef.current = input
+    },
+    [book, localSettings]
+  )
+
+  // Clears search box and restores initial data view
+  const cleanUp = useCallback(() => {
+    localStorage.removeItem('prevSearch')
+    setInputValue('')
+    inputRef.current?.focus()
+    setRenderPage(0)
+    if (rawData) {
+      Search(rawData, '')
+    } else {
+      setData(rawData)
+    }
+  }, [rawData, Search])
+
+  // Run search whenever input or raw data changes
   useEffect(() => {
     const settings = JSON.parse(localStorage.getItem('settings') || '{}')
     setLocalSettings(settings)
   }, [])
 
+  // Restore focus and previous search if needed
   useEffect(() => {
     if (!router.isReady) return
 
@@ -126,15 +290,20 @@ export default function SearchPage() {
     if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search)
   }, [router.isReady])
 
+  // Fetch hymns data (all books or single) on mount/change
   useEffect(() => {
     if (!router.isReady) return
 
     const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{"search": null}')
 
     const loadData = (fetchData: Hymn[]) => {
-      setRawData(fetchData)
-      if (prevSearch?.search) Search(fetchData, prevSearch.search || '')
-      else setData(fetchData)
+      const prepared = fetchData.map(mapHymn)
+      setRawData(prepared)
+
+      const initialSearch = prevSearch?.search || ''
+      if (initialSearch) setInputValue(initialSearch)
+
+      Search(prepared, initialSearch)
     }
 
     if (!book) {
@@ -153,9 +322,7 @@ export default function SearchPage() {
             (response): response is AxiosResponse<Hymn[]> => response !== null
           )
 
-          const hymns = validResponses
-            .flatMap((response) => response.data)
-            .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
+          const hymns = validResponses.flatMap((response) => response.data)
 
           loadData(hymns)
         } catch (err) {
@@ -170,7 +337,12 @@ export default function SearchPage() {
 
       axios
         .get(`database/${book}.json`, { signal: abortController.signal })
-        .then(({ data }) => loadData(data))
+        .then(({ data }) => {
+          const sorted = [...data].sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { numeric: true })
+          )
+          loadData(sorted)
+        })
         .catch((err) => {
           if (axios.isCancel(err)) return
           console.error(err)
@@ -179,25 +351,24 @@ export default function SearchPage() {
 
       return () => abortController.abort()
     }
-  }, [router, book])
+  }, [router, book, Search])
 
+  // Run search whenever input or raw data changes
   useEffect(() => {
     setShowClearBtn(!!inputValue)
 
     if (inputValue && !rawData) inputRef.current?.select()
 
     if (rawData) {
-      if (inputValue) {
-        const timeout = setTimeout(() => {
-          Search(rawData, inputValue)
-        }, 100)
-        return () => clearTimeout(timeout)
-      } else {
-        setData(rawData)
-      }
+      if (inputValue === lastSearchRef.current) return
+      const timeout = setTimeout(() => {
+        Search(rawData, inputValue || '')
+      }, 50)
+      return () => clearTimeout(timeout)
     }
-  }, [inputValue, rawData])
+  }, [inputValue, rawData, Search])
 
+  // Handle infinite scroll and back-to-top visibility
   useEffect(() => {
     const scrollEvent = () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
@@ -210,6 +381,7 @@ export default function SearchPage() {
     return () => window.removeEventListener('scroll', scrollEvent)
   }, [])
 
+  // Paginate rendered data chunks
   useEffect(() => {
     if (!data) return
 
@@ -223,6 +395,7 @@ export default function SearchPage() {
     setLoading(false)
   }, [data, renderPage])
 
+  // Sync favorites flags from localStorage
   useEffect(() => {
     if (!data) return
 
@@ -240,7 +413,7 @@ export default function SearchPage() {
     setFavoritesState(states)
   }, [data])
 
-  // Random hymn function
+  // Opens a random hymn
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)
     if (foundHymn) {
@@ -283,6 +456,7 @@ export default function SearchPage() {
     return () => document.removeEventListener('keyup', keyupEvent)
   }, [router, data, inputValue, cleanUp, randomHymn])
 
+  // Renders a single search result row
   const SearchResult = ({
     hymn,
     quickSearch,

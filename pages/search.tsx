@@ -131,11 +131,6 @@ const compareAllBooks = (unlocked: boolean) => (a: ProcessedHymn, b: ProcessedHy
   const ib = order.indexOf(bookShortcut(b.book))
   if (ia !== ib) return ia - ib
 
-  // Shorter titles first (stability)
-  const la = a.name.length
-  const lb = b.name.length
-  if (la !== lb) return la - lb
-
   // Alphabetical by name (numeric-aware) as final tiebreaker
   const nameCmp = a.name.localeCompare(b.name, undefined, { numeric: true })
   if (nameCmp !== 0) return nameCmp
@@ -165,11 +160,6 @@ const compareSingleBook = (a: ProcessedHymn, b: ProcessedHymn) => {
   if (aHasNumber && bHasNumber && na === nb) {
     if (a.hasLetterSuffix !== b.hasLetterSuffix) return a.hasLetterSuffix ? 1 : -1
   }
-
-  // Shorter titles first (stability)
-  const la = a.name.length
-  const lb = b.name.length
-  if (la !== lb) return la - lb
 
   // Alphabetical by name (numeric-aware) as final tiebreaker
   const nameCmp = a.name.localeCompare(b.name, undefined, { numeric: true })

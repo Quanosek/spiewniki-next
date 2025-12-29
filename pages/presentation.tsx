@@ -103,7 +103,9 @@ export default function PresentationPage() {
         .filter((line) => line.startsWith(' '))
         .map((line) => line.slice(1))
         .map((line) => line.replace(/\(.*?\)/g, ''))
-        .filter((line) => line !== '' && line !== ' ')
+        .map((line) => line.replace(/\s+/g, ' ').trim())
+        .map((line) => line.replace(/\s+([.,;:!?])/g, '$1'))
+        .filter((line) => line !== '')
     )
   }, [hymn, order, slide])
 

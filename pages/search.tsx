@@ -182,20 +182,6 @@ export default function SearchPage() {
   const router = useRouter()
   const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
 
-  const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
-  const [rawData, setRawData] = useState<ProcessedHymn[]>()
-  const [data, setData] = useState<ProcessedHymn[]>()
-  const [inputValue, setInputValue] = useState('')
-  const [showClearBtn, setShowClearBtn] = useState(false)
-  const [renderPage, setRenderPage] = useState(0)
-  const [showTopBtn, setShowTopBtn] = useState(false)
-  const [renderData, setRenderData] = useState<ProcessedHymn[]>([])
-  const [isLoading, setLoading] = useState(true)
-  const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
-
-  const inputRef = useRef<HTMLInputElement>(null)
-  const lastSearchRef = useRef<string>('')
-
   // Builds link to hymn detail page
   const hymnLink = (hymn: ProcessedHymn) => ({
     pathname: '/hymn',
@@ -205,11 +191,19 @@ export default function SearchPage() {
     },
   })
 
+  // Search related state
+  const [rawData, setRawData] = useState<ProcessedHymn[]>()
+  const [data, setData] = useState<ProcessedHymn[]>()
+  const [inputValue, setInputValue] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+  const lastSearchRef = useRef<string>('')
+  const searchRef = useRef<(data: ProcessedHymn[], input: string) => void>()
+
   // Main search algorithm: collect matches from names/lyrics, dedupe, and sort
   const Search = useCallback(
     (data: ProcessedHymn[], input: string) => {
-      const settings = localSettings || defaultSettings
-      const contextSearch = settings.contextSearch || false
+      const settings = JSON.parse(localStorage.getItem('settings') || '{}')
+      const contextSearch = settings.contextSearch ?? false
       const formattedInput = reformatText(input)
 
       // Collect all matching hymns from titles and lyrics
@@ -253,23 +247,30 @@ export default function SearchPage() {
       setData(result)
       lastSearchRef.current = input
     },
-    [book, localSettings]
+    [book]
   )
 
+  // Update search ref
+  searchRef.current = Search
+
   // Clears search box and restores initial data view
+  const [showClearBtn, setShowClearBtn] = useState(false)
+
   const cleanUp = useCallback(() => {
     localStorage.removeItem('prevSearch')
     setInputValue('')
     inputRef.current?.focus()
     setRenderPage(0)
     if (rawData) {
-      Search(rawData, '')
+      searchRef.current?.(rawData, '')
     } else {
       setData(rawData)
     }
-  }, [rawData, Search])
+  }, [rawData])
 
   // Run search whenever input or raw data changes
+  const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
+
   useEffect(() => {
     const settings = JSON.parse(localStorage.getItem('settings') || '{}')
     setLocalSettings(settings)
@@ -303,7 +304,7 @@ export default function SearchPage() {
       const initialSearch = prevSearch?.search || ''
       if (initialSearch) setInputValue(initialSearch)
 
-      Search(prepared, initialSearch)
+      searchRef.current?.(prepared, initialSearch)
     }
 
     if (!book) {
@@ -351,7 +352,7 @@ export default function SearchPage() {
 
       return () => abortController.abort()
     }
-  }, [router, book, Search])
+  }, [router, book])
 
   // Run search whenever input or raw data changes
   useEffect(() => {
@@ -362,13 +363,16 @@ export default function SearchPage() {
     if (rawData) {
       if (inputValue === lastSearchRef.current) return
       const timeout = setTimeout(() => {
-        Search(rawData, inputValue || '')
+        searchRef.current?.(rawData, inputValue || '')
       }, 50)
       return () => clearTimeout(timeout)
     }
-  }, [inputValue, rawData, Search])
+  }, [inputValue, rawData])
 
   // Handle infinite scroll and back-to-top visibility
+  const [renderPage, setRenderPage] = useState(0)
+  const [showTopBtn, setShowTopBtn] = useState(false)
+
   useEffect(() => {
     const scrollEvent = () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
@@ -382,6 +386,9 @@ export default function SearchPage() {
   }, [])
 
   // Paginate rendered data chunks
+  const [renderData, setRenderData] = useState<ProcessedHymn[]>([])
+  const [isLoading, setLoading] = useState(true)
+
   useEffect(() => {
     if (!data) return
 
@@ -396,6 +403,8 @@ export default function SearchPage() {
   }, [data, renderPage])
 
   // Sync favorites flags from localStorage
+  const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
+
   useEffect(() => {
     if (!data) return
 
@@ -668,11 +677,12 @@ export default function SearchPage() {
               setInputValue(value)
               setRenderPage(0)
 
+              const settings = JSON.parse(localStorage.getItem('settings') || '{}')
               localStorage.setItem(
                 'prevSearch',
                 JSON.stringify({
                   book,
-                  search: localSettings?.quickSearch ? value : '',
+                  search: settings.quickSearch ? value : '',
                 })
               )
 

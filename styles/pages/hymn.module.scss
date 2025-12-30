@@ -28,7 +28,7 @@
     position: relative;
   }
 
-  &.hide {
+  &.hide:not(.static) {
     top: calc(var(--mobileHeader-height) * -1);
     box-shadow: unset;
   }

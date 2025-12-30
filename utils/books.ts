@@ -22,7 +22,7 @@ const bookShortcut = (input: string) => {
 
 // Get list of available books
 const booksList = (unlocked: boolean) => {
-  const booksList = ['B', 'C', 'N', 'K', 'P', 'E', 'S', 'M', 'R']
+  const booksList = ['B', 'C', 'N', 'K', 'P', 'M', 'E', 'S', 'R']
   const lockedBooksList = ['B', 'C', 'N', 'M']
   const list = unlocked ? booksList : lockedBooksList
 

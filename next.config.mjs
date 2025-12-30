@@ -3,20 +3,13 @@
 import withPWAInit from '@ducanh2912/next-pwa'
 
 const lockedFiles = []
-const excludedBooks = [
-  'Śpiewnik Koziański',
-  'Śpiewnik Poznański',
-  'Śpiewniczek Młodzieżowy',
-  'Śpiewnik Międzynarodowy (IC)',
-  'Pieśni Chóru Syloe',
-  'Różne pieśni',
-]
+const excludedBooks = ['K', 'P', 'E', 'S', 'R']
 
 excludedBooks.forEach((book) => lockedFiles.push(`!database/${book}.json`))
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-const publicExcludes = ['!mp3/**/*', '!pdf/*/*'].concat(unlocked ? [] : lockedFiles)
+const publicExcludes = ['!pdf/*/*', '!mp3/**/*'].concat(unlocked ? [] : lockedFiles)
 
 const runtimeCaching = [
   {
@@ -86,30 +79,6 @@ const runtimeCaching = [
     },
   },
   {
-    urlPattern: /\.(?:mp3|wav|ogg)$/i,
-    handler: 'CacheFirst',
-    options: {
-      rangeRequests: true,
-      cacheName: 'static-audio-assets',
-      expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
-      },
-    },
-  },
-  {
-    urlPattern: /\.(?:mp4|webm)$/i,
-    handler: 'CacheFirst',
-    options: {
-      rangeRequests: true,
-      cacheName: 'static-video-assets',
-      expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
-      },
-    },
-  },
-  {
     urlPattern: /\.(?:js)$/i,
     handler: 'StaleWhileRevalidate',
     options: {
@@ -144,12 +113,12 @@ const runtimeCaching = [
   },
   {
     urlPattern: /\.(?:json|xml|csv)$/i,
-    handler: 'NetworkFirst',
+    handler: 'StaleWhileRevalidate',
     options: {
       cacheName: 'static-data-assets',
       expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxEntries: 64,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       },
     },
   },
@@ -185,7 +154,7 @@ const runtimeCaching = [
       request.headers.get('Next-Router-Prefetch') === '1' &&
       sameOrigin &&
       !pathname.startsWith('/api/'),
-    handler: 'NetworkFirst',
+    handler: 'StaleWhileRevalidate',
     options: {
       cacheName: 'pages-rsc-prefetch',
       expiration: {
@@ -197,7 +166,7 @@ const runtimeCaching = [
   {
     urlPattern: ({ request, url: { pathname }, sameOrigin }) =>
       request.headers.get('RSC') === '1' && sameOrigin && !pathname.startsWith('/api/'),
-    handler: 'NetworkFirst',
+    handler: 'StaleWhileRevalidate',
     options: {
       cacheName: 'pages-rsc',
       expiration: {
@@ -208,7 +177,7 @@ const runtimeCaching = [
   },
   {
     urlPattern: ({ url: { pathname }, sameOrigin }) => sameOrigin && !pathname.startsWith('/api/'),
-    handler: 'NetworkFirst',
+    handler: 'StaleWhileRevalidate',
     options: {
       cacheName: 'pages',
       expiration: {

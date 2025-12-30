@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-import shareButton from '@/utils/shareButton'
+import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
+import MenuModal from '@/components/mobile-menu/menu-modal'
 
 import styles from '@/styles/pages/error.module.scss'
 
@@ -20,7 +21,7 @@ export default function ErrorPage() {
     const counter = setInterval(() => {
       setSeconds((prev) => {
         if (prev <= 1) {
-          router.push('/')
+          // router.push('/')
           return 0
         }
         return prev - 1
@@ -70,31 +71,10 @@ export default function ErrorPage() {
             <h1>Śpiewniki</h1>
           </Link>
 
-          {!unlocked && (
-            <button
-              className={styles.hamburgerIcon}
-              onClick={() => showHamburgerMenu((prev) => !prev)}
-            >
-              <svg className={`${hamburgerMenu && styles.active} icon`} viewBox='0 0 64 48'>
-                <path d='M19,15 L45,15 C70,15 58,-2 49.0177126,7 L19,37'></path>
-                <path d='M19,24 L45,24 C61.2371586,24 57,49 41,33 L32,24'></path>
-                <path d='M45,33 L19,33 C-8,33 6,-2 22,14 L45,37'></path>
-              </svg>
-            </button>
-          )}
+          {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />}
         </div>
 
-        {hamburgerMenu && (
-          <div className={styles.hamburgerMenu}>
-            <button onClick={shareButton}>
-              <p>Udostępnij</p>
-            </button>
-
-            <Link href='https://nastrazy.org'>
-              <p>Nastrazy.org</p>
-            </Link>
-          </div>
-        )}
+        {unlocked || <MenuModal active={hamburgerMenu} />}
 
         <div className={styles.content}>
           <h1>Strona napotkała problem</h1>

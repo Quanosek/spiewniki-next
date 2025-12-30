@@ -7,8 +7,8 @@ import { useRouter } from 'next/router'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
 import { ThemeProvider } from 'next-themes'
 
+import Menu, { hiddenMenuQuery } from '@/components/menu/_handler'
 import { defaultSettings } from '@/components/menu/settings'
-import Menu, { hiddenMenuQuery } from '@/components/menu'
 
 import 'the-new-css-reset/css/reset.css'
 import '@/styles/globals.scss'
@@ -124,7 +124,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <p>Skróty klawiszowe</p>
               </button>
 
-              {!unlocked && (
+              {unlocked || (
                 <Link href='https://nastrazy.org'>
                   <p>Nastrazy.org</p>
                 </Link>

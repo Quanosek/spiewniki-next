@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { useEffect, useState, useCallback, ReactElement } from 'react'
 import { useTheme } from 'next-themes'
 
-import { hiddenMenuQuery } from '../menu'
+import { hiddenMenuQuery } from './_handler'
 
 import styles from '@/styles/components/menu.module.scss'
 

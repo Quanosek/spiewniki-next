@@ -4,10 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 
+import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
+import MenuModal from '@/components/mobile-menu/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
+
 import { bookShortcut } from '@/utils/books'
 import getRandomHymn from '@/utils/getRandomHymn'
-import shareButton from '@/utils/shareButton'
 
 import styles from '@/styles/pages/index.module.scss'
 
@@ -91,31 +93,10 @@ export default function HomePage() {
             <h1>Śpiewniki</h1>
           </Link>
 
-          {!unlocked && (
-            <button
-              className={styles.hamburgerIcon}
-              onClick={() => showHamburgerMenu(!hamburgerMenu)}
-            >
-              <svg className={`${hamburgerMenu && styles.active} icon`} viewBox='0 0 64 48'>
-                <path d='M19,15 L45,15 C70,15 58,-2 49.0177126,7 L19,37'></path>
-                <path d='M19,24 L45,24 C61.2371586,24 57,49 41,33 L32,24'></path>
-                <path d='M45,33 L19,33 C-8,33 6,-2 22,14 L45,37'></path>
-              </svg>
-            </button>
-          )}
+          {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />}
         </div>
 
-        {hamburgerMenu && (
-          <div className={styles.hamburgerMenu}>
-            <button onClick={shareButton}>
-              <p>Udostępnij</p>
-            </button>
-
-            <Link href='https://nastrazy.org'>
-              <p>Nastrazy.org</p>
-            </Link>
-          </div>
-        )}
+        {unlocked || <MenuModal active={hamburgerMenu} />}
 
         <div className={styles.searchBox}>
           <div className={styles.searchIcon}>
@@ -199,7 +180,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      <MobileNavbar unlocked={unlocked} />
+      {unlocked && <MobileNavbar unlocked={unlocked} />}
     </>
   )
 }

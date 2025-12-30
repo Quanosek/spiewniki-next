@@ -23,6 +23,11 @@
     display: none;
   }
 
+  &.static {
+    z-index: unset;
+    position: relative;
+  }
+
   &.hide {
     top: calc(var(--mobileHeader-height) * -1);
     box-shadow: unset;
@@ -40,19 +45,15 @@
     background-color: transparent;
     transition: 150ms transform ease-out;
 
-    @media (max-width: 768px) {
-      img {
-        height: min(25px, 5.5vw);
-        width: auto;
+    img {
+      height: min(25px, 5.5vw);
+      width: auto;
 
-        &:first-child {
-          height: min(23px, 5.25vw);
-        }
+      &:first-child {
+        height: min(23px, 5.25vw);
       }
-    }
 
-    @media (max-width: 425px) {
-      img {
+      @media (max-width: 425px) {
         height: 6vw;
       }
     }
@@ -72,6 +73,11 @@
 
   @media (max-width: 768px) {
     padding: var(--mobileHeader-height) 2% 5%;
+
+    &.static {
+      margin-top: -1rem !important;
+      padding-top: 0 !important;
+    }
   }
 
   @media print {
@@ -298,6 +304,10 @@ $button-gap: 12px;
     padding: 0 0 calc(var(--navbar-height) + 3em);
     min-height: unset;
     background-color: transparent;
+
+    &.static {
+      padding-bottom: 3em !important;
+    }
 
     .noChords {
       margin: 1rem 0 -0.5em;
@@ -539,7 +549,7 @@ $button-gap: 12px;
 .controlsMobile {
   position: fixed;
   left: 0;
-  bottom: calc(var(--navbar-height) + 1.5rem);
+  bottom: 3%;
   padding: 0 3%;
   width: 100%;
   display: flex;
@@ -550,12 +560,15 @@ $button-gap: 12px;
     display: none;
   }
 
+  &.marginBottom {
+    bottom: calc(var(--navbar-height) + 1.5rem);
+  }
+
   button {
     opacity: 85%;
-    position: relative;
     top: 0;
-    padding: min(0.8rem, 5vw);
-    height: min(3rem, 16vw);
+    padding: min(0.8rem, 3.5vw);
+    height: min(3rem, 12vw);
     aspect-ratio: 1/1;
     border-radius: 100%;
     background-color: var(--elements);

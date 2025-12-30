@@ -53,7 +53,7 @@ export default function MenuComponent() {
   }, [router, menu, params])
 
   // Dynamic import menu
-  const DynamicComponent = dynamic(() => import(`./menu/${menu}`), {
+  const DynamicComponent = dynamic(() => import(`./${menu}`), {
     ssr: false,
   })
 

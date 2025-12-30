@@ -4,7 +4,10 @@ import { useCallback } from 'react'
 
 import getRandomHymn from '@/utils/getRandomHymn'
 import shareButton from '@/utils/shareButton'
-import { hiddenMenuQuery } from './menu'
+
+import { hiddenMenuQuery } from './menu/_handler'
+
+import styles from '@/styles/components/mobile-navbar.module.scss'
 
 export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean }) {
   const router = useRouter()
@@ -22,28 +25,24 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
     }
   }, [unlocked, book, router])
 
-  const moreButtons = unlocked || router.pathname !== '/'
-
   return (
-    <nav>
-      {moreButtons && (
-        <button
-          onClick={() => {
-            localStorage.removeItem('prevSearch')
-            router.push(unlocked ? '/books' : '/')
-          }}
-        >
-          <Image
-            className='icon'
-            alt='books'
-            src='/icons/book.svg'
-            width={25}
-            height={25}
-            draggable={false}
-          />
-          <p>Śpiewniki</p>
-        </button>
-      )}
+    <nav className={styles.navbar}>
+      <button
+        onClick={() => {
+          localStorage.removeItem('prevSearch')
+          router.push(unlocked ? '/books' : '/')
+        }}
+      >
+        <Image
+          className='icon'
+          alt='books'
+          src='/icons/book.svg'
+          width={25}
+          height={25}
+          draggable={false}
+        />
+        <p>Śpiewniki</p>
+      </button>
 
       <button onClick={() => hiddenMenuQuery('favorites')}>
         <Image
@@ -81,19 +80,17 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
         <p>Ustawienia</p>
       </button>
 
-      {moreButtons && (
-        <button onClick={shareButton}>
-          <Image
-            className='icon'
-            alt='share'
-            src='/icons/share.svg'
-            width={25}
-            height={25}
-            draggable={false}
-          />
-          <p>Udostępnij</p>
-        </button>
-      )}
+      <button onClick={shareButton}>
+        <Image
+          className='icon'
+          alt='share'
+          src='/icons/share.svg'
+          width={25}
+          height={25}
+          draggable={false}
+        />
+        <p>Udostępnij</p>
+      </button>
     </nav>
   )
 }

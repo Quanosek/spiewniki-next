@@ -5,7 +5,8 @@ import { useState } from 'react'
 import axios from 'axios'
 
 import { bookShortcut, booksList } from '@/utils/books'
-import { hiddenMenuQuery } from '../menu'
+
+import { hiddenMenuQuery } from './_handler'
 
 import styles from '@/styles/components/menu.module.scss'
 

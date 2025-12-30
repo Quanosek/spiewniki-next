@@ -256,7 +256,7 @@ export default function PresentationPage() {
               transition: 'opacity 200ms ease-in',
             }}
           >
-            {!ic && (
+            {ic || (
               <div className={styles.title}>
                 <h1>{hymn?.name}</h1>
                 <h2>{hymn?.book}</h2>

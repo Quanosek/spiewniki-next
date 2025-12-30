@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 
-import { hiddenMenuQuery } from '../menu'
+import { hiddenMenuQuery } from './_handler'
 
 import styles from '@/styles/components/menu.module.scss'
 

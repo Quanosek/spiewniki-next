@@ -1,7 +1,7 @@
 @import '../mixins';
 
 .menuComponent {
-  z-index: 5;
+  z-index: 100;
   position: relative;
   display: flex;
   justify-content: center;
@@ -141,7 +141,6 @@
     }
 
     button {
-      position: relative;
       padding: min(2vw, 0.5rem) min(6vw, 1.5rem);
       display: flex;
       align-items: center;

@@ -179,6 +179,7 @@ h2 {
 }
 
 button {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -188,66 +189,6 @@ button {
 
   &:hover {
     background-color: var(--elements-hover);
-  }
-}
-
-nav {
-  z-index: 1;
-  position: fixed;
-  bottom: 0;
-  padding: var(--space) calc(var(--space) * 2) env(safe-area-inset-bottom);
-  height: var(--navbar-height);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  gap: 3vw;
-  background-color: var(--elements);
-  box-shadow: 0 12px 16px 2px #000000;
-  user-select: none;
-
-  button {
-    height: calc(100% - 2 * var(--space));
-    width: 5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;
-    background-color: transparent;
-
-    &:hover {
-      background-color: var(--elements-hover);
-    }
-
-    p {
-      opacity: 0.85;
-      font-size: 10px;
-    }
-  }
-
-  @media (min-width: 769px) {
-    display: none;
-  }
-
-  @media (max-width: 320px) {
-    gap: 1vw;
-
-    button {
-      width: 20%;
-
-      img {
-        height: 7.5vw;
-      }
-
-      p {
-        font-size: 3vw;
-      }
-    }
-  }
-
-  @media print {
-    display: none;
   }
 }
 

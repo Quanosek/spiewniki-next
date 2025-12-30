@@ -6,10 +6,14 @@ import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 
 import { defaultSettings } from '@/components/menu/settings'
+import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
+import MenuModal from '@/components/mobile-menu/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
+
 import { bookShortcut } from '@/utils/books'
 import getRandomHymn from '@/utils/getRandomHymn'
 import shareButton from '@/utils/shareButton'
+
 import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/pages/hymn.module.scss'
@@ -270,6 +274,21 @@ export default function HymnPage() {
     }
   }, [hymn])
 
+  // Prevent scrolling on active hamburger menu
+  const [hamburgerMenu, showHamburgerMenu] = useState(false)
+
+  useEffect(() => {
+    if (!hamburgerMenu) return
+
+    const leftScroll = document.documentElement.scrollLeft
+    const topScroll = document.documentElement.scrollTop
+
+    const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
+
+    document.addEventListener('scroll', scrollEvent)
+    return () => document.removeEventListener('scroll', scrollEvent)
+  }, [hamburgerMenu])
+
   // Handle additional hymn files
   const [hymnFiles, setHymnFiles] = useState<HymnFiles>({} as HymnFiles)
   const [filesLoading, setFilesLoading] = useState(true)
@@ -488,7 +507,9 @@ export default function HymnPage() {
       <main style={{ padding: 0 }}>
         {hymn && (
           <>
-            <div className={`${styles.title} ${hideControls ? styles.hide : ''}`}>
+            <div
+              className={`${styles.title} ${unlocked ? '' : styles.static} ${hideControls ? styles.hide : ''}`}
+            >
               <button onClick={openPrevSearch}>
                 <Image
                   style={{ rotate: '90deg' }}
@@ -538,10 +559,14 @@ export default function HymnPage() {
                     draggable={false}
                   />
                 </button>
+
+                {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />}
               </div>
             </div>
 
-            <div className={styles.container}>
+            {unlocked || <MenuModal active={hamburgerMenu} />}
+
+            <div className={`${styles.container} ${unlocked ? '' : styles.static}`}>
               <div className={styles.options}>
                 <button title='Powróć do wyników wyszukiwania [Esc]' onClick={openPrevSearch}>
                   <Image
@@ -579,7 +604,10 @@ export default function HymnPage() {
               </div>
 
               <div className={styles.center}>
-                <div className={styles.content} style={{ fontSize }}>
+                <div
+                  className={`${styles.content} ${unlocked ? '' : styles.static}`}
+                  style={{ fontSize }}
+                >
                   {showChords && !hasChords && (
                     <span className={styles.noChords}>Brak akordów do wyświetlenia</span>
                   )}
@@ -634,7 +662,7 @@ export default function HymnPage() {
                   </button>
                 </div>
 
-                <div className={styles.controlsMobile}>
+                <div className={`${styles.controlsMobile} ${unlocked ? styles.marginBottom : ''}`}>
                   <button
                     className={hideControls ? styles.hide : ''}
                     onClick={() => changeHymn(hymn.id - 1)}
@@ -822,7 +850,7 @@ export default function HymnPage() {
         )}
       </main>
 
-      <MobileNavbar unlocked={unlocked} />
+      {unlocked && <MobileNavbar unlocked={unlocked} />}
     </>
   )
 }

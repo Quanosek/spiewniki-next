@@ -7,9 +7,13 @@ import Highlighter from 'react-highlight-words'
 import axios, { AxiosResponse } from 'axios'
 
 import { defaultSettings } from '@/components/menu/settings'
+import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
+import MenuModal from '@/components/mobile-menu/menu-modal'
+
 import { bookShortcut, booksList } from '@/utils/books'
 import getRandomHymn from '@/utils/getRandomHymn'
 import { reformatText } from '@/utils/simplifyText'
+
 import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/pages/search.module.scss'
@@ -412,6 +416,21 @@ export default function SearchPage() {
     setFavoritesState(states)
   }, [data])
 
+  // Prevent scrolling on active hamburger menu
+  const [hamburgerMenu, showHamburgerMenu] = useState(false)
+
+  useEffect(() => {
+    if (!hamburgerMenu) return
+
+    const leftScroll = document.documentElement.scrollLeft
+    const topScroll = document.documentElement.scrollTop
+
+    const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
+
+    document.addEventListener('scroll', scrollEvent)
+    return () => document.removeEventListener('scroll', scrollEvent)
+  }, [hamburgerMenu])
+
   // Opens a random hymn
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)
@@ -627,9 +646,9 @@ export default function SearchPage() {
             <p>Powrót</p>
           </Link>
 
-          {!isLoading && <h1>{bookShortcut(book || 'all')}</h1>}
+          {isLoading || <h1>{bookShortcut(book || 'all')}</h1>}
 
-          {unlocked && (
+          {unlocked ? (
             <Link href='/books' title='Wybierz inny śpiewnik [B]'>
               <p>Zmień śpiewnik</p>
               <Image
@@ -641,8 +660,12 @@ export default function SearchPage() {
                 draggable={false}
               />
             </Link>
+          ) : (
+            <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />
           )}
         </div>
+
+        {unlocked || <MenuModal active={hamburgerMenu} />}
 
         <div className={styles.searchBox}>
           <div className={styles.searchIcon}>

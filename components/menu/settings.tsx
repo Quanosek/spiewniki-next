@@ -1,8 +1,9 @@
 import Image from 'next/image'
-import { useEffect, useState, useCallback, ReactElement } from 'react'
+import { useEffect, useState, useCallback, ReactElement, useRef } from 'react'
 import { useTheme } from 'next-themes'
 
 import { hiddenMenuQuery } from './_handler'
+import { THEMES } from '@/utils/enums'
 
 import styles from '@/styles/components/menu.module.scss'
 
@@ -24,7 +25,12 @@ export const defaultSettings = {
 
 export default function SettingsMenu() {
   const { theme, setTheme } = useTheme()
-  const defaultTheme = unlocked ? 'black' : 'white'
+  const defaultTheme = unlocked ? 'dark' : 'light'
+
+  const themeScrollRef = useRef<HTMLDivElement>(null)
+  const [isScrolling, setIsScrolling] = useState(false)
+  const [scrollStart, setScrollStart] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
 
   const settings: Settings = JSON.parse(localStorage.getItem('settings') as string)
 
@@ -79,7 +85,36 @@ export default function SettingsMenu() {
       )
     })
 
-    return <form className={styles.themeSelection}>{themes}</form>
+    const handleMouseDown = (e: React.MouseEvent) => {
+      setIsScrolling(true)
+      setScrollStart(e.clientX - (themeScrollRef.current?.getBoundingClientRect().left || 0))
+      setScrollLeft(themeScrollRef.current?.scrollLeft || 0)
+    }
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+      if (!isScrolling || !themeScrollRef.current) return
+      e.preventDefault()
+      const x = e.clientX - (themeScrollRef.current?.getBoundingClientRect().left || 0)
+      const walk = (x - scrollStart) * 1.5
+      themeScrollRef.current.scrollLeft = scrollLeft - walk
+    }
+
+    const handleMouseUp = () => {
+      setIsScrolling(false)
+    }
+
+    return (
+      <div
+        ref={themeScrollRef}
+        className={styles.themeSelectionWrapper}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        <div className={styles.themeSelection}>{themes}</div>
+      </div>
+    )
   }
 
   // Quick settings options buttons
@@ -127,9 +162,7 @@ export default function SettingsMenu() {
         <div className={styles.settingsSection}>
           <h3>Motyw kolorów:</h3>
 
-          {unlocked
-            ? Themes(['black', 'gray', 'white', 'reading'])
-            : Themes(['white', 'reading', 'gray', 'black'])}
+          {unlocked ? Themes(THEMES) : Themes(['light', 'dark', 'system'])}
         </div>
 
         {/* FONT SIZE */}

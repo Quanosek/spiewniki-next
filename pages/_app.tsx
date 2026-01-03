@@ -9,6 +9,7 @@ import { ThemeProvider } from 'next-themes'
 
 import Menu, { hiddenMenuQuery } from '@/components/menu/_handler'
 import { defaultSettings } from '@/components/menu/settings'
+import { THEMES } from '@/utils/enums'
 
 import 'the-new-css-reset/css/reset.css'
 import '@/styles/globals.scss'
@@ -28,6 +29,14 @@ export default function App({ Component, pageProps }: AppProps) {
     } catch (error) {
       console.error('Error parsing settings:', error)
       localStorage.setItem('settings', JSON.stringify(defaultSettings))
+    }
+
+    // Validate theme
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme && !THEMES.includes(savedTheme)) {
+      const fallbackTheme = unlocked ? 'dark' : 'light'
+      localStorage.setItem('theme', fallbackTheme)
+      router.reload()
     }
 
     // Set global accent color
@@ -62,9 +71,9 @@ export default function App({ Component, pageProps }: AppProps) {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       wakeLock?.release()
     }
-  }, [])
+  }, [router])
 
-  const defaultTheme = unlocked ? 'black' : 'white'
+  const defaultTheme = unlocked ? 'dark' : 'light'
 
   return (
     <>
@@ -72,11 +81,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name='viewport' content='initial-scale=1, width=device-width, user-scalable=no' />
       </Head>
 
-      <ThemeProvider
-        defaultTheme={defaultTheme}
-        enableColorScheme={false}
-        themes={['black', 'dark-blue', 'gray', 'white', 'reading', 'light-blue', 'light-purple']}
-      >
+      <ThemeProvider defaultTheme={defaultTheme} enableColorScheme={false} themes={THEMES}>
         {process.env.NODE_ENV === 'production' && (
           <GoogleAnalytics
             trackPageViews

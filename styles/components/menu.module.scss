@@ -72,7 +72,7 @@
   }
 }
 
-// Menu components template
+//! Menu components template
 
 .content {
   display: flex;
@@ -115,7 +115,7 @@
   }
 }
 
-// Favorites menu
+//! Favorites menu
 
 .favorites {
   position: relative;
@@ -279,7 +279,7 @@
   }
 }
 
-// Settings menu
+//! Settings menu
 
 .settingsSection {
   padding: 1.2rem 0;
@@ -301,14 +301,40 @@
   }
 }
 
+.themeSelectionWrapper {
+  padding: 0 calc(min(3.5vw, 1rem) * 1.5);
+  width: 100%;
+  overflow-x: auto;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--menu-elements-hover);
+  }
+}
+
 .themeSelection {
-  display: flex;
+  padding: 0.5rem 0;
+  min-width: 100%;
+  display: inline-flex;
+  justify-content: center;
   gap: min(2.5vw, 0.8rem);
 
   label {
     padding: min(2.4vw, 8px) min(2vw, 7px);
     width: min(13vw, 3.4rem);
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -316,25 +342,6 @@
     gap: min(1.5vw, 5px);
     border-radius: 0.4rem;
     cursor: pointer;
-
-    &[for='black'] > *,
-    &[for='gray'] > * {
-      filter: invert(1);
-    }
-
-    &[for='black'] {
-      background-color: #000000;
-    }
-    &[for='gray'] {
-      background-color: #303030;
-    }
-
-    &[for='white'] {
-      background-color: #f3f3f3;
-    }
-    &[for='reading'] {
-      background-color: #f6efe2;
-    }
 
     img {
       height: auto;
@@ -350,6 +357,72 @@
       &:checked {
         background: url('/icons/check.svg') no-repeat center/60%;
       }
+    }
+
+    &[for='system'] {
+      background: linear-gradient(
+        125deg,
+        #f3f3f3 0%,
+        #f3f3f3 25%,
+        #d8d8d8 35%,
+        #b0b0b0 45%,
+        #a0a0a0 50%,
+        #808080 55%,
+        #505050 62%,
+        #383838 68%,
+        #202020 72%,
+        #000000 100%
+      );
+
+      input {
+        filter: invert(1);
+      }
+    }
+    &[for='dark'] {
+      background-color: #000000;
+      * {
+        filter: invert(1);
+      }
+    }
+    &[for='midnight'] {
+      background-color: #0d1433;
+      * {
+        filter: invert(1);
+      }
+    }
+    &[for='ocean'] {
+      background-color: #082a2a;
+      * {
+        filter: invert(1);
+      }
+    }
+    &[for='crimson'] {
+      background-color: #2a1018;
+      * {
+        filter: invert(1);
+      }
+    }
+    &[for='slate'] {
+      background-color: #23272f;
+      * {
+        filter: invert(1);
+      }
+    }
+
+    &[for='light'] {
+      background-color: #f3f3f3;
+    }
+    &[for='warm'] {
+      background-color: #f5e8d8;
+    }
+    &[for='sky'] {
+      background-color: #dde6f5;
+    }
+    &[for='mint'] {
+      background-color: #dceae0;
+    }
+    &[for='lavender'] {
+      background-color: #e8ddf3;
     }
   }
 }
@@ -476,7 +549,7 @@ $gap: min(2.5vw, 0.8rem);
       width: 100%;
       border-radius: 30px;
       background-color: #9c9c9c;
-      transition: 100ms ease-out;
+      transition: 50ms ease;
       cursor: pointer;
       pointer-events: all;
     }
@@ -497,13 +570,13 @@ $gap: min(2.5vw, 0.8rem);
       width: calc($dotSize * 1.5);
       border-radius: 30px;
       background-color: #ffffff;
-      transition: 100ms ease-out;
+      transition: 50ms ease;
       pointer-events: none;
     }
   }
 }
 
-// Shortcuts menu
+//! Shortcuts menu
 
 .shortcut {
   padding: 0.65rem;

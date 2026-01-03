@@ -9,6 +9,7 @@ import axios, { AxiosResponse } from 'axios'
 import { defaultSettings } from '@/components/menu/settings'
 import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
 import MenuModal from '@/components/mobile-menu/menu-modal'
+import MobileNavbar from '@/components/mobile-navbar'
 
 import { bookShortcut, booksList } from '@/utils/books'
 import getRandomHymn from '@/utils/getRandomHymn'
@@ -774,6 +775,8 @@ export default function SearchPage() {
           <Image alt='up' src='/icons/arrow.svg' width={25} height={25} draggable={false} />
         </button>
       </main>
+
+      <MobileNavbar unlocked={unlocked} />
     </>
   )
 }

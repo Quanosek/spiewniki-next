@@ -1,9 +1,7 @@
 @import '../mixins';
 
 .title {
-  z-index: 2;
-  position: fixed;
-  top: 0;
+  position: relative;
   padding: 1vw 2%;
   height: var(--mobileHeader-height);
   width: 100%;
@@ -21,16 +19,6 @@
 
   @media print {
     display: none;
-  }
-
-  &.static {
-    z-index: unset;
-    position: relative;
-  }
-
-  &.hide:not(.static) {
-    top: calc(var(--mobileHeader-height) * -1);
-    box-shadow: unset;
   }
 
   button {
@@ -72,12 +60,8 @@
   display: flex;
 
   @media (max-width: 768px) {
-    padding: var(--mobileHeader-height) 2% 5%;
-
-    &.static {
-      margin-top: -1rem !important;
-      padding-top: 0 !important;
-    }
+    margin-top: -1rem;
+    padding: 0 2% 5%;
   }
 
   @media print {
@@ -304,10 +288,6 @@ $button-gap: 12px;
     padding: 0 0 calc(var(--navbar-height) + 3em);
     min-height: unset;
     background-color: transparent;
-
-    &.static {
-      padding-bottom: 3em !important;
-    }
 
     .noChords {
       margin: 1rem 0 -0.5em;
@@ -549,7 +529,7 @@ $button-gap: 12px;
 .controlsMobile {
   position: fixed;
   left: 0;
-  bottom: 3%;
+  bottom: calc(var(--navbar-height) + 1.3rem);
   padding: 0 3%;
   width: 100%;
   display: flex;
@@ -558,10 +538,6 @@ $button-gap: 12px;
 
   @media (min-width: 769px) {
     display: none;
-  }
-
-  &.marginBottom {
-    bottom: calc(var(--navbar-height) + 1.5rem);
   }
 
   button {

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
+import MobileNavbar from '@/components/mobile-navbar'
 import { bookShortcut, booksList } from '@/utils/books'
 
 import styles from '@/styles/pages/books.module.scss'
@@ -100,6 +101,8 @@ export default function BooksPage() {
           ))}
         </div>
       </main>
+
+      <MobileNavbar unlocked={unlocked} />
     </>
   )
 }

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 
 import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
 import MenuModal from '@/components/mobile-menu/menu-modal'
+import MobileNavbar from '@/components/mobile-navbar'
 
 import styles from '@/styles/pages/error.module.scss'
 
@@ -87,6 +88,8 @@ export default function ErrorPage() {
           </p>
         </div>
       </main>
+
+      <MobileNavbar unlocked={unlocked} />
     </>
   )
 }

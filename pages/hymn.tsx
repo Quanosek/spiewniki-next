@@ -507,9 +507,7 @@ export default function HymnPage() {
       <main style={{ padding: 0 }}>
         {hymn && (
           <>
-            <div
-              className={`${styles.title} ${unlocked ? '' : styles.static} ${hideControls ? styles.hide : ''}`}
-            >
+            <div className={styles.title}>
               <button onClick={openPrevSearch}>
                 <Image
                   style={{ rotate: '90deg' }}
@@ -560,13 +558,24 @@ export default function HymnPage() {
                   />
                 </button>
 
-                {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />}
+                {(unlocked && (
+                  <button onClick={shareButton}>
+                    <Image
+                      className='icon'
+                      alt='share'
+                      src={`/icons/share.svg`}
+                      width={25}
+                      height={25}
+                      draggable={false}
+                    />
+                  </button>
+                )) || <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />}
               </div>
             </div>
 
             {unlocked || <MenuModal active={hamburgerMenu} />}
 
-            <div className={`${styles.container} ${unlocked ? '' : styles.static}`}>
+            <div className={styles.container}>
               <div className={styles.options}>
                 <button title='Powróć do wyników wyszukiwania [Esc]' onClick={openPrevSearch}>
                   <Image
@@ -604,10 +613,7 @@ export default function HymnPage() {
               </div>
 
               <div className={styles.center}>
-                <div
-                  className={`${styles.content} ${unlocked ? '' : styles.static}`}
-                  style={{ fontSize }}
-                >
+                <div className={styles.content} style={{ fontSize }}>
                   {showChords && !hasChords && (
                     <span className={styles.noChords}>Brak akordów do wyświetlenia</span>
                   )}
@@ -637,13 +643,15 @@ export default function HymnPage() {
                     <p>Poprzednia</p>
                   </button>
 
-                  <button
-                    title='Otwórz losową pieśń z wybranego śpiewnika [R]'
-                    className={styles.randomButton}
-                    onClick={randomHymn}
-                  >
-                    <p>Wylosuj pieśń</p>
-                  </button>
+                  {unlocked && (
+                    <button
+                      title='Otwórz losową pieśń z wybranego śpiewnika [R]'
+                      className={styles.randomButton}
+                      onClick={randomHymn}
+                    >
+                      <p>Wylosuj pieśń</p>
+                    </button>
+                  )}
 
                   <button
                     title='Przejdź do następnej pieśni [→]'
@@ -662,7 +670,7 @@ export default function HymnPage() {
                   </button>
                 </div>
 
-                <div className={`${styles.controlsMobile} ${unlocked ? styles.marginBottom : ''}`}>
+                <div className={styles.controlsMobile}>
                   <button
                     className={hideControls ? styles.hide : ''}
                     onClick={() => changeHymn(hymn.id - 1)}
@@ -850,7 +858,7 @@ export default function HymnPage() {
         )}
       </main>
 
-      {unlocked && <MobileNavbar unlocked={unlocked} />}
+      <MobileNavbar unlocked={unlocked} />
     </>
   )
 }

@@ -180,7 +180,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      {unlocked && <MobileNavbar unlocked={unlocked} />}
+      <MobileNavbar unlocked={unlocked} />
     </>
   )
 }

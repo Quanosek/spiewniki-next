@@ -1,7 +1,5 @@
 import Link from 'next/link'
 
-import { hiddenMenuQuery } from '@/components/menu/_handler'
-
 import shareButton from '@/utils/shareButton'
 
 import styles from '@/styles/components/mobile-menu.module.scss'
@@ -11,14 +9,6 @@ export default function MenuModal({ active }: { active: boolean }) {
 
   return (
     <div className={styles.menu}>
-      <button onClick={() => hiddenMenuQuery('favorites')}>
-        <p>Lista ulubionych</p>
-      </button>
-
-      <button onClick={() => hiddenMenuQuery('settings')}>
-        <p>Ustawienia</p>
-      </button>
-
       <button onClick={shareButton}>
         <p>Udostępnij</p>
       </button>

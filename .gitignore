@@ -41,7 +41,14 @@ next-env.d.ts
 
 # Database directories
 /public/mp3/*
-/public/pdf/*/
+
+/public/pdf/*
+!/public/pdf/B/
+!/public/pdf/C/
+!/public/pdf/N/
+!/public/pdf/piesni-brzasku-tysiaclecia.pdf
+!/public/pdf/spiewajcie-panu-piesn-nowa.pdf
+!/public/pdf/uwielbiajmy-pana-cegielki.pdf
 
 # PWA
 /public/sw.js

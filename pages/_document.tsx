@@ -1,4 +1,4 @@
-import { Head, Html, Main, NextScript } from 'next/document'
+import { Html, Head, Main, NextScript } from 'next/document'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 

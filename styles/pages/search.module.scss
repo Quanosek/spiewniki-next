@@ -143,20 +143,12 @@
 
     &.authorSearch {
       padding-left: min(calc(var(--space) + 5rem), 18vw);
-      color: #ffff00;
-
-      &::placeholder {
-        color: rgba(255, 255, 0, 0.6);
-      }
+      color: var(--prefix-color-author);
     }
 
     &.keywordSearch {
       padding-left: min(calc(var(--space) + 4.5rem), 16vw);
-      color: #00ff00;
-
-      &::placeholder {
-        color: rgba(0, 255, 0, 0.6);
-      }
+      color: var(--prefix-color-keyword);
     }
   }
 
@@ -176,11 +168,11 @@
     }
 
     &.authorPrefix {
-      color: #ffff00;
+      color: var(--prefix-color-author);
     }
 
     &.keywordPrefix {
-      color: #00ff00;
+      color: var(--prefix-color-keyword);
     }
   }
 
@@ -230,6 +222,13 @@
     }
   }
 }
+
+// .resultCount {
+//   margin: -0.25em 0 -0.5em 1rem;
+//   width: min(850px, 95%);
+//   font-size: 16px;
+//   opacity: 0.65;
+// }
 
 .results {
   width: min(850px, 95%);
@@ -306,12 +305,28 @@
     color: var(--accent-color);
   }
 
+  .highlightAuthor {
+    color: var(--prefix-color-author);
+    background-color: var(--prefix-bg-author);
+  }
+
+  .highlightKeyword {
+    color: var(--prefix-color-keyword);
+    background-color: var(--prefix-bg-keyword);
+  }
+
   h2,
   p {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .prefixResult {
+    opacity: 0.65;
+    margin: 6px 0;
+    width: 100%;
   }
 
   .lyrics {

@@ -214,6 +214,7 @@ export default function SearchPage() {
 
   // Main search algorithm
   const [data, setData] = useState<ProcessedHymn[]>()
+  // const [searchDuration, setSearchDuration] = useState(0)
   const lastSearchRef = useRef<string>('')
 
   const Search = useCallback(
@@ -222,6 +223,8 @@ export default function SearchPage() {
       input: string = '',
       prefix: (typeof SEARCH_PREFIXES)[number] = null
     ) => {
+      // const startTime = performance.now()
+
       const authorSearch = prefix === '@' || (!prefix && input.startsWith('@'))
       const keywordSearch = prefix === '#' || (!prefix && input.startsWith('#'))
       const prefixSearchMode = authorSearch || keywordSearch
@@ -283,6 +286,9 @@ export default function SearchPage() {
 
       setData(result)
       lastSearchRef.current = input
+
+      // const durationMs = performance.now() - startTime
+      // setSearchDuration(durationMs)
     },
     [localSettings, book]
   )
@@ -534,7 +540,13 @@ export default function SearchPage() {
             {unlocked ? (
               <Highlighter
                 autoEscape={true}
-                highlightClassName={styles.highlight}
+                highlightClassName={
+                  hymn.matchType === 'author'
+                    ? styles.highlightAuthor
+                    : hymn.matchType === 'keywords'
+                      ? styles.highlightKeyword
+                      : styles.highlight
+                }
                 searchWords={[inputValue]}
                 textToHighlight={hymn.name}
               />
@@ -544,16 +556,12 @@ export default function SearchPage() {
           </h2>
 
           {hymn.matchType === 'author' && hymn.author ? (
-            <div style={{ opacity: 0.65, margin: '6px 0' }}>
+            <div className={styles.prefixResult}>
               <p>
                 {unlocked ? (
                   <Highlighter
                     autoEscape={true}
-                    highlightClassName={styles.highlight}
-                    highlightStyle={{
-                      backgroundColor: 'rgba(255, 255, 0, 0.4)',
-                      color: '#ffff00',
-                    }}
+                    highlightClassName={styles.highlightAuthor}
                     searchWords={[inputValue]}
                     textToHighlight={hymn.author}
                   />
@@ -563,16 +571,12 @@ export default function SearchPage() {
               </p>
             </div>
           ) : hymn.matchType === 'keywords' && hymn.copyright ? (
-            <div style={{ opacity: 0.65, margin: '6px 0' }}>
+            <div className={styles.prefixResult}>
               <p>
                 {unlocked ? (
                   <Highlighter
                     autoEscape={true}
-                    highlightClassName={styles.highlight}
-                    highlightStyle={{
-                      backgroundColor: 'rgba(0, 255, 0, 0.4)',
-                      color: '#00ff00',
-                    }}
+                    highlightClassName={styles.highlightKeyword}
                     searchWords={[inputValue]}
                     textToHighlight={hymn.copyright}
                   />
@@ -886,6 +890,12 @@ export default function SearchPage() {
             </button>
           )}
         </div>
+
+        {/* {inputValue && (
+          <h2 className={styles.resultCount}>
+            Znaleziono {data?.length} wyników ({(searchDuration / 1000).toFixed(3)} sekund)
+          </h2>
+        )} */}
 
         <div className={styles.results}>
           {isLoading ||

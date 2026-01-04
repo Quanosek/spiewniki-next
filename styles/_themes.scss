@@ -11,6 +11,11 @@
   --slide-background: #000000;
   --slide-text: #ffffff;
 
+  --prefix-color-author: #ffd400;
+  --prefix-bg-author: rgba(255, 212, 0, 0.45);
+  --prefix-color-keyword: #2dff7a;
+  --prefix-bg-keyword: rgba(45, 255, 122, 0.5);
+
   .icon {
     filter: invert(1);
   }
@@ -20,6 +25,11 @@
   color-scheme: light;
   --slide-background: #ffffff;
   --slide-text: #000000;
+
+  --prefix-color-author: #c6851a;
+  --prefix-bg-author: rgba(255, 231, 184, 0.95);
+  --prefix-color-keyword: #0f8f45;
+  --prefix-bg-keyword: rgba(213, 245, 226, 0.95);
 }
 
 html[data-theme='dark'] {

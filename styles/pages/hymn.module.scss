@@ -82,7 +82,7 @@ $button-gap: 12px;
   button {
     max-width: 100%;
     overflow: hidden;
-    opacity: 85%;
+    opacity: 0.85;
     padding: 12px 16px;
     justify-content: flex-start;
     gap: $button-gap;
@@ -90,7 +90,7 @@ $button-gap: 12px;
     transition: 150ms transform ease-out;
 
     &:hover {
-      opacity: 100%;
+      opacity: 1;
       transform: translateY(-1px);
     }
 
@@ -180,7 +180,7 @@ $button-gap: 12px;
       img {
         position: relative;
         bottom: 1px;
-        opacity: 65%;
+        opacity: 0.65;
         transition: 150ms ease-out;
       }
     }
@@ -188,7 +188,7 @@ $button-gap: 12px;
     @media (min-width: 1025px) {
       &:hover {
         .moreArrow img {
-          opacity: 90%;
+          opacity: 0.9;
         }
 
         div:hover {
@@ -223,7 +223,7 @@ $button-gap: 12px;
     transition: 150ms ease-out;
 
     button {
-      opacity: 85%;
+      opacity: 0.85;
       width: 100%;
 
       p {
@@ -233,7 +233,7 @@ $button-gap: 12px;
 
     @media (min-width: 1025px) {
       &.active {
-        opacity: 100%;
+        opacity: 1;
         top: 100%;
       }
     }
@@ -272,7 +272,7 @@ $button-gap: 12px;
   border-radius: var(--radius);
 
   .noChords {
-    opacity: 85%;
+    opacity: 0.85;
     margin: -1rem -1rem 0.5em -1rem;
     padding: 1em 1.5em;
     border-radius: var(--radius);
@@ -362,7 +362,7 @@ $button-gap: 12px;
 }
 
 .credits {
-  opacity: 80%;
+  opacity: 0.8;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -405,7 +405,7 @@ $button-gap: 12px;
   }
 
   .italic {
-    opacity: 85%;
+    opacity: 0.85;
     font-style: italic;
   }
 
@@ -541,7 +541,7 @@ $button-gap: 12px;
   }
 
   button {
-    opacity: 85%;
+    opacity: 0.85;
     top: 0;
     padding: min(0.8rem, 3.5vw);
     height: min(3rem, 12vw);

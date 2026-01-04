@@ -50,12 +50,12 @@
       gap: 1.5vw;
 
       h1 {
-        opacity: 100%;
+        opacity: 1;
         font-size: 5vw;
       }
 
       h2 {
-        opacity: 65%;
+        opacity: 0.65;
         font-size: 3vw;
         font-weight: 500;
       }
@@ -95,13 +95,13 @@
   gap: 0.4vw;
 
   h1 {
-    opacity: 65%;
+    opacity: 0.65;
     font-size: 2.4vw;
     font-weight: 500;
   }
 
   h2 {
-    opacity: 50%;
+    opacity: 0.5;
     font-size: 1.35vw;
     font-weight: 700;
   }
@@ -211,7 +211,7 @@
   }
 
   button {
-    opacity: 25%;
+    opacity: 0.25;
     padding: 0.8vw;
     height: 3.2vw;
     width: auto;
@@ -222,7 +222,7 @@
     transition: 150ms opacity ease-out;
 
     &:hover {
-      opacity: 45%;
+      opacity: 0.45;
     }
 
     img {

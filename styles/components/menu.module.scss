@@ -184,7 +184,7 @@
   }
 
   .placeholder {
-    opacity: 25%;
+    opacity: 0.25;
     position: absolute;
     height: 100%;
     display: flex;
@@ -239,7 +239,7 @@
   }
 
   .info {
-    opacity: 60%;
+    opacity: 0.6;
     font-size: 75%;
 
     span {
@@ -257,18 +257,18 @@
   background-color: transparent;
 
   img {
-    opacity: 75%;
+    opacity: 0.75;
   }
 
   @media (min-width: 1025px) {
     display: none;
 
     img {
-      opacity: 60%;
+      opacity: 0.6;
     }
 
     &:hover img {
-      opacity: 100%;
+      opacity: 1;
     }
   }
 
@@ -526,7 +526,7 @@ $gap: min(2.5vw, 0.8rem);
     }
 
     p {
-      opacity: 80%;
+      opacity: 0.8;
       font-size: 85%;
       line-height: 115%;
     }

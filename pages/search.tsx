@@ -25,12 +25,14 @@ interface ProcessedHymn extends Omit<Hymn, 'song'> {
   song: Hymn['song']
   lyrics?: string[]
   matchPosition?: number
-  matchType?: 'name' | 'lyrics'
+  matchType?: 'name' | 'lyrics' | 'author' | 'keywords'
   formattedName: string
   numberPrefix: number
   hasLetterSuffix: boolean
   lyricsPlain: string[]
   dedupeKey: string
+  author?: string
+  copyright?: string
 }
 
 const numberPrefix = (value: string) => {
@@ -58,10 +60,11 @@ const mapHymn = (hymn: Hymn): ProcessedHymn => {
     hasLetterSuffix: hasLetterSuffix(hymn.name),
     lyricsPlain,
     dedupeKey: `${bookShortcut(hymn.book)}|${hymn.name}`,
+    author: hymn.song.author || '',
+    copyright: hymn.song.copyright || '',
   }
 }
 
-// Match hymn titles against search query and return results with match position
 const matchNames = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
   if (!hymn.formattedName.includes(formattedInput)) return null
 
@@ -72,7 +75,6 @@ const matchNames = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn 
   }
 }
 
-// Match hymn lyrics against search query (only if contextSearch enabled)
 const matchLyrics = (
   hymn: ProcessedHymn,
   input: string,
@@ -106,19 +108,44 @@ const matchLyrics = (
   return results
 }
 
-// Comparator for all-books mode
+const matchAuthors = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
+  if (!hymn.author) return null
+
+  const formattedAuthor = reformatText(hymn.author)
+  if (!formattedAuthor.includes(formattedInput)) return null
+
+  return {
+    ...hymn,
+    matchPosition: formattedAuthor.indexOf(formattedInput),
+    matchType: 'author',
+  }
+}
+
+const matchKeywords = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
+  if (!hymn.copyright) return null
+
+  const formattedKeywords = reformatText(hymn.copyright)
+  if (!formattedKeywords.includes(formattedInput)) return null
+
+  return {
+    ...hymn,
+    matchPosition: formattedKeywords.indexOf(formattedInput),
+    matchType: 'keywords',
+  }
+}
+
 const compareAllBooks = (unlocked: boolean) => (a: ProcessedHymn, b: ProcessedHymn) => {
   const order = booksList(unlocked)
+  const matchTypeOrder = { name: 0, author: 1, keywords: 2, lyrics: 3 }
 
-  // Titles (name matches) before lyrics
-  if (a.matchType !== b.matchType) return a.matchType === 'name' ? -1 : 1
+  const aTypeOrder = matchTypeOrder[a.matchType as keyof typeof matchTypeOrder] ?? 4
+  const bTypeOrder = matchTypeOrder[b.matchType as keyof typeof matchTypeOrder] ?? 4
+  if (aTypeOrder !== bTypeOrder) return aTypeOrder - bTypeOrder
 
-  // Earlier match position (prefix) first
   const pa = a.matchPosition ?? Number.MAX_SAFE_INTEGER
   const pb = b.matchPosition ?? Number.MAX_SAFE_INTEGER
   if (pa !== pb) return pa - pb
 
-  // Numeric titles grouped; sort by number value
   const na = a.numberPrefix
   const nb = b.numberPrefix
   const aHasNumber = Number.isFinite(na)
@@ -126,34 +153,31 @@ const compareAllBooks = (unlocked: boolean) => (a: ProcessedHymn, b: ProcessedHy
   if (aHasNumber && bHasNumber && na !== nb) return na - nb
   if (aHasNumber !== bHasNumber) return aHasNumber ? -1 : 1
 
-  // Within same number, plain titles (no letter suffix) before suffixed ones
   if (aHasNumber && bHasNumber && na === nb) {
     if (a.hasLetterSuffix !== b.hasLetterSuffix) return a.hasLetterSuffix ? 1 : -1
   }
 
-  // Book order per booksList
   const ia = order.indexOf(bookShortcut(a.book))
   const ib = order.indexOf(bookShortcut(b.book))
   if (ia !== ib) return ia - ib
 
-  // Alphabetical by name (numeric-aware) as final tiebreaker
   const nameCmp = a.name.localeCompare(b.name, undefined, { numeric: true })
   if (nameCmp !== 0) return nameCmp
 
   return 0
 }
 
-// Comparator for single-book mode
 const compareSingleBook = (a: ProcessedHymn, b: ProcessedHymn) => {
-  // Titles (name matches) before lyrics
-  if (a.matchType !== b.matchType) return a.matchType === 'name' ? -1 : 1
+  const matchTypeOrder = { name: 0, author: 1, keywords: 2, lyrics: 3 }
 
-  // Earlier match position (prefix) first
+  const aTypeOrder = matchTypeOrder[a.matchType as keyof typeof matchTypeOrder] ?? 4
+  const bTypeOrder = matchTypeOrder[b.matchType as keyof typeof matchTypeOrder] ?? 4
+  if (aTypeOrder !== bTypeOrder) return aTypeOrder - bTypeOrder
+
   const pa = a.matchPosition ?? Number.MAX_SAFE_INTEGER
   const pb = b.matchPosition ?? Number.MAX_SAFE_INTEGER
   if (pa !== pb) return pa - pb
 
-  // Numeric titles grouped; sort by number value
   const na = a.numberPrefix
   const nb = b.numberPrefix
   const aHasNumber = Number.isFinite(na)
@@ -161,12 +185,10 @@ const compareSingleBook = (a: ProcessedHymn, b: ProcessedHymn) => {
   if (aHasNumber && bHasNumber && na !== nb) return na - nb
   if (aHasNumber !== bHasNumber) return aHasNumber ? -1 : 1
 
-  // Within same number, plain titles (no letter suffix) before suffixed ones
   if (aHasNumber && bHasNumber && na === nb) {
     if (a.hasLetterSuffix !== b.hasLetterSuffix) return a.hasLetterSuffix ? 1 : -1
   }
 
-  // Alphabetical by name (numeric-aware) as final tiebreaker
   const nameCmp = a.name.localeCompare(b.name, undefined, { numeric: true })
   if (nameCmp !== 0) return nameCmp
 
@@ -186,43 +208,83 @@ export default function SearchPage() {
     },
   })
 
-  // Search related state
   const [rawData, setRawData] = useState<ProcessedHymn[]>()
   const [data, setData] = useState<ProcessedHymn[]>()
   const [inputValue, setInputValue] = useState('')
+  const [activePrefix, setActivePrefix] = useState<'@' | '#' | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const lastSearchRef = useRef<string>('')
-  const searchRef = useRef<(data: ProcessedHymn[], input: string) => void>()
+  const searchRef =
+    useRef<(data: ProcessedHymn[], input: string, prefix?: '@' | '#' | null) => void>()
 
-  // Main search algorithm: collect matches from names/lyrics, dedupe, and sort
   const Search = useCallback(
-    (data: ProcessedHymn[], input: string) => {
+    (data: ProcessedHymn[], input: string, prefix: '@' | '#' | null = null) => {
       const settings = JSON.parse(localStorage.getItem('settings') || '{}')
       const contextSearch = settings.contextSearch ?? false
-      const formattedInput = reformatText(input)
 
-      // Collect all matching hymns from titles and lyrics
+      let searchInput = input
+      const authorSearch = prefix === '@' || (!prefix && input.startsWith('@'))
+      const keywordSearch = prefix === '#' || (!prefix && input.startsWith('#'))
+      if (authorSearch || keywordSearch) searchInput = input.slice(1).trim()
+
+      const formattedInput = reformatText(searchInput)
+
+      const AuthorsCollector: ProcessedHymn[] = []
+      const KeywordsCollector: ProcessedHymn[] = []
       const NamesCollector: ProcessedHymn[] = []
       const LyricsCollector: ProcessedHymn[] = []
 
       data.forEach((hymn) => {
+        // If prefix search enabled
+        if (authorSearch) {
+          const authorMatch = matchAuthors(hymn, formattedInput)
+          if (authorMatch) AuthorsCollector.push(authorMatch)
+          return
+        }
+
+        if (keywordSearch) {
+          const keywordMatch = matchKeywords(hymn, formattedInput)
+          if (keywordMatch) KeywordsCollector.push(keywordMatch)
+          return
+        }
+
         // Try to match in title first
         const nameMatch = matchNames(hymn, formattedInput)
         if (nameMatch) {
           NamesCollector.push(nameMatch)
-          return // Skip lyrics search if title matches
+          return
         }
 
-        // Try to match in lyrics (if enabled)
+        // Try to match in author
+        const authorMatch = matchAuthors(hymn, formattedInput)
+        if (authorMatch) {
+          AuthorsCollector.push(authorMatch)
+          return
+        }
+
+        // Try to match in keywords
+        const keywordMatch = matchKeywords(hymn, formattedInput)
+        if (keywordMatch) {
+          KeywordsCollector.push(keywordMatch)
+          return
+        }
+
+        // Try to match in lyrics
         if (contextSearch) {
-          const lyricMatches = matchLyrics(hymn, input, formattedInput)
+          const lyricMatches = matchLyrics(hymn, searchInput, formattedInput)
           LyricsCollector.push(...lyricMatches)
         }
       })
 
+      const allMatches = [
+        ...NamesCollector,
+        ...AuthorsCollector,
+        ...KeywordsCollector,
+        ...LyricsCollector,
+      ]
+
       // Deduplicate by hymn book + name
       const collectorMap = new Map<string, ProcessedHymn>()
-      const allMatches = [...NamesCollector, ...LyricsCollector]
 
       allMatches.forEach((hymn) => {
         if (!collectorMap.has(hymn.dedupeKey)) {
@@ -231,13 +293,7 @@ export default function SearchPage() {
       })
 
       const result = Array.from(collectorMap.values())
-
-      // Sort results using appropriate comparator
-      if (!book) {
-        result.sort(compareAllBooks(unlocked))
-      } else {
-        result.sort(compareSingleBook)
-      }
+      result.sort(book ? compareSingleBook : compareAllBooks(unlocked))
 
       setData(result)
       lastSearchRef.current = input
@@ -254,6 +310,7 @@ export default function SearchPage() {
   const cleanUp = useCallback(() => {
     localStorage.removeItem('prevSearch')
     setInputValue('')
+    setActivePrefix(null)
     inputRef.current?.focus()
     setRenderPage(0)
     if (rawData) {
@@ -297,9 +354,23 @@ export default function SearchPage() {
       setRawData(prepared)
 
       const initialSearch = prevSearch?.search || ''
-      if (initialSearch) setInputValue(initialSearch)
+      let initialPrefix: '@' | '#' | null = null
+      let initialInputValue = initialSearch
 
-      searchRef.current?.(prepared, initialSearch)
+      if (initialSearch.startsWith('@')) {
+        initialPrefix = '@'
+        initialInputValue = initialSearch.slice(1).trim()
+      } else if (initialSearch.startsWith('#')) {
+        initialPrefix = '#'
+        initialInputValue = initialSearch.slice(1).trim()
+      }
+
+      if (initialInputValue) {
+        setInputValue(initialInputValue)
+        if (initialPrefix) setActivePrefix(initialPrefix)
+      }
+
+      searchRef.current?.(prepared, initialSearch, initialPrefix)
     }
 
     if (!book) {
@@ -351,18 +422,19 @@ export default function SearchPage() {
 
   // Run search whenever input or raw data changes
   useEffect(() => {
-    setShowClearBtn(!!inputValue)
+    setShowClearBtn(!!inputValue || activePrefix !== null)
 
     if (inputValue && !rawData) inputRef.current?.select()
 
     if (rawData) {
-      if (inputValue === lastSearchRef.current) return
+      const searchInput = activePrefix ? activePrefix + inputValue : inputValue
+      if (searchInput === lastSearchRef.current) return
       const timeout = setTimeout(() => {
-        searchRef.current?.(rawData, inputValue || '')
+        searchRef.current?.(rawData, searchInput || '', activePrefix)
       }, 50)
       return () => clearTimeout(timeout)
     }
-  }, [inputValue, rawData])
+  }, [inputValue, rawData, activePrefix])
 
   // Handle infinite scroll and back-to-top visibility
   const [renderPage, setRenderPage] = useState(0)
@@ -519,7 +591,45 @@ export default function SearchPage() {
             )}
           </h2>
 
-          {hymn.lyrics && (
+          {hymn.matchType === 'author' && hymn.author ? (
+            <div style={{ opacity: 0.65, margin: '6px 0' }}>
+              <p>
+                {unlocked ? (
+                  <Highlighter
+                    autoEscape={true}
+                    highlightClassName={styles.highlight}
+                    highlightStyle={{
+                      backgroundColor: 'rgba(255, 255, 0, 0.4)',
+                      color: '#ffff00',
+                    }}
+                    searchWords={[inputValue]}
+                    textToHighlight={hymn.author}
+                  />
+                ) : (
+                  hymn.author
+                )}
+              </p>
+            </div>
+          ) : hymn.matchType === 'keywords' && hymn.copyright ? (
+            <div style={{ opacity: 0.65, margin: '6px 0' }}>
+              <p>
+                {unlocked ? (
+                  <Highlighter
+                    autoEscape={true}
+                    highlightClassName={styles.highlight}
+                    highlightStyle={{
+                      backgroundColor: 'rgba(0, 255, 0, 0.4)',
+                      color: '#00ff00',
+                    }}
+                    searchWords={[inputValue]}
+                    textToHighlight={hymn.copyright}
+                  />
+                ) : (
+                  hymn.copyright
+                )}
+              </p>
+            </div>
+          ) : hymn.lyrics ? (
             <div className={styles.lyrics}>
               {hymn.lyrics.map((verse, index) => (
                 <p key={`${verse}-${index}`}>
@@ -536,7 +646,7 @@ export default function SearchPage() {
                 </p>
               ))}
             </div>
-          )}
+          ) : null}
         </Link>
 
         <div className={styles.quickActions}>
@@ -680,23 +790,69 @@ export default function SearchPage() {
             />
           </div>
 
+          {activePrefix && (
+            <div
+              className={`${styles.prefixOverlay} ${
+                activePrefix === '@'
+                  ? styles.authorPrefix
+                  : activePrefix === '#'
+                    ? styles.keywordPrefix
+                    : ''
+              }`}
+            >
+              {activePrefix}
+            </div>
+          )}
+
           <input
             ref={inputRef}
             name='search-box'
-            placeholder={'Rozpocznij wyszukiwanie ' + (data?.length ? `(${data?.length})` : '')}
+            placeholder={
+              activePrefix === '@'
+                ? `Wyszukaj autora ${data?.length ? `(${data?.length})` : ''}`
+                : activePrefix === '#'
+                  ? `Wyszukaj słowa kluczowe ${data?.length ? `(${data?.length})` : ''}`
+                  : `Rozpocznij wyszukiwanie ${data?.length ? `(${data?.length})` : ''}`
+            }
             autoComplete='off'
             value={inputValue}
+            className={`${
+              activePrefix === '@'
+                ? styles.authorSearch
+                : activePrefix === '#'
+                  ? styles.keywordSearch
+                  : ''
+            }`}
+            onKeyDown={(e) => {
+              if (e.key === 'Backspace' && activePrefix && inputValue === '') {
+                setActivePrefix(null)
+              }
+            }}
             onChange={(e) => {
               const value = e.target.value
-              setInputValue(value)
+              const startsWithAuthor = value.startsWith('@')
+              const startsWithKeyword = value.startsWith('#')
+
+              if (startsWithAuthor && !activePrefix) {
+                setActivePrefix('@')
+                setInputValue(value.slice(1).trim())
+              } else if (startsWithKeyword && !activePrefix) {
+                setActivePrefix('#')
+                setInputValue(value.slice(1).trim())
+              } else {
+                setInputValue(value)
+              }
+
               setRenderPage(0)
 
               const settings = JSON.parse(localStorage.getItem('settings') || '{}')
+              const displayValue = activePrefix ? activePrefix + value : value
+
               localStorage.setItem(
                 'prevSearch',
                 JSON.stringify({
                   book,
-                  search: settings.quickSearch ? value : '',
+                  search: settings.quickSearch ? displayValue : '',
                 })
               )
 

@@ -140,6 +140,48 @@
       border-color: var(--accent-color);
       box-shadow: 0px 0px 20px -5px var(--accent-color);
     }
+
+    &.authorSearch {
+      padding-left: min(calc(var(--space) + 5rem), 18vw);
+      color: #ffff00;
+
+      &::placeholder {
+        color: rgba(255, 255, 0, 0.6);
+      }
+    }
+
+    &.keywordSearch {
+      padding-left: min(calc(var(--space) + 4.5rem), 16vw);
+      color: #00ff00;
+
+      &::placeholder {
+        color: rgba(0, 255, 0, 0.6);
+      }
+    }
+  }
+
+  .prefixOverlay {
+    opacity: 0.85;
+    position: absolute;
+    left: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 19px;
+    font-weight: bold;
+    pointer-events: none;
+
+    @media (max-width: 768px) {
+      font-size: 100%;
+    }
+
+    &.authorPrefix {
+      color: #ffff00;
+    }
+
+    &.keywordPrefix {
+      color: #00ff00;
+    }
   }
 
   button {
@@ -180,6 +222,11 @@
     button img {
       height: 5.5vw;
       width: auto;
+    }
+
+    .prefixOverlay {
+      left: 12vw;
+      font-size: 4.2vw;
     }
   }
 }

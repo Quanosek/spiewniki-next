@@ -206,7 +206,8 @@ export default function SettingsMenu() {
           {ToggleSwitch({
             title: 'Rozszerzone wyszukiwanie',
             description:
-              'Wyszukiwanie pieśni po treści tekstu, autorze (@) i słowach kluczowych (#)',
+              'Wyszukiwanie pieśni po treści tekstu' +
+              (unlocked ? ', autorze (@) i słowach kluczowych (#)' : ''),
             name: 'contextSearch',
             state: contextSearch,
           })}

@@ -17,4 +17,4 @@ const shareButton = () => {
   }
 }
 
-export default shareButton
+export { shareButton }

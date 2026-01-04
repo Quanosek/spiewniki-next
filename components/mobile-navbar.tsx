@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
-import getRandomHymn from '@/utils/getRandomHymn'
+import { getRandomHymn } from '@/utils/getRandomHymn'
 
 import { hiddenMenuQuery } from './menu/_handler'
 
@@ -13,7 +13,7 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
   const router = useRouter()
   const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
 
-  // Random hymn function
+  // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)
     if (foundHymn) {

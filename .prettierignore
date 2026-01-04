@@ -3,6 +3,8 @@ node_modules/
 
 public/database/
 public/libraries/
+public/mp3/*
+public/pdf/*
 public/sw.js
 public/swe-worker-*.js
 public/workbox-*.js

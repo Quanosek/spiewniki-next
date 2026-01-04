@@ -44,4 +44,4 @@ const getRandomHymn = async (unlocked: boolean, book?: string) => {
   return null
 }
 
-export default getRandomHymn
+export { getRandomHymn }

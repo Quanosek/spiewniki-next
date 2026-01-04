@@ -9,7 +9,7 @@ import MenuModal from '@/components/mobile-menu/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
 
 import { bookShortcut } from '@/utils/books'
-import getRandomHymn from '@/utils/getRandomHymn'
+import { getRandomHymn } from '@/utils/getRandomHymn'
 
 import styles from '@/styles/pages/index.module.scss'
 
@@ -38,7 +38,7 @@ export default function HomePage() {
     return () => document.removeEventListener('scroll', scrollEvent)
   }, [hamburgerMenu])
 
-  // Random hymn function
+  // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked)
     if (foundHymn) {

@@ -12,4 +12,6 @@ const THEMES = [
   'lavender',
 ]
 
-export { THEMES }
+const SEARCH_PREFIXES = [null, '@', '#']
+
+export { THEMES, SEARCH_PREFIXES }

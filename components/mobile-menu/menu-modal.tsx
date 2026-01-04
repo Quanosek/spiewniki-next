@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import shareButton from '@/utils/shareButton'
+import { shareButton } from '@/utils/shareButton'
 
 import styles from '@/styles/components/mobile-menu.module.scss'
 

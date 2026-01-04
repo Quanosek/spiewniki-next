@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 
 import { defaultSettings } from '@/components/menu/settings'
 import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
@@ -12,7 +12,8 @@ import MenuModal from '@/components/mobile-menu/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
 
 import { bookShortcut, booksList } from '@/utils/books'
-import getRandomHymn from '@/utils/getRandomHymn'
+import { SEARCH_PREFIXES } from '@/utils/enums'
+import { getRandomHymn } from '@/utils/getRandomHymn'
 import { reformatText } from '@/utils/simplifyText'
 
 import type Hymn from '@/types/hymn'
@@ -23,54 +24,24 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 interface ProcessedHymn extends Omit<Hymn, 'song'> {
   song: Hymn['song']
-  lyrics?: string[]
   matchPosition?: number
   matchType?: 'name' | 'lyrics' | 'author' | 'keywords'
-  formattedName: string
+  lyrics?: string[]
+  dedupeKey: string
   numberPrefix: number
   hasLetterSuffix: boolean
   lyricsPlain: string[]
-  dedupeKey: string
   author?: string
   copyright?: string
 }
 
-const numberPrefix = (value: string) => {
-  const match = value.match(/^\s*(\d+)/)
-  return match ? parseInt(match[1], 10) : NaN
-}
-
-const hasLetterSuffix = (value: string) => {
-  const trimmed = value.trim()
-  const match = trimmed.match(/^(\d+)([A-Za-z]+)/)
-  return !!(match && match[2])
-}
-
-const mapHymn = (hymn: Hymn): ProcessedHymn => {
-  const formattedName = reformatText(hymn.name)
-  const lyricsPlain = Object.values(hymn.song.lyrics)
-    .flat()
-    .filter((verse) => verse.startsWith(' '))
-    .map((verse) => verse.slice(1))
-
-  return {
-    ...hymn,
-    formattedName,
-    numberPrefix: numberPrefix(hymn.name),
-    hasLetterSuffix: hasLetterSuffix(hymn.name),
-    lyricsPlain,
-    dedupeKey: `${bookShortcut(hymn.book)}|${hymn.name}`,
-    author: hymn.song.author || '',
-    copyright: hymn.song.copyright || '',
-  }
-}
-
 const matchNames = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
-  if (!hymn.formattedName.includes(formattedInput)) return null
+  const formattedName = reformatText(hymn.name)
+  if (!formattedName.includes(formattedInput)) return null
 
   return {
     ...hymn,
-    matchPosition: hymn.formattedName.indexOf(formattedInput),
+    matchPosition: formattedName.indexOf(formattedInput),
     matchType: 'name',
   }
 }
@@ -90,6 +61,9 @@ const matchLyrics = (
 
     results.push({
       ...hymn,
+
+      matchPosition: formattedVerse.indexOf(formattedInput),
+      matchType: 'lyrics',
       lyrics: [
         hymn.lyricsPlain[index - 1]
           ? `${hymn.lyricsPlain[index - 2] ? '...' : ''} ${hymn.lyricsPlain[index - 1]}`
@@ -100,8 +74,6 @@ const matchLyrics = (
           ? `${hymn.lyricsPlain[index + 2]} ${hymn.lyricsPlain[index + 3] ? '...' : ''}`
           : '',
       ],
-      matchPosition: formattedVerse.indexOf(formattedInput),
-      matchType: 'lyrics',
     })
   })
 
@@ -134,6 +106,7 @@ const matchKeywords = (hymn: ProcessedHymn, formattedInput: string): ProcessedHy
   }
 }
 
+// Final ordering of search results when searching across all books
 const compareAllBooks = (unlocked: boolean) => (a: ProcessedHymn, b: ProcessedHymn) => {
   const order = booksList(unlocked)
   const matchTypeOrder = { name: 0, author: 1, keywords: 2, lyrics: 3 }
@@ -167,6 +140,7 @@ const compareAllBooks = (unlocked: boolean) => (a: ProcessedHymn, b: ProcessedHy
   return 0
 }
 
+// Final ordering of search results when searching within a single book
 const compareSingleBook = (a: ProcessedHymn, b: ProcessedHymn) => {
   const matchTypeOrder = { name: 0, author: 1, keywords: 2, lyrics: 3 }
 
@@ -195,101 +169,113 @@ const compareSingleBook = (a: ProcessedHymn, b: ProcessedHymn) => {
   return 0
 }
 
+// Extract number prefix from hymn name
+const numberPrefix = (value: string) => {
+  const match = value.match(/^\s*(\d+)/)
+  return match ? parseInt(match[1], 10) : NaN
+}
+
+// Check if hymn name has letter suffix
+const hasLetterSuffix = (value: string) => {
+  const trimmed = value.trim()
+  const match = trimmed.match(/^(\d+)([A-Za-z]+)/)
+  return !!(match && match[2])
+}
+
+// Map raw hymn data to processed hymn data
+const mapHymn = (hymn: Hymn): ProcessedHymn => {
+  const lyricsPlain = Object.values(hymn.song.lyrics)
+    .flat()
+    .filter((verse) => verse.startsWith(' '))
+    .map((verse) => verse.slice(1))
+
+  return {
+    ...hymn,
+    dedupeKey: `${bookShortcut(hymn.book)}|${hymn.name}`,
+    numberPrefix: numberPrefix(hymn.name),
+    hasLetterSuffix: hasLetterSuffix(hymn.name),
+    lyricsPlain,
+    author: hymn.song.author || '',
+    copyright: hymn.song.copyright || '',
+  }
+}
+
 export default function SearchPage() {
   const router = useRouter()
   const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
 
-  // Builds link to hymn detail page
-  const hymnLink = (hymn: ProcessedHymn) => ({
-    pathname: '/hymn',
-    query: {
-      book: bookShortcut(hymn.book),
-      title: hymn.name,
-    },
-  })
+  // Get local settings data on page load
+  const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
 
-  const [rawData, setRawData] = useState<ProcessedHymn[]>()
+  useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}')
+    setLocalSettings(settings)
+  }, [router])
+
+  // Main search algorithm
   const [data, setData] = useState<ProcessedHymn[]>()
-  const [inputValue, setInputValue] = useState('')
-  const [activePrefix, setActivePrefix] = useState<'@' | '#' | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const lastSearchRef = useRef<string>('')
-  const searchRef =
-    useRef<(data: ProcessedHymn[], input: string, prefix?: '@' | '#' | null) => void>()
 
   const Search = useCallback(
-    (data: ProcessedHymn[], input: string, prefix: '@' | '#' | null = null) => {
-      const settings = JSON.parse(localStorage.getItem('settings') || '{}')
-      const contextSearch = settings.contextSearch ?? false
-
-      let searchInput = input
+    (
+      data: ProcessedHymn[],
+      input: string = '',
+      prefix: (typeof SEARCH_PREFIXES)[number] = null
+    ) => {
       const authorSearch = prefix === '@' || (!prefix && input.startsWith('@'))
       const keywordSearch = prefix === '#' || (!prefix && input.startsWith('#'))
-      if (authorSearch || keywordSearch) searchInput = input.slice(1).trim()
+      const prefixSearchMode = authorSearch || keywordSearch
 
-      const formattedInput = reformatText(searchInput)
+      const formattedInput = reformatText(input)
 
-      const AuthorsCollector: ProcessedHymn[] = []
-      const KeywordsCollector: ProcessedHymn[] = []
+      const contextSearch = localSettings?.contextSearch ?? false
+
       const NamesCollector: ProcessedHymn[] = []
       const LyricsCollector: ProcessedHymn[] = []
+      const AuthorsCollector: ProcessedHymn[] = []
+      const KeywordsCollector: ProcessedHymn[] = []
 
       data.forEach((hymn) => {
-        // If prefix search enabled
-        if (authorSearch) {
-          const authorMatch = matchAuthors(hymn, formattedInput)
-          if (authorMatch) AuthorsCollector.push(authorMatch)
-          return
+        if (!prefixSearchMode) {
+          const nameMatch = matchNames(hymn, formattedInput)
+          if (nameMatch) {
+            NamesCollector.push(nameMatch)
+            return
+          }
         }
 
-        if (keywordSearch) {
-          const keywordMatch = matchKeywords(hymn, formattedInput)
-          if (keywordMatch) KeywordsCollector.push(keywordMatch)
-          return
-        }
-
-        // Try to match in title first
-        const nameMatch = matchNames(hymn, formattedInput)
-        if (nameMatch) {
-          NamesCollector.push(nameMatch)
-          return
-        }
-
-        // Try to match in author
-        const authorMatch = matchAuthors(hymn, formattedInput)
-        if (authorMatch) {
-          AuthorsCollector.push(authorMatch)
-          return
-        }
-
-        // Try to match in keywords
-        const keywordMatch = matchKeywords(hymn, formattedInput)
-        if (keywordMatch) {
-          KeywordsCollector.push(keywordMatch)
-          return
-        }
-
-        // Try to match in lyrics
         if (contextSearch) {
-          const lyricMatches = matchLyrics(hymn, searchInput, formattedInput)
-          LyricsCollector.push(...lyricMatches)
+          if (!prefixSearchMode) {
+            const lyricMatches = matchLyrics(hymn, input, formattedInput)
+            LyricsCollector.push(...lyricMatches)
+          } else if (unlocked) {
+            if (authorSearch) {
+              const authorMatch = matchAuthors(hymn, formattedInput)
+              if (authorMatch) AuthorsCollector.push(authorMatch)
+              return
+            }
+
+            if (keywordSearch) {
+              const keywordMatch = matchKeywords(hymn, formattedInput)
+              if (keywordMatch) KeywordsCollector.push(keywordMatch)
+              return
+            }
+          }
         }
       })
 
       const allMatches = [
         ...NamesCollector,
+        ...LyricsCollector,
         ...AuthorsCollector,
         ...KeywordsCollector,
-        ...LyricsCollector,
       ]
 
       // Deduplicate by hymn book + name
       const collectorMap = new Map<string, ProcessedHymn>()
 
       allMatches.forEach((hymn) => {
-        if (!collectorMap.has(hymn.dedupeKey)) {
-          collectorMap.set(hymn.dedupeKey, hymn)
-        }
+        if (!collectorMap.has(hymn.dedupeKey)) collectorMap.set(hymn.dedupeKey, hymn)
       })
 
       const result = Array.from(collectorMap.values())
@@ -298,11 +284,77 @@ export default function SearchPage() {
       setData(result)
       lastSearchRef.current = input
     },
-    [book]
+    [localSettings, book]
   )
 
-  // Update search ref
+  // Define search function reference
+  const searchRef =
+    useRef<
+      (data: ProcessedHymn[], input: string, prefix?: (typeof SEARCH_PREFIXES)[number]) => void
+    >()
+
   searchRef.current = Search
+
+  // Load dynamic data on page load
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [inputValue, setInputValue] = useState('')
+  const [activePrefix, setActivePrefix] = useState<(typeof SEARCH_PREFIXES)[number]>(null)
+  const [rawData, setRawData] = useState<ProcessedHymn[]>()
+
+  useEffect(() => {
+    if (!router.isReady) return
+
+    // Handle focus searchbox localStorage flag
+    const focusSearchBox = JSON.parse(localStorage.getItem('focusSearchBox') || 'false')
+    if (focusSearchBox) inputRef.current?.focus()
+    localStorage.removeItem('focusSearchBox')
+
+    // Get back previous search if enabled and exists
+    const quickSearch = localSettings?.quickSearch || false
+    const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{"value": ""}')
+
+    if (quickSearch) {
+      if (prevSearch?.value) setInputValue(prevSearch.value)
+      if (prevSearch?.prefix) setActivePrefix(prevSearch.prefix)
+    }
+
+    // Load data from database
+    const loadData = (fetchData: Hymn[]) => {
+      const rawData = fetchData.map(mapHymn)
+      setRawData(rawData)
+
+      const prevSearchValue = prevSearch?.value || ''
+      const prevSearchPrefix = prevSearch?.prefix || null
+
+      searchRef.current?.(rawData, prevSearchValue, prevSearchPrefix)
+    }
+
+    // Initialize data fetch
+    if (!book) {
+      const fetchAllBooks = async () => {
+        try {
+          const responses = await Promise.all(
+            booksList(unlocked).map((bookName) => axios.get(`database/${bookName}.json`))
+          )
+
+          loadData(responses.flatMap((response) => response.data))
+        } catch (err) {
+          console.error(err)
+          router.push('/404')
+        }
+      }
+
+      fetchAllBooks()
+    } else {
+      axios
+        .get(`database/${book}.json`)
+        .then(({ data }) => loadData(data))
+        .catch((err) => {
+          console.error(err)
+          router.push('/404')
+        })
+    }
+  }, [router, localSettings, book])
 
   // Clears search box and restores initial data view
   const [showClearBtn, setShowClearBtn] = useState(false)
@@ -313,130 +365,32 @@ export default function SearchPage() {
     setActivePrefix(null)
     inputRef.current?.focus()
     setRenderPage(0)
-    if (rawData) {
-      searchRef.current?.(rawData, '')
-    } else {
-      setData(rawData)
-    }
+
+    if (rawData) searchRef.current?.(rawData, '', null)
+    else setData(rawData)
   }, [rawData])
 
-  // Run search whenever input or raw data changes
-  const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
-
+  // Run search on input or raw data change
   useEffect(() => {
-    const settings = JSON.parse(localStorage.getItem('settings') || '{}')
-    setLocalSettings(settings)
-  }, [])
+    console.log('input reload React.useEffect')
 
-  // Restore focus and previous search if needed
-  useEffect(() => {
-    if (!router.isReady) return
-
-    const focusSearchBox = JSON.parse(localStorage.getItem('focusSearchBox') || 'false')
-    if (focusSearchBox) inputRef.current?.focus()
-    localStorage.removeItem('focusSearchBox')
-
-    const settings = JSON.parse(localStorage.getItem('settings') || '{}')
-    const quickSearch = settings.quickSearch || false
-    const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{"search": null}')
-
-    if (quickSearch && prevSearch?.search) setInputValue(prevSearch.search)
-  }, [router.isReady])
-
-  // Fetch hymns data (all books or single) on mount/change
-  useEffect(() => {
-    if (!router.isReady) return
-
-    const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{"search": null}')
-
-    const loadData = (fetchData: Hymn[]) => {
-      const prepared = fetchData.map(mapHymn)
-      setRawData(prepared)
-
-      const initialSearch = prevSearch?.search || ''
-      let initialPrefix: '@' | '#' | null = null
-      let initialInputValue = initialSearch
-
-      if (initialSearch.startsWith('@')) {
-        initialPrefix = '@'
-        initialInputValue = initialSearch.slice(1).trim()
-      } else if (initialSearch.startsWith('#')) {
-        initialPrefix = '#'
-        initialInputValue = initialSearch.slice(1).trim()
-      }
-
-      if (initialInputValue) {
-        setInputValue(initialInputValue)
-        if (initialPrefix) setActivePrefix(initialPrefix)
-      }
-
-      searchRef.current?.(prepared, initialSearch, initialPrefix)
-    }
-
-    if (!book) {
-      const fetchAllBooks = async () => {
-        try {
-          const responses = await Promise.all(
-            booksList(unlocked).map((bookName) =>
-              axios.get<Hymn[]>(`database/${bookName}.json`).catch((err) => {
-                console.error(err)
-                return null
-              })
-            )
-          )
-
-          const validResponses = responses.filter(
-            (response): response is AxiosResponse<Hymn[]> => response !== null
-          )
-
-          const hymns = validResponses.flatMap((response) => response.data)
-
-          loadData(hymns)
-        } catch (err) {
-          console.error(err)
-          router.push('/404')
-        }
-      }
-
-      fetchAllBooks()
-    } else {
-      const abortController = new AbortController()
-
-      axios
-        .get(`database/${book}.json`, { signal: abortController.signal })
-        .then(({ data }) => {
-          const sorted = [...data].sort((a, b) =>
-            a.name.localeCompare(b.name, undefined, { numeric: true })
-          )
-          loadData(sorted)
-        })
-        .catch((err) => {
-          if (axios.isCancel(err)) return
-          console.error(err)
-          router.push('/404')
-        })
-
-      return () => abortController.abort()
-    }
-  }, [router, book])
-
-  // Run search whenever input or raw data changes
-  useEffect(() => {
     setShowClearBtn(!!inputValue || activePrefix !== null)
 
-    if (inputValue && !rawData) inputRef.current?.select()
+    if (inputValue && !rawData) inputRef.current?.select() // focus input on load
 
     if (rawData) {
       const searchInput = activePrefix ? activePrefix + inputValue : inputValue
-      if (searchInput === lastSearchRef.current) return
+      if (searchInput === lastSearchRef.current) return // skip duplicate searches
+
+      // Update search results with delay
       const timeout = setTimeout(() => {
-        searchRef.current?.(rawData, searchInput || '', activePrefix)
+        searchRef.current?.(rawData, searchInput, activePrefix)
       }, 50)
       return () => clearTimeout(timeout)
     }
-  }, [inputValue, rawData, activePrefix])
+  }, [inputValue, activePrefix, rawData])
 
-  // Handle infinite scroll and back-to-top visibility
+  // Handle page scrolling event
   const [renderPage, setRenderPage] = useState(0)
   const [showTopBtn, setShowTopBtn] = useState(false)
 
@@ -452,7 +406,7 @@ export default function SearchPage() {
     return () => window.removeEventListener('scroll', scrollEvent)
   }, [])
 
-  // Paginate rendered data chunks
+  // Load and paginate rendered data
   const [renderData, setRenderData] = useState<ProcessedHymn[]>([])
   const [isLoading, setLoading] = useState(true)
 
@@ -469,46 +423,22 @@ export default function SearchPage() {
     setLoading(false)
   }, [data, renderPage])
 
-  // Sync favorites flags from localStorage
-  const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
+  // Builds link to hymn detail page
+  const hymnLink = (hymn: ProcessedHymn) => ({
+    pathname: '/hymn',
+    query: {
+      book: bookShortcut(hymn.book),
+      title: hymn.name,
+    },
+  })
 
-  useEffect(() => {
-    if (!data) return
-
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
-    const states = Object.fromEntries(
-      data.map((hymn) => [
-        hymn.name,
-        favorites.some(
-          (elem: { book: string; id: number }) =>
-            elem.book === bookShortcut(hymn.book) && elem.id === hymn.id
-        ),
-      ])
-    )
-
-    setFavoritesState(states)
-  }, [data])
-
-  // Prevent scrolling on active hamburger menu
-  const [hamburgerMenu, showHamburgerMenu] = useState(false)
-
-  useEffect(() => {
-    if (!hamburgerMenu) return
-
-    const leftScroll = document.documentElement.scrollLeft
-    const topScroll = document.documentElement.scrollTop
-
-    const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
-
-    document.addEventListener('scroll', scrollEvent)
-    return () => document.removeEventListener('scroll', scrollEvent)
-  }, [hamburgerMenu])
-
-  // Opens a random hymn
+  // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)
+
     if (foundHymn) {
       const { book, title } = foundHymn
+
       router.push({
         pathname: '/hymn',
         query: { book, title },
@@ -547,6 +477,26 @@ export default function SearchPage() {
     return () => document.removeEventListener('keyup', keyupEvent)
   }, [router, data, inputValue, cleanUp, randomHymn])
 
+  // Sync favorites flags from localStorage
+  const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
+
+  useEffect(() => {
+    if (!data) return
+
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
+    const states = Object.fromEntries(
+      data.map((hymn) => [
+        hymn.name,
+        favorites.some(
+          (elem: { book: string; id: number }) =>
+            elem.book === bookShortcut(hymn.book) && elem.id === hymn.id
+        ),
+      ])
+    )
+
+    setFavoritesState(states)
+  }, [data])
+
   // Renders a single search result row
   const SearchResult = ({
     hymn,
@@ -557,6 +507,7 @@ export default function SearchPage() {
     quickSearch: boolean | undefined
     isFavorite: boolean
   }) => {
+    // Handle result quick actions buttons
     const [resultHovered, setResultHovered] = useState(false)
 
     return (
@@ -573,7 +524,8 @@ export default function SearchPage() {
               'prevSearch',
               JSON.stringify({
                 book,
-                search: quickSearch ? inputValue : '',
+                value: quickSearch ? inputValue : '',
+                prefix: quickSearch ? activePrefix : null,
               })
             )
           }}
@@ -731,6 +683,21 @@ export default function SearchPage() {
     )
   }
 
+  // Prevent scrolling on active hamburger menu
+  const [hamburgerMenu, showHamburgerMenu] = useState(false)
+
+  useEffect(() => {
+    if (unlocked || !hamburgerMenu) return
+
+    const leftScroll = document.documentElement.scrollLeft
+    const topScroll = document.documentElement.scrollTop
+
+    const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
+
+    document.addEventListener('scroll', scrollEvent)
+    return () => document.removeEventListener('scroll', scrollEvent)
+  }, [hamburgerMenu])
+
   return (
     <>
       <Head>
@@ -807,15 +774,6 @@ export default function SearchPage() {
           <input
             ref={inputRef}
             name='search-box'
-            placeholder={
-              activePrefix === '@'
-                ? `Wyszukaj autora ${data?.length ? `(${data?.length})` : ''}`
-                : activePrefix === '#'
-                  ? `Wyszukaj słowa kluczowe ${data?.length ? `(${data?.length})` : ''}`
-                  : `Rozpocznij wyszukiwanie ${data?.length ? `(${data?.length})` : ''}`
-            }
-            autoComplete='off'
-            value={inputValue}
             className={`${
               activePrefix === '@'
                 ? styles.authorSearch
@@ -823,41 +781,35 @@ export default function SearchPage() {
                   ? styles.keywordSearch
                   : ''
             }`}
+            value={inputValue}
+            autoComplete='off'
+            placeholder={
+              activePrefix === '@'
+                ? `Wyszukaj autora ${data?.length ? `(${data?.length})` : ''}`
+                : activePrefix === '#'
+                  ? `Wyszukaj słowa kluczowe ${data?.length ? `(${data?.length})` : ''}`
+                  : `Rozpocznij wyszukiwanie ${data?.length ? `(${data?.length})` : ''}`
+            }
+            onFocus={(e) => e.target.select()}
             onKeyDown={(e) => {
               if (e.key === 'Backspace' && activePrefix && inputValue === '') {
                 setActivePrefix(null)
+
+                const fromStorage = localStorage.getItem('prevSearch')
+                if (fromStorage) {
+                  const json = JSON.parse(fromStorage)
+                  json.prefix = null
+                  localStorage.setItem('prevSearch', JSON.stringify(json))
+                }
               }
             }}
             onChange={(e) => {
-              const value = e.target.value
-              const startsWithAuthor = value.startsWith('@')
-              const startsWithKeyword = value.startsWith('#')
+              console.log('input reload HTML.onChange')
 
-              if (startsWithAuthor && !activePrefix) {
-                setActivePrefix('@')
-                setInputValue(value.slice(1).trim())
-              } else if (startsWithKeyword && !activePrefix) {
-                setActivePrefix('#')
-                setInputValue(value.slice(1).trim())
-              } else {
-                setInputValue(value)
-              }
-
-              setRenderPage(0)
-
-              const settings = JSON.parse(localStorage.getItem('settings') || '{}')
-              const displayValue = activePrefix ? activePrefix + value : value
-
-              localStorage.setItem(
-                'prevSearch',
-                JSON.stringify({
-                  book,
-                  search: settings.quickSearch ? displayValue : '',
-                })
-              )
+              const inputValue = e.target.value
 
               // easter-egg
-              if (unlocked && value === '2137') {
+              if (unlocked && !activePrefix && inputValue === '2137') {
                 localStorage.removeItem('prevSearch')
                 router.push({
                   pathname: '/hymn',
@@ -867,8 +819,39 @@ export default function SearchPage() {
                   },
                 })
               }
+
+              const startsWithAuthor = inputValue.startsWith('@')
+              const startsWithKeyword = inputValue.startsWith('#')
+
+              let inputPrefix = null
+              let formattedInput = inputValue
+
+              if (unlocked && localSettings?.contextSearch) {
+                if (startsWithAuthor && !activePrefix) {
+                  inputPrefix = '@'
+                  formattedInput = inputValue.slice(1).trim()
+                } else if (startsWithKeyword && !activePrefix) {
+                  inputPrefix = '#'
+                  formattedInput = inputValue.slice(1).trim()
+                } else {
+                  formattedInput = inputValue
+                }
+
+                if (inputPrefix) setActivePrefix(inputPrefix)
+              }
+
+              setInputValue(formattedInput)
+              setRenderPage(0)
+
+              localStorage.setItem(
+                'prevSearch',
+                JSON.stringify({
+                  book,
+                  value: formattedInput,
+                  prefix: activePrefix || inputPrefix,
+                })
+              )
             }}
-            onFocus={(e) => e.target.select()}
           />
 
           {showClearBtn ? (

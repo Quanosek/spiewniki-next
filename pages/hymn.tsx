@@ -11,8 +11,8 @@ import MenuModal from '@/components/mobile-menu/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
 
 import { bookShortcut } from '@/utils/books'
-import getRandomHymn from '@/utils/getRandomHymn'
-import shareButton from '@/utils/shareButton'
+import { getRandomHymn } from '@/utils/getRandomHymn'
+import { shareButton } from '@/utils/shareButton'
 
 import type Hymn from '@/types/hymn'
 
@@ -159,10 +159,11 @@ export default function HymnPage() {
       if (!hymn) return
 
       try {
-        const fromStorage = localStorage.getItem('prevSearch')
-        if (fromStorage) {
-          const json = JSON.parse(fromStorage)
-          json.search = ''
+        const prevSearch = localStorage.getItem('prevSearch')
+        if (prevSearch) {
+          const json = JSON.parse(prevSearch)
+          json.value = ''
+          json.prefix = null
           localStorage.setItem('prevSearch', JSON.stringify(json))
         }
       } catch (err) {
@@ -197,7 +198,7 @@ export default function HymnPage() {
     [router, hymn]
   )
 
-  // Random hymn function
+  // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)
     if (foundHymn) {

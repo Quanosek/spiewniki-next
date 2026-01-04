@@ -32,7 +32,7 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
           <button
             onClick={() => {
               localStorage.removeItem('prevSearch')
-              router.push('/')
+              router.push('/books')
             }}
           >
             <Image
@@ -99,7 +99,7 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
           <button
             onClick={() => {
               localStorage.removeItem('prevSearch')
-              router.push('/books')
+              router.push('/')
             }}
           >
             <Image

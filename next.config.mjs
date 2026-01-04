@@ -2,14 +2,14 @@
 
 import withPWAInit from '@ducanh2912/next-pwa'
 
-const lockedFiles = []
 const excludedBooks = ['K', 'P', 'E', 'S', 'R']
+const excludedList = []
 
-excludedBooks.forEach((book) => lockedFiles.push(`!database/${book}.json`))
+excludedBooks.forEach((book) => excludedList.push(`!database/${book}.json`))
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-const publicExcludes = ['!pdf/*/*', '!mp3/**/*'].concat(unlocked ? [] : lockedFiles)
+const publicExcludes = ['!pdf/*/*', '!mp3/**/*'].concat(unlocked ? [] : excludedList)
 
 const runtimeCaching = [
   {

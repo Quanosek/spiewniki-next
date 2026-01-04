@@ -63,6 +63,11 @@
   margin: 2cm 1cm;
 }
 
+html.nastrazy {
+  --radius: 0;
+  --glow-opacity: 0;
+}
+
 body {
   font-family: 'Brutal Type Medium', 'Gill Sans MT';
   color: var(--text);

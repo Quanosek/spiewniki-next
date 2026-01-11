@@ -92,7 +92,7 @@
   width: min(850px, 95%);
   display: flex;
   align-items: center;
-  @include element-glow();
+  @include custom-shadow();
   @include fade-in();
 
   .searchIcon {
@@ -222,7 +222,7 @@ $grid-gap-mobile: 1.2vw;
   border-radius: var(--radius);
   background-color: var(--elements);
   transition: background-color 100ms ease-out;
-  @include element-glow();
+  @include custom-shadow();
 
   &:hover {
     background-color: var(--elements-hover);
@@ -232,9 +232,7 @@ $grid-gap-mobile: 1.2vw;
     width: 100%;
     height: auto;
     border-radius: calc(2 * var(--space));
-    box-shadow:
-      rgba(#000000, 0.2) 0px 10px 20px,
-      rgba(#000000, 0.22) 0px 6px 6px;
+    box-shadow: 0px 1.5px 6px rgba(#000000, 0.2);
   }
 
   p {
@@ -321,7 +319,7 @@ $grid-gap-mobile: 1.2vw;
   text-align: center;
   border-radius: var(--radius);
   background-color: var(--elements);
-  @include element-glow();
+  @include custom-shadow();
 
   &:hover {
     background-color: var(--elements-hover);

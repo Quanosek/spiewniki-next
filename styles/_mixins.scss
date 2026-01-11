@@ -1,9 +1,25 @@
-@mixin element-glow($border-radius: 8px) {
+@mixin custom-shadow($border-radius: 8px) {
   position: relative;
 
-  &::before {
+  &::after {
+    opacity: var(--basic-shadow-opacity, 0);
+
     content: '';
-    opacity: var(--glow-opacity, 1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    box-shadow: 0px 1px rgba(#000000, 0.05);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &::before {
+    opacity: var(--fancy-glow-opacity, 1);
+
+    content: '';
     position: absolute;
     top: 0;
     left: 0;

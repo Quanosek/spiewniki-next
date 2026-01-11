@@ -281,7 +281,7 @@ $button-gap: 12px;
   }
 
   @media (min-width: 769px) {
-    @include element-glow();
+    @include custom-shadow();
   }
 
   @media (max-width: 768px) {
@@ -293,7 +293,7 @@ $button-gap: 12px;
       margin: 1rem 0 -0.5em;
       background-color: var(--elements);
       font-size: 65%;
-      @include element-glow();
+      @include custom-shadow();
     }
   }
 
@@ -483,7 +483,7 @@ $button-gap: 12px;
     border-radius: var(--radius);
     background-color: var(--elements);
     font-size: 65%;
-    @include element-glow();
+    @include custom-shadow();
 
     .name {
       margin-left: 0.5em;
@@ -506,7 +506,7 @@ $button-gap: 12px;
     font-size: 90%;
 
     @media (min-width: 769px) {
-      @include element-glow(4px);
+      @include custom-shadow(4px);
     }
 
     .previous {

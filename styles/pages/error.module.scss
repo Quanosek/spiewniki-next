@@ -100,7 +100,7 @@
     font-size: min(3vw, 14px);
     background-color: var(--elements);
     border-radius: var(--radius);
-    @include element-glow();
+    @include custom-shadow();
   }
 
   h1 {

@@ -14,6 +14,7 @@ import MobileNavbar from '@/components/mobile-navbar'
 import { bookShortcut, booksList } from '@/utils/books'
 import { SEARCH_PREFIXES } from '@/utils/enums'
 import { getRandomHymn } from '@/utils/getRandomHymn'
+import { isHymnAccessible } from '@/utils/hymnValidation'
 import { reformatText } from '@/utils/simplifyText'
 
 import type Hymn from '@/types/hymn'
@@ -184,10 +185,54 @@ const hasLetterSuffix = (value: string) => {
 
 // Map raw hymn data to processed hymn data
 const mapHymn = (hymn: Hymn): ProcessedHymn => {
-  const lyricsPlain = Object.values(hymn.song.lyrics)
-    .flat()
-    .filter((verse) => verse.startsWith(' '))
-    .map((verse) => verse.slice(1))
+  let lyricsPlain: string[]
+
+  if (unlocked) {
+    // Full lyrics for unlocked version
+    lyricsPlain = Object.values(hymn.song.lyrics)
+      .flat()
+      .filter((verse) => verse.startsWith(' '))
+      .map((verse) => verse.slice(1))
+  } else {
+    // Filtered lyrics for restricted version
+    const verses = Object.values(hymn.song.lyrics) as string[][]
+    const filteredLines: string[] = []
+
+    for (const verse of verses) {
+      const separatorIndex = verse.findIndex((line) => line.includes('———'))
+
+      // Stop at separator
+      if (separatorIndex !== -1) {
+        if (separatorIndex > 0) {
+          verse.slice(0, separatorIndex).forEach((line) => {
+            if (line.startsWith(' ')) {
+              const processed = line
+                .slice(1)
+                .replace(/\(.*?\)/g, '')
+                .replace(/\s+/g, ' ')
+                .trim()
+              if (processed) filteredLines.push(processed)
+            }
+          })
+        }
+        break
+      }
+
+      // Process verse lines
+      verse.forEach((line) => {
+        if (line.startsWith(' ')) {
+          const processed = line
+            .slice(1)
+            .replace(/\(.*?\)/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+          if (processed) filteredLines.push(processed)
+        }
+      })
+    }
+
+    lyricsPlain = filteredLines
+  }
 
   return {
     ...hymn,
@@ -326,7 +371,10 @@ export default function SearchPage() {
 
     // Load data from database
     const loadData = (fetchData: Hymn[]) => {
-      const rawData = fetchData.map(mapHymn)
+      // Filter out excluded hymns for restricted version
+      const filteredData = fetchData.filter((hymn) => isHymnAccessible(hymn.name))
+
+      const rawData = filteredData.map(mapHymn)
       setRawData(rawData)
 
       const prevSearchValue = prevSearch?.value || ''

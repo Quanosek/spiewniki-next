@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 
 import { defaultSettings } from '@/components/menu/settings'
@@ -12,6 +12,7 @@ import MobileNavbar from '@/components/mobile-navbar'
 
 import { bookShortcut } from '@/utils/books'
 import { getRandomHymn } from '@/utils/getRandomHymn'
+import { isHymnAccessible } from '@/utils/hymnValidation'
 import { shareButton } from '@/utils/shareButton'
 
 import type Hymn from '@/types/hymn'
@@ -179,13 +180,27 @@ export default function HymnPage() {
         .then(({ data }) => {
           if (id >= data.length) return
 
-          const hymn = data.find((elem: { id: number }) => elem.id === id)
+          // Find next accessible hymn (skipping excluded ones)
+          const direction = id > hymn.id ? 1 : -1
+          let currentId = id
+          let targetHymn = null
+
+          while (currentId >= 0 && currentId < data.length) {
+            const candidate = data.find((elem: { id: number }) => elem.id === currentId)
+            if (candidate && isHymnAccessible(candidate.name)) {
+              targetHymn = candidate
+              break
+            }
+            currentId += direction
+          }
+
+          if (!targetHymn) return
 
           router.push({
             pathname: '/hymn',
             query: {
-              book: bookShortcut(hymn.book),
-              title: hymn.name,
+              book: bookShortcut(targetHymn.book),
+              title: targetHymn.name,
             },
           })
         })
@@ -381,6 +396,36 @@ export default function HymnPage() {
     language: number
     setLanguage: (value: number) => void
   }) => {
+    // Filter lyrics for restricted version
+    const filteredLyrics = useMemo(() => {
+      const result: string[][] = []
+
+      for (const verse of hymn.lyrics) {
+        const separatorIndex = verse.findIndex((line) => line.includes('———'))
+
+        // Hide additional text after separator
+        if (separatorIndex !== -1) {
+          if (separatorIndex > 0) {
+            const processedVerse = verse.slice(0, separatorIndex)
+            result.push(processedVerse)
+          }
+          break
+        }
+
+        // Hide additional choir lyrics in brackets
+        const processedVerse = verse.map((line) =>
+          line
+            .replace(/\(.*?\)/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+        )
+        result.push(processedVerse)
+      }
+
+      return result
+    }, [hymn.lyrics])
+
+    // Special International Hymns book handling
     const ic = hymn.song.title.includes('IC')
 
     const FormattedVerse = ({ array, index }: { array: string[]; index: number }) => {
@@ -463,7 +508,7 @@ export default function HymnPage() {
           <hr className={styles.printLine} />
 
           <div className={styles.lyrics}>
-            {hymn.lyrics.map((array, index) => (
+            {(unlocked ? hymn.lyrics : filteredLyrics).map((array, index) => (
               <FormattedVerse key={index} array={array} index={index} />
             ))}
           </div>

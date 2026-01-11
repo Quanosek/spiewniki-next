@@ -14,6 +14,8 @@ export default function PresentationPage() {
   const router = useRouter()
 
   const [hymn, setHymn] = useState<Hymn>()
+
+  // Special International Hymns book handling
   const ic = hymn?.song.title.includes('IC')
 
   const [order, setOrder] = useState<string[]>([])

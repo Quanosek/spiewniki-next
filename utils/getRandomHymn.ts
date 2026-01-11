@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { bookShortcut } from '@/utils/books'
+import { isHymnAccessible } from '@/utils/hymnValidation'
 
 import { booksList } from './books'
 
@@ -13,9 +14,10 @@ const getRandomHymn = async (unlocked: boolean, book?: string) => {
       )
 
       const hymns = responses.flatMap((response) => response?.data ?? [])
+      const accessibleHymns = hymns.filter((hymn: { name: string }) => isHymnAccessible(hymn.name))
 
-      if (hymns.length > 0) {
-        const randomHymn = hymns[Math.floor(Math.random() * hymns.length)]
+      if (accessibleHymns.length > 0) {
+        const randomHymn = accessibleHymns[Math.floor(Math.random() * accessibleHymns.length)]
         return {
           book: bookShortcut(randomHymn.book),
           title: randomHymn.name,
@@ -28,9 +30,10 @@ const getRandomHymn = async (unlocked: boolean, book?: string) => {
     // Specific book, get random from that book
     try {
       const { data } = await axios.get(`/database/${book}.json`)
+      const accessibleHymns = data.filter((hymn: { name: string }) => isHymnAccessible(hymn.name))
 
-      if (data.length > 0) {
-        const randomHymn = data[Math.floor(Math.random() * data.length)]
+      if (accessibleHymns.length > 0) {
+        const randomHymn = accessibleHymns[Math.floor(Math.random() * accessibleHymns.length)]
         return {
           book: bookShortcut(randomHymn.book),
           title: randomHymn.name,

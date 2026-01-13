@@ -282,7 +282,7 @@
 //! Settings menu
 
 .settingsSection {
-  padding: 1.2rem 0;
+  padding: 1.2rem calc(min(3.5vw, 1rem) * 1.5);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -302,7 +302,6 @@
 }
 
 .themeSelectionWrapper {
-  padding: 0 calc(min(3.5vw, 1rem) * 1.5);
   width: 100%;
   overflow-x: auto;
   user-select: none;
@@ -429,7 +428,7 @@
 
 .fontPreview {
   height: 3.5rem;
-  width: 65%;
+  width: 75%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -452,7 +451,7 @@
 .fontSlider {
   position: relative;
   margin: min(4vw, 1rem) 0;
-  width: 65%;
+  width: 75%;
   display: flex;
   justify-content: center;
   align-items: center;

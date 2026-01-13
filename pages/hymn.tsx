@@ -63,7 +63,11 @@ export default function HymnPage() {
       .get(`database/${book}.json`, { signal: abortController.signal })
       .then(({ data }) => {
         const hymn = data.find((elem: Hymn) => elem.name === title)
-        if (!hymn) return router.push('/404')
+
+        if (!hymn) {
+          router.push('/404')
+          return
+        }
 
         hymn.lyrics = Object.values(hymn.song.lyrics)
 
@@ -361,7 +365,7 @@ export default function HymnPage() {
       const key = e.key.toUpperCase()
 
       if (key === 'B') router.push(unlocked ? '/books' : '/')
-      if (key === 'R') randomHymn()
+      if (unlocked && key === 'R') randomHymn()
       if (key === 'P') showPresentation()
       if (key === 'F') toggleFavorite()
       if (key === 'D') openDocument(hymnFiles.pdf)
@@ -769,7 +773,7 @@ export default function HymnPage() {
                     </div>
 
                     <div
-                      className={styles.moreArrow}
+                      className={styles.showMore}
                       onClick={() => showPresOptions((prev) => !prev)}
                     >
                       <Image

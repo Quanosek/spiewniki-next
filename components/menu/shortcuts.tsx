@@ -64,7 +64,7 @@ export default function ShortcutsMenu() {
       {isHymn && (
         <>
           <div className={styles.content}>
-            <Shortcut keyup='R' action='Losowa pieśń z wybranego śpiewnika' />
+            {unlocked && <Shortcut keyup='R' action='Losowa pieśń z wybranego śpiewnika' />}
             <Shortcut keyup='←' action='Poprzednia pieśń' />
             <Shortcut keyup='→' action='Następna pieśń' />
           </div>

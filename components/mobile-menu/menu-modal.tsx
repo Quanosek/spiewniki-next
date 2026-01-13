@@ -14,7 +14,9 @@ export default function MenuModal({ active }: { active: boolean }) {
       </button>
 
       <Link href='https://nastrazy.org'>
-        <p>Nastrazy.org</p>
+        <p>
+          <b>Nastrazy.org</b>
+        </p>
       </Link>
     </div>
   )

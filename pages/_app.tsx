@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
 import { ThemeProvider } from 'next-themes'
@@ -15,6 +15,15 @@ import 'the-new-css-reset/css/reset.css'
 import '@/styles/globals.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
+}
+
+interface NavigatorStandalone extends Navigator {
+  standalone?: boolean
+}
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -73,6 +82,46 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
+  // Detect PWA installation possibility
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [showInstallButton, setShowInstallButton] = useState(false)
+
+  useEffect(() => {
+    // Check if browser window is running as PWA
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: fullscreen)').matches ||
+      window.matchMedia('(display-mode: minimal-ui)').matches ||
+      (window.navigator as NavigatorStandalone).standalone ||
+      document.referrer.includes('android-app://')
+
+    if (isStandalone) {
+      setShowInstallButton(false)
+      return
+    }
+
+    // Check for prompt before installation
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault()
+      setDeferredPrompt(e as BeforeInstallPromptEvent)
+      setShowInstallButton(true)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+  }, [])
+
+  // Handle simple PWA installation button
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return
+
+    deferredPrompt.prompt()
+    await deferredPrompt.userChoice
+
+    setDeferredPrompt(null)
+    setShowInstallButton(false)
+  }
+
   const defaultTheme = unlocked ? 'dark' : 'light'
 
   return (
@@ -93,28 +142,44 @@ export default function App({ Component, pageProps }: AppProps) {
 
         <header>
           <div className='container'>
-            <Link
-              href='/'
-              title={
-                router.pathname === '/'
-                  ? 'Zebrane w jednym miejscu różne śpiewniki i pieśni religijne'
-                  : unlocked
-                    ? 'Powróć do strony głównej'
-                    : 'Powróć do wyboru śpiewników'
-              }
-              className='title'
-            >
-              <Image
-                className='icon'
-                alt='bpsw'
-                src='/logo/bpsw.svg'
-                width={36}
-                height={36}
-                draggable={false}
-                priority
-              />
-              <h1>Śpiewniki</h1>
-            </Link>
+            <div>
+              <Link
+                href='/'
+                title={
+                  router.pathname === '/'
+                    ? 'Zebrane w jednym miejscu różne śpiewniki i pieśni religijne'
+                    : unlocked
+                      ? 'Powróć do strony głównej'
+                      : 'Powróć do wyboru śpiewników'
+                }
+                className='title'
+              >
+                <Image
+                  className='icon'
+                  alt='bpsw'
+                  src='/logo/bpsw.svg'
+                  width={36}
+                  height={36}
+                  draggable={false}
+                  priority
+                />
+                <h1>Śpiewniki</h1>
+              </Link>
+
+              {unlocked && showInstallButton && (
+                <button onClick={handleInstallClick} className='installButton'>
+                  <Image
+                    className='icon'
+                    src='/icons/download.svg'
+                    alt='Install PWA'
+                    width={18}
+                    height={18}
+                    draggable={false}
+                  />
+                  <p>Zainstaluj</p>
+                </button>
+              )}
+            </div>
 
             <div className='buttons'>
               <button onClick={() => hiddenMenuQuery('favorites')}>
@@ -131,7 +196,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
               {unlocked || (
                 <Link href='https://nastrazy.org'>
-                  <p>Nastrazy.org</p>
+                  <p>
+                    <b>Nastrazy.org</b>
+                  </p>
                 </Link>
               )}
             </div>

@@ -2,14 +2,19 @@
 
 import withPWAInit from '@ducanh2912/next-pwa'
 
+const excludedIconsArray = ['download.svg', 'filter.svg', 'play.svg']
+const excludedIcons = []
+excludedIconsArray.forEach((icon) => excludedIcons.push(`!public/icons/${icon}`))
+
 const excludedBooks = ['K', 'P', 'E', 'S', 'R']
 const excludedList = []
-
 excludedBooks.forEach((book) => excludedList.push(`!database/${book}.json`))
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-const publicExcludes = ['!pdf/*/*', '!mp3/**/*'].concat(unlocked ? [] : excludedList)
+const publicExcludes = ['!pdf/*/*', '!mp3/**/*'].concat(
+  unlocked ? [] : [...excludedIcons, ...excludedList]
+)
 
 const runtimeCaching = [
   {

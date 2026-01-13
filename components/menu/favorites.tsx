@@ -193,7 +193,7 @@ export default function FavoritesMenu() {
         <button
           className={styles.alert}
           onClick={() => {
-            if (!favorites.length) return alert('Brak ulubionych pieśni!')
+            if (!favorites.length) return
 
             if (!confirm('Czy na pewno chcesz wyczyścić listę ulubionych?')) {
               return

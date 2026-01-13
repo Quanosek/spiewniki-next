@@ -133,6 +133,19 @@ header {
     }
   }
 
+  .installButton {
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 0.4rem;
+    border: 2px solid var(--elements-hover);
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
   div {
     display: flex;
     align-items: center;
@@ -182,6 +195,10 @@ h1 {
 
 h2 {
   font-size: 125%;
+}
+
+b {
+  font-weight: 600;
 }
 
 button {

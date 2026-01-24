@@ -2,7 +2,8 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+// import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
 import { ThemeProvider } from 'next-themes'
@@ -16,14 +17,14 @@ import '@/styles/globals.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
-}
+// interface BeforeInstallPromptEvent extends Event {
+//   prompt: () => Promise<void>
+//   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
+// }
 
-interface NavigatorStandalone extends Navigator {
-  standalone?: boolean
-}
+// interface NavigatorStandalone extends Navigator {
+//   standalone?: boolean
+// }
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -59,7 +60,7 @@ export default function App({ Component, pageProps }: AppProps) {
         if ('wakeLock' in navigator) {
           wakeLock = await navigator.wakeLock.request('screen')
           wakeLock.addEventListener('release', () => {
-            console.log('Wake Lock released')
+            // console.log('Wake Lock released')
           })
         }
       } catch (err) {
@@ -82,45 +83,45 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
-  // Detect PWA installation possibility
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
-  const [showInstallButton, setShowInstallButton] = useState(false)
+  // // Detect PWA installation possibility
+  // const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  // const [showInstallButton, setShowInstallButton] = useState(false)
 
-  useEffect(() => {
-    // Check if browser window is running as PWA
-    const isStandalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      window.matchMedia('(display-mode: fullscreen)').matches ||
-      window.matchMedia('(display-mode: minimal-ui)').matches ||
-      (window.navigator as NavigatorStandalone).standalone ||
-      document.referrer.includes('android-app://')
+  // useEffect(() => {
+  //   // Check if browser window is running as PWA
+  //   const isStandalone =
+  //     window.matchMedia('(display-mode: standalone)').matches ||
+  //     window.matchMedia('(display-mode: fullscreen)').matches ||
+  //     window.matchMedia('(display-mode: minimal-ui)').matches ||
+  //     (window.navigator as NavigatorStandalone).standalone ||
+  //     document.referrer.includes('android-app://')
 
-    if (isStandalone) {
-      setShowInstallButton(false)
-      return
-    }
+  //   if (isStandalone) {
+  //     setShowInstallButton(false)
+  //     return
+  //   }
 
-    // Check for prompt before installation
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault()
-      setDeferredPrompt(e as BeforeInstallPromptEvent)
-      setShowInstallButton(true)
-    }
+  //   // Check for prompt before installation
+  //   const handleBeforeInstallPrompt = (e: Event) => {
+  //     e.preventDefault()
+  //     setDeferredPrompt(e as BeforeInstallPromptEvent)
+  //     setShowInstallButton(true)
+  //   }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-  }, [])
+  //   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+  //   return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+  // }, [])
 
-  // Handle simple PWA installation button
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) return
+  // // Handle simple PWA installation button
+  // const handleInstallClick = async () => {
+  //   if (!deferredPrompt) return
 
-    deferredPrompt.prompt()
-    await deferredPrompt.userChoice
+  //   deferredPrompt.prompt()
+  //   await deferredPrompt.userChoice
 
-    setDeferredPrompt(null)
-    setShowInstallButton(false)
-  }
+  //   setDeferredPrompt(null)
+  //   setShowInstallButton(false)
+  // }
 
   const defaultTheme = unlocked ? 'dark' : 'light'
 
@@ -166,7 +167,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <h1>Śpiewniki</h1>
               </Link>
 
-              {unlocked && showInstallButton && (
+              {/* {unlocked && showInstallButton && (
                 <button onClick={handleInstallClick} className='installButton'>
                   <Image
                     className='icon'
@@ -178,7 +179,7 @@ export default function App({ Component, pageProps }: AppProps) {
                   />
                   <p>Zainstaluj</p>
                 </button>
-              )}
+              )} */}
             </div>
 
             <div className='buttons'>

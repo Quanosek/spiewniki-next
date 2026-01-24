@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -189,16 +191,23 @@ const mapHymn = (hymn: Hymn): ProcessedHymn => {
 
   if (unlocked) {
     // Full lyrics for unlocked version
-    lyricsPlain = Object.values(hymn.song.lyrics)
+    const entries = Object.entries(hymn.song.lyrics) as [string, string[]][]
+
+    // Filter out verses with T tag (check by key)
+    const filteredVerses = entries.filter(([key]) => !key.includes('T')).map(([_, verse]) => verse)
+
+    lyricsPlain = filteredVerses
       .flat()
       .filter((verse) => verse.startsWith(' '))
       .map((verse) => verse.slice(1))
   } else {
     // Filtered lyrics for restricted version
-    const verses = Object.values(hymn.song.lyrics) as string[][]
+    const entries = Object.entries(hymn.song.lyrics) as [string, string[]][]
     const filteredLines: string[] = []
 
-    for (const verse of verses) {
+    for (const [key, verse] of entries) {
+      if (key.includes('T')) continue
+
       const separatorIndex = verse.findIndex((line) => line.includes('———'))
 
       // Stop at separator
@@ -426,8 +435,6 @@ export default function SearchPage() {
 
   // Run search on input or raw data change
   useEffect(() => {
-    console.log('input reload React.useEffect')
-
     setShowClearBtn(!!inputValue || activePrefix !== null)
 
     if (inputValue && !rawData) inputRef.current?.select() // focus input on load
@@ -856,8 +863,6 @@ export default function SearchPage() {
               }
             }}
             onChange={(e) => {
-              console.log('input reload HTML.onChange')
-
               const inputValue = e.target.value
 
               // easter-egg

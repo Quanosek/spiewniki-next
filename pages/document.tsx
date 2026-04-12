@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-import { modifyText } from '@/utils/simplifyText'
+import { slugifyText } from '@/utils/simplifyText'
 
 import styles from '@/styles/pages/document.module.scss'
 
@@ -28,7 +28,7 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
     const id = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id
 
     if (d && d.trim()) {
-      setDocumentPath(`/pdf/${modifyText(d)}.pdf`)
+      setDocumentPath(`/pdf/${slugifyText(d)}.pdf`)
     } else if (book && book.trim() && id && id.trim()) {
       setDocumentPath(`/pdf/${book}/${id}.pdf`)
     } else {

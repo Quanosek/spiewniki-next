@@ -1,5 +1,5 @@
 {
-  "version": "0.11.9",
+  "version": "0.12.0",
   "name": "spiewniki",
   "description": "Various hymnbooks and religious songs gathered in one place",
   "private": true,
@@ -11,31 +11,31 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "pnpm run format:check && pnpm run lint"
+    "validate": "pnpm run format:check && pnpm run lint",
+    "prepare": "husky"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "axios": "^1.15.0",
-    "next": "~14.2.35",
+    "next": "14.2.35",
     "next-themes": "^0.4.6",
     "nextjs-google-analytics": "^2.3.7",
-    "react": "~18.3.1",
-    "react-dom": "~18.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-highlight-words": "^0.21.0",
-    "sharp": "^0.34.5",
     "the-new-css-reset": "^1.11.3"
   },
   "devDependencies": {
-    "@types/node": "~22.19.17",
-    "@types/react": "~18.3.28",
-    "@types/react-dom": "~18.3.7",
+    "@types/node": "^20.19.39",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
     "@types/react-highlight-words": "^0.20.1",
-    "eslint": "~8.57.1",
-    "eslint-config-next": "~14.2.35",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.35",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "prettier": "^3.8.2",
     "sass": "^1.99.0",
-    "typescript": "~5.9.3",
-    "webpack": "^5.106.0"
+    "typescript": "^5.9.3"
   }
 }

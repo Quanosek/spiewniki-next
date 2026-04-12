@@ -206,20 +206,21 @@ const runtimeCaching = [
 ]
 
 const withPWA = withPWAInit({
-  cacheOnFrontEndNav: true,
-  aggressiveFrontEndNavCaching: true,
-  disable: process.env.NODE_ENV === 'development',
+  cacheOnFrontEndNav: unlocked,
+  aggressiveFrontEndNavCaching: unlocked,
+  cacheStartUrl: false,
+  disable: !unlocked || process.env.NODE_ENV === 'development',
   dest: 'public',
   extendDefaultRuntimeCaching: true,
   publicExcludes,
-  register: true,
+  register: unlocked,
   reloadOnOnline: false,
   workboxOptions: {
     runtimeCaching,
     cleanupOutdatedCaches: true,
     clientsClaim: true,
     disableDevLogs: true,
-    navigationPreload: true,
+    navigationPreload: false,
     skipWaiting: true,
   },
 })

@@ -1,5 +1,5 @@
 // Remove polish diacritics and convert to lowercase
-const reformatText = (text: string) => {
+const normalizeText = (text: string) => {
   return text
     .toLowerCase()
     .replaceAll('ą', 'a')
@@ -15,9 +15,9 @@ const reformatText = (text: string) => {
 }
 
 // Replace spaces with hyphens
-const modifyText = (text: string) => {
-  const formattedText = reformatText(text)
+const slugifyText = (text: string) => {
+  const formattedText = normalizeText(text)
   return formattedText.replaceAll(' ', '-')
 }
 
-export { reformatText, modifyText }
+export { normalizeText, slugifyText }

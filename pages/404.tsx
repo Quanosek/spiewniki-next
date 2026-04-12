@@ -22,7 +22,7 @@ export default function ErrorPage() {
     const counter = setInterval(() => {
       setSeconds((prev) => {
         if (prev <= 1) {
-          // router.push('/')
+          router.push('/')
           return 0
         }
         return prev - 1
@@ -33,7 +33,7 @@ export default function ErrorPage() {
   }, [router])
 
   // Prevent scrolling on active hamburger menu
-  const [hamburgerMenu, showHamburgerMenu] = useState(false)
+  const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {
     if (!hamburgerMenu) return
@@ -72,7 +72,7 @@ export default function ErrorPage() {
             <h1>Śpiewniki</h1>
           </Link>
 
-          {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />}
+          {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={setHamburgerMenu} />}
         </div>
 
         {unlocked || <MenuModal active={hamburgerMenu} />}

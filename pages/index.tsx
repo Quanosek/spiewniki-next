@@ -24,7 +24,7 @@ export default function HomePage() {
   }, [])
 
   // Prevent scrolling on active hamburger menu
-  const [hamburgerMenu, showHamburgerMenu] = useState(false)
+  const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {
     if (!hamburgerMenu) return
@@ -42,10 +42,9 @@ export default function HomePage() {
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked)
     if (foundHymn) {
-      const { book, title } = foundHymn
       router.push({
         pathname: '/hymn',
-        query: { book, title },
+        query: { book: foundHymn.book, title: foundHymn.title },
       })
     }
   }, [router])
@@ -93,7 +92,7 @@ export default function HomePage() {
             <h1>Śpiewniki</h1>
           </Link>
 
-          {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />}
+          {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={setHamburgerMenu} />}
         </div>
 
         {unlocked || <MenuModal active={hamburgerMenu} />}

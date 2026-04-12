@@ -26,7 +26,7 @@ export default function PresentationPage() {
   const handleInit = useCallback(async (book: string, title: string) => {
     const abortController = new AbortController()
     try {
-      const { data } = await axios.get(`database/${book}.json`, { signal: abortController.signal })
+      const { data } = await axios.get(`/database/${book}.json`, { signal: abortController.signal })
 
       const foundHymn = data.find((elem: { name: string }) => elem.name === title)
 
@@ -92,14 +92,14 @@ export default function PresentationPage() {
   }, [ic, slide])
 
   const nextSlide = useCallback(() => {
-    const maxSlide = ic ? order.length + 1 : order.length + 1
+    const maxSlide = order.length + 1
 
     if (slide < maxSlide) {
       setSlide(slide + 1)
     } else {
       closePresentation()
     }
-  }, [ic, slide, closePresentation, order.length])
+  }, [slide, closePresentation, order.length])
 
   useEffect(() => {
     if (!hymn || !order.length) return
@@ -175,52 +175,41 @@ export default function PresentationPage() {
       }
     }
 
-    // Slides custom navigation
-    let startPosition: number
-    let endPosition: number
-
-    const handleEvent = (event: Event) => {
-      const TouchEvent = event as TouchEvent
-      const KeyboardEvent = event as KeyboardEvent
-
-      if (event.type === 'touchstart') {
-        startPosition = TouchEvent.touches[0].clientX
-      }
-      if (event.type === 'touchend') {
-        endPosition = TouchEvent.changedTouches[0].clientX - startPosition
-      }
-
-      if (
-        KeyboardEvent.ctrlKey ||
-        KeyboardEvent.shiftKey ||
-        KeyboardEvent.altKey ||
-        KeyboardEvent.metaKey
-      ) {
+    // Slides custom navigation — keyboard
+    const handleKeyup = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
         return
       }
 
-      if (['ArrowLeft', 'ArrowUp'].includes(KeyboardEvent.key) || endPosition < -50) {
-        prevSlide()
-      }
-      if ([' ', 'ArrowRight', 'ArrowDown'].includes(KeyboardEvent.key) || endPosition >= 0) {
-        nextSlide()
-      }
-
-      if (KeyboardEvent.key === 'Escape') closePresentation()
+      if (['ArrowLeft', 'ArrowUp'].includes(event.key)) prevSlide()
+      if ([' ', 'ArrowRight', 'ArrowDown'].includes(event.key)) nextSlide()
+      if (event.key === 'Escape') closePresentation()
     }
 
-    const eventTypes: Array<string> = ['keyup', 'touchstart', 'touchend']
+    // Slides custom navigation — touch swipe
+    let startPosition = 0
+
+    const handleTouchStart = (event: TouchEvent) => {
+      startPosition = event.touches[0].clientX
+    }
+
+    const handleTouchEnd = (event: TouchEvent) => {
+      const endPosition = event.changedTouches[0].clientX - startPosition
+
+      if (endPosition < -50) prevSlide()
+      else if (endPosition > 50) nextSlide()
+    }
 
     document.addEventListener('mousemove', mouseMoveEvent)
-    eventTypes.forEach((eventType) => {
-      return document.addEventListener(eventType, handleEvent)
-    })
+    document.addEventListener('keyup', handleKeyup)
+    document.addEventListener('touchstart', handleTouchStart)
+    document.addEventListener('touchend', handleTouchEnd)
 
     return () => {
       document.removeEventListener('mousemove', mouseMoveEvent)
-      eventTypes.forEach((eventType) => {
-        return document.removeEventListener(eventType, handleEvent)
-      })
+      document.removeEventListener('keyup', handleKeyup)
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchend', handleTouchEnd)
     }
   }, [alwaysShowCursor, nextSlide, prevSlide, closePresentation])
 

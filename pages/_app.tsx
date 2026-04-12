@@ -50,7 +50,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
 
     // Set global accent color
-    document.documentElement.className = unlocked ? 'accent-blue' : 'nastrazy'
+    document.documentElement.className = unlocked ? 'accent-blue' : 'accent-orange'
 
     // Screen Wake Lock API with re-request on visibility change
     let wakeLock: WakeLockSentinel | null = null

@@ -2,12 +2,16 @@
 .DS_Store
 
 .github
+.husky
 .next
 .vscode
 node_modules
 
 .editorconfig
+.eslintrc.json
 .env.example
+.gitattributes
+.gitignore
 .prettierignore
 .prettierrc
 LICENSE

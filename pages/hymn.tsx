@@ -44,6 +44,179 @@ interface HymnFiles {
   }
 }
 
+const FormattedVerse = ({
+  array,
+  index,
+  hymn,
+  ic,
+  language,
+  setLanguage,
+  showChords,
+}: {
+  array: string[]
+  index: number
+  hymn: ProcessedHymn
+  ic: boolean
+  language: number
+  setLanguage: (value: number) => void
+  showChords: boolean
+}) => {
+  const id = Object.keys(hymn.song.lyrics)[index]
+
+  return (
+    <div id={id} className={`${styles.verse} ${id.includes('T') && styles.italic}`}>
+      {ic && index === 0 && (
+        <select
+          className={styles.changeLanguage}
+          onChange={(e) => setLanguage(parseInt(e.target.value))}
+          value={language}
+        >
+          <option value='0'>{array[0]}</option>
+          <option value='1'>{array[1]}</option>
+          <option value='2'>{array[2]}</option>
+          <option value='3'>{array[3]}</option>
+          <option value='4'>{array[4]}</option>
+        </select>
+      )}
+
+      <p>
+        {array.map((verse, j) => {
+          if (ic) if (index === 0 || j !== language) return null
+
+          const isChord = verse.startsWith('.')
+
+          if (isChord && !showChords) return null
+
+          const line = verse
+            .replace(/^[\s.]/, '')
+            .replace(/\b(\w)\b\s/g, '$1\u00A0')
+            .replace(/(?<=\[:) | (?=:\])/g, '\u00A0')
+            .replace(/\:\]\s/g, ':]\u00A0')
+
+          return (
+            <span key={j} className={isChord ? styles.chord : ''}>
+              {line}
+              <br />
+            </span>
+          )
+        })}
+      </p>
+    </div>
+  )
+}
+
+const LinkedSong = ({ linked }: { linked: { book: string; title: string } }) => {
+  const { book, title } = linked
+
+  return (
+    <Link
+      href={{
+        pathname: '/hymn',
+        query: { book, title },
+      }}
+      title='Przejdź do wybranej pieśni'
+    >
+      <p>{linked.title}</p>
+    </Link>
+  )
+}
+
+const HymnData = ({
+  hymn,
+  showChords,
+  language,
+  setLanguage,
+}: {
+  hymn: ProcessedHymn
+  showChords: boolean
+  language: number
+  setLanguage: (value: number) => void
+}) => {
+  // Filter lyrics for restricted version
+  const filteredLyrics = useMemo(() => {
+    const result: string[][] = []
+
+    for (const verse of hymn.lyrics) {
+      const separatorIndex = verse.findIndex((line) => line.includes('———'))
+
+      // Hide additional text after separator
+      if (separatorIndex !== -1) {
+        if (separatorIndex > 0) {
+          const processedVerse = verse.slice(0, separatorIndex)
+          result.push(processedVerse)
+        }
+        break
+      }
+
+      // Hide additional choir lyrics in brackets
+      const processedVerse = verse.map((line) =>
+        line
+          .replace(/\(.*?\)/g, '')
+          .replace(/\s+/g, ' ')
+          .trim()
+      )
+      result.push(processedVerse)
+    }
+
+    return result
+  }, [hymn.lyrics])
+
+  // Special International Hymns book handling
+  const ic = hymn.song.title.includes('IC')
+
+  const hymnTitle = hymn.song.title.replace(/\b(\w)\b\s/g, '$1\u00A0')
+
+  return (
+    <>
+      <div className={styles.text}>
+        <div className={styles.hymnTitle}>
+          <p>{hymn.book}</p>
+          <h1>{hymnTitle}</h1>
+        </div>
+
+        {hymn.song.author && (
+          <div className={styles.credits}>
+            <p className={styles.author}>{hymn.song.author}</p>
+          </div>
+        )}
+
+        <hr className={styles.printLine} />
+
+        <div className={styles.lyrics}>
+          {(unlocked ? hymn.lyrics : filteredLyrics).map((array, index) => (
+            <FormattedVerse
+              key={index}
+              array={array}
+              index={index}
+              hymn={hymn}
+              ic={ic}
+              language={language}
+              setLanguage={setLanguage}
+              showChords={showChords}
+            />
+          ))}
+        </div>
+
+        {hymn.song.copyright && (
+          <div className={styles.credits}>
+            <p className={styles.copyright}>{hymn.song.copyright}</p>
+          </div>
+        )}
+      </div>
+
+      {unlocked && hymn.song.linked_songs && (
+        <span className={styles.linked}>
+          <p className={styles.name}>Powiązane pieśni:</p>
+
+          {hymn.song.linked_songs.map((linked, index) => (
+            <LinkedSong key={index} linked={linked} />
+          ))}
+        </span>
+      )}
+    </>
+  )
+}
+
 export default function HymnPage() {
   const router = useRouter()
 
@@ -60,7 +233,7 @@ export default function HymnPage() {
     const abortController = new AbortController()
 
     axios
-      .get(`database/${book}.json`, { signal: abortController.signal })
+      .get(`/database/${book}.json`, { signal: abortController.signal })
       .then(({ data }) => {
         const hymn = data.find((elem: Hymn) => elem.name === title)
 
@@ -169,7 +342,12 @@ export default function HymnPage() {
           const json = JSON.parse(prevSearch)
           json.value = ''
           json.prefix = null
+          json.scrollY = 0
+          json.renderPage = 0
           localStorage.setItem('prevSearch', JSON.stringify(json))
+
+          const cacheKey = `searchCache_${json.book || 'all'}`
+          sessionStorage.removeItem(cacheKey)
         }
       } catch (err) {
         console.error('Error updating prevSearch:', err)
@@ -180,7 +358,7 @@ export default function HymnPage() {
       const abortController = new AbortController()
 
       axios
-        .get(`database/${bookShortcut(hymn.book)}.json`, { signal: abortController.signal })
+        .get(`/database/${bookShortcut(hymn.book)}.json`, { signal: abortController.signal })
         .then(({ data }) => {
           if (id >= data.length) return
 
@@ -219,12 +397,26 @@ export default function HymnPage() {
 
   // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
+    try {
+      const prevSearch = localStorage.getItem('prevSearch')
+      if (prevSearch) {
+        const json = JSON.parse(prevSearch)
+        json.value = ''
+        json.prefix = null
+        json.scrollY = 0
+        json.renderPage = 0
+        localStorage.setItem('prevSearch', JSON.stringify(json))
+
+        const cacheKey = `searchCache_${json.book || 'all'}`
+        sessionStorage.removeItem(cacheKey)
+      }
+    } catch {}
+
     const foundHymn = await getRandomHymn(unlocked, book)
     if (foundHymn) {
-      const { book, title } = foundHymn
       router.push({
         pathname: '/hymn',
-        query: { book, title },
+        query: { book: foundHymn.book, title: foundHymn.title },
       })
     }
   }, [book, router])
@@ -250,9 +442,10 @@ export default function HymnPage() {
 
     try {
       const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
+      const bookName = bookShortcut(hymn.book)
       setFavorite(
         favorites.some((elem: { book: string; id: number }) => {
-          return elem.book === book && elem.id === hymn.id
+          return elem.book === bookName && elem.id === hymn.id
         })
       )
     } catch (err) {
@@ -295,7 +488,7 @@ export default function HymnPage() {
   }, [hymn])
 
   // Prevent scrolling on active hamburger menu
-  const [hamburgerMenu, showHamburgerMenu] = useState(false)
+  const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {
     if (!hamburgerMenu) return
@@ -317,14 +510,9 @@ export default function HymnPage() {
     if (!hymn) return
 
     setFilesLoading(true)
-    fetch(`/api/hymnFiles?book=${hymn.book}&title=${hymn.song.title}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`)
-        }
-        return res.json()
-      })
-      .then((data) => setHymnFiles(data))
+    axios
+      .get('/api/hymnFiles', { params: { book: hymn.book, title: hymn.song.title } })
+      .then(({ data }) => setHymnFiles(data))
       .catch((err) => console.error(err))
       .finally(() => setFilesLoading(false))
   }, [hymn])
@@ -389,161 +577,13 @@ export default function HymnPage() {
     playMusic,
   ])
 
-  const HymnData = ({
-    hymn,
-    showChords,
-    language,
-    setLanguage,
-  }: {
-    hymn: ProcessedHymn
-    showChords: boolean
-    language: number
-    setLanguage: (value: number) => void
-  }) => {
-    // Filter lyrics for restricted version
-    const filteredLyrics = useMemo(() => {
-      const result: string[][] = []
-
-      for (const verse of hymn.lyrics) {
-        const separatorIndex = verse.findIndex((line) => line.includes('———'))
-
-        // Hide additional text after separator
-        if (separatorIndex !== -1) {
-          if (separatorIndex > 0) {
-            const processedVerse = verse.slice(0, separatorIndex)
-            result.push(processedVerse)
-          }
-          break
-        }
-
-        // Hide additional choir lyrics in brackets
-        const processedVerse = verse.map((line) =>
-          line
-            .replace(/\(.*?\)/g, '')
-            .replace(/\s+/g, ' ')
-            .trim()
-        )
-        result.push(processedVerse)
-      }
-
-      return result
-    }, [hymn.lyrics])
-
-    // Special International Hymns book handling
-    const ic = hymn.song.title.includes('IC')
-
-    const FormattedVerse = ({ array, index }: { array: string[]; index: number }) => {
-      const id = Object.keys(hymn.song.lyrics)[index]
-
-      return (
-        <div id={id} className={`${styles.verse} ${id.includes('T') && styles.italic}`}>
-          {ic && index === 0 && (
-            <select
-              className={styles.changeLanguage}
-              onChange={(e) => setLanguage(parseInt(e.target.value))}
-              value={language}
-            >
-              <option value='0'>{array[0]}</option>
-              <option value='1'>{array[1]}</option>
-              <option value='2'>{array[2]}</option>
-              <option value='3'>{array[3]}</option>
-              <option value='4'>{array[4]}</option>
-            </select>
-          )}
-
-          <p>
-            {array.map((verse, j) => {
-              if (ic) if (index === 0 || j !== language) return null
-
-              const isChord = verse.startsWith('.')
-
-              if (isChord && !showChords) return null
-
-              const line = verse
-                .replace(/^[\s.]/, '')
-                .replace(/\b(\w)\b\s/g, '$1\u00A0')
-                .replace(/(?<=\[:) | (?=:\])/g, '\u00A0')
-                .replace(/\:\]\s/g, ':]\u00A0')
-
-              return (
-                <span key={j} className={isChord ? styles.chord : ''}>
-                  {line}
-                  <br />
-                </span>
-              )
-            })}
-          </p>
-        </div>
-      )
-    }
-
-    const LinkedSong = ({ linked }: { linked: { book: string; title: string } }) => {
-      const { book, title } = linked
-
-      return (
-        <Link
-          href={{
-            pathname: '/hymn',
-            query: { book, title },
-          }}
-          title='Przejdź do wybranej pieśni'
-        >
-          <p>{linked.title}</p>
-        </Link>
-      )
-    }
-
-    const hymnTitle = hymn.song.title.replace(/\b(\w)\b\s/g, '$1\u00A0')
-
-    return (
-      <>
-        <div className={styles.text}>
-          <div className={styles.hymnTitle}>
-            <p>{hymn.book}</p>
-            <h1>{hymnTitle}</h1>
-          </div>
-
-          {hymn.song.author && (
-            <div className={styles.credits}>
-              <p className={styles.author}>{hymn.song.author}</p>
-            </div>
-          )}
-
-          <hr className={styles.printLine} />
-
-          <div className={styles.lyrics}>
-            {(unlocked ? hymn.lyrics : filteredLyrics).map((array, index) => (
-              <FormattedVerse key={index} array={array} index={index} />
-            ))}
-          </div>
-
-          {hymn.song.copyright && (
-            <div className={styles.credits}>
-              <p className={styles.copyright}>{hymn.song.copyright}</p>
-            </div>
-          )}
-        </div>
-
-        {unlocked && hymn.song.linked_songs && (
-          <span className={styles.linked}>
-            <p className={styles.name}>Powiązane pieśni:</p>
-
-            {hymn.song.linked_songs.map((linked, index) => (
-              <LinkedSong key={index} linked={linked} />
-            ))}
-          </span>
-        )}
-      </>
-    )
-  }
-
   // Detect if hymn has chords
   const hasChords = hymn?.lyrics.some((array: string[]) => {
     return array.some((verse: string) => verse.startsWith('.'))
   })
 
   // Show/hide presentation options
-  const [presOptions, showPresOptions] = useState(false)
+  const [presOptions, setPresOptions] = useState(false)
 
   // Language selection for IC songs
   const [language, setLanguage] = useState(3)
@@ -619,7 +659,7 @@ export default function HymnPage() {
                       draggable={false}
                     />
                   </button>
-                )) || <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />}
+                )) || <HamburgerIcon active={hamburgerMenu} setActive={setHamburgerMenu} />}
               </div>
             </div>
 
@@ -754,7 +794,7 @@ export default function HymnPage() {
               <div className={styles.options}>
                 <div
                   className={styles.presentationButton}
-                  onMouseLeave={() => showPresOptions(false)}
+                  onMouseLeave={() => setPresOptions(false)}
                 >
                   <button
                     title='Włącz tryb prezentacji dla wybranej pieśni [P]'
@@ -774,7 +814,7 @@ export default function HymnPage() {
 
                     <div
                       className={styles.showMore}
-                      onClick={() => showPresOptions((prev) => !prev)}
+                      onClick={() => setPresOptions((prev) => !prev)}
                     >
                       <Image
                         className='icon'

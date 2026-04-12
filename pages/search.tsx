@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import axios from 'axios'
 
@@ -17,7 +15,7 @@ import { bookShortcut, booksList } from '@/utils/books'
 import { SEARCH_PREFIXES } from '@/utils/enums'
 import { getRandomHymn } from '@/utils/getRandomHymn'
 import { isHymnAccessible } from '@/utils/hymnValidation'
-import { reformatText } from '@/utils/simplifyText'
+import { normalizeText } from '@/utils/simplifyText'
 
 import type Hymn from '@/types/hymn'
 
@@ -39,7 +37,7 @@ interface ProcessedHymn extends Omit<Hymn, 'song'> {
 }
 
 const matchNames = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
-  const formattedName = reformatText(hymn.name)
+  const formattedName = normalizeText(hymn.name)
   if (!formattedName.includes(formattedInput)) return null
 
   return {
@@ -59,7 +57,7 @@ const matchLyrics = (
   const results: ProcessedHymn[] = []
 
   hymn.lyricsPlain.forEach((verse, index) => {
-    const formattedVerse = reformatText(verse)
+    const formattedVerse = normalizeText(verse)
     if (!formattedVerse.includes(formattedInput)) return
 
     results.push({
@@ -86,7 +84,7 @@ const matchLyrics = (
 const matchAuthors = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
   if (!hymn.author) return null
 
-  const formattedAuthor = reformatText(hymn.author)
+  const formattedAuthor = normalizeText(hymn.author)
   if (!formattedAuthor.includes(formattedInput)) return null
 
   return {
@@ -99,7 +97,7 @@ const matchAuthors = (hymn: ProcessedHymn, formattedInput: string): ProcessedHym
 const matchKeywords = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
   if (!hymn.copyright) return null
 
-  const formattedKeywords = reformatText(hymn.copyright)
+  const formattedKeywords = normalizeText(hymn.copyright)
   if (!formattedKeywords.includes(formattedInput)) return null
 
   return {
@@ -194,7 +192,7 @@ const mapHymn = (hymn: Hymn): ProcessedHymn => {
     const entries = Object.entries(hymn.song.lyrics) as [string, string[]][]
 
     // Filter out verses with T tag (check by key)
-    const filteredVerses = entries.filter(([key]) => !key.includes('T')).map(([_, verse]) => verse)
+    const filteredVerses = entries.filter(([key]) => !key.includes('T')).map(([, verse]) => verse)
 
     lyricsPlain = filteredVerses
       .flat()
@@ -283,7 +281,7 @@ export default function SearchPage() {
       const keywordSearch = prefix === '#' || (!prefix && input.startsWith('#'))
       const prefixSearchMode = authorSearch || keywordSearch
 
-      const formattedInput = reformatText(input)
+      const formattedInput = normalizeText(input)
 
       const contextSearch = localSettings?.contextSearch ?? false
 
@@ -341,6 +339,12 @@ export default function SearchPage() {
       setData(result)
       lastSearchRef.current = input
 
+      // Cache results for instant restore on quick search
+      try {
+        const cacheKey = `searchCache_${book || 'all'}`
+        sessionStorage.setItem(cacheKey, JSON.stringify(result))
+      } catch {}
+
       // const durationMs = performance.now() - startTime
       // setSearchDuration(durationMs)
     },
@@ -360,6 +364,48 @@ export default function SearchPage() {
   const [inputValue, setInputValue] = useState('')
   const [activePrefix, setActivePrefix] = useState<(typeof SEARCH_PREFIXES)[number]>(null)
   const [rawData, setRawData] = useState<ProcessedHymn[]>()
+  const scrollRestoredRef = useRef(false)
+
+  // Restore cached results + scroll synchronously before first paint
+  useLayoutEffect(() => {
+    if (scrollRestoredRef.current) return
+    try {
+      const settings = JSON.parse(localStorage.getItem('settings') || '{}')
+      if (!settings.quickSearch) return
+
+      const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{}')
+
+      // Check if current URL book matches cached book — skip restore on book change
+      const urlBook = new URLSearchParams(window.location.search).get('book') || undefined
+      if ((prevSearch?.book || undefined) !== urlBook) return
+
+      const cacheKey = `searchCache_${prevSearch?.book || 'all'}`
+      const cached = sessionStorage.getItem(cacheKey)
+      if (!cached) return
+
+      const cachedData = JSON.parse(cached) as ProcessedHymn[]
+      const pages = prevSearch?.renderPage || 0
+
+      setData(cachedData)
+      setRenderData(cachedData.slice(0, (pages + 1) * 30))
+      setRenderPage(pages)
+      setLoading(false)
+      if (prevSearch?.value) setInputValue(prevSearch.value)
+      if (prevSearch?.prefix) setActivePrefix(prevSearch.prefix)
+
+      // Mark search ref so "input change" effect won't re-trigger search
+      lastSearchRef.current = prevSearch?.prefix
+        ? prevSearch.prefix + prevSearch.value
+        : prevSearch?.value || ''
+
+      scrollRestoredRef.current = true
+
+      if (prevSearch?.scrollY) {
+        requestAnimationFrame(() => window.scrollTo(0, prevSearch.scrollY))
+      }
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (!router.isReady) return
@@ -373,9 +419,10 @@ export default function SearchPage() {
     const quickSearch = localSettings?.quickSearch || false
     const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{"value": ""}')
 
-    if (quickSearch) {
+    if (quickSearch && !scrollRestoredRef.current) {
       if (prevSearch?.value) setInputValue(prevSearch.value)
       if (prevSearch?.prefix) setActivePrefix(prevSearch.prefix)
+      if (prevSearch?.renderPage) setRenderPage(prevSearch.renderPage)
     }
 
     // Load data from database
@@ -385,6 +432,9 @@ export default function SearchPage() {
 
       const rawData = filteredData.map(mapHymn)
       setRawData(rawData)
+
+      // Skip re-search if cache was already restored by useLayoutEffect
+      if (scrollRestoredRef.current) return
 
       const prevSearchValue = prevSearch?.value || ''
       const prevSearchPrefix = prevSearch?.prefix || null
@@ -397,7 +447,7 @@ export default function SearchPage() {
       const fetchAllBooks = async () => {
         try {
           const responses = await Promise.all(
-            booksList(unlocked).map((bookName) => axios.get(`database/${bookName}.json`))
+            booksList(unlocked).map((bookName) => axios.get(`/database/${bookName}.json`))
           )
 
           loadData(responses.flatMap((response) => response.data))
@@ -410,7 +460,7 @@ export default function SearchPage() {
       fetchAllBooks()
     } else {
       axios
-        .get(`database/${book}.json`)
+        .get(`/database/${book}.json`)
         .then(({ data }) => loadData(data))
         .catch((err) => {
           console.error(err)
@@ -498,11 +548,9 @@ export default function SearchPage() {
     const foundHymn = await getRandomHymn(unlocked, book)
 
     if (foundHymn) {
-      const { book, title } = foundHymn
-
       router.push({
         pathname: '/hymn',
-        query: { book, title },
+        query: { book: foundHymn.book, title: foundHymn.title },
       })
     }
   }, [book, router])
@@ -547,7 +595,7 @@ export default function SearchPage() {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
     const states = Object.fromEntries(
       data.map((hymn) => [
-        hymn.name,
+        hymn.dedupeKey,
         favorites.some(
           (elem: { book: string; id: number }) =>
             elem.book === bookShortcut(hymn.book) && elem.id === hymn.id
@@ -587,6 +635,8 @@ export default function SearchPage() {
                 book,
                 value: quickSearch ? inputValue : '',
                 prefix: quickSearch ? activePrefix : null,
+                scrollY: quickSearch ? window.scrollY : 0,
+                renderPage: quickSearch ? renderPage : 0,
               })
             )
           }}
@@ -723,7 +773,7 @@ export default function SearchPage() {
                 localStorage.setItem('favorites', JSON.stringify(newFavorites))
                 setFavoritesState((prev) => ({
                   ...prev,
-                  [hymn.name]: false,
+                  [hymn.dedupeKey]: false,
                 }))
               }}
             >
@@ -743,7 +793,7 @@ export default function SearchPage() {
   }
 
   // Prevent scrolling on active hamburger menu
-  const [hamburgerMenu, showHamburgerMenu] = useState(false)
+  const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {
     if (unlocked || !hamburgerMenu) return
@@ -798,7 +848,7 @@ export default function SearchPage() {
               />
             </Link>
           ) : (
-            <HamburgerIcon active={hamburgerMenu} setActive={showHamburgerMenu} />
+            <HamburgerIcon active={hamburgerMenu} setActive={setHamburgerMenu} />
           )}
         </div>
 
@@ -960,7 +1010,7 @@ export default function SearchPage() {
                   <SearchResult
                     hymn={hymn}
                     quickSearch={localSettings?.quickSearch}
-                    isFavorite={favoritesState[hymn.name] || false}
+                    isFavorite={favoritesState[hymn.dedupeKey] || false}
                   />
 
                   {index + 1 !== row.length && <hr />}

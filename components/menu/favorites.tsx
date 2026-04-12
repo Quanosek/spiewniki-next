@@ -128,7 +128,7 @@ export default function FavoritesMenu() {
 
                       // check title
                     } else {
-                      const { data } = await axios.get(`database/${fav.book}.json`)
+                      const { data } = await axios.get(`/database/${fav.book}.json`)
 
                       if (
                         !data.find((elem: { name: string }) => {

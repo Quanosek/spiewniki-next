@@ -20,7 +20,7 @@ export const defaultSettings = {
   fontSize: 21,
   showChords: false,
   contextSearch: true,
-  quickSearch: true,
+  quickSearch: unlocked,
 }
 
 export default function SettingsMenu() {

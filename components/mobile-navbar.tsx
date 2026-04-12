@@ -17,10 +17,9 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)
     if (foundHymn) {
-      const { book, title } = foundHymn
       router.push({
         pathname: '/hymn',
-        query: { book, title },
+        query: { book: foundHymn.book, title: foundHymn.title },
       })
     }
   }, [unlocked, book, router])

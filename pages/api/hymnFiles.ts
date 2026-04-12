@@ -20,7 +20,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     let id = ''
     const match = title.match(/^\d+[a-zA-Z]?/)
 
-    if (match) id = match[0]
+    if (match && book !== 'S') id = match[0]
     else id = slugifyText(title)
 
     const locateFile = (category: string) => {

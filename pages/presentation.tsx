@@ -8,7 +8,7 @@ import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/pages/presentation.module.scss'
 
-// const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function PresentationPage() {
   const router = useRouter()
@@ -22,6 +22,13 @@ export default function PresentationPage() {
   const [slide, setSlide] = useState(ic ? 1 : 0)
   const [verse, setVerse] = useState<string[]>()
   const [alwaysShowCursor, setAlwaysShowCursor] = useState(false)
+
+  const [overlay, setOverlay] = useState<'white' | 'black' | 'logo' | null>(null)
+  const customView = overlay !== null
+
+  const toggleOverlay = useCallback((mode: 'white' | 'black' | 'logo') => {
+    setOverlay((prev) => (prev === mode ? null : mode))
+  }, [])
 
   const handleInit = useCallback(async (book: string, title: string) => {
     const abortController = new AbortController()
@@ -160,10 +167,19 @@ export default function PresentationPage() {
   // Hide cursor visibility
   const [showCursor, setShowCursor] = useState(false)
   const cursorHideTimeout = useRef<NodeJS.Timeout>()
+  const readyRef = useRef(false)
+
+  useEffect(() => {
+    const readyTimeout = setTimeout(() => {
+      readyRef.current = true
+    }, 850)
+    return () => clearTimeout(readyTimeout)
+  }, [])
 
   useEffect(() => {
     const mouseMoveEvent = (event: MouseEvent) => {
       if ((event.movementX && event.movementY) === 0) return
+      if (!readyRef.current) return
 
       setShowCursor(true)
       clearTimeout(cursorHideTimeout.current)
@@ -181,9 +197,15 @@ export default function PresentationPage() {
         return
       }
 
-      if (['ArrowLeft', 'ArrowUp'].includes(event.key)) prevSlide()
-      if ([' ', 'ArrowRight', 'ArrowDown'].includes(event.key)) nextSlide()
-      if (event.key === 'Escape') closePresentation()
+      if (overlay) {
+        if (['ArrowLeft', 'ArrowUp'].includes(event.key)) prevSlide()
+        if ([' ', 'ArrowRight', 'ArrowDown'].includes(event.key)) nextSlide()
+      }
+
+      if (event.key === 'Escape') {
+        setOverlay(null)
+        closePresentation()
+      }
     }
 
     // Slides custom navigation — touch swipe
@@ -194,6 +216,7 @@ export default function PresentationPage() {
     }
 
     const handleTouchEnd = (event: TouchEvent) => {
+      if (overlay) return
       const endPosition = event.changedTouches[0].clientX - startPosition
 
       if (endPosition < -50) prevSlide()
@@ -211,7 +234,7 @@ export default function PresentationPage() {
       document.removeEventListener('touchstart', handleTouchStart)
       document.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [alwaysShowCursor, nextSlide, prevSlide, closePresentation])
+  }, [overlay, prevSlide, nextSlide, alwaysShowCursor, closePresentation])
 
   // Hide default scrollbar
   useEffect(() => {
@@ -251,6 +274,13 @@ export default function PresentationPage() {
               <div className={styles.title}>
                 <h1>{hymn?.name}</h1>
                 <h2>{hymn?.book}</h2>
+
+                {slide === 0 && hymn?.song.author && (
+                  <div className={styles.credits}>
+                    {hymn.song.author && <p>{hymn.song.author}</p>}
+                    {hymn.song.author && hymn?.song.copyright && <p>{hymn.song.copyright}</p>}
+                  </div>
+                )}
               </div>
             )}
 
@@ -272,32 +302,12 @@ export default function PresentationPage() {
             </div>
 
             <div
-              className={`${styles.navigation} ${showCursor && styles.show}`}
+              className={`${styles.navigation} ${showCursor && styles.show} ${
+                overlay === 'white' ? styles.navOnWhite : ''
+              } ${overlay === 'black' ? styles.navOnBlack : ''}`}
               onMouseEnter={() => setAlwaysShowCursor(true)}
               onMouseLeave={() => setAlwaysShowCursor(false)}
             >
-              <button title='Przejdź do poprzedniego slajdu [←] [↑]' onClick={prevSlide}>
-                <Image
-                  className={`${styles.prev} icon`}
-                  alt='previous'
-                  src='/icons/arrow.svg'
-                  width={50}
-                  height={50}
-                  draggable={false}
-                />
-              </button>
-
-              <button title='Przejdź do następnego slajdu [Spacja] [→] [↓]' onClick={nextSlide}>
-                <Image
-                  className={`${styles.next} icon`}
-                  alt='next'
-                  src='/icons/arrow.svg'
-                  width={50}
-                  height={50}
-                  draggable={false}
-                />
-              </button>
-
               <button title='Wyjdź z trybu pokazu slajdów [Esc]' onClick={closePresentation}>
                 <Image
                   className='icon'
@@ -308,6 +318,73 @@ export default function PresentationPage() {
                   draggable={false}
                 />
               </button>
+
+              <button
+                title='Przejdź do poprzedniego slajdu [←] [↑]'
+                className={customView ? styles.disabled : ''}
+                onClick={() => !customView && prevSlide()}
+              >
+                <Image
+                  className={`${styles.prev} icon`}
+                  alt='previous'
+                  src='/icons/arrow.svg'
+                  width={50}
+                  height={50}
+                  draggable={false}
+                />
+              </button>
+
+              <button
+                title='Przejdź do następnego slajdu [Spacja] [→] [↓]'
+                className={customView ? styles.disabled : ''}
+                onClick={() => !customView && nextSlide()}
+              >
+                <Image
+                  className={`${styles.next} icon`}
+                  alt='next'
+                  src='/icons/arrow.svg'
+                  width={50}
+                  height={50}
+                  draggable={false}
+                />
+              </button>
+
+              {unlocked && (
+                <>
+                  <div className={styles.separator} />
+
+                  <button
+                    title='Biały ekran'
+                    className={overlay === 'white' ? styles.active : ''}
+                    onClick={() => toggleOverlay('white')}
+                  >
+                    <span className={styles.screenIcon} style={{ backgroundColor: '#ffffff' }} />
+                  </button>
+
+                  <button
+                    title='Czarny ekran'
+                    className={overlay === 'black' ? styles.active : ''}
+                    onClick={() => toggleOverlay('black')}
+                  >
+                    <span className={styles.screenIcon} style={{ backgroundColor: '#000000' }} />
+                  </button>
+
+                  <button
+                    title='Logo'
+                    className={overlay === 'logo' ? styles.active : ''}
+                    onClick={() => toggleOverlay('logo')}
+                  >
+                    <Image
+                      className={`${styles.logo} icon`}
+                      alt='logo'
+                      src='/logo/bpsw.svg'
+                      width={50}
+                      height={50}
+                      draggable={false}
+                    />
+                  </button>
+                </>
+              )}
             </div>
 
             <div
@@ -319,6 +396,32 @@ export default function PresentationPage() {
             >
               <div style={{ width: `${getProgressWidth()}%` }} />
             </div>
+
+            {overlay && (
+              <div
+                className={`${styles.overlay} ${
+                  overlay === 'white' ? styles.overlayWhite : ''
+                } ${overlay === 'black' ? styles.overlayBlack : ''} ${
+                  overlay === 'logo'
+                    ? slide > order.length
+                      ? styles.overlayLogoDark
+                      : styles.overlayLogo
+                    : ''
+                }`}
+                onClick={() => setOverlay(null)}
+              >
+                {overlay === 'logo' && (
+                  <Image
+                    className='icon'
+                    alt='logo'
+                    src='/logo/bpsw.svg'
+                    width={300}
+                    height={300}
+                    draggable={false}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -25,6 +25,9 @@ export default function PresentationPage() {
   const [overlay, setOverlay] = useState<'white' | 'black' | 'logo' | null>(null)
   const customView = overlay !== null
 
+  const isPopupRef = useRef(false)
+  const isClosingRef = useRef(false)
+
   const toggleOverlay = useCallback((mode: 'white' | 'black' | 'logo') => {
     setOverlay((prev) => (prev === mode ? null : mode))
   }, [])
@@ -58,10 +61,13 @@ export default function PresentationPage() {
   }, [router.isReady, router.query.book, router.query.title, handleInit])
 
   useEffect(() => {
+    isPopupRef.current = !!localStorage.getItem('presWindow')
+
     const beforeUnloadHandler = () => localStorage.removeItem('presWindow')
 
+    // Handle browser-initiated fullscreen exit (e.g. user presses F11/Esc outside our controls)
     const fullscreenChangeHandler = () => {
-      if (!document.fullscreenElement) router.back()
+      if (!document.fullscreenElement && !isClosingRef.current) router.back()
     }
 
     window.addEventListener('beforeunload', beforeUnloadHandler)
@@ -74,21 +80,18 @@ export default function PresentationPage() {
   }, [router])
 
   const closePresentation = useCallback(() => {
-    const presWindow = localStorage.getItem('presWindow')
-
     // Close if opened in new window
-    if (presWindow) {
+    if (isPopupRef.current) {
       window.close()
       return
     }
 
-    // Exit fullscreen
+    isClosingRef.current = true
+
     if (document.fullscreenElement) {
-      document.exitFullscreen()
-      return
+      document.exitFullscreen().catch(() => {})
     }
 
-    // Fallback: go back
     router.back()
   }, [router])
 
@@ -102,7 +105,8 @@ export default function PresentationPage() {
 
     if (slide < maxSlide) {
       setSlide(slide + 1)
-    } else {
+    } else if (!isPopupRef.current) {
+      // Only auto-close in fullscreen mode, not in popup window
       closePresentation()
     }
   }, [slide, closePresentation, order.length])

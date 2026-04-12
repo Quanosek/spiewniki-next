@@ -899,6 +899,7 @@ export default function SearchPage() {
                     title: '7C. Pan kiedyś stanął nad brzegiem',
                   },
                 })
+                return
               }
 
               const startsWithAuthor = inputValue.startsWith('@')

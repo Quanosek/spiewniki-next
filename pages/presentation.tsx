@@ -15,7 +15,6 @@ export default function PresentationPage() {
 
   const [hymn, setHymn] = useState<Hymn>()
 
-  // Special International Hymns book handling
   const ic = hymn?.song.title.includes('IC')
 
   const [order, setOrder] = useState<string[]>([])
@@ -77,19 +76,19 @@ export default function PresentationPage() {
   const closePresentation = useCallback(() => {
     const presWindow = localStorage.getItem('presWindow')
 
-    // Presentation in new browser window
+    // Close if opened in new window
     if (presWindow) {
       window.close()
       return
     }
 
-    // Presentation in fullscreen mode
+    // Exit fullscreen
     if (document.fullscreenElement) {
       document.exitFullscreen()
       return
     }
 
-    // Presentation without fullscreen
+    // Fallback: go back
     router.back()
   }, [router])
 
@@ -126,7 +125,7 @@ export default function PresentationPage() {
     )
   }, [hymn, order, slide])
 
-  // Adjust font size based on window width and verse length
+  // Auto-resize font based on content width and line count
   const linesWidth = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
@@ -164,11 +163,11 @@ export default function PresentationPage() {
     }
   }, [verse, ic])
 
-  // Hide cursor visibility
   const [showCursor, setShowCursor] = useState(false)
   const cursorHideTimeout = useRef<NodeJS.Timeout>()
   const readyRef = useRef(false)
 
+  // Delay cursor tracking to prevent false triggers on page load
   useEffect(() => {
     const readyTimeout = setTimeout(() => {
       readyRef.current = true
@@ -191,13 +190,18 @@ export default function PresentationPage() {
       }
     }
 
-    // Slides custom navigation — keyboard
+    // Prevent space from activating focused buttons
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === ' ') event.preventDefault()
+    }
+
+    // Keyboard navigation
     const handleKeyup = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
         return
       }
 
-      if (overlay) {
+      if (!overlay) {
         if (['ArrowLeft', 'ArrowUp'].includes(event.key)) prevSlide()
         if ([' ', 'ArrowRight', 'ArrowDown'].includes(event.key)) nextSlide()
       }
@@ -208,7 +212,7 @@ export default function PresentationPage() {
       }
     }
 
-    // Slides custom navigation — touch swipe
+    // Touch swipe navigation
     let startPosition = 0
 
     const handleTouchStart = (event: TouchEvent) => {
@@ -219,24 +223,25 @@ export default function PresentationPage() {
       if (overlay) return
       const endPosition = event.changedTouches[0].clientX - startPosition
 
-      if (endPosition < -50) prevSlide()
-      else if (endPosition > 50) nextSlide()
+      if (endPosition < -50) nextSlide()
+      else if (endPosition > 50) prevSlide()
     }
 
     document.addEventListener('mousemove', mouseMoveEvent)
+    document.addEventListener('keydown', handleKeydown)
     document.addEventListener('keyup', handleKeyup)
     document.addEventListener('touchstart', handleTouchStart)
     document.addEventListener('touchend', handleTouchEnd)
 
     return () => {
       document.removeEventListener('mousemove', mouseMoveEvent)
+      document.removeEventListener('keydown', handleKeydown)
       document.removeEventListener('keyup', handleKeyup)
       document.removeEventListener('touchstart', handleTouchStart)
       document.removeEventListener('touchend', handleTouchEnd)
     }
   }, [overlay, prevSlide, nextSlide, alwaysShowCursor, closePresentation])
 
-  // Hide default scrollbar
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => {

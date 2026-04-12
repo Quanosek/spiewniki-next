@@ -15,12 +15,10 @@ const reversedBooksMap: Record<string, string> = Object.fromEntries(
   Object.entries(booksMap).map(([key, value]) => [value, key])
 )
 
-// Convert any book name to shortcut and vice versa
 const bookShortcut = (input: string) => {
   return booksMap[input] || reversedBooksMap[input]
 }
 
-// Get list of available books
 const booksList = (unlocked: boolean) => {
   const unlockedList = ['B', 'C', 'N', 'K', 'P', 'M', 'E', 'S', 'R']
   const restrictedList = ['B', 'C', 'N', 'M']

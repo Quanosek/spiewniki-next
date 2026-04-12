@@ -23,17 +23,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     if (match && book !== 'S') id = match[0]
     else id = slugifyText(title)
 
+    // Exact match first, then prefix match with word boundary
     const locateFile = (category: string) => {
       try {
         const files = fs.readdirSync(path.join(process.cwd(), 'public', category, book))
 
-        // First try exact match (without extension)
         let file = files.find((a) => {
           const nameWithoutExt = a.replace(/\.[^/.]+$/, '')
           return nameWithoutExt === id
         })
 
-        // If no exact match, try startsWith but ensure it's followed by a non-alphanumeric character or end of string
         if (!file) {
           file = files.find((a) => {
             const nameWithoutExt = a.replace(/\.[^/.]+$/, '')
@@ -58,8 +57,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     }
 
     return res.status(200).json(results)
-
-    // handle error
   } catch (err) {
     console.error(err)
     return res.status(500).json({ error: 'Internal Server Error' })

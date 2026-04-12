@@ -15,8 +15,7 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 export default function ErrorPage() {
   const router = useRouter()
 
-  // Redirect countdown
-  const [seconds, setSeconds] = useState(10) // 10 seconds
+  const [seconds, setSeconds] = useState(10)
 
   useEffect(() => {
     const counter = setInterval(() => {
@@ -32,7 +31,6 @@ export default function ErrorPage() {
     return () => clearInterval(counter)
   }, [router])
 
-  // Prevent scrolling on active hamburger menu
   const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {

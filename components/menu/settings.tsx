@@ -34,12 +34,10 @@ export default function SettingsMenu() {
 
   const settings: Settings = JSON.parse(localStorage.getItem('settings') as string)
 
-  // Dynamic states
   const [{ fontSize, showChords, contextSearch, quickSearch }, setState] = useState(
     settings || defaultSettings
   )
 
-  // Save settings to local storage
   const saveSettings = useCallback(() => {
     localStorage.setItem(
       'settings',
@@ -52,12 +50,10 @@ export default function SettingsMenu() {
     )
   }, [fontSize, showChords, contextSearch, quickSearch])
 
-  // Save settings on change
   useEffect(() => {
     saveSettings()
   }, [saveSettings])
 
-  // Theme colors labels
   const Themes = (names: string[]) => {
     const themes: ReactElement[] = []
 
@@ -117,7 +113,6 @@ export default function SettingsMenu() {
     )
   }
 
-  // Quick settings options buttons
   const ToggleSwitch = ({
     title,
     description,

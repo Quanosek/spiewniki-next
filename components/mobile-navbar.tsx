@@ -13,7 +13,6 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
   const router = useRouter()
   const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
 
-  // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)
     if (foundHymn) {

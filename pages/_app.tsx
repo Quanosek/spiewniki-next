@@ -30,7 +30,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
   useEffect(() => {
-    // Initialize settings in localStorage
     try {
       const settings = localStorage.getItem('settings')
       if (!settings) {
@@ -41,7 +40,6 @@ export default function App({ Component, pageProps }: AppProps) {
       localStorage.setItem('settings', JSON.stringify(defaultSettings))
     }
 
-    // Validate theme
     const savedTheme = localStorage.getItem('theme')
     if (savedTheme && !THEMES.includes(savedTheme)) {
       const fallbackTheme = unlocked ? 'dark' : 'light'
@@ -49,10 +47,9 @@ export default function App({ Component, pageProps }: AppProps) {
       router.reload()
     }
 
-    // Set global accent color
     document.documentElement.className = unlocked ? 'accent-blue' : 'accent-orange'
 
-    // Screen Wake Lock API with re-request on visibility change
+    // Keep screen awake
     let wakeLock: WakeLockSentinel | null = null
 
     const requestWakeLock = async () => {
@@ -83,12 +80,12 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
-  // // Detect PWA installation possibility
+  // // PWA install prompt
   // const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   // const [showInstallButton, setShowInstallButton] = useState(false)
 
   // useEffect(() => {
-  //   // Check if browser window is running as PWA
+  //   // Skip if already running as PWA
   //   const isStandalone =
   //     window.matchMedia('(display-mode: standalone)').matches ||
   //     window.matchMedia('(display-mode: fullscreen)').matches ||
@@ -101,7 +98,7 @@ export default function App({ Component, pageProps }: AppProps) {
   //     return
   //   }
 
-  //   // Check for prompt before installation
+  //   // Capture install prompt
   //   const handleBeforeInstallPrompt = (e: Event) => {
   //     e.preventDefault()
   //     setDeferredPrompt(e as BeforeInstallPromptEvent)
@@ -112,7 +109,7 @@ export default function App({ Component, pageProps }: AppProps) {
   //   return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
   // }, [])
 
-  // // Handle simple PWA installation button
+  // // Trigger PWA install
   // const handleInstallClick = async () => {
   //   if (!deferredPrompt) return
 

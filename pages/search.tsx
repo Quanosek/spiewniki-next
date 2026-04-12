@@ -107,7 +107,7 @@ const matchKeywords = (hymn: ProcessedHymn, formattedInput: string): ProcessedHy
   }
 }
 
-// Final ordering of search results when searching across all books
+// Sort results across all books
 const compareAllBooks = (unlocked: boolean) => (a: ProcessedHymn, b: ProcessedHymn) => {
   const order = booksList(unlocked)
   const matchTypeOrder = { name: 0, author: 1, keywords: 2, lyrics: 3 }
@@ -141,7 +141,7 @@ const compareAllBooks = (unlocked: boolean) => (a: ProcessedHymn, b: ProcessedHy
   return 0
 }
 
-// Final ordering of search results when searching within a single book
+// Sort results within a single book
 const compareSingleBook = (a: ProcessedHymn, b: ProcessedHymn) => {
   const matchTypeOrder = { name: 0, author: 1, keywords: 2, lyrics: 3 }
 
@@ -170,28 +170,24 @@ const compareSingleBook = (a: ProcessedHymn, b: ProcessedHymn) => {
   return 0
 }
 
-// Extract number prefix from hymn name
 const numberPrefix = (value: string) => {
   const match = value.match(/^\s*(\d+)/)
   return match ? parseInt(match[1], 10) : NaN
 }
 
-// Check if hymn name has letter suffix
 const hasLetterSuffix = (value: string) => {
   const trimmed = value.trim()
   const match = trimmed.match(/^(\d+)([A-Za-z]+)/)
   return !!(match && match[2])
 }
 
-// Map raw hymn data to processed hymn data
+// Map raw hymn to searchable format
 const mapHymn = (hymn: Hymn): ProcessedHymn => {
   let lyricsPlain: string[]
 
   if (unlocked) {
-    // Full lyrics for unlocked version
     const entries = Object.entries(hymn.song.lyrics) as [string, string[]][]
 
-    // Filter out verses with T tag (check by key)
     const filteredVerses = entries.filter(([key]) => !key.includes('T')).map(([, verse]) => verse)
 
     lyricsPlain = filteredVerses
@@ -199,7 +195,6 @@ const mapHymn = (hymn: Hymn): ProcessedHymn => {
       .filter((verse) => verse.startsWith(' '))
       .map((verse) => verse.slice(1))
   } else {
-    // Filtered lyrics for restricted version
     const entries = Object.entries(hymn.song.lyrics) as [string, string[]][]
     const filteredLines: string[] = []
 
@@ -225,7 +220,6 @@ const mapHymn = (hymn: Hymn): ProcessedHymn => {
         break
       }
 
-      // Process verse lines
       verse.forEach((line) => {
         if (line.startsWith(' ')) {
           const processed = line
@@ -256,7 +250,6 @@ export default function SearchPage() {
   const router = useRouter()
   const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
 
-  // Get local settings data on page load
   const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
 
   useEffect(() => {
@@ -264,7 +257,6 @@ export default function SearchPage() {
     setLocalSettings(settings)
   }, [router])
 
-  // Main search algorithm
   const [data, setData] = useState<ProcessedHymn[]>()
   // const [searchDuration, setSearchDuration] = useState(0)
   const lastSearchRef = useRef<string>('')
@@ -326,7 +318,7 @@ export default function SearchPage() {
         ...KeywordsCollector,
       ]
 
-      // Deduplicate by hymn book + name
+      // Deduplicate results
       const collectorMap = new Map<string, ProcessedHymn>()
 
       allMatches.forEach((hymn) => {
@@ -339,7 +331,7 @@ export default function SearchPage() {
       setData(result)
       lastSearchRef.current = input
 
-      // Cache results for instant restore on quick search
+      // Cache for instant restore
       try {
         const cacheKey = `searchCache_${book || 'all'}`
         sessionStorage.setItem(cacheKey, JSON.stringify(result))
@@ -351,7 +343,6 @@ export default function SearchPage() {
     [localSettings, book]
   )
 
-  // Define search function reference
   const searchRef =
     useRef<
       (data: ProcessedHymn[], input: string, prefix?: (typeof SEARCH_PREFIXES)[number]) => void
@@ -359,14 +350,13 @@ export default function SearchPage() {
 
   searchRef.current = Search
 
-  // Load dynamic data on page load
   const inputRef = useRef<HTMLInputElement>(null)
   const [inputValue, setInputValue] = useState('')
   const [activePrefix, setActivePrefix] = useState<(typeof SEARCH_PREFIXES)[number]>(null)
   const [rawData, setRawData] = useState<ProcessedHymn[]>()
   const scrollRestoredRef = useRef(false)
 
-  // Restore cached results + scroll synchronously before first paint
+  // Restore cached results before first paint
   useLayoutEffect(() => {
     if (scrollRestoredRef.current) return
     try {
@@ -375,7 +365,7 @@ export default function SearchPage() {
 
       const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{}')
 
-      // Check if current URL book matches cached book — skip restore on book change
+      // Skip restore on book change
       const urlBook = new URLSearchParams(window.location.search).get('book') || undefined
       if ((prevSearch?.book || undefined) !== urlBook) return
 
@@ -410,12 +400,11 @@ export default function SearchPage() {
   useEffect(() => {
     if (!router.isReady) return
 
-    // Handle focus searchbox localStorage flag
     const focusSearchBox = JSON.parse(localStorage.getItem('focusSearchBox') || 'false')
     if (focusSearchBox) inputRef.current?.focus()
     localStorage.removeItem('focusSearchBox')
 
-    // Get back previous search if enabled and exists
+    // Restore previous search if quick search enabled
     const quickSearch = localSettings?.quickSearch || false
     const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{"value": ""}')
 
@@ -425,15 +414,13 @@ export default function SearchPage() {
       if (prevSearch?.renderPage) setRenderPage(prevSearch.renderPage)
     }
 
-    // Load data from database
     const loadData = (fetchData: Hymn[]) => {
-      // Filter out excluded hymns for restricted version
       const filteredData = fetchData.filter((hymn) => isHymnAccessible(hymn.name))
 
       const rawData = filteredData.map(mapHymn)
       setRawData(rawData)
 
-      // Skip re-search if cache was already restored by useLayoutEffect
+      // Skip if cache already restored
       if (scrollRestoredRef.current) return
 
       const prevSearchValue = prevSearch?.value || ''
@@ -442,7 +429,6 @@ export default function SearchPage() {
       searchRef.current?.(rawData, prevSearchValue, prevSearchPrefix)
     }
 
-    // Initialize data fetch
     if (!book) {
       const fetchAllBooks = async () => {
         try {
@@ -469,7 +455,6 @@ export default function SearchPage() {
     }
   }, [router, localSettings, book])
 
-  // Clears search box and restores initial data view
   const [showClearBtn, setShowClearBtn] = useState(false)
 
   const cleanUp = useCallback(() => {
@@ -483,7 +468,7 @@ export default function SearchPage() {
     else setData(rawData)
   }, [rawData])
 
-  // Run search on input or raw data change
+  // Re-run search on input change
   useEffect(() => {
     setShowClearBtn(!!inputValue || activePrefix !== null)
 
@@ -493,7 +478,7 @@ export default function SearchPage() {
       const searchInput = activePrefix ? activePrefix + inputValue : inputValue
       if (searchInput === lastSearchRef.current) return // skip duplicate searches
 
-      // Update search results with delay
+      // Debounce search
       const timeout = setTimeout(() => {
         searchRef.current?.(rawData, searchInput, activePrefix)
       }, 50)
@@ -501,7 +486,6 @@ export default function SearchPage() {
     }
   }, [inputValue, activePrefix, rawData])
 
-  // Handle page scrolling event
   const [renderPage, setRenderPage] = useState(0)
   const [showTopBtn, setShowTopBtn] = useState(false)
 
@@ -517,7 +501,6 @@ export default function SearchPage() {
     return () => window.removeEventListener('scroll', scrollEvent)
   }, [])
 
-  // Load and paginate rendered data
   const [renderData, setRenderData] = useState<ProcessedHymn[]>([])
   const [isLoading, setLoading] = useState(true)
 
@@ -534,7 +517,6 @@ export default function SearchPage() {
     setLoading(false)
   }, [data, renderPage])
 
-  // Builds link to hymn detail page
   const hymnLink = (hymn: ProcessedHymn) => ({
     pathname: '/hymn',
     query: {
@@ -543,7 +525,6 @@ export default function SearchPage() {
     },
   })
 
-  // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)
 
@@ -555,7 +536,6 @@ export default function SearchPage() {
     }
   }, [book, router])
 
-  // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {
@@ -563,7 +543,6 @@ export default function SearchPage() {
       }
 
       if (document.activeElement === inputRef.current) {
-        // Input is focused
         if (e.key === 'Escape') inputRef.current?.blur()
         if (e.key === 'Enter') {
           const hymn = data && data[0]
@@ -571,7 +550,6 @@ export default function SearchPage() {
           else cleanUp()
         }
       } else {
-        // Input is not focused
         if (e.key === 'Escape') router.push('/')
         if (e.key === '/') inputRef.current?.focus()
 
@@ -586,7 +564,6 @@ export default function SearchPage() {
     return () => document.removeEventListener('keyup', keyupEvent)
   }, [router, data, inputValue, cleanUp, randomHymn])
 
-  // Sync favorites flags from localStorage
   const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
@@ -606,7 +583,6 @@ export default function SearchPage() {
     setFavoritesState(states)
   }, [data])
 
-  // Renders a single search result row
   const SearchResult = ({
     hymn,
     quickSearch,
@@ -616,7 +592,6 @@ export default function SearchPage() {
     quickSearch: boolean | undefined
     isFavorite: boolean
   }) => {
-    // Handle result quick actions buttons
     const [resultHovered, setResultHovered] = useState(false)
 
     return (
@@ -792,7 +767,6 @@ export default function SearchPage() {
     )
   }
 
-  // Prevent scrolling on active hamburger menu
   const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {

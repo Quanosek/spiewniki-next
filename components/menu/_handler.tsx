@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import styles from '@/styles/components/menu.module.scss'
 
-// Menu boxes smart navigation
+// Menu navigation via hidden query param
 export function hiddenMenuQuery(name: string | undefined) {
   const params = { ...Router.query }
   delete params.menu
@@ -28,14 +28,11 @@ export default function MenuComponent() {
   useEffect(() => {
     if (!router.isReady) return
 
-    // Menu render
     setShowMenu(Boolean(menu))
 
-    // Prevent scrolling
     const { scrollLeft, scrollTop } = document.documentElement
     const scrollEvent = () => menu && window.scrollTo(scrollLeft, scrollTop)
 
-    // Keyboard shortcuts
     const keyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || !menu) {
         return
@@ -52,7 +49,6 @@ export default function MenuComponent() {
     }
   }, [router, menu, params])
 
-  // Dynamic import menu
   const DynamicComponent = dynamic(() => import(`./${menu}`), {
     ssr: false,
   })

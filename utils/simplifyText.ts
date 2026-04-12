@@ -1,4 +1,4 @@
-// Remove polish diacritics and convert to lowercase
+// Strip Polish diacritics and lowercase
 const normalizeText = (text: string) => {
   return text
     .toLowerCase()
@@ -14,7 +14,6 @@ const normalizeText = (text: string) => {
     .replace(/[^\w\s]/gi, '')
 }
 
-// Replace spaces with hyphens
 const slugifyText = (text: string) => {
   const formattedText = normalizeText(text)
   return formattedText.replaceAll(' ', '-')

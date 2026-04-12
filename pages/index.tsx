@@ -18,12 +18,10 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 export default function HomePage() {
   const router = useRouter()
 
-  // Reset previous search
   useEffect(() => {
     localStorage.removeItem('prevSearch')
   }, [])
 
-  // Prevent scrolling on active hamburger menu
   const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {
@@ -38,7 +36,6 @@ export default function HomePage() {
     return () => document.removeEventListener('scroll', scrollEvent)
   }, [hamburgerMenu])
 
-  // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked)
     if (foundHymn) {
@@ -49,7 +46,6 @@ export default function HomePage() {
     }
   }, [router])
 
-  // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {

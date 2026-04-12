@@ -22,14 +22,11 @@ interface Favorite {
 export default function FavoritesMenu() {
   const router = useRouter()
 
-  // Favorites array data
   const favoritesData = JSON.parse(localStorage.getItem('favorites') as string)
   const [favorites, setFavorites] = useState<Favorite[]>(favoritesData || [])
 
-  // Hover delete button on desktop
   const [elemHovered, setElemHovered] = useState<number>()
 
-  // Remove selected hymn from list of favorites
   const removeFromList = (index: number) => {
     const newArray = favorites.filter((fav) => fav !== favorites[index])
 
@@ -71,12 +68,10 @@ export default function FavoritesMenu() {
 
                 if (option === 'books') {
                   sortedItems.sort((a, b) => {
-                    // sort by title
                     return a.title.localeCompare(b.title, undefined, {
                       numeric: true,
                     })
                   })
-                  // sort by book name
                   sortedItems.sort(
                     (a, b) =>
                       booksList(unlocked).indexOf(a.book) - booksList(unlocked).indexOf(b.book)
@@ -121,12 +116,12 @@ export default function FavoritesMenu() {
                 }}
                 onClick={async () => {
                   try {
-                    // check book name
+                    // Validate book
                     if (!booksList(unlocked).includes(fav.book)) {
                       removeFromList(index)
                       throw new Error()
 
-                      // check title
+                      // Validate title
                     } else {
                       const { data } = await axios.get(`/database/${fav.book}.json`)
 

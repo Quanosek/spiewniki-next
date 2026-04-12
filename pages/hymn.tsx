@@ -132,14 +132,13 @@ const HymnData = ({
   language: number
   setLanguage: (value: number) => void
 }) => {
-  // Filter lyrics for restricted version
+  // Restricted version: cut at ——— separator, strip choir parts in brackets
   const filteredLyrics = useMemo(() => {
     const result: string[][] = []
 
     for (const verse of hymn.lyrics) {
       const separatorIndex = verse.findIndex((line) => line.includes('———'))
 
-      // Hide additional text after separator
       if (separatorIndex !== -1) {
         if (separatorIndex > 0) {
           const processedVerse = verse.slice(0, separatorIndex)
@@ -148,7 +147,6 @@ const HymnData = ({
         break
       }
 
-      // Hide additional choir lyrics in brackets
       const processedVerse = verse.map((line) =>
         line
           .replace(/\(.*?\)/g, '')
@@ -161,7 +159,6 @@ const HymnData = ({
     return result
   }, [hymn.lyrics])
 
-  // Special International Hymns book handling
   const ic = hymn.song.title.includes('IC')
 
   const hymnTitle = hymn.song.title.replace(/\b(\w)\b\s/g, '$1\u00A0')
@@ -224,7 +221,6 @@ export default function HymnPage() {
   const title = Array.isArray(router.query.title) ? router.query.title[0] : router.query.title
   const menu = Array.isArray(router.query.menu) ? router.query.menu[0] : router.query.menu
 
-  // Define hymn
   const [hymn, setHymn] = useState<ProcessedHymn>()
 
   useEffect(() => {
@@ -267,7 +263,7 @@ export default function HymnPage() {
     return () => abortController.abort()
   }, [router, book, title])
 
-  // Refresh dedicated hymn settings
+  // Reload settings when menu closes
   const [settings, setSettings] = useState(defaultSettings)
 
   useEffect(() => {
@@ -278,7 +274,7 @@ export default function HymnPage() {
 
   const { showChords, fontSize } = settings
 
-  // Handle hiding controls on scroll in mobile view
+  // Hide mobile controls on scroll down
   const [hideControls, setHideControls] = useState(false)
 
   useEffect(() => {
@@ -308,14 +304,17 @@ export default function HymnPage() {
     return () => document.removeEventListener('scroll', scrollEvent)
   }, [hideControls])
 
-  // Open previous search results
   const openPrevSearch = useCallback(() => {
-    localStorage.setItem('focusSearchBox', 'true')
-
     try {
       const prevSearch = localStorage.getItem('prevSearch')
       if (prevSearch) {
         const parsed = JSON.parse(prevSearch)
+
+        // Skip focus if user had scroll position (came from search list)
+        if (!parsed.scrollY) {
+          localStorage.setItem('focusSearchBox', 'true')
+        }
+
         const { book } = parsed
 
         if (book) {
@@ -324,14 +323,17 @@ export default function HymnPage() {
             query: { book },
           })
         } else router.push('/search')
-      } else router.push('/search')
+      } else {
+        localStorage.setItem('focusSearchBox', 'true')
+        router.push('/search')
+      }
     } catch (err) {
       console.error('Error parsing prevSearch:', err)
+      localStorage.setItem('focusSearchBox', 'true')
       router.push('/search')
     }
   }, [router])
 
-  // Change hymn to previous/next
   const changeHymn = useCallback(
     (id: number) => {
       if (!hymn) return
@@ -362,7 +364,7 @@ export default function HymnPage() {
         .then(({ data }) => {
           if (id >= data.length) return
 
-          // Find next accessible hymn (skipping excluded ones)
+          // Skip excluded hymns
           const direction = id > hymn.id ? 1 : -1
           let currentId = id
           let targetHymn = null
@@ -395,7 +397,6 @@ export default function HymnPage() {
     [router, hymn]
   )
 
-  // Handle custom random hymn function
   const randomHymn = useCallback(async () => {
     try {
       const prevSearch = localStorage.getItem('prevSearch')
@@ -421,7 +422,6 @@ export default function HymnPage() {
     }
   }, [book, router])
 
-  // Open presentation view
   const showPresentation = useCallback(() => {
     if (!hymn) return
 
@@ -434,7 +434,6 @@ export default function HymnPage() {
     })
   }, [hymn, router])
 
-  // Handle favorite hymns
   const [isFavorite, setFavorite] = useState(false)
 
   useEffect(() => {
@@ -487,7 +486,6 @@ export default function HymnPage() {
     }
   }, [hymn])
 
-  // Prevent scrolling on active hamburger menu
   const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {
@@ -502,7 +500,6 @@ export default function HymnPage() {
     return () => document.removeEventListener('scroll', scrollEvent)
   }, [hamburgerMenu])
 
-  // Handle additional hymn files
   const [hymnFiles, setHymnFiles] = useState<HymnFiles>({} as HymnFiles)
   const [filesLoading, setFilesLoading] = useState(true)
 
@@ -534,7 +531,6 @@ export default function HymnPage() {
     window.open(`/mp3/${book}/${id}.mp3`, '_blank', 'noopener,noreferrer')
   }, [])
 
-  // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu || !hymn) {
@@ -577,15 +573,12 @@ export default function HymnPage() {
     playMusic,
   ])
 
-  // Detect if hymn has chords
   const hasChords = hymn?.lyrics.some((array: string[]) => {
     return array.some((verse: string) => verse.startsWith('.'))
   })
 
-  // Show/hide presentation options
   const [presOptions, setPresOptions] = useState(false)
 
-  // Language selection for IC songs
   const [language, setLanguage] = useState(3)
 
   return (

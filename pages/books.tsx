@@ -14,11 +14,9 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 export default function BooksPage() {
   const router = useRouter()
 
-  // Get books list
   const allBooks = booksList(unlocked)
   const booksWithPdf = ['B', 'C', 'N', 'E']
 
-  // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {

@@ -17,7 +17,6 @@ export interface DocumentPageProps {
 export default function DocumentPage({ libraryPath }: DocumentPageProps) {
   const router = useRouter()
 
-  // Determine PDF document path
   const [documentPath, setDocumentPath] = useState('')
 
   useEffect(() => {
@@ -36,7 +35,6 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
     }
   }, [router])
 
-  // Keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {

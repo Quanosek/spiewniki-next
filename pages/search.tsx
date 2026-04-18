@@ -364,6 +364,11 @@ export default function SearchPage() {
       if (!settings.quickSearch) return
 
       const prevSearch = JSON.parse(localStorage.getItem('prevSearch') || '{}')
+      const hasSavedSearch =
+        typeof prevSearch?.value === 'string' ||
+        prevSearch?.prefix === '@' ||
+        prevSearch?.prefix === '#'
+      if (!hasSavedSearch) return
 
       // Skip restore on book change
       const urlBook = new URLSearchParams(window.location.search).get('book') || undefined
@@ -472,7 +477,8 @@ export default function SearchPage() {
   useEffect(() => {
     setShowClearBtn(!!inputValue || activePrefix !== null)
 
-    if (inputValue && !rawData) inputRef.current?.select() // focus input on load
+    const isMobile = window.matchMedia('(pointer: coarse)').matches
+    if (inputValue && !rawData && !isMobile) inputRef.current?.select() // focus input on load
 
     if (rawData) {
       const searchInput = activePrefix ? activePrefix + inputValue : inputValue

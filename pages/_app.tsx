@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-// import { useEffect, useState } from 'react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
@@ -11,20 +10,12 @@ import { ThemeProvider } from 'next-themes'
 import Menu, { hiddenMenuQuery } from '@/components/menu/_handler'
 import { defaultSettings } from '@/components/menu/settings'
 import { THEMES } from '@/utils/enums'
+import { useInstallPWA } from '@/utils/usePwaInstall'
 
 import 'the-new-css-reset/css/reset.css'
 import '@/styles/globals.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
-
-// interface BeforeInstallPromptEvent extends Event {
-//   prompt: () => Promise<void>
-//   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
-// }
-
-// interface NavigatorStandalone extends Navigator {
-//   standalone?: boolean
-// }
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -80,45 +71,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
-  // // PWA install prompt
-  // const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
-  // const [showInstallButton, setShowInstallButton] = useState(false)
-
-  // useEffect(() => {
-  //   // Skip if already running as PWA
-  //   const isStandalone =
-  //     window.matchMedia('(display-mode: standalone)').matches ||
-  //     window.matchMedia('(display-mode: fullscreen)').matches ||
-  //     window.matchMedia('(display-mode: minimal-ui)').matches ||
-  //     (window.navigator as NavigatorStandalone).standalone ||
-  //     document.referrer.includes('android-app://')
-
-  //   if (isStandalone) {
-  //     setShowInstallButton(false)
-  //     return
-  //   }
-
-  //   // Capture install prompt
-  //   const handleBeforeInstallPrompt = (e: Event) => {
-  //     e.preventDefault()
-  //     setDeferredPrompt(e as BeforeInstallPromptEvent)
-  //     setShowInstallButton(true)
-  //   }
-
-  //   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-  //   return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-  // }, [])
-
-  // // Trigger PWA install
-  // const handleInstallClick = async () => {
-  //   if (!deferredPrompt) return
-
-  //   deferredPrompt.prompt()
-  //   await deferredPrompt.userChoice
-
-  //   setDeferredPrompt(null)
-  //   setShowInstallButton(false)
-  // }
+  const { install, showButton } = useInstallPWA()
 
   const defaultTheme = unlocked ? 'dark' : 'light'
 
@@ -164,19 +117,19 @@ export default function App({ Component, pageProps }: AppProps) {
                 <h1>Śpiewniki</h1>
               </Link>
 
-              {/* {unlocked && showInstallButton && (
-                <button onClick={handleInstallClick} className='installButton'>
+              {unlocked && showButton && (
+                <button onClick={install} className='installButton'>
                   <Image
                     className='icon'
                     src='/icons/download.svg'
-                    alt='Install PWA'
+                    alt='Pobierz'
                     width={18}
                     height={18}
                     draggable={false}
                   />
-                  <p>Zainstaluj</p>
+                  <p>Pobierz</p>
                 </button>
-              )} */}
+              )}
             </div>
 
             <div className='buttons'>

@@ -10,6 +10,7 @@ import MobileNavbar from '@/components/mobile-navbar'
 
 import { bookShortcut } from '@/utils/books'
 import { getRandomHymn } from '@/utils/getRandomHymn'
+import { useInstallPWA } from '@/utils/usePwaInstall'
 
 import styles from '@/styles/pages/index.module.scss'
 
@@ -17,6 +18,7 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function HomePage() {
   const router = useRouter()
+  const { install, showButton } = useInstallPWA()
 
   useEffect(() => {
     localStorage.removeItem('prevSearch')
@@ -89,6 +91,19 @@ export default function HomePage() {
           </Link>
 
           {unlocked || <HamburgerIcon active={hamburgerMenu} setActive={setHamburgerMenu} />}
+
+          {unlocked && showButton && (
+            <button onClick={install} className={styles.installButton}>
+              <Image
+                className='icon'
+                alt='Pobierz'
+                src='/icons/download.svg'
+                width={22}
+                height={22}
+                draggable={false}
+              />
+            </button>
+          )}
         </div>
 
         {unlocked || <MenuModal active={hamburgerMenu} />}

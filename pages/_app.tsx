@@ -78,7 +78,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta name='viewport' content='initial-scale=1, width=device-width, user-scalable=no' />
+        <meta
+          name='viewport'
+          content='initial-scale=1, width=device-width, user-scalable=no, viewport-fit=cover'
+        />
       </Head>
 
       <ThemeProvider defaultTheme={defaultTheme} enableColorScheme={false} themes={THEMES}>

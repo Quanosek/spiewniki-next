@@ -2,7 +2,7 @@
   z-index: 1;
   position: fixed;
   bottom: 0;
-  padding: var(--space) calc(var(--space) * 2) env(safe-area-inset-bottom);
+  padding: var(--space) calc(var(--space) * 2) max(var(--space), env(safe-area-inset-bottom));
   height: var(--navbar-height);
   width: 100%;
   display: flex;

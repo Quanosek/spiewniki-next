@@ -3,50 +3,49 @@
 import withPWAInit from '@ducanh2912/next-pwa'
 
 const excludedIconsArray = ['download.svg', 'filter.svg', 'play.svg']
-const excludedIcons = []
-excludedIconsArray.forEach((icon) => excludedIcons.push(`!public/icons/${icon}`))
+const excludedIcons = excludedIconsArray.map((icon) => `!icons/${icon}`)
 
 const excludedBooks = ['K', 'P', 'E', 'S', 'R']
-const excludedList = []
-excludedBooks.forEach((book) => excludedList.push(`!database/${book}.json`))
+const excludedList = excludedBooks.map((book) => `!database/${book}.json`)
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+const ONE_WEEK_SECONDS = 7 * 24 * 60 * 60
 
-const publicExcludes = ['!pdf/*/*', '!mp3/**/*'].concat(
+const publicExcludes = ['!pdf/**/*', '!pdf/*.pdf', '!mp3/**/*', '!*.mp3'].concat(
   unlocked ? [] : [...excludedIcons, ...excludedList]
 )
 
 const runtimeCaching = [
   {
-    urlPattern: /^https:\/\/fonts\.(?:gstatic)\.com\/.*/i,
+    urlPattern: /^\/covers\/.*\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
     handler: 'CacheFirst',
     options: {
-      cacheName: 'google-fonts-webfonts',
+      cacheName: 'cover-image-assets',
       expiration: {
-        maxEntries: 4,
-        maxAgeSeconds: 365 * 24 * 60 * 60, // 365 days
+        maxEntries: 400,
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
     },
   },
   {
-    urlPattern: /^https:\/\/fonts\.(?:googleapis)\.com\/.*/i,
+    urlPattern: /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,
     handler: 'StaleWhileRevalidate',
     options: {
-      cacheName: 'google-fonts-stylesheets',
+      cacheName: 'google-fonts',
       expiration: {
-        maxEntries: 4,
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+        maxEntries: 16,
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
     },
   },
   {
-    urlPattern: /\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i,
+    urlPattern: /\.(?:js|css|less|eot|otf|ttc|ttf|woff|woff2|font\.css)$/i,
     handler: 'StaleWhileRevalidate',
     options: {
-      cacheName: 'static-font-assets',
+      cacheName: 'static-assets',
       expiration: {
-        maxEntries: 4,
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+        maxEntries: 256,
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
     },
   },
@@ -56,19 +55,8 @@ const runtimeCaching = [
     options: {
       cacheName: 'static-image-assets',
       expiration: {
-        maxEntries: 64,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-      },
-    },
-  },
-  {
-    urlPattern: /\/_next\/static.+\.js$/i,
-    handler: 'CacheFirst',
-    options: {
-      cacheName: 'next-static-js-assets',
-      expiration: {
-        maxEntries: 64,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxEntries: 256,
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
     },
   },
@@ -78,53 +66,33 @@ const runtimeCaching = [
     options: {
       cacheName: 'next-image',
       expiration: {
-        maxEntries: 64,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
-      },
-    },
-  },
-  {
-    urlPattern: /\.(?:js)$/i,
-    handler: 'StaleWhileRevalidate',
-    options: {
-      cacheName: 'static-js-assets',
-      expiration: {
-        maxEntries: 48,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
-      },
-    },
-  },
-  {
-    urlPattern: /\.(?:css|less)$/i,
-    handler: 'StaleWhileRevalidate',
-    options: {
-      cacheName: 'static-style-assets',
-      expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxEntries: 256,
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
     },
   },
   {
     urlPattern: /\/_next\/data\/.+\/.+\.json$/i,
-    handler: 'StaleWhileRevalidate',
+    handler: 'NetworkFirst',
     options: {
       cacheName: 'next-data',
       expiration: {
         maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
+      networkTimeoutSeconds: 3,
     },
   },
   {
     urlPattern: /\.(?:json|xml|csv)$/i,
-    handler: 'StaleWhileRevalidate',
+    handler: 'NetworkFirst',
     options: {
       cacheName: 'static-data-assets',
       expiration: {
         maxEntries: 64,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
+      networkTimeoutSeconds: 3,
     },
   },
   {
@@ -148,9 +116,9 @@ const runtimeCaching = [
       cacheName: 'apis',
       expiration: {
         maxEntries: 16,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
-      networkTimeoutSeconds: 10, // fallback to cache if API does not response within 10 seconds
+      networkTimeoutSeconds: 5,
     },
   },
   {
@@ -164,31 +132,33 @@ const runtimeCaching = [
       cacheName: 'pages-rsc-prefetch',
       expiration: {
         maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
     },
   },
   {
     urlPattern: ({ request, url: { pathname }, sameOrigin }) =>
       request.headers.get('RSC') === '1' && sameOrigin && !pathname.startsWith('/api/'),
-    handler: 'StaleWhileRevalidate',
+    handler: 'NetworkFirst',
     options: {
       cacheName: 'pages-rsc',
       expiration: {
         maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
+      networkTimeoutSeconds: 3,
     },
   },
   {
     urlPattern: ({ url: { pathname }, sameOrigin }) => sameOrigin && !pathname.startsWith('/api/'),
-    handler: 'StaleWhileRevalidate',
+    handler: 'NetworkFirst',
     options: {
       cacheName: 'pages',
       expiration: {
         maxEntries: 32,
-        maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
+      networkTimeoutSeconds: 3,
     },
   },
   {
@@ -198,9 +168,9 @@ const runtimeCaching = [
       cacheName: 'cross-origin',
       expiration: {
         maxEntries: 32,
-        maxAgeSeconds: 60 * 60, // 1 hour
+        maxAgeSeconds: ONE_WEEK_SECONDS,
       },
-      networkTimeoutSeconds: 10,
+      networkTimeoutSeconds: 5,
     },
   },
 ]
@@ -208,19 +178,19 @@ const runtimeCaching = [
 const withPWA = withPWAInit({
   cacheOnFrontEndNav: unlocked,
   aggressiveFrontEndNavCaching: unlocked,
-  cacheStartUrl: false,
+  cacheStartUrl: unlocked,
   disable: !unlocked || process.env.NODE_ENV === 'development',
   dest: 'public',
-  extendDefaultRuntimeCaching: true,
+  extendDefaultRuntimeCaching: false,
   publicExcludes,
   register: unlocked,
-  reloadOnOnline: false,
+  reloadOnOnline: unlocked,
   workboxOptions: {
     runtimeCaching,
     cleanupOutdatedCaches: true,
     clientsClaim: true,
     disableDevLogs: true,
-    navigationPreload: false,
+    navigationPreload: true,
     skipWaiting: true,
   },
 })

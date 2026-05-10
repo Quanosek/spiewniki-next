@@ -124,7 +124,7 @@ export default function PresentationPage() {
         .map((line) => line.slice(1))
         .map((line) => line.replace(/\(.*?\)/g, ''))
         .map((line) => line.replace(/\s+/g, ' ').trim())
-        .map((line) => line.replace(/\s+([.,;:!?])/g, '$1'))
+        .map((line) => line.replace(/\s+([.,;!?]|:(?!\]))/g, '$1'))
         .filter((line) => line !== '')
     )
   }, [hymn, order, slide])

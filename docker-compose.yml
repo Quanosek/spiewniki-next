@@ -10,8 +10,3 @@ services:
       dockerfile: Dockerfile
     ports:
       - "${HOST_PORT}:3000"
-    volumes:
-      - data:/app/node_modules
-
-volumes:
-  data:

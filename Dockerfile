@@ -1,8 +1,9 @@
-FROM node:22-alpine
+FROM node:24-alpine
 
 WORKDIR /app
 
 ENV HUSKY=0
+ENV CI=true
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 

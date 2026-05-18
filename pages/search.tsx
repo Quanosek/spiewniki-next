@@ -13,6 +13,7 @@ import MobileNavbar from '@/components/mobile-navbar'
 
 import { bookShortcut, booksList } from '@/utils/books'
 import { SEARCH_PREFIXES } from '@/utils/enums'
+import { getQueryParam } from '@/utils/queryParam'
 import { getRandomHymn } from '@/utils/getRandomHymn'
 import { isHymnAccessible } from '@/utils/hymnValidation'
 import { normalizeText } from '@/utils/simplifyText'
@@ -248,7 +249,7 @@ const mapHymn = (hymn: Hymn): ProcessedHymn => {
 
 export default function SearchPage() {
   const router = useRouter()
-  const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
+  const book = getQueryParam(router.query, 'book')
 
   const [localSettings, setLocalSettings] = useState<typeof defaultSettings>()
 

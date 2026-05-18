@@ -5,6 +5,8 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 import { slugifyText } from '@/utils/simplifyText'
+import { getQueryParam } from '@/utils/queryParam'
+import { useOnlineStatus } from '@/utils/useOnlineStatus'
 
 import styles from '@/styles/pages/document.module.scss'
 
@@ -16,15 +18,23 @@ export interface DocumentPageProps {
 
 export default function DocumentPage({ libraryPath }: DocumentPageProps) {
   const router = useRouter()
+  const isOnline = useOnlineStatus()
 
   const [documentPath, setDocumentPath] = useState('')
 
   useEffect(() => {
     if (!router.isReady) return
+    if (!isOnline) {
+      router.replace('/')
+    }
+  }, [router, isOnline])
 
-    const d = Array.isArray(router.query.d) ? router.query.d[0] : router.query.d
-    const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
-    const id = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id
+  useEffect(() => {
+    if (!router.isReady) return
+
+    const d = getQueryParam(router.query, 'd')
+    const book = getQueryParam(router.query, 'book')
+    const id = getQueryParam(router.query, 'id')
 
     if (d && d.trim()) {
       setDocumentPath(`/pdf/${slugifyText(d)}.pdf`)

@@ -11,6 +11,7 @@ import MobileNavbar from '@/components/mobile-navbar'
 import { bookShortcut } from '@/utils/books'
 import { getRandomHymn } from '@/utils/getRandomHymn'
 import { useInstallPWA } from '@/utils/usePwaInstall'
+import { useOnlineStatus } from '@/utils/useOnlineStatus'
 
 import styles from '@/styles/pages/index.module.scss'
 
@@ -19,6 +20,7 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 export default function HomePage() {
   const router = useRouter()
   const { install, showButton } = useInstallPWA()
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     localStorage.removeItem('prevSearch')
@@ -162,8 +164,16 @@ export default function HomePage() {
                     pathname: '/document',
                     query: { d: bookShortcut(book) },
                   }}
-                  title='Pokaż śpiewnik w formacie PDF'
-                  className={styles.pdfIcon}
+                  title={
+                    isOnline
+                      ? 'Pokaż śpiewnik w formacie PDF'
+                      : 'Podgląd PDF jest niedostępny w trybie offline'
+                  }
+                  className={`${styles.pdfIcon} ${isOnline ? '' : styles.disabled}`}
+                  aria-disabled={!isOnline}
+                  onClick={(e) => {
+                    if (!isOnline) e.preventDefault()
+                  }}
                 >
                   <Image
                     className='icon'

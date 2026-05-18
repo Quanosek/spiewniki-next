@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 
 import { getRandomHymn } from '@/utils/getRandomHymn'
+import { getQueryParam } from '@/utils/queryParam'
 
 import { hiddenMenuQuery } from './menu/_handler'
 
@@ -11,7 +12,7 @@ import styles from '@/styles/components/mobile-navbar.module.scss'
 
 export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean }) {
   const router = useRouter()
-  const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
+  const book = getQueryParam(router.query, 'book')
 
   const randomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(unlocked, book)

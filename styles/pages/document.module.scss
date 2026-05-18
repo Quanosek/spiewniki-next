@@ -25,13 +25,18 @@
     left: 8px;
 
     button {
+      $btn-size: min(11vw, 44px);
+      $icon-size: min(5vw, 20px);
+
       opacity: 0.85;
-      padding: min(3.5vw, 12px);
-      aspect-ratio: 1/1;
+      padding: 0;
+      width: $btn-size;
+      height: $btn-size;
       border-radius: 100%;
 
       img {
-        height: min(5vw, 20px);
+        width: $icon-size;
+        height: $icon-size;
       }
 
       p {

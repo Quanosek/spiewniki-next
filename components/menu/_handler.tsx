@@ -1,8 +1,16 @@
 import dynamic from 'next/dynamic'
 import Router, { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import styles from '@/styles/components/menu.module.scss'
+
+const MENU_MODULES = {
+  favorites: () => import('./favorites'),
+  settings: () => import('./settings'),
+  shortcuts: () => import('./shortcuts'),
+} as const
+
+type MenuName = keyof typeof MENU_MODULES
 
 // Menu navigation via hidden query param
 export function hiddenMenuQuery(name: string | undefined) {
@@ -49,9 +57,25 @@ export default function MenuComponent() {
     }
   }, [router, menu, params])
 
-  const DynamicComponent = dynamic(() => import(`./${menu}`), {
-    ssr: false,
-  })
+  const menuName = typeof menu === 'string' && menu in MENU_MODULES ? (menu as MenuName) : null
+
+  const DynamicComponent = useMemo(
+    () =>
+      menuName
+        ? dynamic(
+            () =>
+              MENU_MODULES[menuName]().catch(() => {
+                hiddenMenuQuery(undefined)
+                return { default: () => null }
+              }),
+            {
+              ssr: false,
+              loading: () => <p className={styles.menuLoading}>Ładowanie…</p>,
+            }
+          )
+        : null,
+    [menuName]
+  )
 
   return (
     <div
@@ -64,7 +88,7 @@ export default function MenuComponent() {
     >
       <div className={styles.menuBackground} onClick={() => hiddenMenuQuery(undefined)} />
 
-      {menu && (
+      {menuName && DynamicComponent && (
         <div className={styles.menuHandler}>
           <div className={styles.menuBox}>
             <DynamicComponent />

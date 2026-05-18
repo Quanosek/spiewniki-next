@@ -5,8 +5,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
 import type Hymn from '@/types/hymn'
+import { getQueryParam } from '@/utils/queryParam'
+import { booksList } from '@/utils/books'
 
 import styles from '@/styles/pages/presentation.module.scss'
+
+const VALID_BOOKS = new Set(booksList(true))
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
@@ -32,49 +36,71 @@ export default function PresentationPage() {
     setOverlay((prev) => (prev === mode ? null : mode))
   }, [])
 
-  const handleInit = useCallback(async (book: string, title: string) => {
-    const abortController = new AbortController()
-    try {
-      const { data } = await axios.get(`/database/${book}.json`, { signal: abortController.signal })
+  const handleInit = useCallback(
+    async (book: string, title: string, signal: AbortSignal) => {
+      try {
+        const { data } = await axios.get(`/database/${book}.json`, {
+          signal,
+          timeout: 8000,
+        })
 
-      const foundHymn = data.find((elem: { name: string }) => elem.name === title)
+        const foundHymn = data.find((elem: { name: string }) => elem.name === title)
 
-      setHymn(foundHymn)
+        if (!foundHymn) {
+          router.replace('/404')
+          return
+        }
 
-      const hymnOrder =
-        foundHymn?.song.presentation?.split(' ').filter(Boolean) ??
-        Object.keys(foundHymn.song.lyrics)
+        setHymn(foundHymn)
 
-      setOrder(hymnOrder)
-      setSlide(foundHymn.song.title.includes('IC') ? 1 : 0)
-    } catch (error) {
-      if (!axios.isCancel(error)) console.error(error)
-    }
-    return () => abortController.abort()
-  }, [])
+        const hymnOrder =
+          foundHymn.song.presentation?.split(' ').filter(Boolean) ??
+          Object.keys(foundHymn.song.lyrics)
+
+        setOrder(hymnOrder)
+        setSlide(foundHymn.song.title.includes('IC') ? 1 : 0)
+      } catch (error) {
+        if (axios.isCancel(error)) return
+        console.error(error)
+        router.replace('/404')
+      }
+    },
+    [router]
+  )
 
   useEffect(() => {
     if (!router.isReady) return
-    const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
-    const title = Array.isArray(router.query.title) ? router.query.title[0] : router.query.title
-    if (book && title) handleInit(book, title)
-  }, [router.isReady, router.query.book, router.query.title, handleInit])
+    const book = getQueryParam(router.query, 'book')
+    const title = getQueryParam(router.query, 'title')
+
+    if (!book || !title) return
+    if (!VALID_BOOKS.has(book)) {
+      router.replace('/404')
+      return
+    }
+
+    const abortController = new AbortController()
+    handleInit(book, title, abortController.signal)
+    return () => abortController.abort()
+  }, [router, router.isReady, router.query.book, router.query.title, handleInit])
 
   useEffect(() => {
     isPopupRef.current = !!localStorage.getItem('presWindow')
 
-    const beforeUnloadHandler = () => localStorage.removeItem('presWindow')
+    const cleanupPresWindow = () => localStorage.removeItem('presWindow')
 
     // Handle browser-initiated fullscreen exit (e.g. user presses F11/Esc outside our controls)
     const fullscreenChangeHandler = () => {
       if (!document.fullscreenElement && !isClosingRef.current) router.back()
     }
 
-    window.addEventListener('beforeunload', beforeUnloadHandler)
+    window.addEventListener('beforeunload', cleanupPresWindow)
+    window.addEventListener('pagehide', cleanupPresWindow)
     document.addEventListener('fullscreenchange', fullscreenChangeHandler)
 
     return () => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler)
+      window.removeEventListener('beforeunload', cleanupPresWindow)
+      window.removeEventListener('pagehide', cleanupPresWindow)
       document.removeEventListener('fullscreenchange', fullscreenChangeHandler)
     }
   }, [router])

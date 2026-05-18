@@ -74,11 +74,29 @@ body {
   color: var(--text);
   background-color: var(--background);
   -webkit-tap-highlight-color: transparent;
+  padding-top: env(safe-area-inset-top, 0px);
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top, 0px);
+    background-color: var(--elements);
+    z-index: -1;
+    pointer-events: none;
+  }
 
   @media print {
     width: 550px;
     color: #000000;
     background-color: #ffffff;
+    padding-top: 0;
+
+    &::before {
+      display: none;
+    }
   }
 }
 
@@ -179,8 +197,9 @@ main {
   gap: 1rem;
 
   @media (max-width: 768px) {
-    padding: 0 0 calc(var(--navbar-height) + min(4rem, 10vw)) 0;
-    min-height: 100svh;
+    padding: 0 env(safe-area-inset-right, 0px) calc(var(--navbar-height) + min(4rem, 10vw))
+      env(safe-area-inset-left, 0px);
+    min-height: calc(100svh - env(safe-area-inset-top, 0px));
   }
 
   @media (max-width: 425px) {

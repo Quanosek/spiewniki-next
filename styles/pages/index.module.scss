@@ -302,8 +302,9 @@ $grid-gap-mobile: 1.2vw;
   position: absolute;
   top: 18px;
   right: 18px;
+  width: 46px;
+  height: 46px;
   padding: 0.5rem;
-  aspect-ratio: 1/1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -320,14 +321,20 @@ $grid-gap-mobile: 1.2vw;
   }
 
   img {
+    width: 100%;
+    height: auto;
     filter: invert(1);
   }
 
   @media (max-width: 768px) {
+    $box: min(9vw, 44px);
+
     opacity: 0.8;
     top: 0;
     right: 0;
-    padding: min(3.5vw, 1rem);
+    width: $box;
+    height: $box;
+    padding: min(1.8vw, 0.5rem);
     filter: none;
 
     &:hover {
@@ -338,9 +345,14 @@ $grid-gap-mobile: 1.2vw;
     }
 
     img {
-      width: min(5.5vw, 25px);
       filter: none;
     }
+  }
+
+  &.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    cursor: not-allowed;
   }
 }
 

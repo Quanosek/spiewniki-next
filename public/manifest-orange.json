@@ -1,15 +1,30 @@
 {
   "id": "spiewniki-orange",
   "name": "Śpiewniki",
+  "short_name": "Śpiewniki",
   "description": "Zebrane w jednym miejscu różne śpiewniki i pieśni religijne",
+  "lang": "pl",
+  "dir": "ltr",
   "start_url": "/",
-  "theme_color": "#000000",
-  "background_color": "#000000",
+  "scope": "/",
+  "theme_color": "#ffffff",
+  "background_color": "#f3f3f3",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
+  "categories": ["music", "education", "lifestyle"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/logo/orange/icon.svg",
-      "sizes": "any"
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo/orange/pwa-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/logo/orange/pwa-192.png",
@@ -21,13 +36,31 @@
       "src": "/logo/orange/pwa-384.png",
       "sizes": "384x384",
       "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo/orange/pwa-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
       "purpose": "maskable"
     },
     {
       "src": "/logo/orange/pwa-512.png",
       "sizes": "512x512",
       "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo/orange/pwa-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/logo/orange/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

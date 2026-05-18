@@ -14,6 +14,8 @@ import { bookShortcut } from '@/utils/books'
 import { getRandomHymn } from '@/utils/getRandomHymn'
 import { isHymnAccessible } from '@/utils/hymnValidation'
 import { shareButton } from '@/utils/shareButton'
+import { getQueryParam } from '@/utils/queryParam'
+import { useOnlineStatus } from '@/utils/useOnlineStatus'
 
 import type Hymn from '@/types/hymn'
 
@@ -216,10 +218,11 @@ const HymnData = ({
 
 export default function HymnPage() {
   const router = useRouter()
+  const isOnline = useOnlineStatus()
 
-  const book = Array.isArray(router.query.book) ? router.query.book[0] : router.query.book
-  const title = Array.isArray(router.query.title) ? router.query.title[0] : router.query.title
-  const menu = Array.isArray(router.query.menu) ? router.query.menu[0] : router.query.menu
+  const book = getQueryParam(router.query, 'book')
+  const title = getQueryParam(router.query, 'title')
+  const menu = getQueryParam(router.query, 'menu')
 
   const [hymn, setHymn] = useState<ProcessedHymn>()
 
@@ -517,11 +520,12 @@ export default function HymnPage() {
   const openDocument = useCallback(
     (file: HymnFiles['pdf'] | undefined) => {
       if (!file) return
+      if (!isOnline) return
       const { book, id } = file
 
       router.push({ pathname: '/document', query: { book, id } })
     },
-    [router]
+    [router, isOnline]
   )
 
   const playMusic = useCallback((file: HymnFiles['mp3'] | undefined) => {
@@ -618,7 +622,15 @@ export default function HymnPage() {
                 )}
 
                 {hymnFiles.pdf && (
-                  <button onClick={() => openDocument(hymnFiles.pdf)}>
+                  <button
+                    onClick={() => openDocument(hymnFiles.pdf)}
+                    disabled={!isOnline}
+                    title={
+                      isOnline
+                        ? 'Otwórz zapis nutowy'
+                        : 'Podgląd PDF jest niedostępny w trybie offline'
+                    }
+                  >
                     <Image
                       className='icon'
                       alt='pdf'
@@ -862,11 +874,15 @@ export default function HymnPage() {
                   <p>{isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}</p>
                 </button>
 
-                {['B', 'C', 'N', 'S'].includes(bookShortcut(hymn.book)) && (
+                {['B', 'C', 'N', 'S', 'R'].includes(bookShortcut(hymn.book)) && (
                   <button
-                    tabIndex={hymnFiles.pdf ? 0 : -1}
-                    title='Otwórz zapis nutowy wybranej pieśni [D]'
-                    className={hymnFiles.pdf ? '' : 'disabled'}
+                    tabIndex={hymnFiles.pdf && isOnline ? 0 : -1}
+                    title={
+                      !isOnline
+                        ? 'Podgląd PDF jest niedostępny w trybie offline'
+                        : 'Otwórz zapis nutowy wybranej pieśni [D]'
+                    }
+                    className={hymnFiles.pdf && isOnline ? '' : 'disabled'}
                     onClick={() => openDocument(hymnFiles.pdf)}
                   >
                     <Image

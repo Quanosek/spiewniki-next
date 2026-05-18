@@ -2,7 +2,11 @@
   z-index: 1;
   position: fixed;
   bottom: 0;
-  padding: var(--space) calc(var(--space) * 2) max(var(--space), env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  padding: var(--space) calc(var(--space) * 2 + env(safe-area-inset-right, 0px))
+    max(var(--space), env(safe-area-inset-bottom, 0px))
+    calc(var(--space) * 2 + env(safe-area-inset-left, 0px));
   height: var(--navbar-height);
   width: 100%;
   display: flex;
@@ -51,7 +55,7 @@
         position: absolute;
         top: -8px;
         left: -4px;
-        bottom: -16px;
+        bottom: calc(0px - max(var(--space), env(safe-area-inset-bottom, 0px)) - var(--space));
         right: -4px;
         background-color: var(--menu-elements);
         border-radius: 12px 12px 0 0;

@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 
 import MobileNavbar from '@/components/mobile-navbar'
 import { bookShortcut, booksList } from '@/utils/books'
+import { useOnlineStatus } from '@/utils/useOnlineStatus'
 
 import styles from '@/styles/pages/books.module.scss'
 
@@ -13,6 +14,7 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function BooksPage() {
   const router = useRouter()
+  const isOnline = useOnlineStatus()
 
   const allBooks = booksList(unlocked)
   const booksWithPdf = ['B', 'C', 'N', 'E']
@@ -78,8 +80,16 @@ export default function BooksPage() {
                       pathname: '/document',
                       query: { d: bookShortcut(book) },
                     }}
-                    title='Pokaż śpiewnik w formacie PDF'
-                    className={styles.pdfFile}
+                    title={
+                      isOnline
+                        ? 'Pokaż śpiewnik w formacie PDF'
+                        : 'Podgląd PDF jest niedostępny w trybie offline'
+                    }
+                    className={`${styles.pdfFile} ${isOnline ? '' : styles.disabled}`}
+                    aria-disabled={!isOnline}
+                    onClick={(e) => {
+                      if (!isOnline) e.preventDefault()
+                    }}
                   >
                     <p>Otwórz PDF</p>
                     <Image

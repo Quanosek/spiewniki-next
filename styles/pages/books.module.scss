@@ -175,6 +175,12 @@
     opacity: 1;
   }
 
+  &.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
   p {
     font-size: 13px;
     white-space: nowrap;

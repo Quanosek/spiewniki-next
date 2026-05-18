@@ -11,7 +11,7 @@ const excludedList = excludedBooks.map((book) => `!database/${book}.json`)
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 const ONE_WEEK_SECONDS = 7 * 24 * 60 * 60
 
-const publicExcludes = ['!pdf/**/*', '!pdf/*.pdf', '!mp3/**/*', '!*.mp3'].concat(
+const publicExcludes = ['!pdf/**/*', '!pdf/*.pdf', '!mp3/**/*', '!*.mp3', '!libraries/**/*'].concat(
   unlocked ? [] : [...excludedIcons, ...excludedList]
 )
 
@@ -197,7 +197,6 @@ const withPWA = withPWAInit({
 
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
 }
 
 export default withPWA(nextConfig)

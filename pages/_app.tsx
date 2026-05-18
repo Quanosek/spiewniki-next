@@ -17,7 +17,85 @@ import '@/styles/globals.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
-export default function App({ Component, pageProps }: AppProps) {
+function AppShell({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+  const { install, showButton } = useInstallPWA()
+
+  return (
+    <>
+      <Menu />
+
+      <header>
+        <div className='container'>
+          <div>
+            <Link
+              href='/'
+              title={
+                router.pathname === '/'
+                  ? 'Zebrane w jednym miejscu różne śpiewniki i pieśni religijne'
+                  : unlocked
+                    ? 'Powróć do strony głównej'
+                    : 'Powróć do wyboru śpiewników'
+              }
+              className='title'
+            >
+              <Image
+                className='icon'
+                alt='bpsw'
+                src='/logo/bpsw.svg'
+                width={36}
+                height={36}
+                draggable={false}
+                priority
+              />
+              <h1>Śpiewniki</h1>
+            </Link>
+
+            {unlocked && showButton && (
+              <button onClick={install} className='installButton' title='Zainstaluj aplikację'>
+                <Image
+                  className='icon'
+                  src='/icons/download.svg'
+                  alt='Pobierz'
+                  width={18}
+                  height={18}
+                  draggable={false}
+                />
+                <p>Pobierz</p>
+              </button>
+            )}
+          </div>
+
+          <div className='buttons'>
+            <button onClick={() => hiddenMenuQuery('favorites')}>
+              <p>Lista ulubionych</p>
+            </button>
+
+            <button onClick={() => hiddenMenuQuery('settings')}>
+              <p>Ustawienia</p>
+            </button>
+
+            <button className='desktopOnly' onClick={() => hiddenMenuQuery('shortcuts')}>
+              <p>Skróty klawiszowe</p>
+            </button>
+
+            {unlocked || (
+              <Link href='https://nastrazy.org'>
+                <p>
+                  <b>Nastrazy.org</b>
+                </p>
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+
+      <Component {...pageProps} />
+    </>
+  )
+}
+
+export default function App(appProps: AppProps) {
   const router = useRouter()
 
   useEffect(() => {
@@ -71,8 +149,6 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router])
 
-  const { install, showButton } = useInstallPWA()
-
   const defaultTheme = unlocked ? 'dark' : 'light'
 
   return (
@@ -92,74 +168,7 @@ export default function App({ Component, pageProps }: AppProps) {
           />
         )}
 
-        <Menu />
-
-        <header>
-          <div className='container'>
-            <div>
-              <Link
-                href='/'
-                title={
-                  router.pathname === '/'
-                    ? 'Zebrane w jednym miejscu różne śpiewniki i pieśni religijne'
-                    : unlocked
-                      ? 'Powróć do strony głównej'
-                      : 'Powróć do wyboru śpiewników'
-                }
-                className='title'
-              >
-                <Image
-                  className='icon'
-                  alt='bpsw'
-                  src='/logo/bpsw.svg'
-                  width={36}
-                  height={36}
-                  draggable={false}
-                  priority
-                />
-                <h1>Śpiewniki</h1>
-              </Link>
-
-              {unlocked && showButton && (
-                <button onClick={install} className='installButton'>
-                  <Image
-                    className='icon'
-                    src='/icons/download.svg'
-                    alt='Pobierz'
-                    width={18}
-                    height={18}
-                    draggable={false}
-                  />
-                  <p>Pobierz</p>
-                </button>
-              )}
-            </div>
-
-            <div className='buttons'>
-              <button onClick={() => hiddenMenuQuery('favorites')}>
-                <p>Lista ulubionych</p>
-              </button>
-
-              <button onClick={() => hiddenMenuQuery('settings')}>
-                <p>Ustawienia</p>
-              </button>
-
-              <button className='desktopOnly' onClick={() => hiddenMenuQuery('shortcuts')}>
-                <p>Skróty klawiszowe</p>
-              </button>
-
-              {unlocked || (
-                <Link href='https://nastrazy.org'>
-                  <p>
-                    <b>Nastrazy.org</b>
-                  </p>
-                </Link>
-              )}
-            </div>
-          </div>
-        </header>
-
-        <Component {...pageProps} />
+        <AppShell {...appProps} />
       </ThemeProvider>
     </>
   )

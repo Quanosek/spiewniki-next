@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 
-import { hiddenMenuQuery } from './_handler'
+import { setMenuQuery } from './_handler'
 
 import styles from '@/styles/components/menu.module.scss'
 
@@ -81,7 +81,7 @@ export default function ShortcutsMenu() {
       )}
 
       <div className={styles.buttons}>
-        <button onClick={() => hiddenMenuQuery(undefined)}>
+        <button onClick={() => setMenuQuery(undefined)}>
           <p>Zamknij</p>
         </button>
       </div>

@@ -6,23 +6,23 @@ import { useCallback } from 'react'
 import { getRandomHymn } from '@/utils/getRandomHymn'
 import { getQueryParam } from '@/utils/queryParam'
 
-import { hiddenMenuQuery } from './menu/_handler'
+import { setMenuQuery } from './menu/_handler'
 
 import styles from '@/styles/components/mobile-navbar.module.scss'
 
-export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean }) {
+export default function MobileNavbar({ unlocked }: { unlocked: boolean }) {
   const router = useRouter()
   const book = getQueryParam(router.query, 'book')
 
-  const randomHymn = useCallback(async () => {
-    const foundHymn = await getRandomHymn(unlocked, book)
+  const handleRandomHymn = useCallback(async () => {
+    const foundHymn = await getRandomHymn(book)
     if (foundHymn) {
       router.push({
         pathname: '/hymn',
         query: { book: foundHymn.book, title: foundHymn.title },
       })
     }
-  }, [unlocked, book, router])
+  }, [book, router])
 
   return (
     <nav className={styles.navbar}>
@@ -57,7 +57,7 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
             <p>Wyszukiwanie</p>
           </Link>
 
-          <button onClick={randomHymn} className={styles.randomButton}>
+          <button onClick={handleRandomHymn} className={styles.randomButton}>
             <Image
               className='icon'
               alt='dice'
@@ -69,7 +69,7 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
             <p>Wylosuj</p>
           </button>
 
-          <button onClick={() => hiddenMenuQuery('favorites')}>
+          <button onClick={() => setMenuQuery('favorites')}>
             <Image
               className='icon'
               alt='list'
@@ -81,7 +81,7 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
             <p>Ulubione</p>
           </button>
 
-          <button onClick={() => hiddenMenuQuery('settings')}>
+          <button onClick={() => setMenuQuery('settings')}>
             <Image
               className='icon'
               alt='settings'
@@ -124,7 +124,7 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
             <p>Wyszukiwanie</p>
           </Link>
 
-          <button onClick={() => hiddenMenuQuery('favorites')}>
+          <button onClick={() => setMenuQuery('favorites')}>
             <Image
               className='icon'
               alt='list'
@@ -136,7 +136,7 @@ export default function MobileNavbarComponent({ unlocked }: { unlocked: boolean 
             <p>Ulubione</p>
           </button>
 
-          <button onClick={() => hiddenMenuQuery('settings')}>
+          <button onClick={() => setMenuQuery('settings')}>
             <Image
               className='icon'
               alt='settings'

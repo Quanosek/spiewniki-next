@@ -21,9 +21,10 @@
     display: none;
   }
 
-  button {
-    padding: 0;
-    height: 100%;
+  > button,
+  .titleActions > button {
+    padding: 0.16rem;
+    height: calc(100% - 0.32rem);
     aspect-ratio: 1/1;
     display: flex;
     justify-content: center;
@@ -47,10 +48,108 @@
     }
   }
 
-  div {
+  .titleActions {
     height: 100%;
     display: flex;
     align-items: center;
+    gap: 0.2rem;
+  }
+
+  .transposeTopBar {
+    display: inline-grid;
+    grid-template-columns: 2rem minmax(3.65rem, auto) 2rem 2.2rem;
+    height: 2rem;
+    border-radius: calc(var(--radius) / 1.8);
+    border: 1px solid color-mix(in srgb, var(--menu-elements-hover) 75%, var(--text) 10%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, #ffffff 14%, transparent),
+      0 1px 5px color-mix(in srgb, #000000 22%, transparent);
+    overflow: hidden;
+
+    > * {
+      background-color: color-mix(in srgb, var(--menu-elements) 88%, var(--elements));
+      min-width: 0;
+    }
+
+    > * + * {
+      border-left: 1px solid color-mix(in srgb, var(--menu-elements-hover) 70%, transparent);
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0.18rem;
+      border-radius: 0;
+      color: var(--text);
+      font-size: 0.98rem;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      transition: filter 0.15s ease-out;
+
+      &:hover,
+      &:focus-visible {
+        filter: brightness(1.1);
+      }
+
+      &:disabled {
+        opacity: 0.35;
+      }
+    }
+
+    button:nth-child(1),
+    button:nth-child(3) {
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+
+    // Symbols with unusual glyph metrics need slight optical correction.
+    button:nth-child(1),
+    button:nth-child(4) {
+      font-family: 'Noto Sans', 'Gill Sans MT', sans-serif;
+      line-height: 0.92;
+      position: relative;
+      top: -0.03em;
+    }
+
+    .topBarKeyValue {
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .keyChanged {
+      color: var(--accent-color) !important;
+    }
+
+    @media (max-width: 420px) {
+      margin-left: 0.1rem;
+      grid-template-columns: 1.84rem minmax(3.2rem, auto) 1.84rem 2rem;
+      height: 1.84rem;
+
+      .topBarKeyValue {
+        min-width: 3.2ch;
+        font-size: 0.82rem;
+      }
+
+      button {
+        padding: 0 0.12rem;
+        font-size: 0.9rem;
+      }
+
+      button:nth-child(1),
+      button:nth-child(3) {
+        font-size: 1.02rem;
+      }
+
+      button:nth-child(1),
+      button:nth-child(4) {
+        top: -0.025em;
+      }
+    }
   }
 }
 
@@ -330,33 +429,179 @@ $button-gap: 12px;
   }
 }
 
-.hymnTitle {
+.hymnTitleHandler {
   display: flex;
-  flex-direction: column;
-  gap: 0.3em;
-
-  p {
-    font-size: 90%;
-    color: var(--accent-color);
-  }
-
-  h1 {
-    font-size: 150%;
-  }
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1em;
 
   @media (max-width: 768px) {
-    font-size: 90%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75em;
+  }
+
+  .hymnTitle {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+
+    p {
+      font-size: 90%;
+      color: var(--accent-color);
+    }
 
     h1 {
-      font-size: 135%;
+      font-size: 150%;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 90%;
+
+      h1 {
+        font-size: 135%;
+      }
+    }
+
+    @media print {
+      gap: 0.6rem;
+
+      h1 {
+        font-size: 155%;
+      }
     }
   }
 
-  @media print {
-    gap: 0.6rem;
+  .transpose {
+    padding: 0.25rem;
+    width: clamp(11.8rem, 19vw, 13.2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: var(--elements-hover);
+    border-radius: calc(var(--radius) / 1.75);
+    border: 1px solid var(--menu-elements-hover);
+    font-size: 78%;
+    user-select: none;
+  }
 
-    h1 {
-      font-size: 155%;
+  .transposeTitle {
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.045em;
+    opacity: 0.74;
+    font-size: 0.58rem;
+    line-height: 1.2;
+  }
+
+  .transposeControls {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.8rem minmax(0, 1fr) 1.8rem 1.9rem;
+    align-items: stretch;
+    gap: 0;
+    overflow: hidden;
+    border-radius: 0.45rem;
+
+    > * {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: color-mix(in srgb, var(--menu-elements) 88%, var(--elements));
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background-color: transparent;
+      color: var(--text);
+      font-size: 0.9em;
+      font-weight: bold;
+      line-height: 1;
+      cursor: pointer;
+      transition: filter 0.15s ease-out;
+
+      &:hover,
+      &:focus-visible {
+        filter: brightness(1.1);
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        filter: none;
+      }
+    }
+  }
+
+  .transpose .keyDisplay {
+    display: inline-grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 0.16rem;
+    min-width: 0;
+    padding: 0.08rem 0.22rem;
+
+    .keyValue {
+      font-size: 0.88rem;
+      font-weight: bold;
+      color: currentColor;
+      line-height: 1;
+      width: 5.6ch;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .keyValueButton {
+      min-width: 0;
+      width: auto;
+      height: auto;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background-color: transparent;
+      color: var(--text);
+      font-size: inherit;
+      font-weight: inherit;
+
+      &:disabled {
+        opacity: 1;
+      }
+    }
+
+    .keyReset {
+      height: 1.12rem;
+      min-width: 2.8ch;
+      padding: 0 0.28rem;
+      border: 1px solid color-mix(in srgb, var(--menu-elements-hover) 70%, transparent);
+      border-radius: 0.35rem;
+      background-color: color-mix(in srgb, var(--menu-elements) 88%, var(--elements));
+      font-size: 0.62rem;
+      font-weight: 700;
+      line-height: 1;
+
+      &:disabled {
+        opacity: 0.55;
+      }
+    }
+  }
+
+  .transpose {
+    @media (max-width: 768px) {
+      display: none;
+    }
+
+    @media print {
+      display: none;
     }
   }
 }

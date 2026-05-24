@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export function useOnlineStatus(): boolean {
+function useOnlineStatus(): boolean {
   const [isOnline, setIsOnline] = useState(true)
 
   useEffect(() => {
@@ -18,3 +18,5 @@ export function useOnlineStatus(): boolean {
 
   return isOnline
 }
+
+export { useOnlineStatus }

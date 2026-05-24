@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
-import MenuModal from '@/components/mobile-menu/menu-modal'
+import HamburgerIcon from '@/components/hamburger-icon'
+import MenuModal from '@/components/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
 
 import styles from '@/styles/pages/error.module.scss'
@@ -41,8 +41,8 @@ export default function ErrorPage() {
 
     const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
 
-    document.addEventListener('scroll', scrollEvent)
-    return () => document.removeEventListener('scroll', scrollEvent)
+    window.addEventListener('scroll', scrollEvent)
+    return () => window.removeEventListener('scroll', scrollEvent)
   }, [hamburgerMenu])
 
   return (

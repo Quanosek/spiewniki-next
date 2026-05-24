@@ -4,14 +4,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
 
-import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
-import MenuModal from '@/components/mobile-menu/menu-modal'
+import HamburgerIcon from '@/components/hamburger-icon'
+import MenuModal from '@/components/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
 
-import { bookShortcut } from '@/utils/books'
+import { getBookShortcut } from '@/utils/getBookShortcut'
 import { getRandomHymn } from '@/utils/getRandomHymn'
-import { useInstallPWA } from '@/utils/usePwaInstall'
 import { useOnlineStatus } from '@/utils/useOnlineStatus'
+import { useInstallPWA } from '@/utils/usePwaInstall'
 
 import styles from '@/styles/pages/index.module.scss'
 
@@ -36,12 +36,12 @@ export default function HomePage() {
 
     const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
 
-    document.addEventListener('scroll', scrollEvent)
-    return () => document.removeEventListener('scroll', scrollEvent)
+    window.addEventListener('scroll', scrollEvent)
+    return () => window.removeEventListener('scroll', scrollEvent)
   }, [hamburgerMenu])
 
-  const randomHymn = useCallback(async () => {
-    const foundHymn = await getRandomHymn(unlocked)
+  const handleRandomHymn = useCallback(async () => {
+    const foundHymn = await getRandomHymn()
     if (foundHymn) {
       router.push({
         pathname: '/hymn',
@@ -64,12 +64,12 @@ export default function HomePage() {
       const key = e.key.toUpperCase()
 
       if (unlocked && key === 'B') router.push('/books')
-      if (key === 'R') randomHymn()
+      if (key === 'R') handleRandomHymn()
     }
 
     document.addEventListener('keyup', keyupEvent)
     return () => document.removeEventListener('keyup', keyupEvent)
-  }, [router, randomHymn])
+  }, [router, handleRandomHymn])
 
   return (
     <>
@@ -131,7 +131,7 @@ export default function HomePage() {
             <p>Rozpocznij wyszukiwanie</p>
           </Link>
 
-          <button title='Otwórz losową pieśń [R]' onClick={randomHymn}>
+          <button title='Otwórz losową pieśń [R]' onClick={handleRandomHymn}>
             <Image
               className='icon'
               alt='dice'
@@ -156,13 +156,13 @@ export default function HomePage() {
                     draggable={false}
                     priority
                   />
-                  <p>{bookShortcut(book)}</p>
+                  <p>{getBookShortcut(book)}</p>
                 </Link>
 
                 <Link
                   href={{
                     pathname: '/document',
-                    query: { d: bookShortcut(book) },
+                    query: { d: getBookShortcut(book) },
                   }}
                   title={
                     isOnline

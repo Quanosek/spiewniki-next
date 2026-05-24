@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import fs from 'fs'
 import path from 'path'
 
-import { bookShortcut } from '@/utils/books'
+import { getBookShortcut } from '@/utils/getBookShortcut'
 import { slugifyText } from '@/utils/simplifyText'
 
 type Data = {
@@ -14,7 +14,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
   const { title } = req.query as { [key: string]: string }
 
   let { book } = req.query as { [key: string]: string }
-  book = bookShortcut(book)
+  book = getBookShortcut(book)
 
   try {
     let id = ''

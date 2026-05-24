@@ -15,16 +15,8 @@ const reversedBooksMap: Record<string, string> = Object.fromEntries(
   Object.entries(booksMap).map(([key, value]) => [value, key])
 )
 
-const bookShortcut = (input: string) => {
+const getBookShortcut = (input: string) => {
   return booksMap[input] || reversedBooksMap[input]
 }
 
-const booksList = (unlocked: boolean) => {
-  const unlockedList = ['B', 'C', 'N', 'K', 'P', 'M', 'E', 'S', 'R']
-  const restrictedList = ['B', 'C', 'N', 'M']
-  const list = unlocked ? unlockedList : restrictedList
-
-  return list
-}
-
-export { bookShortcut, booksList }
+export { getBookShortcut }

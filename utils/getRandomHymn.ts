@@ -1,45 +1,40 @@
 import axios from 'axios'
 
-import { bookShortcut } from '@/utils/books'
-import { isHymnAccessible } from '@/utils/hymnValidation'
+import type Hymn from '@/types/hymn'
 
-import { booksList } from './books'
+import { getBookShortcut } from './getBookShortcut'
+import { HYMNBOOKS } from './constants'
+import { isHymnAccessible } from './hymnValidation'
 
-const getRandomHymn = async (unlocked: boolean, book?: string) => {
-  if (!book) {
-    try {
+const getRandomHymn = async (book?: string) => {
+  try {
+    let hymns: Hymn[] = []
+
+    if (!book) {
+      // Fetch all hymnbooks
       const responses = await Promise.all(
-        booksList(unlocked).map((bookName) => axios.get(`/database/${bookName}.json`))
+        HYMNBOOKS.map((bookName) => axios.get(`/database/${bookName}.json`))
       )
 
-      const hymns = responses.flatMap((response) => response?.data ?? [])
-      const accessibleHymns = hymns.filter((hymn: { name: string }) => isHymnAccessible(hymn.name))
-
-      if (accessibleHymns.length > 0) {
-        const randomHymn = accessibleHymns[Math.floor(Math.random() * accessibleHymns.length)]
-        return {
-          book: bookShortcut(randomHymn.book),
-          title: randomHymn.name,
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching hymns:', error)
-    }
-  } else {
-    try {
+      hymns = responses.flatMap((response) => response?.data ?? [])
+    } else {
+      // Fetch specific hymnbook
       const { data } = await axios.get(`/database/${book}.json`)
-      const accessibleHymns = data.filter((hymn: { name: string }) => isHymnAccessible(hymn.name))
-
-      if (accessibleHymns.length > 0) {
-        const randomHymn = accessibleHymns[Math.floor(Math.random() * accessibleHymns.length)]
-        return {
-          book: bookShortcut(randomHymn.book),
-          title: randomHymn.name,
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching hymns:', error)
+      hymns = data
     }
+
+    // Filter hymns based on accessibility and select a random one
+    const accessibleHymns = hymns.filter((hymn) => isHymnAccessible(hymn.name))
+
+    if (accessibleHymns.length > 0) {
+      const randomHymn = accessibleHymns[Math.floor(Math.random() * accessibleHymns.length)]
+      return {
+        book: getBookShortcut(randomHymn.book),
+        title: randomHymn.name,
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching hymns:', err)
   }
 
   return null

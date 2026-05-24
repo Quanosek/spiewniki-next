@@ -5,7 +5,8 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 import MobileNavbar from '@/components/mobile-navbar'
-import { bookShortcut, booksList } from '@/utils/books'
+import { HYMNBOOKS, PDF_BOOKS } from '@/utils/constants'
+import { getBookShortcut } from '@/utils/getBookShortcut'
 import { useOnlineStatus } from '@/utils/useOnlineStatus'
 
 import styles from '@/styles/pages/books.module.scss'
@@ -15,9 +16,6 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 export default function BooksPage() {
   const router = useRouter()
   const isOnline = useOnlineStatus()
-
-  const allBooks = booksList(unlocked)
-  const booksWithPdf = ['B', 'C', 'N', 'E']
 
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
@@ -67,18 +65,18 @@ export default function BooksPage() {
 
           <hr />
 
-          {allBooks.map((book, index) => (
+          {HYMNBOOKS.map((book, index) => (
             <div key={book}>
               <div className={styles.book}>
                 <Link href={{ pathname: '/search', query: { book } }} className={styles.result}>
-                  <h2>{bookShortcut(book)}</h2>
+                  <h2>{getBookShortcut(book)}</h2>
                 </Link>
 
-                {booksWithPdf.includes(book) && (
+                {PDF_BOOKS.includes(book) && (
                   <Link
                     href={{
                       pathname: '/document',
-                      query: { d: bookShortcut(book) },
+                      query: { d: getBookShortcut(book) },
                     }}
                     title={
                       isOnline
@@ -104,7 +102,7 @@ export default function BooksPage() {
                 )}
               </div>
 
-              {index + 1 !== allBooks.length && <hr />}
+              {index + 1 !== HYMNBOOKS.length && <hr />}
             </div>
           ))}
         </div>

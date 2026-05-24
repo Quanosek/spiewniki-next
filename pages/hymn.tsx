@@ -1,39 +1,29 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 
-import { defaultSettings } from '@/components/menu/settings'
-import HamburgerIcon from '@/components/mobile-menu/hamburger-icon'
-import MenuModal from '@/components/mobile-menu/menu-modal'
+import HamburgerIcon from '@/components/hamburger-icon'
+import MenuModal from '@/components/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
+import HymnData from '@/components/hymn/hymn-data'
 
-import { bookShortcut } from '@/utils/books'
+import { detectHymnKey, detectHymnUseSharps, transposeChord } from '@/utils/chords'
+import { DEFAULT_SETTINGS, SHOW_MP3, SHOW_PDF } from '@/utils/constants'
+import { getBookShortcut } from '@/utils/getBookShortcut'
 import { getRandomHymn } from '@/utils/getRandomHymn'
 import { isHymnAccessible } from '@/utils/hymnValidation'
-import { shareButton } from '@/utils/shareButton'
 import { getQueryParam } from '@/utils/queryParam'
+import { shareButton } from '@/utils/shareButton'
 import { useOnlineStatus } from '@/utils/useOnlineStatus'
 
 import type Hymn from '@/types/hymn'
+import type { HymnDetail } from '@/types/hymn'
 
 import styles from '@/styles/pages/hymn.module.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
-
-type ProcessedHymnSong = Hymn['song'] & {
-  linked_songs?: {
-    book: string
-    title: string
-  }[]
-}
-
-interface ProcessedHymn extends Omit<Hymn, 'song'> {
-  lyrics: string[][]
-  song: ProcessedHymnSong
-}
 
 interface HymnFiles {
   pdf: {
@@ -46,176 +36,6 @@ interface HymnFiles {
   }
 }
 
-const FormattedVerse = ({
-  array,
-  index,
-  hymn,
-  ic,
-  language,
-  setLanguage,
-  showChords,
-}: {
-  array: string[]
-  index: number
-  hymn: ProcessedHymn
-  ic: boolean
-  language: number
-  setLanguage: (value: number) => void
-  showChords: boolean
-}) => {
-  const id = Object.keys(hymn.song.lyrics)[index]
-
-  return (
-    <div id={id} className={`${styles.verse} ${id.includes('T') && styles.italic}`}>
-      {ic && index === 0 && (
-        <select
-          className={styles.changeLanguage}
-          onChange={(e) => setLanguage(parseInt(e.target.value))}
-          value={language}
-        >
-          <option value='0'>{array[0]}</option>
-          <option value='1'>{array[1]}</option>
-          <option value='2'>{array[2]}</option>
-          <option value='3'>{array[3]}</option>
-          <option value='4'>{array[4]}</option>
-        </select>
-      )}
-
-      <p>
-        {array.map((verse, j) => {
-          if (ic) if (index === 0 || j !== language) return null
-
-          const isChord = verse.startsWith('.')
-
-          if (isChord && !showChords) return null
-
-          const line = verse
-            .replace(/^[\s.]/, '')
-            .replace(/\b(\w)\b\s/g, '$1\u00A0')
-            .replace(/(?<=\[:) | (?=:\])/g, '\u00A0')
-            .replace(/\:\]\s/g, ':]\u00A0')
-
-          return (
-            <span key={j} className={isChord ? styles.chord : ''}>
-              {line}
-              <br />
-            </span>
-          )
-        })}
-      </p>
-    </div>
-  )
-}
-
-const LinkedSong = ({ linked }: { linked: { book: string; title: string } }) => {
-  const { book, title } = linked
-
-  return (
-    <Link
-      href={{
-        pathname: '/hymn',
-        query: { book, title },
-      }}
-      title='Przejdź do wybranej pieśni'
-    >
-      <p>{linked.title}</p>
-    </Link>
-  )
-}
-
-const HymnData = ({
-  hymn,
-  showChords,
-  language,
-  setLanguage,
-}: {
-  hymn: ProcessedHymn
-  showChords: boolean
-  language: number
-  setLanguage: (value: number) => void
-}) => {
-  // Restricted version: cut at ——— separator, strip choir parts in brackets
-  const filteredLyrics = useMemo(() => {
-    const result: string[][] = []
-
-    for (const verse of hymn.lyrics) {
-      const separatorIndex = verse.findIndex((line) => line.includes('———'))
-
-      if (separatorIndex !== -1) {
-        if (separatorIndex > 0) {
-          const processedVerse = verse.slice(0, separatorIndex)
-          result.push(processedVerse)
-        }
-        break
-      }
-
-      const processedVerse = verse.map((line) =>
-        line
-          .replace(/\(.*?\)/g, '')
-          .replace(/\s+/g, ' ')
-          .trim()
-      )
-      result.push(processedVerse)
-    }
-
-    return result
-  }, [hymn.lyrics])
-
-  const ic = hymn.song.title.includes('IC')
-
-  const hymnTitle = hymn.song.title.replace(/\b(\w)\b\s/g, '$1\u00A0')
-
-  return (
-    <>
-      <div className={styles.text}>
-        <div className={styles.hymnTitle}>
-          <p>{hymn.book}</p>
-          <h1>{hymnTitle}</h1>
-        </div>
-
-        {hymn.song.author && (
-          <div className={styles.credits}>
-            <p className={styles.author}>{hymn.song.author}</p>
-          </div>
-        )}
-
-        <hr className={styles.printLine} />
-
-        <div className={styles.lyrics}>
-          {(unlocked ? hymn.lyrics : filteredLyrics).map((array, index) => (
-            <FormattedVerse
-              key={index}
-              array={array}
-              index={index}
-              hymn={hymn}
-              ic={ic}
-              language={language}
-              setLanguage={setLanguage}
-              showChords={showChords}
-            />
-          ))}
-        </div>
-
-        {hymn.song.copyright && (
-          <div className={styles.credits}>
-            <p className={styles.copyright}>{hymn.song.copyright}</p>
-          </div>
-        )}
-      </div>
-
-      {unlocked && hymn.song.linked_songs && (
-        <span className={styles.linked}>
-          <p className={styles.name}>Powiązane pieśni:</p>
-
-          {hymn.song.linked_songs.map((linked, index) => (
-            <LinkedSong key={index} linked={linked} />
-          ))}
-        </span>
-      )}
-    </>
-  )
-}
-
 export default function HymnPage() {
   const router = useRouter()
   const isOnline = useOnlineStatus()
@@ -224,7 +44,7 @@ export default function HymnPage() {
   const title = getQueryParam(router.query, 'title')
   const menu = getQueryParam(router.query, 'menu')
 
-  const [hymn, setHymn] = useState<ProcessedHymn>()
+  const [hymn, setHymn] = useState<HymnDetail>()
 
   useEffect(() => {
     if (!(router.isReady && book && title)) return
@@ -249,7 +69,7 @@ export default function HymnPage() {
             const splitSong = songStr.split('\\')
 
             return {
-              book: bookShortcut(splitSong[0]),
+              book: getBookShortcut(splitSong[0]),
               title: splitSong[1],
             }
           })
@@ -266,18 +86,43 @@ export default function HymnPage() {
     return () => abortController.abort()
   }, [router, book, title])
 
-  // Reload settings when menu closes
-  const [settings, setSettings] = useState(defaultSettings)
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS)
 
   useEffect(() => {
-    const settingsString = localStorage.getItem('settings')
-    const loadedSettings = settingsString ? JSON.parse(settingsString) : {}
-    setSettings({ ...defaultSettings, ...loadedSettings })
+    try {
+      const settingsString = localStorage.getItem('settings')
+      const loadedSettings = settingsString ? JSON.parse(settingsString) : {}
+      setSettings({ ...DEFAULT_SETTINGS, ...loadedSettings })
+    } catch (err) {
+      console.error('Error parsing settings:', err)
+      setSettings({ ...DEFAULT_SETTINGS })
+    }
   }, [menu])
 
-  const { showChords, fontSize } = settings
+  const { fontSize, showChords, chordNotation } = settings
 
-  // Hide mobile controls on scroll down
+  const hasChords = hymn?.lyrics.some((array: string[]) => {
+    return array.some((verse: string) => verse.startsWith('.'))
+  })
+
+  const [semitones, setSemitones] = useState(0)
+  const [useSharps, setUseSharps] = useState(true)
+
+  useEffect(() => {
+    if (!hymn) return
+
+    const detectedUseSharps = detectHymnUseSharps(hymn.song.lyrics)
+    const sourceUseSharps = detectedUseSharps ?? true
+
+    setSemitones(0)
+    setUseSharps(sourceUseSharps)
+  }, [hymn])
+
+  const hymnKey = hymn ? (hymn.song.key ?? detectHymnKey(hymn.song.lyrics)) : null
+  const displayedKey = hymnKey
+    ? transposeChord(hymnKey, { semitones, useSharps, notation: chordNotation })
+    : null
+
   const [hideControls, setHideControls] = useState(false)
 
   useEffect(() => {
@@ -303,17 +148,30 @@ export default function HymnPage() {
       }
     }
 
-    document.addEventListener('scroll', scrollEvent, { passive: true })
-    return () => document.removeEventListener('scroll', scrollEvent)
+    window.addEventListener('scroll', scrollEvent)
+    return () => window.removeEventListener('scroll', scrollEvent)
   }, [hideControls])
 
-  const openPrevSearch = useCallback(() => {
+  const [hamburgerMenu, setHamburgerMenu] = useState(false)
+
+  useEffect(() => {
+    if (!hamburgerMenu) return
+
+    const leftScroll = document.documentElement.scrollLeft
+    const topScroll = document.documentElement.scrollTop
+
+    const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
+
+    window.addEventListener('scroll', scrollEvent)
+    return () => window.removeEventListener('scroll', scrollEvent)
+  }, [hamburgerMenu])
+
+  const handleBackToSearch = useCallback(() => {
     try {
       const prevSearch = localStorage.getItem('prevSearch')
       if (prevSearch) {
         const parsed = JSON.parse(prevSearch)
 
-        // Skip focus if user had scroll position (came from search list)
         if (!parsed.scrollY) {
           localStorage.setItem('focusSearchBox', 'true')
         }
@@ -337,37 +195,45 @@ export default function HymnPage() {
     }
   }, [router])
 
-  const changeHymn = useCallback(
+  const handleBooksSelect = useCallback(() => {
+    localStorage.removeItem('prevSearch')
+    router.push(unlocked ? '/books' : '/')
+  }, [router])
+
+  const resetPrevSearch = useCallback(() => {
+    try {
+      const prevSearch = localStorage.getItem('prevSearch')
+      if (!prevSearch) return
+
+      const json = JSON.parse(prevSearch)
+      json.value = ''
+      json.prefix = null
+      json.scrollY = 0
+      json.renderPage = 0
+      localStorage.setItem('prevSearch', JSON.stringify(json))
+
+      const cacheKey = `searchCache_${json.book || 'all'}`
+      sessionStorage.removeItem(cacheKey)
+    } catch (err) {
+      console.error('Error updating prevSearch:', err)
+    }
+  }, [])
+
+  const handleChangeHymn = useCallback(
     (id: number) => {
       if (!hymn) return
 
-      try {
-        const prevSearch = localStorage.getItem('prevSearch')
-        if (prevSearch) {
-          const json = JSON.parse(prevSearch)
-          json.value = ''
-          json.prefix = null
-          json.scrollY = 0
-          json.renderPage = 0
-          localStorage.setItem('prevSearch', JSON.stringify(json))
-
-          const cacheKey = `searchCache_${json.book || 'all'}`
-          sessionStorage.removeItem(cacheKey)
-        }
-      } catch (err) {
-        console.error('Error updating prevSearch:', err)
-      }
+      resetPrevSearch()
 
       if (id < 0) return
 
       const abortController = new AbortController()
 
       axios
-        .get(`/database/${bookShortcut(hymn.book)}.json`, { signal: abortController.signal })
+        .get(`/database/${getBookShortcut(hymn.book)}.json`, { signal: abortController.signal })
         .then(({ data }) => {
           if (id >= data.length) return
 
-          // Skip excluded hymns
           const direction = id > hymn.id ? 1 : -1
           let currentId = id
           let targetHymn = null
@@ -386,7 +252,7 @@ export default function HymnPage() {
           router.push({
             pathname: '/hymn',
             query: {
-              book: bookShortcut(targetHymn.book),
+              book: getBookShortcut(targetHymn.book),
               title: targetHymn.name,
             },
           })
@@ -397,35 +263,24 @@ export default function HymnPage() {
           router.back()
         })
     },
-    [router, hymn]
+    [router, hymn, resetPrevSearch]
   )
 
-  const randomHymn = useCallback(async () => {
-    try {
-      const prevSearch = localStorage.getItem('prevSearch')
-      if (prevSearch) {
-        const json = JSON.parse(prevSearch)
-        json.value = ''
-        json.prefix = null
-        json.scrollY = 0
-        json.renderPage = 0
-        localStorage.setItem('prevSearch', JSON.stringify(json))
+  const handleRandomHymn = useCallback(async () => {
+    resetPrevSearch()
 
-        const cacheKey = `searchCache_${json.book || 'all'}`
-        sessionStorage.removeItem(cacheKey)
-      }
-    } catch {}
-
-    const foundHymn = await getRandomHymn(unlocked, book)
+    const foundHymn = await getRandomHymn(book)
     if (foundHymn) {
       router.push({
         pathname: '/hymn',
         query: { book: foundHymn.book, title: foundHymn.title },
       })
     }
-  }, [book, router])
+  }, [book, router, resetPrevSearch])
 
-  const showPresentation = useCallback(() => {
+  const [presOptions, setPresOptions] = useState(false)
+
+  const handlePresentation = useCallback(() => {
     if (!hymn) return
 
     const elem = document.documentElement
@@ -433,19 +288,31 @@ export default function HymnPage() {
 
     router.push({
       pathname: '/presentation',
-      query: { book: bookShortcut(hymn.book), title: hymn.name },
+      query: { book: getBookShortcut(hymn.book), title: hymn.name },
     })
   }, [hymn, router])
 
-  const [isFavorite, setFavorite] = useState(false)
+  const handleExternalPresentation = () => {
+    if (!book || !title) return
+
+    const params = new URLSearchParams()
+    params.append('book', book)
+    params.append('title', title)
+
+    window.open(`/presentation?${params.toString()}`, 'presentation', 'width=960,height=540')
+
+    localStorage.setItem('presWindow', 'true')
+  }
+
+  const [isFavorite, setIsFavorite] = useState(false)
 
   useEffect(() => {
     if (!hymn) return
 
     try {
       const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
-      const bookName = bookShortcut(hymn.book)
-      setFavorite(
+      const bookName = getBookShortcut(hymn.book)
+      setIsFavorite(
         favorites.some((elem: { book: string; id: number }) => {
           return elem.book === bookName && elem.id === hymn.id
         })
@@ -455,11 +322,11 @@ export default function HymnPage() {
     }
   }, [hymn, book])
 
-  const toggleFavorite = useCallback(() => {
+  const handleToggleFavorite = useCallback(() => {
     if (!hymn) return
 
     try {
-      const bookName = bookShortcut(hymn.book)
+      const bookName = getBookShortcut(hymn.book)
       let favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
 
       if (
@@ -467,12 +334,12 @@ export default function HymnPage() {
           return elem.book === bookName && elem.id === hymn.id
         })
       ) {
-        setFavorite(false)
+        setIsFavorite(false)
         favorites = favorites.filter((elem: { book: string; id: number }) => {
           return elem.book !== bookName || elem.id !== hymn.id
         })
       } else {
-        setFavorite(true)
+        setIsFavorite(true)
         favorites = [
           {
             book: bookName,
@@ -489,36 +356,23 @@ export default function HymnPage() {
     }
   }, [hymn])
 
-  const [hamburgerMenu, setHamburgerMenu] = useState(false)
-
-  useEffect(() => {
-    if (!hamburgerMenu) return
-
-    const leftScroll = document.documentElement.scrollLeft
-    const topScroll = document.documentElement.scrollTop
-
-    const scrollEvent = () => window.scrollTo(leftScroll, topScroll)
-
-    document.addEventListener('scroll', scrollEvent)
-    return () => document.removeEventListener('scroll', scrollEvent)
-  }, [hamburgerMenu])
-
   const [hymnFiles, setHymnFiles] = useState<HymnFiles>({} as HymnFiles)
-  const [filesLoading, setFilesLoading] = useState(true)
+  const [isFilesLoading, setIsFilesLoading] = useState(true)
 
   useEffect(() => {
     if (!hymn) return
 
-    setFilesLoading(true)
+    setIsFilesLoading(true)
+
     axios
       .get('/api/hymnFiles', { params: { book: hymn.book, title: hymn.song.title } })
       .then(({ data }) => setHymnFiles(data))
       .catch((err) => console.error(err))
-      .finally(() => setFilesLoading(false))
+      .finally(() => setIsFilesLoading(false))
   }, [hymn])
 
-  const openDocument = useCallback(
-    (file: HymnFiles['pdf'] | undefined) => {
+  const handleDocument = useCallback(
+    (file?: HymnFiles['pdf']) => {
       if (!file) return
       if (!isOnline) return
       const { book, id } = file
@@ -528,11 +382,19 @@ export default function HymnPage() {
     [router, isOnline]
   )
 
-  const playMusic = useCallback((file: HymnFiles['mp3'] | undefined) => {
+  const handlePlay = useCallback((file?: HymnFiles['mp3']) => {
     if (!file) return
     const { book, id } = file
 
     window.open(`/mp3/${book}/${id}.mp3`, '_blank', 'noopener,noreferrer')
+  }, [])
+
+  const handlePrint = useCallback(() => {
+    window.print()
+  }, [])
+
+  const handleShare = useCallback(() => {
+    shareButton()
   }, [])
 
   useEffect(() => {
@@ -541,49 +403,46 @@ export default function HymnPage() {
         return
       }
 
-      if (e.key === 'Escape') openPrevSearch()
+      if (e.key === 'Escape') handleBackToSearch()
+
       if (e.key === '/') {
         localStorage.removeItem('prevSearch')
         localStorage.setItem('focusSearchBox', 'true')
         router.push('/search')
       }
-      if (e.key === 'ArrowLeft') changeHymn(hymn.id - 1)
-      if (e.key === 'ArrowRight') changeHymn(hymn.id + 1)
+
+      if (e.key === 'ArrowLeft') handleChangeHymn(hymn.id - 1)
+      if (e.key === 'ArrowRight') handleChangeHymn(hymn.id + 1)
 
       const key = e.key.toUpperCase()
 
-      if (key === 'B') router.push(unlocked ? '/books' : '/')
-      if (unlocked && key === 'R') randomHymn()
-      if (key === 'P') showPresentation()
-      if (key === 'F') toggleFavorite()
-      if (key === 'D') openDocument(hymnFiles.pdf)
-      if (unlocked && key === 'M') playMusic(hymnFiles.mp3)
-      if (key === 'S') shareButton()
-      if (key === 'K') window.print()
+      if (key === 'B') handleBooksSelect()
+      if (unlocked && key === 'R') handleRandomHymn()
+      if (key === 'P') handlePresentation()
+      if (key === 'F') handleToggleFavorite()
+      if (key === 'D') handleDocument(hymnFiles.pdf)
+      if (unlocked && key === 'M') handlePlay(hymnFiles.mp3)
+      if (key === 'K') handlePrint()
+      if (key === 'S') handleShare()
     }
 
     document.addEventListener('keyup', keyupEvent)
     return () => document.removeEventListener('keyup', keyupEvent)
   }, [
     router,
+    handleBackToSearch,
     hymn,
-    openPrevSearch,
-    changeHymn,
-    randomHymn,
-    showPresentation,
-    toggleFavorite,
+    handleChangeHymn,
+    handleBooksSelect,
+    handleRandomHymn,
+    handlePresentation,
+    handleToggleFavorite,
     hymnFiles,
-    openDocument,
-    playMusic,
+    handleDocument,
+    handlePlay,
+    handlePrint,
+    handleShare,
   ])
-
-  const hasChords = hymn?.lyrics.some((array: string[]) => {
-    return array.some((verse: string) => verse.startsWith('.'))
-  })
-
-  const [presOptions, setPresOptions] = useState(false)
-
-  const [language, setLanguage] = useState(3)
 
   return (
     <>
@@ -595,7 +454,7 @@ export default function HymnPage() {
         {hymn && (
           <>
             <div className={styles.title}>
-              <button onClick={openPrevSearch}>
+              <button onClick={handleBackToSearch}>
                 <Image
                   style={{ rotate: '90deg' }}
                   className='icon'
@@ -607,9 +466,38 @@ export default function HymnPage() {
                 />
               </button>
 
-              <div>
+              <div className={styles.titleActions}>
+                {unlocked && showChords && hasChords && displayedKey && (
+                  <div className={styles.transposeTopBar}>
+                    <button
+                      disabled={semitones <= -5}
+                      onClick={() => setSemitones((prev) => Math.max(-5, prev - 1))}
+                    >
+                      {'-'}
+                    </button>
+
+                    <button
+                      className={`${styles.topBarKeyValueButton} ${semitones !== 0 ? styles.keyChanged : ''}`}
+                      onClick={() => setSemitones(0)}
+                    >
+                      <span className={styles.topBarKeyValue}>{displayedKey}</span>
+                    </button>
+
+                    <button
+                      disabled={semitones >= 6}
+                      onClick={() => setSemitones((prev) => Math.min(6, prev + 1))}
+                    >
+                      {'+'}
+                    </button>
+
+                    <button onClick={() => setUseSharps((prev) => !prev)}>
+                      {useSharps ? '♯' : '♭'}
+                    </button>
+                  </div>
+                )}
+
                 {unlocked && hymnFiles.mp3 && (
-                  <button onClick={() => playMusic(hymnFiles.mp3)}>
+                  <button onClick={() => handlePlay(hymnFiles.mp3)}>
                     <Image
                       className='icon'
                       alt='mp3'
@@ -622,15 +510,7 @@ export default function HymnPage() {
                 )}
 
                 {hymnFiles.pdf && (
-                  <button
-                    onClick={() => openDocument(hymnFiles.pdf)}
-                    disabled={!isOnline}
-                    title={
-                      isOnline
-                        ? 'Otwórz zapis nutowy'
-                        : 'Podgląd PDF jest niedostępny w trybie offline'
-                    }
-                  >
+                  <button onClick={() => handleDocument(hymnFiles.pdf)} disabled={!isOnline}>
                     <Image
                       className='icon'
                       alt='pdf'
@@ -642,7 +522,7 @@ export default function HymnPage() {
                   </button>
                 )}
 
-                <button onClick={toggleFavorite}>
+                <button onClick={handleToggleFavorite}>
                   <Image
                     className='icon'
                     alt='favorite'
@@ -654,7 +534,7 @@ export default function HymnPage() {
                 </button>
 
                 {(unlocked && (
-                  <button onClick={shareButton}>
+                  <button onClick={handleShare}>
                     <Image
                       className='icon'
                       alt='share'
@@ -672,7 +552,7 @@ export default function HymnPage() {
 
             <div className={styles.container}>
               <div className={styles.options}>
-                <button title='Powróć do wyników wyszukiwania [Esc]' onClick={openPrevSearch}>
+                <button title='Powróć do wyników wyszukiwania [Esc]' onClick={handleBackToSearch}>
                   <Image
                     className='icon'
                     alt='search'
@@ -690,10 +570,7 @@ export default function HymnPage() {
                       ? 'Otwórz listę wszystkich śpiewników [B]'
                       : 'Powróć do wyboru śpiewników [B]'
                   }
-                  onClick={() => {
-                    localStorage.removeItem('prevSearch')
-                    router.push(unlocked ? '/books' : '/')
-                  }}
+                  onClick={handleBooksSelect}
                 >
                   <Image
                     className='icon'
@@ -709,15 +586,21 @@ export default function HymnPage() {
 
               <div className={styles.center}>
                 <div className={styles.content} style={{ fontSize }}>
-                  {showChords && !hasChords && (
+                  {!hasChords && showChords && (
                     <span className={styles.noChords}>Brak akordów do wyświetlenia</span>
                   )}
 
                   <HymnData
                     hymn={hymn}
+                    notation={chordNotation}
                     showChords={showChords}
-                    language={language}
-                    setLanguage={setLanguage}
+                    semitones={semitones}
+                    useSharps={useSharps}
+                    displayedKey={displayedKey}
+                    onTransposeDown={() => setSemitones((prev) => Math.max(-5, prev - 1))}
+                    onTransposeUp={() => setSemitones((prev) => Math.min(6, prev + 1))}
+                    onTransposeReset={() => setSemitones(0)}
+                    onToggleSharps={() => setUseSharps((prev) => !prev)}
                   />
                 </div>
 
@@ -725,7 +608,7 @@ export default function HymnPage() {
                   <button
                     title='Przejdź do poprzedniej pieśni [←]'
                     className={hideControls ? styles.hide : ''}
-                    onClick={() => changeHymn(hymn.id - 1)}
+                    onClick={() => handleChangeHymn(hymn.id - 1)}
                   >
                     <Image
                       className={`${styles.previous} icon`}
@@ -742,7 +625,7 @@ export default function HymnPage() {
                     <button
                       title='Otwórz losową pieśń z wybranego śpiewnika [R]'
                       className={styles.randomButton}
-                      onClick={randomHymn}
+                      onClick={handleRandomHymn}
                     >
                       <p>Wylosuj pieśń</p>
                     </button>
@@ -751,7 +634,7 @@ export default function HymnPage() {
                   <button
                     title='Przejdź do następnej pieśni [→]'
                     className={hideControls ? styles.hide : ''}
-                    onClick={() => changeHymn(hymn.id + 1)}
+                    onClick={() => handleChangeHymn(hymn.id + 1)}
                   >
                     <p>Następna</p>
                     <Image
@@ -768,7 +651,7 @@ export default function HymnPage() {
                 <div className={styles.controlsMobile}>
                   <button
                     className={hideControls ? styles.hide : ''}
-                    onClick={() => changeHymn(hymn.id - 1)}
+                    onClick={() => handleChangeHymn(hymn.id - 1)}
                   >
                     <Image
                       className={`${styles.previous} icon`}
@@ -782,7 +665,7 @@ export default function HymnPage() {
 
                   <button
                     className={hideControls ? styles.hide : ''}
-                    onClick={() => changeHymn(hymn.id + 1)}
+                    onClick={() => handleChangeHymn(hymn.id + 1)}
                   >
                     <Image
                       className={`${styles.next} icon`}
@@ -805,7 +688,7 @@ export default function HymnPage() {
                     title='Włącz tryb prezentacji dla wybranej pieśni [P]'
                     className={styles.default}
                   >
-                    <div className={styles.buttonText} onClick={showPresentation}>
+                    <div className={styles.buttonText} onClick={handlePresentation}>
                       <Image
                         className='icon'
                         alt='presentation'
@@ -833,23 +716,7 @@ export default function HymnPage() {
                   </button>
 
                   <div className={`${styles.list} ${presOptions ? styles.active : ''}`}>
-                    <button
-                      tabIndex={-1}
-                      onClick={() => {
-                        if (!book || !title) return
-                        const params = new URLSearchParams()
-                        params.append('book', book)
-                        params.append('title', title)
-
-                        window.open(
-                          `/presentation?${params.toString()}`,
-                          'presentation',
-                          'width=960,height=540'
-                        )
-
-                        localStorage.setItem('presWindow', 'true')
-                      }}
-                    >
+                    <button tabIndex={-1} onClick={handleExternalPresentation}>
                       <p>Otwórz w nowym oknie</p>
                     </button>
                   </div>
@@ -861,7 +728,7 @@ export default function HymnPage() {
                       ? 'Usuń pieśń z listy ulubionych [F]'
                       : 'Dodaj pieśń do listy ulubionych [F]'
                   }
-                  onClick={toggleFavorite}
+                  onClick={handleToggleFavorite}
                 >
                   <Image
                     className='icon'
@@ -874,16 +741,12 @@ export default function HymnPage() {
                   <p>{isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}</p>
                 </button>
 
-                {['B', 'C', 'N', 'S', 'R'].includes(bookShortcut(hymn.book)) && (
+                {SHOW_PDF.includes(book || '') && (
                   <button
                     tabIndex={hymnFiles.pdf && isOnline ? 0 : -1}
-                    title={
-                      !isOnline
-                        ? 'Podgląd PDF jest niedostępny w trybie offline'
-                        : 'Otwórz zapis nutowy wybranej pieśni [D]'
-                    }
+                    title='Pokaż zapis nutowy wybranej pieśni [D]'
                     className={hymnFiles.pdf && isOnline ? '' : 'disabled'}
-                    onClick={() => openDocument(hymnFiles.pdf)}
+                    onClick={() => handleDocument(hymnFiles.pdf)}
                   >
                     <Image
                       className='icon'
@@ -894,21 +757,21 @@ export default function HymnPage() {
                       draggable={false}
                     />
                     <p>
-                      {filesLoading
+                      {isFilesLoading
                         ? 'Ładowanie...'
                         : hymnFiles.pdf
-                          ? 'Otwórz PDF'
+                          ? 'Pokaż nuty'
                           : 'Brak pliku PDF'}
                     </p>
                   </button>
                 )}
 
-                {unlocked && bookShortcut(hymn.book) === 'N' && (
+                {unlocked && SHOW_MP3.includes(book || '') && (
                   <button
-                    tabIndex={hymnFiles.mp3 ? 0 : -1}
-                    title='Odtwórz linię melodyjną wybranej pieśni [M]'
-                    className={hymnFiles.mp3 ? '' : 'disabled'}
-                    onClick={() => playMusic(hymnFiles.mp3)}
+                    tabIndex={hymnFiles.mp3 && isOnline ? 0 : -1}
+                    title='Odtwórz melodię wybranej pieśni [M]'
+                    className={hymnFiles.mp3 && isOnline ? '' : 'disabled'}
+                    onClick={() => handlePlay(hymnFiles.mp3)}
                   >
                     <Image
                       className='icon'
@@ -919,7 +782,7 @@ export default function HymnPage() {
                       draggable={false}
                     />
                     <p>
-                      {filesLoading
+                      {isFilesLoading
                         ? 'Ładowanie...'
                         : hymnFiles.mp3
                           ? 'Odtwórz melodię'
@@ -928,7 +791,7 @@ export default function HymnPage() {
                   </button>
                 )}
 
-                <button title='Wydrukuj tekst wybranej pieśni [K]' onClick={() => window.print()}>
+                <button title='Wydrukuj tekst wybranej pieśni [K]' onClick={handlePrint}>
                   <Image
                     className='icon'
                     alt='print'
@@ -940,7 +803,7 @@ export default function HymnPage() {
                   <p>Drukuj</p>
                 </button>
 
-                <button title='Skopiuj link do wybranej pieśni [S]' onClick={shareButton}>
+                <button title='Skopiuj link do wybranej pieśni [S]' onClick={handleShare}>
                   <Image
                     className='icon'
                     alt='share'

@@ -17,9 +17,9 @@ const isStandaloneMode = (navigatorRef: NavigatorWithInstallHints) =>
   navigatorRef.standalone === true ||
   document.referrer.includes('android-app://')
 
-export function useInstallPWA() {
+function useInstallPWA() {
   const [deferredPrompt, setDeferredPrompt] = useState<InstallPromptEvent | null>(null)
-  const [isStandalone, setIsStandalone] = useState(true) // hidden by default
+  const [isStandalone, setIsStandalone] = useState(true)
 
   useEffect(() => {
     let isMounted = true
@@ -38,9 +38,7 @@ export function useInstallPWA() {
 
       try {
         const relatedApps = await navigatorRef.getInstalledRelatedApps()
-        if (isMounted && relatedApps.length > 0) {
-          markInstalled()
-        }
+        if (isMounted && relatedApps.length > 0) markInstalled()
       } catch {
         // Ignore
       }
@@ -77,7 +75,9 @@ export function useInstallPWA() {
     if (!deferredPrompt) return
 
     await deferredPrompt.prompt()
+
     const { outcome } = await deferredPrompt.userChoice
+
     if (outcome === 'accepted') {
       setDeferredPrompt(null)
       setIsStandalone(true)
@@ -87,3 +87,5 @@ export function useInstallPWA() {
   const showButton = !isStandalone && deferredPrompt !== null
   return { install, showButton }
 }
+
+export { useInstallPWA }

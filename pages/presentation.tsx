@@ -4,13 +4,11 @@ import { useRouter } from 'next/router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
-import type Hymn from '@/types/hymn'
+import { HYMNBOOKS } from '@/utils/constants'
 import { getQueryParam } from '@/utils/queryParam'
-import { booksList } from '@/utils/books'
+import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/pages/presentation.module.scss'
-
-const VALID_BOOKS = new Set(booksList(true))
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
@@ -36,7 +34,7 @@ export default function PresentationPage() {
     setOverlay((prev) => (prev === mode ? null : mode))
   }, [])
 
-  const handleInit = useCallback(
+  const loadHymn = useCallback(
     async (book: string, title: string, signal: AbortSignal) => {
       try {
         const { data } = await axios.get(`/database/${book}.json`, {
@@ -59,9 +57,9 @@ export default function PresentationPage() {
 
         setOrder(hymnOrder)
         setSlide(foundHymn.song.title.includes('IC') ? 1 : 0)
-      } catch (error) {
-        if (axios.isCancel(error)) return
-        console.error(error)
+      } catch (err) {
+        if (axios.isCancel(err)) return
+        console.error(err)
         router.replace('/404')
       }
     },
@@ -74,34 +72,34 @@ export default function PresentationPage() {
     const title = getQueryParam(router.query, 'title')
 
     if (!book || !title) return
-    if (!VALID_BOOKS.has(book)) {
+    if (!HYMNBOOKS.includes(book)) {
       router.replace('/404')
       return
     }
 
     const abortController = new AbortController()
-    handleInit(book, title, abortController.signal)
+    loadHymn(book, title, abortController.signal)
     return () => abortController.abort()
-  }, [router, router.isReady, router.query.book, router.query.title, handleInit])
+  }, [router, router.isReady, router.query.book, router.query.title, loadHymn])
 
   useEffect(() => {
     isPopupRef.current = !!localStorage.getItem('presWindow')
 
-    const cleanupPresWindow = () => localStorage.removeItem('presWindow')
+    const clearPresWindow = () => localStorage.removeItem('presWindow')
 
     // Handle browser-initiated fullscreen exit (e.g. user presses F11/Esc outside our controls)
-    const fullscreenChangeHandler = () => {
+    const fullscreenChangeEvent = () => {
       if (!document.fullscreenElement && !isClosingRef.current) router.back()
     }
 
-    window.addEventListener('beforeunload', cleanupPresWindow)
-    window.addEventListener('pagehide', cleanupPresWindow)
-    document.addEventListener('fullscreenchange', fullscreenChangeHandler)
+    window.addEventListener('beforeunload', clearPresWindow)
+    window.addEventListener('pagehide', clearPresWindow)
+    document.addEventListener('fullscreenchange', fullscreenChangeEvent)
 
     return () => {
-      window.removeEventListener('beforeunload', cleanupPresWindow)
-      window.removeEventListener('pagehide', cleanupPresWindow)
-      document.removeEventListener('fullscreenchange', fullscreenChangeHandler)
+      window.removeEventListener('beforeunload', clearPresWindow)
+      window.removeEventListener('pagehide', clearPresWindow)
+      document.removeEventListener('fullscreenchange', fullscreenChangeEvent)
     }
   }, [router])
 
@@ -207,7 +205,7 @@ export default function PresentationPage() {
 
   useEffect(() => {
     const mouseMoveEvent = (event: MouseEvent) => {
-      if ((event.movementX && event.movementY) === 0) return
+      if (event.movementX === 0 && event.movementY === 0) return
       if (!readyRef.current) return
 
       setShowCursor(true)
@@ -221,12 +219,12 @@ export default function PresentationPage() {
     }
 
     // Prevent space from activating focused buttons
-    const handleKeydown = (event: KeyboardEvent) => {
+    const keydownEvent = (event: KeyboardEvent) => {
       if (event.key === ' ') event.preventDefault()
     }
 
     // Keyboard navigation
-    const handleKeyup = (event: KeyboardEvent) => {
+    const keyupEvent = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
         return
       }
@@ -245,11 +243,11 @@ export default function PresentationPage() {
     // Touch swipe navigation
     let startPosition = 0
 
-    const handleTouchStart = (event: TouchEvent) => {
+    const touchStartEvent = (event: TouchEvent) => {
       startPosition = event.touches[0].clientX
     }
 
-    const handleTouchEnd = (event: TouchEvent) => {
+    const touchEndEvent = (event: TouchEvent) => {
       if (overlay) return
       const endPosition = event.changedTouches[0].clientX - startPosition
 
@@ -258,17 +256,17 @@ export default function PresentationPage() {
     }
 
     document.addEventListener('mousemove', mouseMoveEvent)
-    document.addEventListener('keydown', handleKeydown)
-    document.addEventListener('keyup', handleKeyup)
-    document.addEventListener('touchstart', handleTouchStart)
-    document.addEventListener('touchend', handleTouchEnd)
+    document.addEventListener('keydown', keydownEvent)
+    document.addEventListener('keyup', keyupEvent)
+    document.addEventListener('touchstart', touchStartEvent)
+    document.addEventListener('touchend', touchEndEvent)
 
     return () => {
       document.removeEventListener('mousemove', mouseMoveEvent)
-      document.removeEventListener('keydown', handleKeydown)
-      document.removeEventListener('keyup', handleKeyup)
-      document.removeEventListener('touchstart', handleTouchStart)
-      document.removeEventListener('touchend', handleTouchEnd)
+      document.removeEventListener('keydown', keydownEvent)
+      document.removeEventListener('keyup', keyupEvent)
+      document.removeEventListener('touchstart', touchStartEvent)
+      document.removeEventListener('touchend', touchEndEvent)
     }
   }, [overlay, prevSlide, nextSlide, alwaysShowCursor, closePresentation])
 

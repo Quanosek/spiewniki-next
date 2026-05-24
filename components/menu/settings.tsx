@@ -2,26 +2,13 @@ import Image from 'next/image'
 import { useEffect, useState, useCallback, ReactElement, useRef } from 'react'
 import { useTheme } from 'next-themes'
 
-import { hiddenMenuQuery } from './_handler'
-import { THEMES } from '@/utils/enums'
+import { DEFAULT_SETTINGS, THEMES } from '@/utils/constants'
+
+import { setMenuQuery } from './_handler'
 
 import styles from '@/styles/components/menu.module.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
-
-interface Settings {
-  fontSize: number
-  showChords: boolean
-  contextSearch: boolean
-  quickSearch: boolean
-}
-
-export const defaultSettings = {
-  fontSize: 21,
-  showChords: false,
-  contextSearch: true,
-  quickSearch: unlocked,
-}
 
 export default function SettingsMenu() {
   const { theme, setTheme } = useTheme()
@@ -32,10 +19,17 @@ export default function SettingsMenu() {
   const [scrollStart, setScrollStart] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
 
-  const settings: Settings = JSON.parse(localStorage.getItem('settings') as string)
+  const settings = (() => {
+    try {
+      const raw = localStorage.getItem('settings')
+      return raw ? (JSON.parse(raw) as typeof DEFAULT_SETTINGS) : null
+    } catch {
+      return null
+    }
+  })()
 
-  const [{ fontSize, showChords, contextSearch, quickSearch }, setState] = useState(
-    settings || defaultSettings
+  const [{ fontSize, showChords, chordNotation, contextSearch, quickSearch }, setState] = useState(
+    settings || DEFAULT_SETTINGS
   )
 
   const saveSettings = useCallback(() => {
@@ -44,11 +38,12 @@ export default function SettingsMenu() {
       JSON.stringify({
         fontSize,
         showChords,
+        chordNotation,
         contextSearch,
         quickSearch,
       })
     )
-  }, [fontSize, showChords, contextSearch, quickSearch])
+  }, [fontSize, showChords, chordNotation, contextSearch, quickSearch])
 
   useEffect(() => {
     saveSettings()
@@ -121,7 +116,7 @@ export default function SettingsMenu() {
   }: {
     title: string
     description: string
-    name: keyof Settings
+    name: keyof typeof DEFAULT_SETTINGS
     state: boolean
   }) => (
     <div className={styles.toggle}>
@@ -148,6 +143,54 @@ export default function SettingsMenu() {
     </div>
   )
 
+  const ChordsNotationSelector = () => {
+    const options: { label: string; value: typeof DEFAULT_SETTINGS.chordNotation }[] = [
+      { label: 'Środkowoeuropejska', value: 'centralEuropean' },
+      { label: 'Tradycyjna', value: 'germanTraditional' },
+      { label: 'Anglosaska', value: 'angloSaxon' },
+    ]
+
+    return (
+      <div className={styles.notationSelector}>
+        <p className={styles.notationLabel}>Wybrana notacja akordów:</p>
+
+        <div className={styles.notationOptions}>
+          {options.map((opt) => (
+            <label key={opt.value} className={chordNotation === opt.value ? styles.active : ''}>
+              <input
+                type='radio'
+                name='chord-notation'
+                value={opt.value}
+                checked={chordNotation === opt.value}
+                onChange={() => setState((prev) => ({ ...prev, chordNotation: opt.value }))}
+              />
+              <span>
+                {opt.value === 'centralEuropean' && (
+                  <>
+                    <b>C</b>, <b>Cism</b>, <b>H</b>, <b>B</b>
+                  </>
+                )}
+
+                {opt.value === 'germanTraditional' && (
+                  <>
+                    <b>C</b>, <b>cis</b>, <b>H</b>, <b>h</b>
+                  </>
+                )}
+
+                {opt.value === 'angloSaxon' && (
+                  <>
+                    <b>C</b>, <b>C♯m</b>, <b>B</b>, <b>B♭</b>
+                  </>
+                )}
+              </span>
+              <small>{opt.label}</small>
+            </label>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <h2>Ustawienia</h2>
@@ -156,8 +199,7 @@ export default function SettingsMenu() {
         {/* THEME COLOR */}
         <div className={styles.settingsSection}>
           <h3>Motyw kolorów:</h3>
-
-          {unlocked ? Themes(THEMES) : Themes(['light', 'dark', 'system'])}
+          {Themes(THEMES)}
         </div>
 
         {/* FONT SIZE */}
@@ -198,6 +240,8 @@ export default function SettingsMenu() {
             state: showChords,
           })}
 
+          {unlocked && showChords && <ChordsNotationSelector />}
+
           {ToggleSwitch({
             title: 'Rozszerzone wyszukiwanie',
             description:
@@ -225,14 +269,14 @@ export default function SettingsMenu() {
               return
             }
 
-            setState({ ...defaultSettings })
+            setState({ ...DEFAULT_SETTINGS })
             setTheme(defaultTheme)
           }}
         >
           <p>Przywróć domyślne</p>
         </button>
 
-        <button onClick={() => hiddenMenuQuery(undefined)}>
+        <button onClick={() => setMenuQuery(undefined)}>
           <p>Zamknij</p>
         </button>
       </div>

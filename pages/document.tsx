@@ -4,13 +4,11 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-import { slugifyText } from '@/utils/simplifyText'
 import { getQueryParam } from '@/utils/queryParam'
+import { slugifyText } from '@/utils/simplifyText'
 import { useOnlineStatus } from '@/utils/useOnlineStatus'
 
 import styles from '@/styles/pages/document.module.scss'
-
-// const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export interface DocumentPageProps {
   libraryPath: string
@@ -39,6 +37,13 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
     if (d && d.trim()) {
       setDocumentPath(`/pdf/${slugifyText(d)}.pdf`)
     } else if (book && book.trim() && id && id.trim()) {
+      const isSafeSegment = (value: string) => /^[A-Za-z0-9_-]+$/.test(value)
+
+      if (!isSafeSegment(book) || !isSafeSegment(id)) {
+        router.replace('/404')
+        return
+      }
+
       setDocumentPath(`/pdf/${book}/${id}.pdf`)
     } else {
       router.back()

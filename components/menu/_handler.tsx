@@ -13,7 +13,7 @@ const MENU_MODULES = {
 type MenuName = keyof typeof MENU_MODULES
 
 // Menu navigation via hidden query param
-export function hiddenMenuQuery(name: string | undefined) {
+export function setMenuQuery(name: string | undefined) {
   const params = { ...Router.query }
   delete params.menu
 
@@ -27,7 +27,7 @@ export function hiddenMenuQuery(name: string | undefined) {
   )
 }
 
-export default function MenuComponent() {
+export default function Menu() {
   const router = useRouter()
   const { menu, ...params } = router.query
 
@@ -46,13 +46,13 @@ export default function MenuComponent() {
         return
       }
 
-      if (e.key === 'Escape') hiddenMenuQuery(undefined)
+      if (e.key === 'Escape') setMenuQuery(undefined)
     }
 
-    document.addEventListener('scroll', scrollEvent)
+    window.addEventListener('scroll', scrollEvent)
     document.addEventListener('keyup', keyupEvent)
     return () => {
-      document.removeEventListener('scroll', scrollEvent)
+      window.removeEventListener('scroll', scrollEvent)
       document.removeEventListener('keyup', keyupEvent)
     }
   }, [router, menu, params])
@@ -65,7 +65,7 @@ export default function MenuComponent() {
         ? dynamic(
             () =>
               MENU_MODULES[menuName]().catch(() => {
-                hiddenMenuQuery(undefined)
+                setMenuQuery(undefined)
                 return { default: () => null }
               }),
             {
@@ -86,7 +86,7 @@ export default function MenuComponent() {
         transition: '100ms ease-out',
       }}
     >
-      <div className={styles.menuBackground} onClick={() => hiddenMenuQuery(undefined)} />
+      <div className={styles.menuBackground} onClick={() => setMenuQuery(undefined)} />
 
       {menuName && DynamicComponent && (
         <div className={styles.menuHandler}>

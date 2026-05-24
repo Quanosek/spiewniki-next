@@ -1,4 +1,3 @@
-// Strip Polish diacritics and lowercase
 const normalizeText = (text: string) => {
   return text
     .toLowerCase()

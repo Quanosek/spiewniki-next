@@ -4,13 +4,12 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import axios from 'axios'
 
-import { bookShortcut, booksList } from '@/utils/books'
+import { HYMNBOOKS } from '@/utils/constants'
+import { getBookShortcut } from '@/utils/getBookShortcut'
 
-import { hiddenMenuQuery } from './_handler'
+import { setMenuQuery } from './_handler'
 
 import styles from '@/styles/components/menu.module.scss'
-
-const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 interface Favorite {
   book: string
@@ -22,7 +21,14 @@ interface Favorite {
 export default function FavoritesMenu() {
   const router = useRouter()
 
-  const favoritesData = JSON.parse(localStorage.getItem('favorites') as string)
+  const favoritesData = (() => {
+    try {
+      const raw = localStorage.getItem('favorites')
+      return raw ? (JSON.parse(raw) as Favorite[]) : null
+    } catch {
+      return null
+    }
+  })()
   const [favorites, setFavorites] = useState<Favorite[]>(favoritesData || [])
 
   const [elemHovered, setElemHovered] = useState<number>()
@@ -72,10 +78,7 @@ export default function FavoritesMenu() {
                       numeric: true,
                     })
                   })
-                  sortedItems.sort(
-                    (a, b) =>
-                      booksList(unlocked).indexOf(a.book) - booksList(unlocked).indexOf(b.book)
-                  )
+                  sortedItems.sort((a, b) => HYMNBOOKS.indexOf(a.book) - HYMNBOOKS.indexOf(b.book))
                 }
 
                 setFavorites(sortedItems)
@@ -117,7 +120,7 @@ export default function FavoritesMenu() {
                 onClick={async () => {
                   try {
                     // Validate book
-                    if (!booksList(unlocked).includes(fav.book)) {
+                    if (!HYMNBOOKS.includes(fav.book)) {
                       removeFromList(index)
                       throw new Error()
 
@@ -148,7 +151,7 @@ export default function FavoritesMenu() {
 
                 <div className={styles.info}>
                   <p>
-                    {bookShortcut(fav.book)}
+                    {getBookShortcut(fav.book)}
                     {' • '}
                     <span>
                       {new Date(fav.timestamp).toLocaleString('pl-PL', {
@@ -201,7 +204,7 @@ export default function FavoritesMenu() {
           <p>Wyczyść listę</p>
         </button>
 
-        <button onClick={() => hiddenMenuQuery(undefined)}>
+        <button onClick={() => setMenuQuery(undefined)}>
           <p>Zamknij</p>
         </button>
       </div>

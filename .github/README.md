@@ -34,7 +34,11 @@ A comprehensive frontend application using PWA technology to display religious h
 If this project has been helpful to you, you can buy me a coffee as a thank you for the work invested.
 
 <a href="https://buycoffee.to/kubaklalo">
-  <img alt="Buy me a coffee" src="https://storagebuycoffeeprod.blob.core.windows.net/content-files/Logo/0197ef01-0531-46ad-b782-1ea5a5bca0b7.png" height="32" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./buycoffee-light.png">
+    <source media="(prefers-color-scheme: light)" srcset="./buycoffee-dark.png">
+    <img alt="Buy me a coffee" src="./buycoffee-dark.png" height="50" />
+  </picture>
 </a>
 
-<strong>Thank you for any support! 🙏</strong>
+**Thank you for any support! 🙏**

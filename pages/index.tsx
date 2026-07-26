@@ -193,7 +193,7 @@ export default function HomePage() {
               <p>Pokaż wszystkie śpiewniki</p>
             </Link>
           ) : (
-            <Link href='/search?book=M' className={styles.moreButton}>
+            <Link href='/search?book=IC' className={styles.moreButton}>
               <p>Śpiewnik Międzynarodowy (IC)</p>
             </Link>
           )}

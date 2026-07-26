@@ -18,7 +18,7 @@ const DEFAULT_SETTINGS: {
 
 const EXCLUDED_HYMNS = ['359a.', '389a.', '392a.', '394a.', '397a.', '418a.', '425a.', '484a.']
 
-const HYMNBOOKS = unlocked ? ['B', 'C', 'N', 'K', 'P', 'M', 'E', 'S', 'R'] : ['B', 'C', 'N', 'M']
+const HYMNBOOKS = unlocked ? ['B', 'C', 'N', 'K', 'P', 'IC', 'E', 'S', 'R'] : ['B', 'C', 'N', 'IC']
 
 const PDF_BOOKS = ['B', 'C', 'N', 'E']
 

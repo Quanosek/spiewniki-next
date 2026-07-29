@@ -5,8 +5,23 @@ import withPWAInit from '@ducanh2912/next-pwa'
 const excludedIconsArray = ['download.svg', 'filter.svg', 'play.svg']
 const excludedIcons = excludedIconsArray.map((icon) => `!icons/${icon}`)
 
-const excludedBooks = ['K', 'P', 'E', 'S', 'R']
-const excludedList = excludedBooks.map((book) => `!database/${book}.json`)
+const excludedBooks = ['K', 'P', 'E', 'M', 'S', 'R']
+const bookShortcutToName = {
+  B: 'Pieśni Brzasku Tysiąclecia',
+  C: 'Uwielbiajmy Pana (Cegiełki)',
+  N: 'Śpiewajcie Panu Pieśń Nową',
+  K: 'Śpiewnik Koziański',
+  P: 'Śpiewnik Poznański',
+  E: 'Śpiewniczek Młodzieżowy',
+  IC: 'Śpiewnik Międzynarodowy (IC)',
+  M: 'Chór Międzynarodowy (IC)',
+  S: 'Pieśni Chóru Syloe',
+  R: 'Różne pieśni',
+}
+const excludedList = excludedBooks.map((book) => {
+  if (book === 'M') return `!database/${bookShortcutToName[book]}/**/*`
+  return `!database/${bookShortcutToName[book]}.json`
+})
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 const ONE_WEEK_SECONDS = 7 * 24 * 60 * 60

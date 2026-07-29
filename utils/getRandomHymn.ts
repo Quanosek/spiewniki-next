@@ -1,10 +1,9 @@
-import axios from 'axios'
-
 import type Hymn from '@/types/hymn'
 
 import { getBookShortcut } from './getBookShortcut'
 import { HYMNBOOKS } from './constants'
 import { isHymnAccessible } from './hymnValidation'
+import { fetchBookHymns } from './hymnDatabase'
 
 const getRandomHymn = async (book?: string) => {
   try {
@@ -12,15 +11,11 @@ const getRandomHymn = async (book?: string) => {
 
     if (!book) {
       // Fetch all hymnbooks
-      const responses = await Promise.all(
-        HYMNBOOKS.map((bookName) => axios.get(`/database/${bookName}.json`))
-      )
-
-      hymns = responses.flatMap((response) => response?.data ?? [])
+      const responses = await Promise.all(HYMNBOOKS.map((bookName) => fetchBookHymns(bookName)))
+      hymns = responses.flat()
     } else {
       // Fetch specific hymnbook
-      const { data } = await axios.get(`/database/${book}.json`)
-      hymns = data
+      hymns = await fetchBookHymns(book)
     }
 
     // Filter hymns based on accessibility and select a random one

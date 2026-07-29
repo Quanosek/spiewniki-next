@@ -28,6 +28,7 @@ export default function SearchResult({
 
   const book = getBookShortcut(hymn.book)
   const title = hymn.name
+  const collection = hymn.collection
 
   const [resultHovered, setResultHovered] = useState(false)
 
@@ -49,12 +50,17 @@ export default function SearchResult({
 
       router.push({
         pathname: '/presentation',
-        query: { book, title },
+        query: {
+          book,
+          title,
+          ...(collection ? { collection } : {}),
+        },
       })
     } else {
       const params = new URLSearchParams()
       params.append('book', book)
       params.append('title', title)
+      if (collection) params.append('collection', collection)
 
       window.open(`/presentation?${params.toString()}`, 'presentation', 'width=960,height=540')
 
@@ -69,13 +75,19 @@ export default function SearchResult({
 
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
 
-    const newFavorites = favorites.filter((elem: { book: string; id: number }) => {
-      return elem.book !== book || elem.id !== hymn.id
-    })
+    const newFavorites = favorites.filter(
+      (elem: { book: string; id: number; collection?: string }) => {
+        return (
+          elem.book !== book ||
+          elem.id !== hymn.id ||
+          (elem.collection || '') !== (collection || '')
+        )
+      }
+    )
 
     localStorage.setItem('favorites', JSON.stringify(newFavorites))
     setFavoritesState((prev) => ({ ...prev, [hymn.dedupeKey]: false }))
-  }, [book, hymn, setFavoritesState])
+  }, [book, collection, hymn, setFavoritesState])
 
   return (
     <div
@@ -84,7 +96,14 @@ export default function SearchResult({
       onMouseLeave={() => setResultHovered(false)}
     >
       <Link
-        href={{ pathname: '/hymn', query: { book, title } }}
+        href={{
+          pathname: '/hymn',
+          query: {
+            book,
+            title,
+            ...(collection ? { collection } : {}),
+          },
+        }}
         className={styles.result}
         onClick={saveSearchState}
       >

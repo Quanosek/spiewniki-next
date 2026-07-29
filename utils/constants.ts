@@ -18,7 +18,9 @@ const DEFAULT_SETTINGS: {
 
 const EXCLUDED_HYMNS = ['359a.', '389a.', '392a.', '394a.', '397a.', '418a.', '425a.', '484a.']
 
-const HYMNBOOKS = unlocked ? ['B', 'C', 'N', 'K', 'P', 'IC', 'E', 'S', 'R'] : ['B', 'C', 'N', 'IC']
+const HYMNBOOKS = unlocked
+  ? ['B', 'C', 'N', 'K', 'P', 'M', 'IC', 'E', 'S', 'R']
+  : ['B', 'C', 'N', 'IC']
 
 const PDF_BOOKS = ['B', 'C', 'N', 'E']
 
@@ -26,7 +28,7 @@ const SEARCH_PREFIXES = [null, '@', '#']
 
 const SHOW_MP3 = ['N']
 
-const SHOW_PDF = ['B', 'C', 'N', 'S', 'R']
+const SHOW_PDF = ['B', 'C', 'N', 'M', 'S', 'R']
 
 const THEMES = unlocked
   ? [

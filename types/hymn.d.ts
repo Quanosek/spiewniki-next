@@ -38,6 +38,7 @@ export default interface Hymn {
 
 export interface ProcessedHymn extends Omit<Hymn, 'song'> {
   song: Hymn['song']
+  collection?: string
   matchPosition?: number
   matchType?: 'name' | 'lyrics' | 'author' | 'keywords'
   lyrics?: string[]

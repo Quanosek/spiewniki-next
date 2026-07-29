@@ -2,10 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import axios from 'axios'
 
 import { HYMNBOOKS } from '@/utils/constants'
 import { getBookShortcut } from '@/utils/getBookShortcut'
+import { fetchBookHymns } from '@/utils/hymnDatabase'
 
 import { setMenuQuery } from './_handler'
 
@@ -15,6 +15,7 @@ interface Favorite {
   book: string
   id: number
   title: string
+  collection?: string
   timestamp: number
 }
 
@@ -115,7 +116,11 @@ export default function FavoritesMenu() {
               <Link
                 href={{
                   pathname: '/hymn',
-                  query: { book: fav.book, title: fav.title },
+                  query: {
+                    book: fav.book,
+                    title: fav.title,
+                    ...(fav.collection ? { collection: fav.collection } : {}),
+                  },
                 }}
                 onClick={async () => {
                   try {
@@ -126,7 +131,7 @@ export default function FavoritesMenu() {
 
                       // Validate title
                     } else {
-                      const { data } = await axios.get(`/database/${fav.book}.json`)
+                      const data = await fetchBookHymns(fav.book, fav.collection)
 
                       if (
                         !data.find((elem: { name: string }) => {
@@ -151,7 +156,9 @@ export default function FavoritesMenu() {
 
                 <div className={styles.info}>
                   <p>
-                    {getBookShortcut(fav.book)}
+                    {fav.collection
+                      ? `${getBookShortcut(fav.book)} • ${fav.collection}`
+                      : getBookShortcut(fav.book)}
                     {' • '}
                     <span>
                       {new Date(fav.timestamp).toLocaleString('pl-PL', {

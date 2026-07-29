@@ -2,10 +2,10 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import axios from 'axios'
 
 import { HYMNBOOKS } from '@/utils/constants'
 import { getQueryParam } from '@/utils/queryParam'
+import { fetchBookHymns } from '@/utils/hymnDatabase'
 import type Hymn from '@/types/hymn'
 
 import styles from '@/styles/pages/presentation.module.scss'
@@ -35,12 +35,10 @@ export default function PresentationPage() {
   }, [])
 
   const loadHymn = useCallback(
-    async (book: string, title: string, signal: AbortSignal) => {
+    async (book: string, title: string, collection: string | undefined, signal: AbortSignal) => {
       try {
-        const { data } = await axios.get(`/database/${book}.json`, {
-          signal,
-          timeout: 8000,
-        })
+        const data = await fetchBookHymns(book, collection, signal)
+        if (signal.aborted) return
 
         const foundHymn = data.find((elem: { name: string }) => elem.name === title)
 
@@ -58,7 +56,7 @@ export default function PresentationPage() {
         setOrder(hymnOrder)
         setSlide(foundHymn.song.title.includes('IC') ? 1 : 0)
       } catch (err) {
-        if (axios.isCancel(err)) return
+        if (signal.aborted) return
         console.error(err)
         router.replace('/404')
       }
@@ -70,6 +68,7 @@ export default function PresentationPage() {
     if (!router.isReady) return
     const book = getQueryParam(router.query, 'book')
     const title = getQueryParam(router.query, 'title')
+    const collection = getQueryParam(router.query, 'collection')
 
     if (!book || !title) return
     if (!HYMNBOOKS.includes(book)) {
@@ -78,9 +77,16 @@ export default function PresentationPage() {
     }
 
     const abortController = new AbortController()
-    loadHymn(book, title, abortController.signal)
+    loadHymn(book, title, collection, abortController.signal)
     return () => abortController.abort()
-  }, [router, router.isReady, router.query.book, router.query.title, loadHymn])
+  }, [
+    router,
+    router.isReady,
+    router.query.book,
+    router.query.title,
+    router.query.collection,
+    loadHymn,
+  ])
 
   useEffect(() => {
     isPopupRef.current = !!localStorage.getItem('presWindow')

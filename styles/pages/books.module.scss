@@ -150,6 +150,141 @@
   }
 }
 
+.bookAccordion {
+  width: 100%;
+}
+
+.accordionToggle {
+  margin: var(--space);
+  padding: 1rem 1.25rem;
+  width: calc(100% - var(--space) * 2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: calc(var(--radius) - var(--space));
+  background-color: transparent;
+  transition: background-color 100ms ease-out;
+
+  &:hover {
+    background-color: var(--elements-hover);
+  }
+
+  h2 {
+    margin: 0;
+    text-align: left;
+  }
+
+  @media (max-width: 768px) {
+    margin: 0;
+    width: 100%;
+  }
+
+  @media (max-width: 425px) {
+    padding: 3.5vw 4.5vw;
+  }
+}
+
+.chevron {
+  transition: transform 160ms ease-out;
+
+  @media (max-width: 768px) {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (max-width: 425px) {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.expanded {
+  transform: rotate(180deg);
+}
+
+.collectionsList {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 calc(var(--space) * 2);
+  transform: translateY(-6px);
+  transition:
+    max-height 260ms ease,
+    opacity 180ms ease,
+    transform 220ms ease;
+}
+
+.open {
+  opacity: 1;
+  max-height: 520px;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.collectionRow {
+  position: relative;
+  width: 100%;
+}
+
+.collectionItem {
+  margin: var(--space) !important;
+  padding: 1rem 1.25rem !important;
+  border-radius: calc(var(--radius) - var(--space));
+  background-color: transparent;
+
+  &:hover {
+    background-color: var(--elements-hover);
+  }
+
+  h2 {
+    margin: 0;
+    padding-left: 0.85rem;
+    width: calc(100% - 130px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 100%;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    margin: 0 !important;
+    border-radius: 0;
+
+    h2 {
+      padding-left: 0.65rem;
+      width: calc(100% - 55px);
+    }
+  }
+
+  @media (max-width: 425px) {
+    padding: 3.5vw 4.5vw !important;
+  }
+}
+
+.collectionKoncertTitle {
+  padding-left: 0;
+
+  @media (max-width: 425px) {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .collectionsList {
+    padding: 0 0 calc(var(--space) * 2);
+  }
+}
+
+@media (max-width: 425px) {
+  .collectionsList {
+    padding: 0 0 calc(var(--space) * 2);
+  }
+}
+
 .result {
   h2,
   p {

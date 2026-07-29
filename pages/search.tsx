@@ -3,7 +3,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import axios from 'axios'
 
 import HamburgerIcon from '@/components/hamburger-icon'
 import MenuModal from '@/components/menu-modal'
@@ -15,15 +14,20 @@ import SearchBox from '@/components/search/search-box'
 import { DEFAULT_SETTINGS, HYMNBOOKS, SEARCH_PREFIXES } from '@/utils/constants'
 import { getBookShortcut } from '@/utils/getBookShortcut'
 import { getRandomHymn } from '@/utils/getRandomHymn'
+import { fetchBookHymns, type HymnWithCollection } from '@/utils/hymnDatabase'
 import { isHymnAccessible } from '@/utils/hymnValidation'
 import { getQueryParam } from '@/utils/queryParam'
 import { normalizeText } from '@/utils/simplifyText'
 
-import Hymn, { ProcessedHymn } from '@/types/hymn'
+import { ProcessedHymn } from '@/types/hymn'
 
 import styles from '@/styles/pages/search.module.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
+const getSearchCacheKey = (book?: string, collection?: string) => {
+  return `searchCache_${book || 'all'}_${collection || 'all'}`
+}
 
 const matchNames = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
   const formattedName = normalizeText(hymn.name)
@@ -143,7 +147,7 @@ const hasLetterSuffix = (value: string) => {
 }
 
 // Map raw hymn to searchable format
-const mapHymn = (hymn: Hymn): ProcessedHymn => {
+const mapHymn = (hymn: HymnWithCollection): ProcessedHymn => {
   let lyricsPlain: string[]
 
   if (unlocked) {
@@ -198,7 +202,7 @@ const mapHymn = (hymn: Hymn): ProcessedHymn => {
 
   return {
     ...hymn,
-    dedupeKey: `${getBookShortcut(hymn.book)}|${hymn.name}`,
+    dedupeKey: `${getBookShortcut(hymn.book)}|${hymn.collection || ''}|${hymn.name}`,
     numberPrefix: numberPrefix(hymn.name),
     hasLetterSuffix: hasLetterSuffix(hymn.name),
     lyricsPlain,
@@ -210,6 +214,7 @@ const mapHymn = (hymn: Hymn): ProcessedHymn => {
 export default function SearchPage() {
   const router = useRouter()
   const book = getQueryParam(router.query, 'book')
+  const collection = getQueryParam(router.query, 'collection')
 
   const [localSettings, setLocalSettings] = useState<typeof DEFAULT_SETTINGS>()
 
@@ -293,7 +298,7 @@ export default function SearchPage() {
 
       // Cache for instant restore
       try {
-        const cacheKey = `searchCache_${book || 'all'}`
+        const cacheKey = getSearchCacheKey(book, collection)
         sessionStorage.setItem(cacheKey, JSON.stringify(result))
       } catch {
         // Ignore
@@ -302,7 +307,7 @@ export default function SearchPage() {
       const durationMs = performance.now() - startTime
       setSearchDuration(durationMs)
     },
-    [localSettings, book]
+    [localSettings, book, collection]
   )
 
   const searchRef =
@@ -332,11 +337,14 @@ export default function SearchPage() {
         prevSearch?.prefix === '#'
       if (!hasSavedSearch) return
 
-      // Skip restore on book change
-      const urlBook = new URLSearchParams(window.location.search).get('book') || undefined
+      // Skip restore on book/collection change
+      const urlParams = new URLSearchParams(window.location.search)
+      const urlBook = urlParams.get('book') || undefined
+      const urlCollection = urlParams.get('collection') || undefined
       if ((prevSearch?.book || undefined) !== urlBook) return
+      if ((prevSearch?.collection || undefined) !== urlCollection) return
 
-      const cacheKey = `searchCache_${prevSearch?.book || 'all'}`
+      const cacheKey = getSearchCacheKey(prevSearch?.book, prevSearch?.collection)
       const cached = sessionStorage.getItem(cacheKey)
       if (!cached) return
 
@@ -379,7 +387,13 @@ export default function SearchPage() {
 
     // Restore previous search if quick search enabled
     const quickSearch = localSettings?.quickSearch || false
-    let prevSearch: { value?: string; prefix?: '@' | '#' | null; renderPage?: number } = {
+    let prevSearch: {
+      value?: string
+      prefix?: '@' | '#' | null
+      renderPage?: number
+      collection?: string
+      book?: string
+    } = {
       value: '',
     }
     try {
@@ -394,7 +408,7 @@ export default function SearchPage() {
       if (prevSearch?.renderPage) setRenderPage(prevSearch.renderPage)
     }
 
-    const loadData = (fetchData: Hymn[]) => {
+    const loadData = (fetchData: HymnWithCollection[]) => {
       const filteredData = fetchData.filter((hymn) => isHymnAccessible(hymn.name))
 
       const rawData = filteredData.map(mapHymn)
@@ -412,11 +426,8 @@ export default function SearchPage() {
     if (!book) {
       const fetchAllBooks = async () => {
         try {
-          const responses = await Promise.all(
-            HYMNBOOKS.map((bookName) => axios.get(`/database/${bookName}.json`))
-          )
-
-          loadData(responses.flatMap((response) => response.data))
+          const responses = await Promise.all(HYMNBOOKS.map((bookName) => fetchBookHymns(bookName)))
+          loadData(responses.flat())
         } catch (err) {
           console.error(err)
           router.push('/404')
@@ -425,15 +436,14 @@ export default function SearchPage() {
 
       fetchAllBooks()
     } else {
-      axios
-        .get(`/database/${book}.json`)
-        .then(({ data }) => loadData(data))
+      fetchBookHymns(book, collection)
+        .then((data) => loadData(data))
         .catch((err) => {
           console.error(err)
           router.push('/404')
         })
     }
-  }, [router, localSettings, book])
+  }, [router, localSettings, book, collection])
 
   // Re-run search after the input settles, but skip if we already have the same query.
   useEffect(() => {
@@ -523,19 +533,22 @@ export default function SearchPage() {
   }, [book, router])
 
   const currentBook = typeof router.query.book === 'string' ? router.query.book : undefined
+  const currentCollection =
+    typeof router.query.collection === 'string' ? router.query.collection : undefined
 
   const saveSearchState = useCallback(() => {
     localStorage.setItem(
       'prevSearch',
       JSON.stringify({
         book: currentBook,
+        collection: currentCollection,
         value: localSettings?.quickSearch ? inputValue : '',
         prefix: localSettings?.quickSearch ? activePrefix : null,
         scrollY: localSettings?.quickSearch ? window.scrollY : 0,
         renderPage: localSettings?.quickSearch ? renderPage : 0,
       })
     )
-  }, [activePrefix, currentBook, inputValue, localSettings, renderPage])
+  }, [activePrefix, currentBook, currentCollection, inputValue, localSettings, renderPage])
 
   // Handle favorite state for return hymns
   const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
@@ -548,8 +561,10 @@ export default function SearchPage() {
       data.map((hymn) => [
         hymn.dedupeKey,
         favorites.some(
-          (elem: { book: string; id: number }) =>
-            elem.book === getBookShortcut(hymn.book) && elem.id === hymn.id
+          (elem: { book: string; id: number; collection?: string }) =>
+            elem.book === getBookShortcut(hymn.book) &&
+            elem.id === hymn.id &&
+            (elem.collection || '') === (hymn.collection || '')
         ),
       ])
     )
@@ -571,7 +586,11 @@ export default function SearchPage() {
           if (hymn && inputValue) {
             router.push({
               pathname: '/hymn',
-              query: { book: getBookShortcut(hymn.book), title: hymn.name },
+              query: {
+                book: getBookShortcut(hymn.book),
+                title: hymn.name,
+                ...(hymn.collection ? { collection: hymn.collection } : {}),
+              },
             })
           } else {
             handleClear()
@@ -618,7 +637,19 @@ export default function SearchPage() {
             <p>Powrót</p>
           </Link>
 
-          {isLoading || <h1>{getBookShortcut(book || 'all')}</h1>}
+          {isLoading ||
+            (book === 'M' && collection ? (
+              <h1 className={styles.titleWithCollection}>
+                <span>{getBookShortcut(book)}</span>
+                <span>{collection}</span>
+              </h1>
+            ) : (
+              <h1>
+                {collection
+                  ? `${getBookShortcut(book || 'all')} • ${collection}`
+                  : getBookShortcut(book || 'all')}
+              </h1>
+            ))}
 
           {unlocked ? (
             <Link href='/books' title='Wybierz inny śpiewnik [B]'>
@@ -667,7 +698,7 @@ export default function SearchPage() {
                 const isFavorite = favoritesState[hymn.dedupeKey] || false
 
                 return (
-                  <div key={`${hymn.book}-${hymn.id}`}>
+                  <div key={`${hymn.book}-${hymn.collection || 'default'}-${hymn.id}`}>
                     <SearchResult
                       inputValue={inputValue}
                       hymn={hymn}

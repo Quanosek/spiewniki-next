@@ -13,12 +13,12 @@ import { detectHymnKey, detectHymnUseSharps, transposeChord } from '@/utils/chor
 import { DEFAULT_SETTINGS, SHOW_MP3, SHOW_PDF } from '@/utils/constants'
 import { getBookShortcut } from '@/utils/getBookShortcut'
 import { getRandomHymn } from '@/utils/getRandomHymn'
+import { fetchBookHymns, type HymnWithCollection } from '@/utils/hymnDatabase'
 import { isHymnAccessible } from '@/utils/hymnValidation'
 import { getQueryParam } from '@/utils/queryParam'
 import { shareButton } from '@/utils/shareButton'
 import { useOnlineStatus } from '@/utils/useOnlineStatus'
 
-import type Hymn from '@/types/hymn'
 import type { HymnDetail } from '@/types/hymn'
 
 import styles from '@/styles/pages/hymn.module.scss'
@@ -34,6 +34,7 @@ interface HymnFiles {
     book: string
     id: string
   }
+  collectionPdf?: string | null
 }
 
 export default function HymnPage() {
@@ -42,49 +43,60 @@ export default function HymnPage() {
 
   const book = getQueryParam(router.query, 'book')
   const title = getQueryParam(router.query, 'title')
+  const collection = getQueryParam(router.query, 'collection')
   const menu = getQueryParam(router.query, 'menu')
 
   const [hymn, setHymn] = useState<HymnDetail>()
+  const [hymnsInScope, setHymnsInScope] = useState<HymnWithCollection[]>([])
+  const [currentCollection, setCurrentCollection] = useState<string>()
 
   useEffect(() => {
     if (!(router.isReady && book && title)) return
 
     const abortController = new AbortController()
 
-    axios
-      .get(`/database/${book}.json`, { signal: abortController.signal })
-      .then(({ data }) => {
-        const hymn = data.find((elem: Hymn) => elem.name === title)
+    fetchBookHymns(book, collection, abortController.signal)
+      .then((data) => {
+        setHymnsInScope(data)
+
+        const hymn = data.find((elem: HymnWithCollection) => elem.name === title)
 
         if (!hymn) {
           router.push('/404')
           return
         }
 
-        hymn.lyrics = Object.values(hymn.song.lyrics)
+        setCurrentCollection(hymn.collection)
 
-        if (hymn.song.linked_songs) {
-          hymn.song.linked_songs = Object.values(hymn.song.linked_songs).map((song) => {
-            const songStr = song as string
-            const splitSong = songStr.split('\\')
+        const hymnDetail: HymnDetail = {
+          ...hymn,
+          lyrics: Object.values(hymn.song.lyrics),
+          song: {
+            ...hymn.song,
+            linked_songs: hymn.song.linked_songs
+              ? Object.values(hymn.song.linked_songs).map((song) => {
+                  const songStr = song as string
+                  const splitSong = songStr.split('\\')
 
-            return {
-              book: getBookShortcut(splitSong[0]),
-              title: splitSong[1],
-            }
-          })
+                  return {
+                    book: getBookShortcut(splitSong[0]),
+                    title: splitSong[1],
+                  }
+                })
+              : undefined,
+          },
         }
 
-        setHymn(hymn)
+        setHymn(hymnDetail)
       })
       .catch((err) => {
-        if (axios.isCancel(err)) return
+        if (abortController.signal.aborted) return
         console.error(err)
         router.push('/404')
       })
 
     return () => abortController.abort()
-  }, [router, book, title])
+  }, [router, book, title, collection])
 
   const [settings, setSettings] = useState(DEFAULT_SETTINGS)
 
@@ -176,12 +188,15 @@ export default function HymnPage() {
           localStorage.setItem('focusSearchBox', 'true')
         }
 
-        const { book } = parsed
+        const { book, collection } = parsed
 
         if (book) {
           router.push({
             pathname: '/search',
-            query: { book },
+            query: {
+              book,
+              ...(collection ? { collection } : {}),
+            },
           })
         } else router.push('/search')
       } else {
@@ -220,50 +235,31 @@ export default function HymnPage() {
   }, [])
 
   const handleChangeHymn = useCallback(
-    (id: number) => {
+    (direction: -1 | 1) => {
       if (!hymn) return
 
       resetPrevSearch()
 
-      if (id < 0) return
+      const scope = hymnsInScope.filter((elem) => isHymnAccessible(elem.name))
+      const currentIndex = scope.findIndex((elem) => {
+        return elem.name === hymn.name && (elem.collection || '') === (currentCollection || '')
+      })
 
-      const abortController = new AbortController()
+      if (currentIndex === -1) return
 
-      axios
-        .get(`/database/${getBookShortcut(hymn.book)}.json`, { signal: abortController.signal })
-        .then(({ data }) => {
-          if (id >= data.length) return
+      const targetHymn = scope[currentIndex + direction]
+      if (!targetHymn) return
 
-          const direction = id > hymn.id ? 1 : -1
-          let currentId = id
-          let targetHymn = null
-
-          while (currentId >= 0 && currentId < data.length) {
-            const candidate = data.find((elem: { id: number }) => elem.id === currentId)
-            if (candidate && isHymnAccessible(candidate.name)) {
-              targetHymn = candidate
-              break
-            }
-            currentId += direction
-          }
-
-          if (!targetHymn) return
-
-          router.push({
-            pathname: '/hymn',
-            query: {
-              book: getBookShortcut(targetHymn.book),
-              title: targetHymn.name,
-            },
-          })
-        })
-        .catch((err) => {
-          if (axios.isCancel(err)) return
-          console.error(err)
-          router.back()
-        })
+      router.push({
+        pathname: '/hymn',
+        query: {
+          book: getBookShortcut(targetHymn.book),
+          title: targetHymn.name,
+          ...(targetHymn.collection ? { collection: targetHymn.collection } : {}),
+        },
+      })
     },
-    [router, hymn, resetPrevSearch]
+    [router, hymn, hymnsInScope, currentCollection, resetPrevSearch]
   )
 
   const handleRandomHymn = useCallback(async () => {
@@ -288,9 +284,13 @@ export default function HymnPage() {
 
     router.push({
       pathname: '/presentation',
-      query: { book: getBookShortcut(hymn.book), title: hymn.name },
+      query: {
+        book: getBookShortcut(hymn.book),
+        title: hymn.name,
+        ...(currentCollection ? { collection: currentCollection } : {}),
+      },
     })
-  }, [hymn, router])
+  }, [hymn, router, currentCollection])
 
   const handleExternalPresentation = () => {
     if (!book || !title) return
@@ -298,6 +298,7 @@ export default function HymnPage() {
     const params = new URLSearchParams()
     params.append('book', book)
     params.append('title', title)
+    if (currentCollection) params.append('collection', currentCollection)
 
     window.open(`/presentation?${params.toString()}`, 'presentation', 'width=960,height=540')
 
@@ -313,14 +314,18 @@ export default function HymnPage() {
       const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
       const bookName = getBookShortcut(hymn.book)
       setIsFavorite(
-        favorites.some((elem: { book: string; id: number }) => {
-          return elem.book === bookName && elem.id === hymn.id
+        favorites.some((elem: { book: string; id: number; collection?: string }) => {
+          return (
+            elem.book === bookName &&
+            elem.id === hymn.id &&
+            (elem.collection || '') === (currentCollection || '')
+          )
         })
       )
     } catch (err) {
       console.error('Error parsing favorites:', err)
     }
-  }, [hymn, book])
+  }, [hymn, book, currentCollection])
 
   const handleToggleFavorite = useCallback(() => {
     if (!hymn) return
@@ -330,13 +335,21 @@ export default function HymnPage() {
       let favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
 
       if (
-        favorites.some((elem: { book: string; id: number }) => {
-          return elem.book === bookName && elem.id === hymn.id
+        favorites.some((elem: { book: string; id: number; collection?: string }) => {
+          return (
+            elem.book === bookName &&
+            elem.id === hymn.id &&
+            (elem.collection || '') === (currentCollection || '')
+          )
         })
       ) {
         setIsFavorite(false)
-        favorites = favorites.filter((elem: { book: string; id: number }) => {
-          return elem.book !== bookName || elem.id !== hymn.id
+        favorites = favorites.filter((elem: { book: string; id: number; collection?: string }) => {
+          return (
+            elem.book !== bookName ||
+            elem.id !== hymn.id ||
+            (elem.collection || '') !== (currentCollection || '')
+          )
         })
       } else {
         setIsFavorite(true)
@@ -345,6 +358,7 @@ export default function HymnPage() {
             book: bookName,
             id: hymn.id,
             title: hymn.name,
+            ...(currentCollection ? { collection: currentCollection } : {}),
             timestamp: Date.now(),
           },
         ].concat(favorites)
@@ -354,10 +368,11 @@ export default function HymnPage() {
     } catch (err) {
       console.error('Error handling favorites:', err)
     }
-  }, [hymn])
+  }, [hymn, currentCollection])
 
   const [hymnFiles, setHymnFiles] = useState<HymnFiles>({} as HymnFiles)
   const [isFilesLoading, setIsFilesLoading] = useState(true)
+  const collectionPdfName = hymnFiles.collectionPdf || null
 
   useEffect(() => {
     if (!hymn) return
@@ -365,16 +380,27 @@ export default function HymnPage() {
     setIsFilesLoading(true)
 
     axios
-      .get('/api/hymnFiles', { params: { book: hymn.book, title: hymn.song.title } })
+      .get('/api/hymnFiles', {
+        params: { book: hymn.book, title: hymn.song.title, collection: currentCollection },
+      })
       .then(({ data }) => setHymnFiles(data))
       .catch((err) => console.error(err))
       .finally(() => setIsFilesLoading(false))
-  }, [hymn])
+  }, [hymn, currentCollection])
 
   const handleDocument = useCallback(
-    (file?: HymnFiles['pdf']) => {
-      if (!file) return
+    (file?: HymnFiles['pdf'], collectionPdf?: string | null) => {
       if (!isOnline) return
+
+      if (collectionPdf) {
+        router.push({
+          pathname: '/document',
+          query: { d: collectionPdf },
+        })
+        return
+      }
+
+      if (!file) return
       const { book, id } = file
 
       router.push({ pathname: '/document', query: { book, id } })
@@ -411,8 +437,8 @@ export default function HymnPage() {
         router.push('/search')
       }
 
-      if (e.key === 'ArrowLeft') handleChangeHymn(hymn.id - 1)
-      if (e.key === 'ArrowRight') handleChangeHymn(hymn.id + 1)
+      if (e.key === 'ArrowLeft') handleChangeHymn(-1)
+      if (e.key === 'ArrowRight') handleChangeHymn(1)
 
       const key = e.key.toUpperCase()
 
@@ -420,7 +446,7 @@ export default function HymnPage() {
       if (unlocked && key === 'R') handleRandomHymn()
       if (key === 'P') handlePresentation()
       if (key === 'F') handleToggleFavorite()
-      if (key === 'D') handleDocument(hymnFiles.pdf)
+      if (key === 'D') handleDocument(hymnFiles.pdf, collectionPdfName)
       if (unlocked && key === 'M') handlePlay(hymnFiles.mp3)
       if (key === 'K') handlePrint()
       if (key === 'S') handleShare()
@@ -438,6 +464,7 @@ export default function HymnPage() {
     handlePresentation,
     handleToggleFavorite,
     hymnFiles,
+    collectionPdfName,
     handleDocument,
     handlePlay,
     handlePrint,
@@ -509,8 +536,11 @@ export default function HymnPage() {
                   </button>
                 )}
 
-                {hymnFiles.pdf && (
-                  <button onClick={() => handleDocument(hymnFiles.pdf)} disabled={!isOnline}>
+                {(hymnFiles.pdf || collectionPdfName) && (
+                  <button
+                    onClick={() => handleDocument(hymnFiles.pdf, collectionPdfName)}
+                    disabled={!isOnline}
+                  >
                     <Image
                       className='icon'
                       alt='pdf'
@@ -608,7 +638,7 @@ export default function HymnPage() {
                   <button
                     title='Przejdź do poprzedniej pieśni [←]'
                     className={hideControls ? styles.hide : ''}
-                    onClick={() => handleChangeHymn(hymn.id - 1)}
+                    onClick={() => handleChangeHymn(-1)}
                   >
                     <Image
                       className={`${styles.previous} icon`}
@@ -634,7 +664,7 @@ export default function HymnPage() {
                   <button
                     title='Przejdź do następnej pieśni [→]'
                     className={hideControls ? styles.hide : ''}
-                    onClick={() => handleChangeHymn(hymn.id + 1)}
+                    onClick={() => handleChangeHymn(1)}
                   >
                     <p>Następna</p>
                     <Image
@@ -651,7 +681,7 @@ export default function HymnPage() {
                 <div className={styles.controlsMobile}>
                   <button
                     className={hideControls ? styles.hide : ''}
-                    onClick={() => handleChangeHymn(hymn.id - 1)}
+                    onClick={() => handleChangeHymn(-1)}
                   >
                     <Image
                       className={`${styles.previous} icon`}
@@ -665,7 +695,7 @@ export default function HymnPage() {
 
                   <button
                     className={hideControls ? styles.hide : ''}
-                    onClick={() => handleChangeHymn(hymn.id + 1)}
+                    onClick={() => handleChangeHymn(1)}
                   >
                     <Image
                       className={`${styles.next} icon`}
@@ -743,10 +773,10 @@ export default function HymnPage() {
 
                 {SHOW_PDF.includes(book || '') && (
                   <button
-                    tabIndex={hymnFiles.pdf && isOnline ? 0 : -1}
+                    tabIndex={(hymnFiles.pdf || collectionPdfName) && isOnline ? 0 : -1}
                     title='Pokaż zapis nutowy wybranej pieśni [D]'
-                    className={hymnFiles.pdf && isOnline ? '' : 'disabled'}
-                    onClick={() => handleDocument(hymnFiles.pdf)}
+                    className={(hymnFiles.pdf || collectionPdfName) && isOnline ? '' : 'disabled'}
+                    onClick={() => handleDocument(hymnFiles.pdf, collectionPdfName)}
                   >
                     <Image
                       className='icon'
@@ -759,7 +789,7 @@ export default function HymnPage() {
                     <p>
                       {isFilesLoading
                         ? 'Ładowanie...'
-                        : hymnFiles.pdf
+                        : hymnFiles.pdf || collectionPdfName
                           ? 'Pokaż nuty'
                           : 'Brak pliku PDF'}
                     </p>

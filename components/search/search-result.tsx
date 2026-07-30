@@ -66,7 +66,7 @@ export default function SearchResult({
 
       localStorage.setItem('presWindow', 'true')
     }
-  }, [router, book, title])
+  }, [router, book, title, collection])
 
   const handleRemoveFavorite = useCallback(() => {
     if (!confirm('Czy chcesz usunąć wybraną pieśń z listy ulubionych?')) {

@@ -314,20 +314,35 @@ $button-gap: 12px;
     opacity: 0;
     position: absolute;
     top: 0;
-    padding: 1% 0;
+    margin: 0;
+    padding: 0;
     width: 100%;
-    background-color: var(--elements);
+    background-color: transparent;
     border-radius: 0 0 0.4rem 0.4rem;
-    font-size: 90%;
+    font-size: 86%;
     transition: 150ms ease-out;
 
     button {
       opacity: 0.85;
       width: 100%;
+      margin: 0;
+      border-radius: 0;
+      font-weight: 700;
+      filter: brightness(0.97) contrast(1.03);
+
+      &:hover,
+      &:focus-visible {
+        filter: brightness(1.03) contrast(1.04);
+      }
 
       p {
-        margin-left: calc(18px + $button-gap);
+        margin-left: calc(28px + $button-gap);
+        font-weight: 700;
       }
+    }
+
+    button:last-child {
+      border-radius: 0 0 0.4rem 0.4rem;
     }
 
     @media (min-width: 1025px) {

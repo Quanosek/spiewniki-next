@@ -34,7 +34,6 @@ interface HymnFiles {
     book: string
     id: string
   }
-  collectionPdf?: string | null
 }
 
 export default function HymnPage() {
@@ -372,7 +371,6 @@ export default function HymnPage() {
 
   const [hymnFiles, setHymnFiles] = useState<HymnFiles>({} as HymnFiles)
   const [isFilesLoading, setIsFilesLoading] = useState(true)
-  const collectionPdfName = hymnFiles.collectionPdf || null
 
   useEffect(() => {
     if (!hymn) return
@@ -389,18 +387,9 @@ export default function HymnPage() {
   }, [hymn, currentCollection])
 
   const handleDocument = useCallback(
-    (file?: HymnFiles['pdf'], collectionPdf?: string | null) => {
-      if (!isOnline) return
+    (file?: HymnFiles['pdf']) => {
+      if (!isOnline || !file) return
 
-      if (collectionPdf) {
-        router.push({
-          pathname: '/document',
-          query: { d: collectionPdf },
-        })
-        return
-      }
-
-      if (!file) return
       const { book, id } = file
 
       router.push({ pathname: '/document', query: { book, id } })
@@ -446,7 +435,7 @@ export default function HymnPage() {
       if (unlocked && key === 'R') handleRandomHymn()
       if (key === 'P') handlePresentation()
       if (key === 'F') handleToggleFavorite()
-      if (key === 'D') handleDocument(hymnFiles.pdf, collectionPdfName)
+      if (key === 'D') handleDocument(hymnFiles.pdf)
       if (unlocked && key === 'M') handlePlay(hymnFiles.mp3)
       if (key === 'K') handlePrint()
       if (key === 'S') handleShare()
@@ -464,7 +453,6 @@ export default function HymnPage() {
     handlePresentation,
     handleToggleFavorite,
     hymnFiles,
-    collectionPdfName,
     handleDocument,
     handlePlay,
     handlePrint,
@@ -536,11 +524,8 @@ export default function HymnPage() {
                   </button>
                 )}
 
-                {(hymnFiles.pdf || collectionPdfName) && (
-                  <button
-                    onClick={() => handleDocument(hymnFiles.pdf, collectionPdfName)}
-                    disabled={!isOnline}
-                  >
+                {hymnFiles.pdf && (
+                  <button onClick={() => handleDocument(hymnFiles.pdf)} disabled={!isOnline}>
                     <Image
                       className='icon'
                       alt='pdf'
@@ -773,10 +758,10 @@ export default function HymnPage() {
 
                 {SHOW_PDF.includes(book || '') && (
                   <button
-                    tabIndex={(hymnFiles.pdf || collectionPdfName) && isOnline ? 0 : -1}
+                    tabIndex={hymnFiles.pdf && isOnline ? 0 : -1}
                     title='Pokaż zapis nutowy wybranej pieśni [D]'
-                    className={(hymnFiles.pdf || collectionPdfName) && isOnline ? '' : 'disabled'}
-                    onClick={() => handleDocument(hymnFiles.pdf, collectionPdfName)}
+                    className={hymnFiles.pdf && isOnline ? '' : 'disabled'}
+                    onClick={() => handleDocument(hymnFiles.pdf)}
                   >
                     <Image
                       className='icon'
@@ -789,7 +774,7 @@ export default function HymnPage() {
                     <p>
                       {isFilesLoading
                         ? 'Ładowanie...'
-                        : hymnFiles.pdf || collectionPdfName
+                        : hymnFiles.pdf
                           ? 'Pokaż nuty'
                           : 'Brak pliku PDF'}
                     </p>

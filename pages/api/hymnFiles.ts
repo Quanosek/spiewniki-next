@@ -3,18 +3,16 @@ import fs from 'fs'
 import path from 'path'
 
 import { getBookShortcut } from '@/utils/getBookShortcut'
-import { getCollectionPdfName } from '@/utils/hymnDatabase'
 import { slugifyText } from '@/utils/simplifyText'
 
 type Data = {
   pdf?: { book: string; id: string } | null
   mp3?: { book: string; id: string } | null
-  collectionPdf?: string | null
   error?: string
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  const { title, collection } = req.query as { [key: string]: string }
+  const { title } = req.query as { [key: string]: string }
 
   let { book } = req.query as { [key: string]: string }
   book = getBookShortcut(book)
@@ -54,23 +52,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
       }
     }
 
-    const locateCollectionPdf = () => {
-      if (book !== 'M' || !collection) return null
-
-      const pdfName = getCollectionPdfName('M', collection)
-      if (!pdfName) return null
-
-      const filename = `${slugifyText(pdfName)}.pdf`
-      const filePath = path.join(process.cwd(), 'public', 'pdf', filename)
-
-      if (fs.existsSync(filePath)) return pdfName
-      return null
-    }
-
     const results = {
       pdf: locateFile('pdf'),
       mp3: locateFile('mp3'),
-      collectionPdf: locateCollectionPdf(),
     }
 
     return res.status(200).json(results)

@@ -8,6 +8,7 @@ const MENU_MODULES = {
   favorites: () => import('./favorites'),
   settings: () => import('./settings'),
   shortcuts: () => import('./shortcuts'),
+  welcome: () => import('./welcome'),
 } as const
 
 type MenuName = keyof typeof MENU_MODULES
@@ -30,6 +31,7 @@ export function setMenuQuery(name: string | undefined) {
 export default function Menu() {
   const router = useRouter()
   const { menu, ...params } = router.query
+  const menuName = typeof menu === 'string' && menu in MENU_MODULES ? (menu as MenuName) : null
 
   const [showMenu, setShowMenu] = useState(false)
 
@@ -56,8 +58,6 @@ export default function Menu() {
       document.removeEventListener('keyup', keyupEvent)
     }
   }, [router, menu, params])
-
-  const menuName = typeof menu === 'string' && menu in MENU_MODULES ? (menu as MenuName) : null
 
   const DynamicComponent = useMemo(
     () =>

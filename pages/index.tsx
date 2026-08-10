@@ -7,7 +7,6 @@ import { useCallback, useEffect, useState } from 'react'
 import HamburgerIcon from '@/components/hamburger-icon'
 import MenuModal from '@/components/menu-modal'
 import MobileNavbar from '@/components/mobile-navbar'
-import { setMenuQuery } from '@/components/menu/_handler'
 
 import { getBookShortcut } from '@/utils/getBookShortcut'
 import { getRandomHymn } from '@/utils/getRandomHymn'
@@ -31,8 +30,6 @@ export default function HomePage() {
     if (!router.isReady) return
     if (!unlocked) return
     if (router.pathname !== '/') return
-
-    setMenuQuery('welcome')
   }, [router.isReady, router.pathname])
 
   const [hamburgerMenu, setHamburgerMenu] = useState(false)

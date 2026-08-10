@@ -8,7 +8,6 @@ const MENU_MODULES = {
   favorites: () => import('./favorites'),
   settings: () => import('./settings'),
   shortcuts: () => import('./shortcuts'),
-  welcome: () => import('./welcome'),
 } as const
 
 type MenuName = keyof typeof MENU_MODULES

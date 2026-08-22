@@ -22,9 +22,7 @@ const HYMNBOOKS = unlocked
   ? ['B', 'C', 'N', 'K', 'P', 'M', 'IC', 'E', 'S', 'R']
   : ['B', 'C', 'N', 'IC']
 
-const ADDITIONAL_HYMNBOOKS: string[] = HYMNBOOKS.filter((book) =>
-  ['M', 'S', 'R'].includes(book)
-)
+const ADDITIONAL_HYMNBOOKS: string[] = HYMNBOOKS.filter((book) => ['M', 'S', 'R'].includes(book))
 // 'IC' (Śpiewnik Międzynarodowy) is a primary hymnbook but sits alongside 'M' (Chór
 // Międzynarodowy) which is now in the additional list — pin IC to the end so the two
 // international entries stay together across the section boundary.

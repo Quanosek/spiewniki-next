@@ -1,13 +1,9 @@
 {
-  "version": "0.13.1",
+  "version": "0.13.2",
   "name": "spiewniki",
   "description": "Various hymnbooks and religious songs gathered in one place",
   "private": true,
   "author": "Jakub Kłało <kubaklalo@gmail.com>",
-  "engines": {
-    "node": ">=20",
-    "pnpm": ">=9"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -40,7 +36,12 @@
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "prettier": "^3.9.6",
-    "sass": "^1.102.0",
+    "sass": "^1.103.1",
     "typescript": "^5.9.3"
-  }
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@11.21.0"
 }

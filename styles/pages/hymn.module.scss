@@ -55,6 +55,13 @@
     gap: 0.2rem;
   }
 
+  @media (max-width: 768px) {
+    > button {
+      padding: 0;
+      height: 100%;
+    }
+  }
+
   .transposeTopBar {
     display: inline-grid;
     grid-template-columns: 2rem minmax(3.65rem, auto) 2rem 2.2rem;
@@ -242,6 +249,14 @@ $button-gap: 12px;
       border: 2px solid var(--elements-hover);
       pointer-events: none;
     }
+
+    &.active .list {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition-delay: 0s;
+    }
   }
 
   button:hover {
@@ -286,12 +301,10 @@ $button-gap: 12px;
 
     @media (min-width: 1025px) {
       &:hover {
+        background-color: var(--elements-hover);
+
         .showMore img {
           opacity: 0.9;
-        }
-
-        div:hover {
-          background-color: var(--elements);
         }
       }
     }
@@ -310,34 +323,48 @@ $button-gap: 12px;
   }
 
   .list {
-    z-index: -1;
+    z-index: 1;
     opacity: 0;
+    visibility: hidden;
     position: absolute;
-    top: 0;
+    top: calc(100% - 2px);
     margin: 0;
     padding: 0;
     width: 100%;
-    background-color: transparent;
+    background-color: var(--elements);
     border-radius: 0 0 0.4rem 0.4rem;
+    border: 2px solid var(--elements-hover);
+    border-top: 1px solid color-mix(in srgb, var(--elements-hover) 75%, transparent);
+    box-shadow: 0 4px 10px -6px rgba(#000000, 0.35);
     font-size: 86%;
-    transition: 150ms ease-out;
+    pointer-events: none;
+    transform: translateY(-0.35rem);
+    transition:
+      opacity 150ms ease-out,
+      transform 150ms ease-out,
+      visibility 0s linear 150ms;
 
     button {
       opacity: 0.85;
+      padding: 14px 16px 14px calc(16px + 20px + $button-gap);
       width: 100%;
       margin: 0;
+      display: flex;
+      justify-content: flex-start;
       border-radius: 0;
       font-weight: 700;
-      filter: brightness(0.97) contrast(1.03);
+      text-align: left;
+      background-color: transparent;
+      transition: background-color 150ms ease-out;
 
       &:hover,
       &:focus-visible {
-        filter: brightness(1.03) contrast(1.04);
+        background-color: var(--elements-hover);
       }
 
       p {
-        margin-left: calc(28px + $button-gap);
         font-weight: 700;
+        text-align: left;
       }
     }
 
@@ -345,11 +372,8 @@ $button-gap: 12px;
       border-radius: 0 0 0.4rem 0.4rem;
     }
 
-    @media (min-width: 1025px) {
-      &.active {
-        opacity: 1;
-        top: 100%;
-      }
+    @media (max-width: 1024px) {
+      display: none;
     }
   }
 }

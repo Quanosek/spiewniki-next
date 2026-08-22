@@ -26,12 +26,6 @@ export default function HomePage() {
     localStorage.removeItem('prevSearch')
   }, [])
 
-  useEffect(() => {
-    if (!router.isReady) return
-    if (!unlocked) return
-    if (router.pathname !== '/') return
-  }, [router.isReady, router.pathname])
-
   const [hamburgerMenu, setHamburgerMenu] = useState(false)
 
   useEffect(() => {
@@ -160,7 +154,8 @@ export default function HomePage() {
                     width={340}
                     height={480}
                     draggable={false}
-                    priority
+                    priority={index === 0}
+                    sizes='(max-width: 768px) 30vw, 280px'
                   />
                   <p>{getBookShortcut(book)}</p>
                 </Link>

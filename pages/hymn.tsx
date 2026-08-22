@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
 import HamburgerIcon from '@/components/hamburger-icon'
@@ -273,7 +273,23 @@ export default function HymnPage() {
     }
   }, [book, router, resetPrevSearch])
 
+  const presentationMenuTimeout = useRef<ReturnType<typeof setTimeout>>()
   const [presOptions, setPresOptions] = useState(false)
+
+  const showPresentationOptions = () => {
+    if (presentationMenuTimeout.current) clearTimeout(presentationMenuTimeout.current)
+    setPresOptions(true)
+  }
+
+  const hidePresentationOptions = () => {
+    presentationMenuTimeout.current = setTimeout(() => setPresOptions(false), 150)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (presentationMenuTimeout.current) clearTimeout(presentationMenuTimeout.current)
+    }
+  }, [])
 
   const handlePresentation = useCallback(() => {
     if (!hymn) return
@@ -696,8 +712,9 @@ export default function HymnPage() {
 
               <div className={styles.options}>
                 <div
-                  className={styles.presentationButton}
-                  onMouseLeave={() => setPresOptions(false)}
+                  className={`${styles.presentationButton} ${presOptions ? styles.active : ''}`}
+                  onMouseEnter={showPresentationOptions}
+                  onMouseLeave={hidePresentationOptions}
                 >
                   <button
                     title='Włącz tryb prezentacji dla wybranej pieśni [P]'
@@ -715,10 +732,7 @@ export default function HymnPage() {
                       <p>Pokaz slajdów</p>
                     </div>
 
-                    <div
-                      className={styles.showMore}
-                      onClick={() => setPresOptions((prev) => !prev)}
-                    >
+                    <div className={styles.showMore}>
                       <Image
                         className='icon'
                         alt='more'
@@ -730,7 +744,7 @@ export default function HymnPage() {
                     </div>
                   </button>
 
-                  <div className={`${styles.list} ${presOptions ? styles.active : ''}`}>
+                  <div className={styles.list}>
                     <button tabIndex={-1} onClick={handleExternalPresentation}>
                       <p>Otwórz w nowym oknie</p>
                     </button>

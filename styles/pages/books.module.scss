@@ -1,5 +1,29 @@
 @import '../mixins';
 
+// $gutter = width of the .searchIcon / .searchCheckbox column outside the list box.
+// It matches /search's magnifier span (a height-sized square == input height), so the icons
+// on both pages land at identical X positions.
+// --gutter, --row-h, --icon-inset are CSS custom properties so they can flip at the ≤425px
+// breakpoint the same way /search's magnifier does (fixed 3.5rem above 425, 12vw at/below).
+//
+// All size tokens are `min(cap, Xvw)` — no lower bound — so the layout keeps shrinking
+// smoothly below 425px (matches /search's pattern: `min(25px, 5.5vw)` etc.). Row padding
+// tracks /search's ≤425 `.results a` rhythm (3.5vw / 4.5vw) so the two pages hit the same
+// values on mobile.
+$row-py: min(1rem, 3.5vw);
+$row-px: min(1.25rem, 4.5vw);
+
+$icon-size: min(25px, 5.5vw);
+$chevron-size: min(18px, 3.6vw);
+$checkbox-size: min(1.15rem, 4vw);
+
+$font-title: min(19px, 4.5vw);
+$font-section: min(22px, 4vw);
+$font-pdf: min(13px, 2.6vw);
+
+// Reference — matches /search's .searchBox width.
+$search-ref-width: min(850px, 95%);
+
 .title {
   position: relative;
   margin-bottom: 6px;
@@ -86,8 +110,98 @@
   }
 }
 
+// Below 1024px: list right-edge matches /search's .searchBox right edge. Left is shifted
+// inward by --gutter to fit the checkbox / magnifier column inside the reference span, so
+// the layout is intentionally asymmetric (list narrower than /search's searchBox).
+//
+// From 1024px up (typical desktop): list stretches to the full $search-ref-width and sits
+// centered like /search's searchBox. The checkbox column then lives entirely in the empty
+// margin to the left of the list (--icon-inset = 0, no overlap). At 1024px the extra space
+// on each side of a 850px list equals the 56px column almost exactly — larger viewports
+// give more breathing room.
+.searchAction,
+.list,
+.listTitle {
+  --gutter: 3.5rem;
+  --row-h: 3.5rem;
+  --icon-inset: var(--space);
+
+  align-self: flex-end;
+  width: calc(#{$search-ref-width} - var(--gutter));
+  margin-right: calc((100% - #{$search-ref-width}) / 2);
+
+  @media (min-width: 1024px) {
+    --icon-inset: 0;
+
+    align-self: auto;
+    width: $search-ref-width;
+    margin-right: 0;
+  }
+
+  @media (max-width: 425px) {
+    --gutter: 12vw;
+    --row-h: 12vw;
+    --icon-inset: 0.8vw;
+  }
+}
+
+.searchAction {
+  position: relative;
+  margin-bottom: 0.5rem;
+  height: var(--row-h);
+}
+
+// Mirror /search's magnifier: an aspect-ratio 1/1 span offset by --icon-inset from the
+// left of the reference container. Placed outside .searchAction in the extra left gutter.
+// Hidden on typical desktop (≥1024px), where the list stretches to full $search-ref-width
+// and the icon no longer aligns with anything on /search — the "Wyszukaj wybrane śpiewniki"
+// button label is self-explanatory without it.
+.searchIcon {
+  position: absolute;
+  top: 0;
+  left: calc(-1 * var(--gutter) + var(--icon-inset));
+  width: var(--gutter);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+
+  img {
+    height: $icon-size;
+    width: auto;
+  }
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+.all {
+  position: relative;
+  padding: 0 $row-px;
+  width: 100%;
+  height: 100%;
+  min-height: var(--row-h);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius);
+  background-color: var(--elements);
+  color: var(--accent-color);
+  @include custom-shadow();
+
+  h2 {
+    font-size: $font-title;
+  }
+
+  &:hover {
+    background-color: var(--elements-hover);
+  }
+}
+
 .list {
-  width: min(850px, 95%);
   border-radius: var(--radius);
   background-color: var(--elements);
   font-size: 16px;
@@ -96,7 +210,7 @@
 
   a {
     margin: var(--space);
-    padding: 1rem 1.25rem;
+    padding: $row-py $row-px;
     display: flex;
     border-radius: calc(var(--radius) - var(--space));
     transition: background-color 100ms ease-out;
@@ -107,20 +221,14 @@
     background-color: var(--background);
   }
 
+  // Match /search's .results font progression so book titles read at the same size
+  // as search-result titles across breakpoints.
   @media (max-width: 768px) {
     font-size: 14px;
-
-    a {
-      margin: 0;
-    }
   }
 
   @media (max-width: 425px) {
     font-size: 4.2vw;
-
-    a {
-      padding: 3.5vw 4.5vw;
-    }
 
     h2 {
       font-size: 100%;
@@ -128,36 +236,116 @@
   }
 }
 
-.all {
-  font-size: 16px;
-  color: var(--accent-color);
-
-  @media (max-width: 768px) {
-    font-size: 100%;
-  }
-
-  &:hover {
-    background-color: var(--elements-hover);
-  }
-}
-
 .book {
   position: relative;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
 
   a:hover {
     background-color: var(--elements-hover);
   }
+
+  // Reserve space on the right so the book title's ellipsis truncates before it would
+  // slide under the .pdfFile absolute-positioned button.
+  &:has(> .pdfFile) .result {
+    padding-right: calc(#{$icon-size} + #{$row-px} + var(--space));
+
+    // ≤425: .pdfFile is a 12vw square pinned at right: var(--space) — reserve that
+    // whole footprint so the title stops before the button's left edge instead of
+    // clipping under it.
+    @media (max-width: 425px) {
+      padding-right: calc(12vw + var(--space) * 2);
+    }
+  }
 }
 
 .bookAccordion {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.bookListItem {
+  position: relative;
+}
+
+.searchCheckbox {
+  position: absolute;
+  top: 0;
+  left: calc(-1 * var(--gutter) + var(--icon-inset));
+  width: var(--gutter);
+  // Fixed to --row-h (not 100%) so the checkbox stays pinned to the first row when the
+  // choir accordion expands — otherwise the box grows with .bookListItem and align-items
+  // re-centers the visual halfway down the expanded panel.
+  height: var(--row-h);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // Below the mobile navbar (z-index: 1) so the fixed bottom bar covers the checkbox
+  // during scroll overlap.
+  z-index: 0;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  span {
+    width: $checkbox-size;
+    height: $checkbox-size;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--accent-color);
+    border-radius: calc(var(--radius) / 2);
+    background-color: var(--background);
+    transition:
+      background-color 120ms ease-out,
+      border-color 120ms ease-out;
+
+    &::after {
+      content: '';
+      width: 0.5rem;
+      height: 0.28rem;
+      border-bottom: 2px solid var(--elements);
+      border-left: 2px solid var(--elements);
+      opacity: 0;
+      transform: rotate(-45deg) translate(1px, -1px);
+      transition: opacity 120ms ease-out;
+    }
+  }
+
+  input:checked + span {
+    border-color: var(--accent-color);
+    background-color: var(--accent-color);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  input:focus-visible + span {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  // Typical desktop: list is full $search-ref-width, so push the checkbox column another
+  // 0.5rem to the left. Without this the 56×56 input hitbox sits flush against the list
+  // card's left edge — clicks intended for the leftmost part of the "Otwórz PDF" / book
+  // button would hit the checkbox instead. The gap also gives clear visual separation.
+  @media (min-width: 1024px) {
+    left: calc(-1 * var(--gutter) - 0.5rem);
+  }
 }
 
 .accordionToggle {
   margin: var(--space);
-  padding: 1rem 1.25rem;
+  padding: $row-py $row-px;
   width: calc(100% - var(--space) * 2);
+  min-height: var(--row-h);
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -173,29 +361,12 @@
     margin: 0;
     text-align: left;
   }
-
-  @media (max-width: 768px) {
-    margin: 0;
-    width: 100%;
-  }
-
-  @media (max-width: 425px) {
-    padding: 3.5vw 4.5vw;
-  }
 }
 
 .chevron {
   transition: transform 160ms ease-out;
-
-  @media (max-width: 768px) {
-    width: 14px;
-    height: 14px;
-  }
-
-  @media (max-width: 425px) {
-    width: 12px;
-    height: 12px;
-  }
+  width: $chevron-size !important;
+  height: $chevron-size !important;
 }
 
 .expanded {
@@ -209,7 +380,7 @@
   pointer-events: none;
   display: flex;
   flex-direction: column;
-  padding: 0 0 calc(var(--space) * 2);
+  padding: 0;
   transform: translateY(-6px);
   transition:
     max-height 260ms ease,
@@ -224,14 +395,22 @@
   transform: translateY(0);
 }
 
+.collectionsList.open {
+  border-top: 1px solid color-mix(in srgb, var(--elements-hover) 75%, transparent);
+}
+
 .collectionRow {
   position: relative;
   width: 100%;
+
+  &:first-child .collectionItem {
+    margin-top: calc(var(--space) * 2) !important;
+  }
 }
 
 .collectionItem {
   margin: var(--space) !important;
-  padding: 1rem 1.25rem !important;
+  padding: $row-py $row-px !important;
   border-radius: calc(var(--radius) - var(--space));
   background-color: transparent;
 
@@ -242,47 +421,30 @@
   h2 {
     margin: 0;
     padding-left: 0.85rem;
-    width: calc(100% - 130px);
+    width: calc(100% - var(--gutter) - #{$icon-size});
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: 100%;
+    font-size: 112.5%;
     font-weight: 600;
-  }
 
-  @media (max-width: 768px) {
-    margin: 0 !important;
-    border-radius: 0;
-
-    h2 {
-      padding-left: 0.65rem;
-      width: calc(100% - 55px);
+    @media (max-width: 425px) {
+      font-size: 100%;
     }
-  }
-
-  @media (max-width: 425px) {
-    padding: 3.5vw 4.5vw !important;
   }
 }
 
 .collectionKoncertTitle {
-  padding-left: 0;
-
-  @media (max-width: 425px) {
-    padding-left: 0;
-  }
+  padding-left: 0 !important;
 }
 
-@media (max-width: 768px) {
-  .collectionsList {
-    padding: 0 0 calc(var(--space) * 2);
-  }
+.listTitle {
+  font-size: $font-section;
+  font-weight: 700;
 }
 
-@media (max-width: 425px) {
-  .collectionsList {
-    padding: 0 0 calc(var(--space) * 2);
-  }
+.list + .listTitle {
+  margin-top: 1.5rem;
 }
 
 .result {
@@ -297,14 +459,15 @@
 .pdfFile {
   opacity: 0.85;
   margin: 0 !important;
+  padding: 0 $row-px !important;
   position: absolute;
   top: 0;
-  right: var(--space);
+  right: 0;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: clamp(4px, 1.5vw, 10px);
 
   &:hover {
     opacity: 1;
@@ -317,32 +480,38 @@
   }
 
   p {
-    font-size: 13px;
+    font-size: $font-pdf;
     white-space: nowrap;
+
+    @media (max-width: 550px) {
+      display: none;
+    }
   }
 
   img {
-    height: 25px;
+    height: $icon-size;
     width: auto;
     aspect-ratio: 1/1;
-  }
 
-  @media (max-width: 768px) {
-    padding: 1rem !important;
-    right: 0;
-    height: 100%;
-  }
-
-  @media (max-width: 425px) {
-    padding: 0 !important;
-    aspect-ratio: 1/1;
-
-    p {
-      display: none;
-    }
-
-    img {
+    @media (max-width: 425px) {
+      // Match /index's .pdfIcon (and .searchBox dice) — 5.5vw icon with 105% scale.
       height: 5.5vw;
+      width: auto;
+      scale: 105%;
     }
+  }
+
+  // ≤425: mirror /index's .pdfIcon square button, which itself mirrors the .searchBox
+  // dice button. Box = 12vw (same as .search height on mobile), no padding, icon 5.5vw
+  // at 105% scale — the three round icon buttons across /index and /books all match.
+  @media (max-width: 425px) {
+    $box: 12vw;
+
+    top: 50%;
+    right: var(--space);
+    transform: translateY(-50%);
+    width: $box;
+    height: $box;
+    padding: 0 !important;
   }
 }

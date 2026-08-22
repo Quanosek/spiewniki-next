@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, ReactElement, useRef } from 'react'
 import { useTheme } from 'next-themes'
 
 import { DEFAULT_SETTINGS, THEMES } from '@/utils/constants'
+import { resetGlobalSearchHymnbooks } from '@/utils/globalSearchHymnbooks'
 
 import { setMenuQuery } from './_handler'
 
@@ -271,6 +272,7 @@ export default function SettingsMenu() {
 
             setState({ ...DEFAULT_SETTINGS })
             setTheme(defaultTheme)
+            resetGlobalSearchHymnbooks()
           }}
         >
           <p>Przywróć domyślne</p>

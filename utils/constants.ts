@@ -22,6 +22,17 @@ const HYMNBOOKS = unlocked
   ? ['B', 'C', 'N', 'K', 'P', 'M', 'IC', 'E', 'S', 'R']
   : ['B', 'C', 'N', 'IC']
 
+const ADDITIONAL_HYMNBOOKS: string[] = HYMNBOOKS.filter((book) =>
+  ['M', 'S', 'R'].includes(book)
+)
+// 'IC' (Śpiewnik Międzynarodowy) is a primary hymnbook but sits alongside 'M' (Chór
+// Międzynarodowy) which is now in the additional list — pin IC to the end so the two
+// international entries stay together across the section boundary.
+const GLOBAL_SEARCH_HYMNBOOKS = [
+  ...HYMNBOOKS.filter((book) => !ADDITIONAL_HYMNBOOKS.includes(book) && book !== 'IC'),
+  ...(HYMNBOOKS.includes('IC') ? ['IC'] : []),
+]
+
 const PDF_BOOKS = ['B', 'C', 'N', 'E']
 
 const SEARCH_PREFIXES = [null, '@', '#']
@@ -47,8 +58,10 @@ const THEMES = unlocked
   : ['light', 'dark', 'system']
 
 export {
+  ADDITIONAL_HYMNBOOKS,
   DEFAULT_SETTINGS,
   EXCLUDED_HYMNS,
+  GLOBAL_SEARCH_HYMNBOOKS,
   HYMNBOOKS,
   PDF_BOOKS,
   SEARCH_PREFIXES,

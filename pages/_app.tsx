@@ -2,9 +2,9 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { GoogleAnalytics } from 'nextjs-google-analytics'
 import { ThemeProvider } from 'next-themes'
 
 import Menu, { setMenuQuery } from '@/components/menu/_handler'
@@ -15,6 +15,11 @@ import 'the-new-css-reset/css/reset.css'
 import '@/styles/globals.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
+
+const GoogleAnalytics = dynamic(
+  () => import('nextjs-google-analytics').then(({ GoogleAnalytics }) => GoogleAnalytics),
+  { ssr: false }
+)
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()

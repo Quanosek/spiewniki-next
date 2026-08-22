@@ -33,12 +33,20 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
     const d = getQueryParam(router.query, 'd')
     const book = getQueryParam(router.query, 'book')
     const id = getQueryParam(router.query, 'id')
+    const isSafeSegment = (value: string) => /^[A-Za-z0-9_-]+$/.test(value)
 
     if (d && d.trim()) {
-      setDocumentPath(`/pdf/${slugifyText(d)}.pdf`)
-    } else if (book && book.trim() && id && id.trim()) {
-      const isSafeSegment = (value: string) => /^[A-Za-z0-9_-]+$/.test(value)
+      if (book && book.trim()) {
+        if (!isSafeSegment(book)) {
+          router.replace('/404')
+          return
+        }
 
+        setDocumentPath(`/pdf/${book}/${slugifyText(d)}.pdf`)
+      } else {
+        setDocumentPath(`/pdf/${slugifyText(d)}.pdf`)
+      }
+    } else if (book && book.trim() && id && id.trim()) {
       if (!isSafeSegment(book) || !isSafeSegment(id)) {
         router.replace('/404')
         return

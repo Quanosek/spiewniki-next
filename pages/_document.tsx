@@ -4,11 +4,12 @@ const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function Document() {
   const color = unlocked ? 'blue' : 'orange'
+  const themeColor = unlocked ? '#141829' : '#ffffff'
 
   return (
     <Html lang='pl'>
       <Head>
-        <meta name='theme-color' content='#000000' />
+        <meta name='theme-color' content={themeColor} />
         <meta httpEquiv='content-type' content='text/html; charset=utf-8' />
         <meta
           name='description'

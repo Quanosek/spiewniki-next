@@ -14,6 +14,7 @@ import SearchBox from '@/components/search/search-box'
 import { DEFAULT_SETTINGS, HYMNBOOKS, SEARCH_PREFIXES } from '@/utils/constants'
 import { getBookShortcut } from '@/utils/getBookShortcut'
 import { getRandomHymn } from '@/utils/getRandomHymn'
+import { getGlobalSearchHymnbooks } from '@/utils/globalSearchHymnbooks'
 import { fetchBookHymns, type HymnWithCollection } from '@/utils/hymnDatabase'
 import { isHymnAccessible } from '@/utils/hymnValidation'
 import { getQueryParam } from '@/utils/queryParam'
@@ -26,7 +27,8 @@ import styles from '@/styles/pages/search.module.scss'
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 const getSearchCacheKey = (book?: string, collection?: string) => {
-  return `searchCache_${book || 'all'}_${collection || 'all'}`
+  const hymnbooks = book || getGlobalSearchHymnbooks().join('-')
+  return `searchCache_${hymnbooks || 'none'}_${collection || 'all'}`
 }
 
 const matchNames = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn | null => {
@@ -426,7 +428,9 @@ export default function SearchPage() {
     if (!book) {
       const fetchAllBooks = async () => {
         try {
-          const responses = await Promise.all(HYMNBOOKS.map((bookName) => fetchBookHymns(bookName)))
+          const responses = await Promise.all(
+            getGlobalSearchHymnbooks().map((bookName) => fetchBookHymns(bookName))
+          )
           loadData(responses.flat())
         } catch (err) {
           console.error(err)
@@ -653,7 +657,7 @@ export default function SearchPage() {
 
           {unlocked ? (
             <Link href='/books' title='Wybierz inny śpiewnik [B]'>
-              <p>Zmień śpiewnik</p>
+              <p>Zmień śpiewniki</p>
               <Image
                 className='icon'
                 alt='filter'

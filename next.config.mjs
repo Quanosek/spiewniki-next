@@ -2,33 +2,26 @@
 
 import withPWAInit from '@ducanh2912/next-pwa'
 
-const excludedIconsArray = ['download.svg', 'filter.svg', 'play.svg']
-const excludedIcons = excludedIconsArray.map((icon) => `!icons/${icon}`)
-
-const excludedBooks = ['K', 'P', 'E', 'M', 'S', 'R']
-const bookShortcutToName = {
-  B: 'Pieśni Brzasku Tysiąclecia',
-  C: 'Uwielbiajmy Pana (Cegiełki)',
-  N: 'Śpiewajcie Panu Pieśń Nową',
-  K: 'Śpiewnik Koziański',
-  P: 'Śpiewnik Poznański',
-  E: 'Śpiewniczek Młodzieżowy',
-  IC: 'Śpiewnik Międzynarodowy (IC)',
-  M: 'Chór Międzynarodowy (IC)',
-  S: 'Pieśni Chóru Syloe',
-  R: 'Różne pieśni',
-}
-const excludedList = excludedBooks.map((book) => {
-  if (book === 'M') return `!database/${bookShortcutToName[book]}/**/*`
-  return `!database/${bookShortcutToName[book]}.json`
-})
-
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 const ONE_WEEK_SECONDS = 7 * 24 * 60 * 60
 
-const publicExcludes = ['!pdf/**/*', '!pdf/*.pdf', '!mp3/**/*', '!*.mp3', '!libraries/**/*'].concat(
-  unlocked ? [] : [...excludedIcons, ...excludedList]
-)
+const variantPublicExcludes = unlocked
+  ? ['!logo/orange/**/*', '!manifest-orange.json']
+  : [
+      '!logo/blue/**/*',
+      '!manifest-blue.json',
+      '!icons/download.svg',
+      '!icons/filter.svg',
+      '!icons/play.svg',
+      '!database/Chór Międzynarodowy (IC)/**/*',
+      '!database/Pieśni Chóru Syloe.json',
+      '!database/Różne pieśni.json',
+      '!database/Śpiewniczek Młodzieżowy.json',
+      '!database/Śpiewnik Koziański.json',
+      '!database/Śpiewnik Poznański.json',
+    ]
+
+const publicExcludes = ['!pdf/**/*', '!mp3/**/*', '!libraries/**/*', ...variantPublicExcludes]
 
 const runtimeCaching = [
   {
@@ -87,18 +80,6 @@ const runtimeCaching = [
     },
   },
   {
-    urlPattern: /\/_next\/data\/.+\/.+\.json$/i,
-    handler: 'NetworkFirst',
-    options: {
-      cacheName: 'next-data',
-      expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: ONE_WEEK_SECONDS,
-      },
-      networkTimeoutSeconds: 3,
-    },
-  },
-  {
     urlPattern: /\.(?:json|xml|csv)$/i,
     handler: 'NetworkFirst',
     options: {
@@ -111,61 +92,7 @@ const runtimeCaching = [
     },
   },
   {
-    urlPattern: ({ sameOrigin, url: { pathname } }) => {
-      // Exclude /api/auth/callback/* to fix OAuth workflow in Safari without having an impact on other environments
-      // The above route is the default for next-auth, you may need to change it if your OAuth workflow has a different callback route
-      // Issue: https://github.com/shadowwalker/next-pwa/issues/131#issuecomment-821894809
-      if (!sameOrigin || pathname.startsWith('/api/auth/callback')) {
-        return false
-      }
-
-      if (pathname.startsWith('/api/')) {
-        return true
-      }
-
-      return false
-    },
-    handler: 'NetworkFirst',
-    method: 'GET',
-    options: {
-      cacheName: 'apis',
-      expiration: {
-        maxEntries: 16,
-        maxAgeSeconds: ONE_WEEK_SECONDS,
-      },
-      networkTimeoutSeconds: 5,
-    },
-  },
-  {
-    urlPattern: ({ request, url: { pathname }, sameOrigin }) =>
-      request.headers.get('RSC') === '1' &&
-      request.headers.get('Next-Router-Prefetch') === '1' &&
-      sameOrigin &&
-      !pathname.startsWith('/api/'),
-    handler: 'StaleWhileRevalidate',
-    options: {
-      cacheName: 'pages-rsc-prefetch',
-      expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: ONE_WEEK_SECONDS,
-      },
-    },
-  },
-  {
-    urlPattern: ({ request, url: { pathname }, sameOrigin }) =>
-      request.headers.get('RSC') === '1' && sameOrigin && !pathname.startsWith('/api/'),
-    handler: 'NetworkFirst',
-    options: {
-      cacheName: 'pages-rsc',
-      expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: ONE_WEEK_SECONDS,
-      },
-      networkTimeoutSeconds: 3,
-    },
-  },
-  {
-    urlPattern: ({ url: { pathname }, sameOrigin }) => sameOrigin && !pathname.startsWith('/api/'),
+    urlPattern: ({ request, sameOrigin }) => sameOrigin && request.mode === 'navigate',
     handler: 'NetworkFirst',
     options: {
       cacheName: 'pages',
@@ -176,30 +103,14 @@ const runtimeCaching = [
       networkTimeoutSeconds: 3,
     },
   },
-  {
-    urlPattern: ({ sameOrigin }) => !sameOrigin,
-    handler: 'NetworkFirst',
-    options: {
-      cacheName: 'cross-origin',
-      expiration: {
-        maxEntries: 32,
-        maxAgeSeconds: ONE_WEEK_SECONDS,
-      },
-      networkTimeoutSeconds: 5,
-    },
-  },
 ]
 
 const withPWA = withPWAInit({
   cacheOnFrontEndNav: unlocked,
-  aggressiveFrontEndNavCaching: unlocked,
   cacheStartUrl: unlocked,
   disable: !unlocked || process.env.NODE_ENV === 'development',
   dest: 'public',
-  extendDefaultRuntimeCaching: false,
   publicExcludes,
-  register: unlocked,
-  reloadOnOnline: unlocked,
   workboxOptions: {
     runtimeCaching,
     cleanupOutdatedCaches: true,

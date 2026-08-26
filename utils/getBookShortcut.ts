@@ -7,6 +7,7 @@ const booksMap: Record<string, string> = {
   P: 'Śpiewnik Poznański',
   E: 'Śpiewniczek Młodzieżowy',
   IC: 'Śpiewnik Międzynarodowy (IC)',
+  U: 'Prosławmo Hospoda Piśniamy (UA)',
   M: 'Chór Międzynarodowy (IC)',
   S: 'Pieśni Chóru Syloe',
   R: 'Różne pieśni',

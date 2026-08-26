@@ -13,12 +13,14 @@ const variantPublicExcludes = unlocked
       '!icons/download.svg',
       '!icons/filter.svg',
       '!icons/play.svg',
+
+      '!database/Śpiewnik Koziański.json',
+      '!database/Śpiewnik Poznański.json',
+      '!database/Śpiewniczek Młodzieżowy.json',
+      '!database/Prosławmo Hospoda Piśniamy (UA).json',
       '!database/Chór Międzynarodowy (IC)/**/*',
       '!database/Pieśni Chóru Syloe.json',
       '!database/Różne pieśni.json',
-      '!database/Śpiewniczek Młodzieżowy.json',
-      '!database/Śpiewnik Koziański.json',
-      '!database/Śpiewnik Poznański.json',
     ]
 
 const publicExcludes = ['!pdf/**/*', '!mp3/**/*', '!libraries/**/*', ...variantPublicExcludes]

@@ -79,8 +79,6 @@
   font-style: italic;
 }
 
-//! Menu components template
-
 .content {
   display: flex;
   flex-direction: column;
@@ -121,8 +119,6 @@
     }
   }
 }
-
-//! Favorites menu
 
 .favorites {
   position: relative;
@@ -285,8 +281,6 @@
     }
   }
 }
-
-//! Settings menu
 
 .settingsSection {
   padding: 1.2rem calc(min(3.5vw, 1rem) * 1.5);
@@ -658,8 +652,6 @@ $gap: min(2.5vw, 0.8rem);
     }
   }
 }
-
-//! Shortcuts menu
 
 .shortcut {
   padding: 0.65rem;

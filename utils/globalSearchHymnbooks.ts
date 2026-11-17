@@ -21,12 +21,10 @@ const setGlobalSearchHymnbooks = (hymnbooks: string[]) => {
   localStorage.setItem(GLOBAL_SEARCH_HYMNBOOKS_KEY, JSON.stringify(hymnbooks))
 }
 
-// Reset by removing the entry so the getter falls back to the current
-// GLOBAL_SEARCH_HYMNBOOKS default — future changes to the constant then propagate
-// without needing another reset. Custom event lets any mounted /books instance re-sync
-// its checkbox state (same-window localStorage writes don't fire the 'storage' event).
+// ? Removing the override lets future defaults apply
 const resetGlobalSearchHymnbooks = () => {
   localStorage.removeItem(GLOBAL_SEARCH_HYMNBOOKS_KEY)
+  // ? Same-tab writes need a custom event because storage events fire in other tabs
   window.dispatchEvent(new Event(GLOBAL_SEARCH_HYMNBOOKS_EVENT))
 }
 

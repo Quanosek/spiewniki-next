@@ -111,7 +111,7 @@
       font-weight: 800;
     }
 
-    // Symbols with unusual glyph metrics need slight optical correction.
+    // ? These symbols need an optical offset because their glyph metrics differ
     button:nth-child(1),
     button:nth-child(4) {
       font-family: 'Noto Sans', 'Gill Sans MT', sans-serif;
@@ -178,7 +178,7 @@
 $button-gap: 12px;
 
 .options {
-  width: 20%; // grid layout
+  width: 20%;
   margin-top: 6rem;
   display: flex;
   flex-direction: column;
@@ -379,7 +379,7 @@ $button-gap: 12px;
 }
 
 .center {
-  width: 60%; // grid layout
+  width: 60%;
   padding: 0 1rem;
   display: flex;
   flex-direction: column;

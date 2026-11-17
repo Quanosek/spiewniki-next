@@ -1,3 +1,4 @@
+// ! Keep shortcuts aligned with hymnbook constants and public database folders
 const booksMap: Record<string, string> = {
   all: 'Wszystkie śpiewniki',
   B: 'Pieśni Brzasku Tysiąclecia',

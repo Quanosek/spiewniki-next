@@ -3,6 +3,7 @@ import { Html, Head, Main, NextScript } from 'next/document'
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
 export default function Document() {
+  // ! Keep the selected logo and manifest aligned with the build variant
   const color = unlocked ? 'blue' : 'orange'
   const themeColor = unlocked ? '#141829' : '#ffffff'
 
@@ -27,7 +28,6 @@ export default function Document() {
         <link rel='apple-touch-icon' href={`/logo/${color}/apple-icon.png`} />
         <link rel='manifest' href={`/manifest-${color}.json`} />
 
-        {/* Disable indexing for unlocked version */}
         {unlocked && <meta name='robots' content='none' />}
       </Head>
 

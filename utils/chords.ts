@@ -1,23 +1,15 @@
-// =============================================================================
-// Section 1 — Input vocabulary
-// =============================================================================
-//
-// All hymn source data is written in full Polish / Central European notation:
-// spelled-out roots (Cis, Des, Es, As, B = B♭, H = B♮) and bare letters for
-// the seven naturals. There is no `C#` / `Bb` syntax on input, so the parser
-// only has to recognize these spellings.
+// ! Keep root spellings, semitone values, notation tables, and accidental sets aligned
 
 const ROOT_TO_SEMITONE: Record<string, number> = {
-  // Naturals
   C: 0,
   D: 2,
   E: 4,
   F: 5,
   G: 7,
   A: 9,
-  B: 10, // B♭ in this convention
-  H: 11, // B♮ in this convention
-  // Sharpened roots (Polish `-is`)
+  // ? B means B-flat while H means B-natural in Central European notation
+  B: 10,
+  H: 11,
   Cis: 1,
   Dis: 3,
   Eis: 5,
@@ -25,7 +17,6 @@ const ROOT_TO_SEMITONE: Record<string, number> = {
   Gis: 8,
   Ais: 10,
   His: 0,
-  // Flattened roots (Polish `-es` / shortened forms)
   Ces: 11,
   Des: 1,
   Es: 3,
@@ -34,25 +25,15 @@ const ROOT_TO_SEMITONE: Record<string, number> = {
   As: 8,
 }
 
-// Try the longest spelling first so e.g. `Cis` wins over `C`.
+// ! Match longer root names first to avoid partial parses
 const ROOTS_BY_LENGTH = Object.keys(ROOT_TO_SEMITONE).sort((a, b) => b.length - a.length)
 
-// =============================================================================
-// Section 2 — Chord body grammar (everything that follows the root)
-// =============================================================================
-
-// Recognized body fragments. Order matters only for the `m(?!aj)` shortcut so
-// that a bare `m` cannot eat the leading letter of `maj`.
+// ! Keep major chords ahead of the minor shortcut
 const BODY_RE = /^(?:maj|min|m(?!aj)|dim|aug|sus[24]?|add\d+|\d+|[+\-#b*])*$/
 
-// Leading minor marker: spelled-out `min` or bare `m` (but not `maj`).
 const MINOR_PREFIX_RE = /^(?:min|m(?!aj))/
 
 const isMinorBody = (body: string): boolean => MINOR_PREFIX_RE.test(body)
-
-// =============================================================================
-// Section 3 — Output tables (one row per notation × accidental preference)
-// =============================================================================
 
 export type ChordNotation = 'centralEuropean' | 'germanTraditional' | 'angloSaxon'
 
@@ -61,9 +42,7 @@ interface NoteTable {
   flat: readonly string[]
 }
 
-// Polish / classical German spelling — shared by both `centralEuropean` and
-// `germanTraditional`. The German variant differs only in minor-chord handling
-// (see `applyGermanMinorConvention` below).
+// The German variant reuses these notes and converts minor chords separately
 const CENTRAL_EUROPEAN_NOTES: NoteTable = {
   sharp: ['C', 'Cis', 'D', 'Dis', 'E', 'F', 'Fis', 'G', 'Gis', 'A', 'Ais', 'H'],
   flat: ['C', 'Des', 'D', 'Es', 'E', 'F', 'Ges', 'G', 'As', 'A', 'B', 'H'],
@@ -79,10 +58,6 @@ const NOTES_BY_NOTATION: Record<ChordNotation, NoteTable> = {
   germanTraditional: CENTRAL_EUROPEAN_NOTES,
   angloSaxon: ANGLO_SAXON_NOTES,
 }
-
-// =============================================================================
-// Section 4 — Parsing: split a chord text into root + body
-// =============================================================================
 
 interface ParsedChord {
   root: string
@@ -102,15 +77,9 @@ const parseChord = (text: string): ParsedChord | null => {
   return null
 }
 
-// =============================================================================
-// Section 5 — Rendering: turn a (transposed) semitone back into a chord text
-// =============================================================================
-
 const mod12 = (n: number): number => ((n % 12) + 12) % 12
 
 const toMusicalAccidentals = (body: string): string => {
-  // Accidentals in chord bodies are written as ASCII in source data
-  // (e.g. #11, b9). Render them with musical symbols.
   return body.replace(/#/g, '♯').replace(/b(?=\d)/g, '♭')
 }
 
@@ -125,8 +94,7 @@ export interface FormatOptions {
   notation: ChordNotation
 }
 
-// `germanTraditional` writes minor chords with a lowercase root and drops the
-// minor marker (`m` or `min`) — e.g. `Am → a`, `Amin7 → a7`, `Fism → fis`.
+// ? German traditional notation lowercases minor roots and drops the minor marker
 const applyGermanMinorConvention = (
   name: string,
   body: string,
@@ -140,10 +108,6 @@ const applyGermanMinorConvention = (
   }
 }
 
-// =============================================================================
-// Section 6 — Public API: tokens, slash chords, whole lines, key detection
-// =============================================================================
-
 const peelBrackets = (chunk: string): { lead: string; core: string; tail: string } => {
   const lead = chunk.match(/^[\[(]*/)![0]
   const tail = chunk.match(/[\])]*$/)![0]
@@ -152,28 +116,23 @@ const peelBrackets = (chunk: string): { lead: string; core: string; tail: string
 }
 
 const transposeToken = (chunk: string, opts: FormatOptions): string => {
-  // 1. Strip any surrounding `[` / `(` brackets so they survive the rewrite.
   const { lead, core, tail } = peelBrackets(chunk)
   if (!core) return chunk
 
-  // 2. Parse the core into root + body, or bail out on non-chords.
   const parsed = parseChord(core)
   if (!parsed) return chunk
 
-  // 3. Shift by `semitones` and render the new root in the chosen notation.
   const newSemitone = mod12(parsed.semitone + opts.semitones)
   const rendered = renderRoot(newSemitone, opts.notation, opts.useSharps)
 
-  // 4. Apply notation-specific tweaks (currently: German minor convention).
   const { name, body } = applyGermanMinorConvention(rendered, parsed.body, opts.notation)
   const formattedBody = toMusicalAccidentals(body)
 
-  // 5. Reassemble with the original brackets.
   return lead + name + formattedBody + tail
 }
 
 export const transposeChord = (token: string, opts: FormatOptions): string => {
-  // Slash chords (e.g. `C/G`) — transpose both halves independently.
+  // ? Slash chords are transposed one root at a time
   if (token.includes('/')) {
     return token
       .split('/')
@@ -184,7 +143,6 @@ export const transposeChord = (token: string, opts: FormatOptions): string => {
 }
 
 export const transposeChordLine = (line: string, opts: FormatOptions): string => {
-  // 1. Find every chord token together with its original column position.
   const tokens: { text: string; start: number }[] = []
   const tokenRegex = /\S+/g
   let match: RegExpExecArray | null
@@ -193,10 +151,6 @@ export const transposeChordLine = (line: string, opts: FormatOptions): string =>
   }
   if (tokens.length === 0) return line
 
-  // 2. Rewrite each token, centring it around the midpoint of the original
-  //    chord. Guarantees: at least one space between chords, no negative
-  //    columns. When two centred chords would collide, the right-hand chord
-  //    slides further right (so growth always pushes outward, never overlaps).
   let out = ''
   let cursor = 0
 
@@ -204,11 +158,11 @@ export const transposeChordLine = (line: string, opts: FormatOptions): string =>
     const { text, start } = tokens[i]
     const transposed = transposeChord(text, opts)
 
+    // ! Keep expanded chords centered without overlapping their neighbors
     const originalCenter = start + (text.length - 1) / 2
     const desiredStart = Math.round(originalCenter - (transposed.length - 1) / 2)
 
-    // Minimum column: keep at least one space gap after the previous token
-    // (the very first token may start at column 0).
+    // ! Start at zero and keep one space between chord tokens
     const minStart = i === 0 ? 0 : cursor + 1
     const newStart = Math.max(minStart, desiredStart)
 
@@ -217,7 +171,7 @@ export const transposeChordLine = (line: string, opts: FormatOptions): string =>
     cursor = newStart + transposed.length
   }
 
-  // 3. Preserve any whitespace that followed the last chord in the source line.
+  // ! Preserve trailing spaces used for chord alignment
   const last = tokens[tokens.length - 1]
   return out + line.slice(last.start + last.text.length)
 }
@@ -227,6 +181,7 @@ const collectParsedChords = (lyrics: Record<string, string[]>): ParsedChord[] =>
 
   for (const verse of Object.values(lyrics)) {
     for (const line of verse) {
+      // ? Period-prefixed lines contain chord data in hymn sources
       if (!line.startsWith('.')) continue
 
       for (const token of line.slice(1).trim().split(/\s+/)) {
@@ -261,6 +216,7 @@ export const detectHymnUseSharps = (lyrics: Record<string, string[]>): boolean |
     }
   }
 
+  // ? Tied accidental counts use the first accidental encountered
   if (flats > sharps) return false
   if (sharps > flats) return true
   if (firstAccidental === 'flat') return false
@@ -268,6 +224,7 @@ export const detectHymnUseSharps = (lyrics: Record<string, string[]>): boolean |
   return null
 }
 
+// ? This fallback takes the first parsed chord as the estimated key
 export const detectHymnKey = (lyrics: Record<string, string[]>): string | null => {
   const [first] = collectParsedChords(lyrics)
   return first ? first.root + first.body : null

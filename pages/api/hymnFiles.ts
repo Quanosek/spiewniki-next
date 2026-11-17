@@ -11,6 +11,7 @@ type Data = {
   error?: string
 }
 
+// Resolve available PDF and audio assets for the requested hymn
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const { title } = req.query as { [key: string]: string }
 
@@ -21,10 +22,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     let id = ''
     const match = title.match(/^\d+[a-zA-Z]?/)
 
+    // ? Syloe choir files use title slugs instead of hymn-number IDs
     if (match && book !== 'S') id = match[0]
     else id = slugifyText(title)
 
-    // Exact match first, then prefix match with word boundary
+    // ? Boundary checks prevent numbered hymn IDs from matching longer IDs
     const locateFile = (category: string) => {
       try {
         const files = fs.readdirSync(path.join(process.cwd(), 'public', category, book))

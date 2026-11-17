@@ -28,7 +28,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const defaultTheme = unlocked ? 'dark' : 'light'
 
   useEffect(() => {
-    // Get saved settings
     try {
       const settings = localStorage.getItem('settings')
       if (!settings) localStorage.setItem('settings', JSON.stringify(DEFAULT_SETTINGS))
@@ -37,17 +36,16 @@ export default function App({ Component, pageProps }: AppProps) {
       localStorage.setItem('settings', JSON.stringify(DEFAULT_SETTINGS))
     }
 
-    // Validate saved theme
+    // ? Reset stored themes that are absent from the shared theme list
     const savedTheme = localStorage.getItem('theme') as (typeof THEMES)[number] | null
     if (savedTheme && !THEMES.includes(savedTheme)) {
       localStorage.setItem('theme', defaultTheme)
       router.reload()
     }
 
-    // Define default accent color
+    // ! Keep the build accent class aligned with theme and logo variants
     document.documentElement.className = unlocked ? 'accent-blue' : 'accent-orange'
 
-    // Prevent screen from sleeping
     let wakeLock: WakeLockSentinel | null = null
 
     const requestWakeLock = async () => {
@@ -60,6 +58,7 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     }
 
+    // Reacquire the screen wake lock when the tab becomes visible
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
         requestWakeLock()

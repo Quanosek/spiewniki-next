@@ -69,8 +69,10 @@ export default function SearchBox({
     localStorage.setItem('prevSearch', JSON.stringify(json))
   }
 
+  // Parse optional search prefixes and persist the new query
   const handleChange = (value: string) => {
     if (unlocked && !activePrefix && value === '2137') {
+      // ? The direct-hymn shortcut runs before search-prefix parsing
       localStorage.removeItem('prevSearch')
       router.push({
         pathname: '/hymn',

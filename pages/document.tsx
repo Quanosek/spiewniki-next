@@ -33,6 +33,7 @@ export default function DocumentPage({ libraryPath }: DocumentPageProps) {
     const d = getQueryParam(router.query, 'd')
     const book = getQueryParam(router.query, 'book')
     const id = getQueryParam(router.query, 'id')
+    // ! Restrict path segments to prevent arbitrary PDF path construction
     const isSafeSegment = (value: string) => /^[A-Za-z0-9_-]+$/.test(value)
 
     if (d && d.trim()) {

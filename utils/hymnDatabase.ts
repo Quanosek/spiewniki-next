@@ -25,6 +25,7 @@ const getBookCollections = async (book: string): Promise<string[]> => {
     collectionCache.set(book, apiCollections)
     return apiCollections
   } catch {
+    // ? Cache missing metadata to preserve the single-file lookup fallback
     collectionCache.set(book, [])
     return []
   }

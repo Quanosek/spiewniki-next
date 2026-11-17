@@ -9,6 +9,7 @@ import styles from '@/styles/pages/hymn.module.scss'
 
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 
+// Render hymn lyrics, language choices, and chord transposition
 export default function HymnData({
   hymn,
   notation,
@@ -35,7 +36,8 @@ export default function HymnData({
   const hymnTitle = hymn.song.title.replace(/\b(\w)\b\s/g, '$1\u00A0')
 
   const ic = hymn.song.title.includes('IC')
-  const [language, setLanguage] = useState(3) // PL by default
+  // ? Index 3 selects the default Polish lyric
+  const [language, setLanguage] = useState(3)
 
   const filteredLyrics = useMemo(() => {
     const result: string[][] = []

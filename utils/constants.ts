@@ -16,8 +16,10 @@ const DEFAULT_SETTINGS: {
   quickSearch: unlocked,
 }
 
+// ! Keep these title prefixes aligned with the locked-build access policy
 const EXCLUDED_HYMNS = ['359a.', '389a.', '392a.', '394a.', '397a.', '418a.', '425a.', '484a.']
 
+// ! Keep these shortcuts aligned with getBookShortcut and public database folders
 const HYMNBOOKS = unlocked
   ? ['B', 'C', 'N', 'K', 'P', 'E', 'IC', 'U', 'M', 'S', 'R']
   : ['B', 'C', 'N', 'IC']
@@ -31,14 +33,18 @@ const GLOBAL_SEARCH_HYMNBOOKS = [
   ...(HYMNBOOKS.includes('IC') ? ['IC'] : []),
 ]
 
+// ! Keep book-level PDF links aligned with files under public/pdf
 const PDF_BOOKS = ['B', 'C', 'N', 'E', 'U']
 
+// ! Keep search parsing and result matching aligned with these prefixes
 const SEARCH_PREFIXES = [null, '@', '#']
 
+// ! Keep per-hymn asset flags aligned with files under public/pdf and public/mp3
 const SHOW_MP3 = ['N']
 
 const SHOW_PDF = ['B', 'C', 'N', 'U', 'S', 'R']
 
+// ! Add a matching theme selector and palette to styles/_themes.scss
 const THEMES = unlocked
   ? [
       'system',

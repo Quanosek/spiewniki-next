@@ -50,6 +50,7 @@ export default function SettingsMenu() {
     saveSettings()
   }, [saveSettings])
 
+  // Render the draggable theme picker
   const Themes = (names: string[]) => {
     const themes: ReactElement[] = []
 
@@ -197,13 +198,11 @@ export default function SettingsMenu() {
       <h2>Ustawienia</h2>
 
       <div className={styles.content}>
-        {/* THEME COLOR */}
         <div className={styles.settingsSection}>
           <h3>Motyw kolorów:</h3>
           {Themes(THEMES)}
         </div>
 
-        {/* FONT SIZE */}
         <div className={styles.settingsSection}>
           <h3>Wielkość tekstu pieśni:</h3>
 
@@ -232,7 +231,6 @@ export default function SettingsMenu() {
           </div>
         </div>
 
-        {/* QUICK OPTIONS SWITCHERS */}
         <div className={`${styles.settingsSection} ${styles.toggleList}`}>
           {ToggleSwitch({
             title: 'Wyświetlanie akordów',
@@ -261,7 +259,6 @@ export default function SettingsMenu() {
         </div>
       </div>
 
-      {/* MENU BUTTONS */}
       <div className={styles.buttons}>
         <button
           className={styles.alert}

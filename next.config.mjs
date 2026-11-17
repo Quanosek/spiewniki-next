@@ -5,6 +5,7 @@ import withPWAInit from '@ducanh2912/next-pwa'
 const unlocked = process.env.NEXT_PUBLIC_UNLOCKED === 'true'
 const ONE_WEEK_SECONDS = 7 * 24 * 60 * 60
 
+// ! Keep theme assets and restricted hymnbook data aligned with each build variant
 const variantPublicExcludes = unlocked
   ? ['!logo/orange/**/*', '!manifest-orange.json']
   : [

@@ -11,6 +11,7 @@ import { setMenuQuery } from './_handler'
 
 import styles from '@/styles/components/menu.module.scss'
 
+// ! Keep persisted fields aligned with hymn and search favorite handlers
 interface Favorite {
   book: string
   id: number
@@ -123,13 +124,11 @@ export default function FavoritesMenu() {
                   },
                 }}
                 onClick={async () => {
+                  // ? Invalid favorites use the shared removal, navigation, and alert path
                   try {
-                    // Validate book
                     if (!HYMNBOOKS.includes(fav.book)) {
                       removeFromList(index)
                       throw new Error()
-
-                      // Validate title
                     } else {
                       const data = await fetchBookHymns(fav.book, fav.collection)
 

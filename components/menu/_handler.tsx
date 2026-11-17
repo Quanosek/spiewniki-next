@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import styles from '@/styles/components/menu.module.scss'
 
+// ! Register each menu here so query validation and lazy loading stay aligned
 const MENU_MODULES = {
   favorites: () => import('./favorites'),
   settings: () => import('./settings'),
@@ -12,17 +13,17 @@ const MENU_MODULES = {
 
 type MenuName = keyof typeof MENU_MODULES
 
-// Menu navigation via hidden query param
+// ! Keep menu state in router query without exposing it in the browser URL
 export function setMenuQuery(name: string | undefined) {
   const params = { ...Router.query }
   delete params.menu
 
   Router.push(
-    // url
+    // Route state
     { query: name ? { ...params, menu: name } : { ...params } },
-    // as
+    // Browser URL
     { query: { ...params } },
-    // options
+    // Navigation options
     { scroll: false, shallow: true }
   )
 }

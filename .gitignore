@@ -38,6 +38,9 @@ next-env.d.ts
 
 # editor
 .vscode
+!.vscode/
+.vscode/*
+!.vscode/extensions.json
 
 # database
 /public/mp3/*

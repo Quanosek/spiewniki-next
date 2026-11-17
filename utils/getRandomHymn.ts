@@ -10,15 +10,12 @@ const getRandomHymn = async (book?: string) => {
     let hymns: Hymn[] = []
 
     if (!book) {
-      // Fetch all hymnbooks
       const responses = await Promise.all(HYMNBOOKS.map((bookName) => fetchBookHymns(bookName)))
       hymns = responses.flat()
     } else {
-      // Fetch specific hymnbook
       hymns = await fetchBookHymns(book)
     }
 
-    // Filter hymns based on accessibility and select a random one
     const accessibleHymns = hymns.filter((hymn) => isHymnAccessible(hymn.name))
 
     if (accessibleHymns.length > 0) {

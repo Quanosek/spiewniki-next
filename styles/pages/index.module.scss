@@ -326,9 +326,7 @@ $grid-gap-mobile: 1.2vw;
     filter: invert(1);
   }
 
-  // ≤768: mirror the dice button in .searchBox above. Both round icons at the top of
-  // /index share the same footprint (56×56 above 425px, 12vw × 12vw below) and the same
-  // 25px / 5.5vw icon with 105% scale, so the pair reads as visually paired.
+  // ! Keep the home PDF button aligned with the search dice button on mobile
   @media (max-width: 768px) {
     $box: 3.5rem;
 

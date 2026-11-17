@@ -42,11 +42,13 @@ const matchNames = (hymn: ProcessedHymn, formattedInput: string): ProcessedHymn 
   }
 }
 
+// Return matching lyric lines with neighboring context
 const matchLyrics = (
   hymn: ProcessedHymn,
   input: string,
   formattedInput: string
 ): ProcessedHymn[] => {
+  // ? Number-only queries are treated as hymn numbers rather than lyric searches
   if (input.match(/^[0-9]+$/)) return []
 
   const results: ProcessedHymn[] = []
@@ -102,9 +104,10 @@ const matchKeywords = (hymn: ProcessedHymn, formattedInput: string): ProcessedHy
   }
 }
 
+// ! Keep match priorities aligned with ProcessedHymn.matchType and result rendering
 const MATCH_TYPE_ORDER = { name: 0, author: 1, keywords: 2, lyrics: 3 } as const
 
-// Sort results, optionally including cross-book ordering when not scoped to a single book
+// Rank matches by type, position, number, and optional hymnbook order
 const compareHymns = (includeBookOrder: boolean) => (a: ProcessedHymn, b: ProcessedHymn) => {
   const aTypeOrder = MATCH_TYPE_ORDER[a.matchType as keyof typeof MATCH_TYPE_ORDER] ?? 4
   const bTypeOrder = MATCH_TYPE_ORDER[b.matchType as keyof typeof MATCH_TYPE_ORDER] ?? 4
@@ -148,10 +151,11 @@ const hasLetterSuffix = (value: string) => {
   return !!(match && match[2])
 }
 
-// Map raw hymn to searchable format
+// Prepare searchable fields while enforcing build-specific lyric visibility
 const mapHymn = (hymn: HymnWithCollection): ProcessedHymn => {
   let lyricsPlain: string[]
 
+  // ? Source title verses use T keys and lyric lines begin with a space
   if (unlocked) {
     const entries = Object.entries(hymn.song.lyrics) as [string, string[]][]
 
@@ -170,7 +174,7 @@ const mapHymn = (hymn: HymnWithCollection): ProcessedHymn => {
 
       const separatorIndex = verse.findIndex((line) => line.includes('———'))
 
-      // Stop at separator
+      // ? The separator marks the end of searchable lyrics
       if (separatorIndex !== -1) {
         if (separatorIndex > 0) {
           verse.slice(0, separatorIndex).forEach((line) => {
@@ -233,6 +237,7 @@ export default function SearchPage() {
   const [searchDuration, setSearchDuration] = useState(0)
   const lastSearchRef = useRef<string>('')
 
+  // * Match the query across enabled fields and order the combined results
   const runSearch = useCallback(
     (
       data: ProcessedHymn[],
@@ -285,7 +290,6 @@ export default function SearchPage() {
 
       const allMatches = [...nameMatches, ...lyricsMatches, ...authorMatches, ...keywordMatches]
 
-      // Deduplicate results
       const dedupedMatches = new Map<string, ProcessedHymn>()
 
       allMatches.forEach((hymn) => {
@@ -298,12 +302,11 @@ export default function SearchPage() {
       setData(result)
       lastSearchRef.current = input
 
-      // Cache for instant restore
       try {
         const cacheKey = getSearchCacheKey(book, collection)
         sessionStorage.setItem(cacheKey, JSON.stringify(result))
       } catch {
-        // Ignore
+        // Keep search available when session storage is unavailable
       }
 
       const durationMs = performance.now() - startTime
@@ -325,7 +328,7 @@ export default function SearchPage() {
   const [rawData, setRawData] = useState<ProcessedHymn[]>()
   const scrollRestoredRef = useRef(false)
 
-  // Restore cached results before first paint
+  // Restore cached results before rendering when quick search is enabled
   useLayoutEffect(() => {
     if (scrollRestoredRef.current) return
     try {
@@ -339,7 +342,7 @@ export default function SearchPage() {
         prevSearch?.prefix === '#'
       if (!hasSavedSearch) return
 
-      // Skip restore on book/collection change
+      // ! Keep cached results scoped to the current hymnbook and collection
       const urlParams = new URLSearchParams(window.location.search)
       const urlBook = urlParams.get('book') || undefined
       const urlCollection = urlParams.get('collection') || undefined
@@ -360,7 +363,7 @@ export default function SearchPage() {
       if (prevSearch?.value) setInputValue(prevSearch.value)
       if (prevSearch?.prefix) setActivePrefix(prevSearch.prefix)
 
-      // Mark search ref so "input change" effect won't re-trigger search
+      // ! Prevent the restored query from triggering a duplicate search
       lastSearchRef.current = prevSearch?.prefix
         ? prevSearch.prefix + prevSearch.value
         : prevSearch?.value || ''
@@ -371,7 +374,7 @@ export default function SearchPage() {
         requestAnimationFrame(() => window.scrollTo(0, prevSearch.scrollY))
       }
     } catch {
-      // Ignore
+      // Run a fresh search when cached state is invalid or unavailable
     }
   }, [])
 
@@ -381,13 +384,10 @@ export default function SearchPage() {
     let focusSearchBox = false
     try {
       focusSearchBox = JSON.parse(localStorage.getItem('focusSearchBox') || 'false')
-    } catch {
-      // Ignore
-    }
+    } catch {}
     if (focusSearchBox) inputRef.current?.focus()
     localStorage.removeItem('focusSearchBox')
 
-    // Restore previous search if quick search enabled
     const quickSearch = localSettings?.quickSearch || false
     let prevSearch: {
       value?: string
@@ -404,19 +404,21 @@ export default function SearchPage() {
       prevSearch = { value: '' }
     }
 
+    // Resume the saved query unless cached results were already restored
     if (quickSearch && !scrollRestoredRef.current) {
       if (prevSearch?.value) setInputValue(prevSearch.value)
       if (prevSearch?.prefix) setActivePrefix(prevSearch.prefix)
       if (prevSearch?.renderPage) setRenderPage(prevSearch.renderPage)
     }
 
+    // Filter and index fetched hymns before running the initial search
     const loadData = (fetchData: HymnWithCollection[]) => {
       const filteredData = fetchData.filter((hymn) => isHymnAccessible(hymn.name))
 
       const rawData = filteredData.map(mapHymn)
       setRawData(rawData)
 
-      // Skip if cache already restored
+      // ! Do not replace restored results when fetched data arrives
       if (scrollRestoredRef.current) return
 
       const prevSearchValue = prevSearch?.value || ''
@@ -449,16 +451,16 @@ export default function SearchPage() {
     }
   }, [router, localSettings, book, collection])
 
-  // Re-run search after the input settles, but skip if we already have the same query.
+  // Search after input changes and skip duplicate queries
   useEffect(() => {
     const isMobile = window.matchMedia('(pointer: coarse)').matches
-    if (inputValue && !rawData && !isMobile) inputRef.current?.select() // focus input on load
+    if (inputValue && !rawData && !isMobile) inputRef.current?.select()
 
     if (rawData) {
       const searchInput = activePrefix ? activePrefix + inputValue : inputValue
-      if (searchInput === lastSearchRef.current) return // skip duplicate searches
+      if (searchInput === lastSearchRef.current) return
 
-      // Debounce search
+      // ? A short delay groups rapid keystrokes into one search
       const timeout = setTimeout(() => {
         searchRef.current?.(rawData, searchInput, activePrefix)
       }, 50)
@@ -524,7 +526,6 @@ export default function SearchPage() {
     else setData(rawData)
   }, [rawData])
 
-  // Random hymn handler
   const handleRandomHymn = useCallback(async () => {
     const foundHymn = await getRandomHymn(book)
 
@@ -540,6 +541,7 @@ export default function SearchPage() {
   const currentCollection =
     typeof router.query.collection === 'string' ? router.query.collection : undefined
 
+  // ! Keep this stored shape aligned with search restoration and hymn-page navigation
   const saveSearchState = useCallback(() => {
     localStorage.setItem(
       'prevSearch',
@@ -554,12 +556,12 @@ export default function SearchPage() {
     )
   }, [activePrefix, currentBook, currentCollection, inputValue, localSettings, renderPage])
 
-  // Handle favorite state for return hymns
   const [favoritesState, setFavoritesState] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     if (!data) return
 
+    // Reconcile visible results with stored favorites
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
     const states = Object.fromEntries(
       data.map((hymn) => [
@@ -576,7 +578,6 @@ export default function SearchPage() {
     setFavoritesState(states)
   }, [data])
 
-  // Handle page keyboard shortcuts
   useEffect(() => {
     const keyupEvent = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey || router.query.menu) {

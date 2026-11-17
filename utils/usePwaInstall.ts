@@ -10,6 +10,7 @@ interface NavigatorWithInstallHints extends Navigator {
   getInstalledRelatedApps?: () => Promise<unknown[]>
 }
 
+// Detect installed display modes across browser platforms
 const isStandaloneMode = (navigatorRef: NavigatorWithInstallHints) =>
   window.matchMedia('(display-mode: standalone)').matches ||
   window.matchMedia('(display-mode: fullscreen)').matches ||
@@ -40,7 +41,7 @@ function useInstallPWA() {
         const relatedApps = await navigatorRef.getInstalledRelatedApps()
         if (isMounted && relatedApps.length > 0) markInstalled()
       } catch {
-        // Ignore
+        // ? Failed related-app lookup must not block install prompting
       }
     }
 

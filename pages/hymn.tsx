@@ -177,6 +177,7 @@ export default function HymnPage() {
     return () => window.removeEventListener('scroll', scrollEvent)
   }, [hamburgerMenu])
 
+  // Restore the previous search context before returning to results
   const handleBackToSearch = useCallback(() => {
     try {
       const prevSearch = localStorage.getItem('prevSearch')
@@ -307,6 +308,7 @@ export default function HymnPage() {
     })
   }, [hymn, router, currentCollection])
 
+  // ! Keep the popup flag aligned with presentation-page lifecycle cleanup
   const handleExternalPresentation = () => {
     if (!book || !title) return
 

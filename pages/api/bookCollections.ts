@@ -15,6 +15,7 @@ const isJsonFile = (name: string) => name.toLowerCase().endsWith('.json')
 
 const removeJsonExtension = (name: string) => name.replace(/\.json$/i, '')
 
+// Return the JSON collections available for the requested hymnbook
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET')
@@ -32,6 +33,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
   try {
     const entries = fs.readdirSync(collectionsDir, { withFileTypes: true })
 
+    // Sort collection names using Polish numeric ordering
     const collections = entries
       .filter((entry) => entry.isFile() && isJsonFile(entry.name))
       .map((entry) => removeJsonExtension(entry.name))

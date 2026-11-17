@@ -7,24 +7,31 @@ export default interface Hymn {
     lyrics: Record<string, string[]>
     author?: string
     copyright?: string
-    hymn_number?: string // Numer w śpiewniku
+    // Hymnbook number
+    hymn_number?: string
     presentation?: string
-    ccli?: string // Numer w CCLI
+    // CCLI identifier
+    ccli?: string
     capo: {
       $: {
         print: 'true' | 'false'
         sharp: 'true' | 'false'
       }
     }
-    key?: string // Tonacja
-    aka?: string // Inny tytuł
-    key_line?: string // Klucz
-    theme?: string // Tematy
+    // Musical key
+    key?: string
+    // Alternate title
+    aka?: string
+    // Key line
+    key_line?: string
+    // Themes
+    theme?: string
     linked_songs?: {
       linked_song: string
     }
     tempo?: 'Bardzo wolno' | 'Wolno' | 'Umiarkowanie' | 'Szybko' | 'Bardzo szybko'
-    time_sig?: string // Metrum
+    // Time signature
+    time_sig?: string
     backgrounds: {
       $: {
         resize: string

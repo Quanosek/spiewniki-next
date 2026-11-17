@@ -17,6 +17,7 @@ export default function PresentationPage() {
 
   const [hymn, setHymn] = useState<Hymn>()
 
+  // ? The IC title slide shifts verse indexes by one
   const ic = hymn?.song.title.includes('IC')
 
   const [order, setOrder] = useState<string[]>([])
@@ -93,7 +94,7 @@ export default function PresentationPage() {
 
     const clearPresWindow = () => localStorage.removeItem('presWindow')
 
-    // Handle browser-initiated fullscreen exit (e.g. user presses F11/Esc outside our controls)
+    // ? Exiting fullscreen outside app controls returns to the previous page
     const fullscreenChangeEvent = () => {
       if (!document.fullscreenElement && !isClosingRef.current) router.back()
     }
@@ -110,7 +111,6 @@ export default function PresentationPage() {
   }, [router])
 
   const closePresentation = useCallback(() => {
-    // Close if opened in new window
     if (isPopupRef.current) {
       window.close()
       return
@@ -136,7 +136,7 @@ export default function PresentationPage() {
     if (slide < maxSlide) {
       setSlide(slide + 1)
     } else if (!isPopupRef.current) {
-      // Only auto-close in fullscreen mode, not in popup window
+      // ! Close at the final slide only in the main window
       closePresentation()
     }
   }, [slide, closePresentation, order.length])
@@ -159,7 +159,7 @@ export default function PresentationPage() {
     )
   }, [hymn, order, slide])
 
-  // Auto-resize font based on content width and line count
+  // Adjust slide text size from rendered width and verse count
   const linesWidth = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
@@ -172,6 +172,7 @@ export default function PresentationPage() {
     const margin = paragraph - window.innerWidth
     const lineCount = verse?.length || 0
 
+    // ? Tune width thresholds with line-count overrides to preserve slide fit
     if (margin < -300) {
       lines?.style.setProperty('font-size', ic ? '5.0vw' : '4.5vw')
     }
@@ -201,7 +202,7 @@ export default function PresentationPage() {
   const cursorHideTimeout = useRef<NodeJS.Timeout>()
   const readyRef = useRef(false)
 
-  // Delay cursor tracking to prevent false triggers on page load
+  // ? Delayed cursor tracking avoids hiding the cursor during page load
   useEffect(() => {
     const readyTimeout = setTimeout(() => {
       readyRef.current = true
@@ -224,12 +225,11 @@ export default function PresentationPage() {
       }
     }
 
-    // Prevent space from activating focused buttons
+    // ? The space key drives slides, so prevent focused controls from consuming it
     const keydownEvent = (event: KeyboardEvent) => {
       if (event.key === ' ') event.preventDefault()
     }
 
-    // Keyboard navigation
     const keyupEvent = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
         return
@@ -246,7 +246,6 @@ export default function PresentationPage() {
       }
     }
 
-    // Touch swipe navigation
     let startPosition = 0
 
     const touchStartEvent = (event: TouchEvent) => {
@@ -283,6 +282,7 @@ export default function PresentationPage() {
     }
   }, [router])
 
+  // ? The IC title slide does not count toward verse progress
   const getProgressWidth = () => {
     if ((ic && slide === 1) || (!ic && slide === 0)) return 0
     const totalSlides = ic ? order.length - 1 : order.length

@@ -183,10 +183,10 @@ export default function BooksPage() {
   }, [])
 
   useEffect(() => {
-    const sync = () => setSelectedHymnbooks(getGlobalSearchHymnbooks())
-    sync()
-    window.addEventListener(GLOBAL_SEARCH_HYMNBOOKS_EVENT, sync)
-    return () => window.removeEventListener(GLOBAL_SEARCH_HYMNBOOKS_EVENT, sync)
+    const syncSelectedHymnbooks = () => setSelectedHymnbooks(getGlobalSearchHymnbooks())
+    syncSelectedHymnbooks()
+    window.addEventListener(GLOBAL_SEARCH_HYMNBOOKS_EVENT, syncSelectedHymnbooks)
+    return () => window.removeEventListener(GLOBAL_SEARCH_HYMNBOOKS_EVENT, syncSelectedHymnbooks)
   }, [])
 
   const toggleGlobalSearchHymnbook = (book: string) => {

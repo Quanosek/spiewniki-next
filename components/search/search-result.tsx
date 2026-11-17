@@ -107,7 +107,6 @@ export default function SearchResult({
         className={styles.result}
         onClick={saveSearchState}
       >
-        {/* Hymn title */}
         <h2>
           {unlocked ? (
             <Highlighter
@@ -122,7 +121,6 @@ export default function SearchResult({
         </h2>
 
         {hymn.matchType === 'author' && hymn.author ? (
-          // Hymn authors (@)
           <div className={styles.prefixResult}>
             <p>
               {unlocked ? (
@@ -138,7 +136,6 @@ export default function SearchResult({
             </p>
           </div>
         ) : hymn.matchType === 'keywords' && hymn.copyright ? (
-          // Hymn keywords (#)
           <div className={styles.prefixResult}>
             <p>
               {unlocked ? (
@@ -154,7 +151,6 @@ export default function SearchResult({
             </p>
           </div>
         ) : hymn.lyrics ? (
-          // Hymn lyrics lines
           <div className={styles.lyrics}>
             {hymn.lyrics.map((verse, index) => (
               <p key={`${verse}-${index}`}>
@@ -174,9 +170,7 @@ export default function SearchResult({
         ) : null}
       </Link>
 
-      {/* Right-side dynamic hymn actions */}
       <div className={styles.quickActions}>
-        {/* Enable presentation mode */}
         <button
           title='Włącz tryb prezentacji dla wybranej pieśni'
           className={styles.onHover}
@@ -193,7 +187,6 @@ export default function SearchResult({
           />
         </button>
 
-        {/* Remove hymn from favorites */}
         {isFavorite && (
           <button title='Usuń pieśń z listy ulubionych' onClick={handleRemoveFavorite}>
             <Image
